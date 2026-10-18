@@ -98,7 +98,7 @@ const STORE = {
     ar: {
       concept: 'نموذج تصميم مقترح لصفحة المنتج — ليس المتجر الفعلي', skip: 'تخطَّ إلى المنتج', ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'عروض اليوم الوطني السعودي',
       search: 'بحث', account: 'حسابي', cart: 'السلة', langBtn: 'EN', langAria: 'Switch to English', home: 'الرئيسية', chairs: 'الكراسي',
-      bestSeller: 'الأكثر مبيعًا', sold: 'بيع أكثر من 1,000 مرة', reviews: 'تقييم', save: 'خصم',
+      bestSeller: 'الأكثر مبيعًا', sold: 'بيع أكثر من {n} مرة', reviews: 'تقييم', save: 'خصم',
       vat: 'السعر شامل ضريبة القيمة المضافة', bnplA: 'أو 4 دفعات بـ', bnplB: 'بدون فوائد مع',
       stockLeft: 'باقي {n} قطعة فقط', stockSub: 'الكمية تنفد بسرعة', deliveryA: 'اطلبه اليوم، ويوصلك', deliveryB: 'مجانًا',
       qty: 'الكمية', dec: 'إنقاص الكمية', inc: 'زيادة الكمية', atc: 'أضف إلى السلة', buyNow: 'اشترِ الآن',
@@ -123,7 +123,7 @@ const STORE = {
     en: {
       concept: 'Design concept for review — not the live store', skip: 'Skip to product', ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'Saudi National Day offer',
       search: 'Search', account: 'Account', cart: 'Cart', langBtn: 'عربي', langAria: 'التبديل إلى العربية', home: 'Home', chairs: 'Chairs',
-      bestSeller: 'Best seller', sold: 'Sold 1,000+ times', reviews: 'reviews', save: 'Save',
+      bestSeller: 'Best seller', sold: 'Sold {n}+ times', reviews: 'reviews', save: 'Save',
       vat: 'Price includes VAT', bnplA: 'or 4 payments of', bnplB: 'interest-free with',
       stockLeft: 'Only {n} left', stockSub: 'Selling fast', deliveryA: 'Order today, delivered by', deliveryB: 'for free',
       qty: 'Quantity', dec: 'Decrease quantity', inc: 'Increase quantity', atc: 'Add to cart', buyNow: 'Buy now',
@@ -308,8 +308,10 @@ html[lang="ar"] .buy__title{ font-weight:700; line-height:1.1; letter-spacing:0;
 .buy__sub{ margin-top:var(--s3); font-size:var(--t-md); color:var(--ink-2); max-width:34ch; }
 .rating{ display:inline-flex; align-items:center; gap:8px; margin-top:var(--s4); font-size:14px; text-decoration:none; }
 .rating:hover .rating__count{ text-decoration:underline; }
-.stars{ position:relative; display:inline-flex; color:var(--g200); }
-.stars__fill{ position:absolute; inset-block:0; inset-inline-start:0; overflow:hidden; color:var(--black); display:flex; }
+.stars{ position:relative; display:inline-flex; gap:1px; }
+.star{ position:relative; display:inline-flex; color:var(--g200); will-change:transform; }
+.star__fill{ position:absolute; inset-block:0; inset-inline-start:0; overflow:hidden; color:var(--black); display:flex; }
+.cnt{ font-variant-numeric:tabular-nums; }
 .stars svg{ flex:none; }
 .rating__val{ font:600 14px var(--f-latin); }
 .price{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 12px; margin-top:var(--s5); }
@@ -710,9 +712,8 @@ html.lenis, html.lenis body{ height:auto; }
 
     <!-- Buy box -->
     <div class="buy" id="buy">
-      <div class="deco" id="decoBuy" aria-hidden="true" style="top:96px; inset-inline-end:0; width:44px;"><svg viewBox="0 0 100 150" aria-hidden="true"><g fill="#D4C4FF"><rect x="16" y="4" width="68" height="10" rx="5"></rect><circle cx="50" cy="40" r="28"></circle><circle cx="50" cy="86" r="22"></circle><circle cx="50" cy="122" r="26"></circle></g></svg></div>
       <div class="buy__pills intro-fade">
-        <span class="pill pill--mint" data-t="sold">بيع أكثر من 1,000 مرة</span>
+        <span class="pill pill--mint" id="soldPill">بيع أكثر من <span class="num cnt" data-cnt="sold">1,000</span> مرة</span>
         <span class="pill pill--yellow" data-t="bestSeller">الأكثر مبيعًا</span>
       </div>
       <h1 class="buy__title" id="pTitle">
@@ -722,15 +723,15 @@ html.lenis, html.lenis body{ height:auto; }
       <p class="buy__sub intro-fade" data-l="product.subtitle">نقوش نجد والحجاز وعسير، في تصميم واحد.</p>
 
       <a class="rating intro-fade" href="#reviews">
-        <span id="starsHero"><span class="stars" role="img" aria-label="4.8 من 5 نجوم"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="stars__fill" style="width:96%"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span>
-        <span class="rating__val num">4.8</span>
-        <span class="rating__count muted"><span class="num">(126</span> <span data-t="reviews">تقييم</span>)</span>
+        <span id="starsHero"><span class="stars" role="img" aria-label="4.8 من 5 نجوم" data-stars="hero"><span class="star"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:79.99999999999999%"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span></span>
+        <span class="rating__val" id="ratingVal"><span class="num cnt" data-cnt="rate">4.8</span></span>
+        <span class="rating__count muted">(<span id="ratingCount"><span class="num cnt" data-cnt="reviews">126</span></span> <span data-t="reviews">تقييم</span>)</span>
       </a>
 
       <div class="price intro-fade">
         <span class="price__now num" id="priceNow">696.00<small>ر.س</small></span>
         <s class="price__was num" id="priceWas">1,560.00 ر.س</s>
-        <span class="pill pill--orange num" id="priceOff" dir="ltr">-56%</span>
+        <span class="pill pill--orange num" id="priceOff" dir="ltr"><span>-<span class="num cnt" data-cnt="off">56</span>%</span></span>
         <span class="price__vat" data-t="vat">السعر شامل ضريبة القيمة المضافة</span>
       </div>
 
@@ -743,10 +744,10 @@ html.lenis, html.lenis body{ height:auto; }
       <hr class="divider">
 
       <div class="stock">
-        <div class="stock__row"><strong id="stockText">باقي 80 قطعة فقط</strong><span class="muted" data-t="stockSub">الكمية تنفد بسرعة</span></div>
+        <div class="stock__row"><strong id="stockText">باقي <span class="num cnt" data-cnt="stock">80</span> قطعة فقط</strong><span class="muted" data-t="stockSub">الكمية تنفد بسرعة</span></div>
         <div class="stock__bar" aria-hidden="true"><span id="stockBar" style="--w: 20%;"></span></div>
       </div>
-      <p class="delivery" id="delivery"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="15" rx="2"></rect><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"></path></svg><span>اطلبه اليوم، ويوصلك <strong>الجمعة، 9 أكتوبر</strong> مجانًا</span></p>
+      <p class="delivery" id="delivery"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="15" rx="2"></rect><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"></path></svg><span>اطلبه اليوم، ويوصلك <strong>الأربعاء، 21 أكتوبر</strong> مجانًا</span></p>
 
       <div class="buy__actions">
         <div class="stepper" role="group" data-t-aria="qty" aria-label="الكمية">
@@ -964,30 +965,30 @@ html.lenis, html.lenis body{ height:auto; }
     </div>
     <div class="rev">
       <div data-reveal="">
-        <p class="rev__score">4.8</p>
-        <div class="rev__meta"><span id="starsRev"><span class="stars" role="img" aria-label="4.8 من 5 نجوم"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="stars__fill" style="width:96%"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span><span id="revBased">من 126 تقييم</span></div>
-        <div class="rev__bars" id="revBars"><div class="rev__bar"><span>5</span><i><b style="--w:82%"></b></i><span>82%</span></div><div class="rev__bar"><span>4</span><i><b style="--w:12%"></b></i><span>12%</span></div><div class="rev__bar"><span>3</span><i><b style="--w:4%"></b></i><span>4%</span></div><div class="rev__bar"><span>2</span><i><b style="--w:1%"></b></i><span>1%</span></div><div class="rev__bar"><span>1</span><i><b style="--w:1%"></b></i><span>1%</span></div></div>
+        <p class="rev__score" id="revScore"><span class="num cnt" data-cnt="rate2">4.8</span></p>
+        <div class="rev__meta"><span id="starsRev"><span class="stars" role="img" aria-label="4.8 من 5 نجوم" data-stars="rev"><span class="star"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:79.99999999999999%"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span></span><span id="revBased">من <span class="num cnt" data-cnt="reviews2">126</span> تقييم</span></div>
+        <div class="rev__bars" id="revBars"><div class="rev__bar"><span>5</span><i><b style="--w:82%"></b></i><span data-bar="0"><span class="num cnt" data-cnt="bar0">82</span>%</span></div><div class="rev__bar"><span>4</span><i><b style="--w:12%"></b></i><span data-bar="1"><span class="num cnt" data-cnt="bar1">12</span>%</span></div><div class="rev__bar"><span>3</span><i><b style="--w:4%"></b></i><span data-bar="2"><span class="num cnt" data-cnt="bar2">4</span>%</span></div><div class="rev__bar"><span>2</span><i><b style="--w:1%"></b></i><span data-bar="3"><span class="num cnt" data-cnt="bar3">1</span>%</span></div><div class="rev__bar"><span>1</span><i><b style="--w:1%"></b></i><span data-bar="4"><span class="num cnt" data-cnt="bar4">1</span>%</span></div></div>
         <span class="pill pill--yellow sample-note" data-t="sampleNote">عيّنة — تُستبدل بتقييمات زد الحقيقية</span>
       </div>
       <div class="slider">
         <div class="slider__track" id="revTrack" tabindex="0">
     <article class="rcard">
-      <span><span class="stars" role="img" aria-label="5 من 5 نجوم"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="stars__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span>
+      <span><span class="stars" role="img" aria-label="5 من 5 نجوم"><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span></span>
       <p data-l="product.reviews.items.0.text">النقشة على الطبيعة أحلى من الصور، وألوانها دافية. صار ركن القراءة أحب مكان في البيت.</p>
       <footer><span><strong data-l="product.reviews.items.0.name">نورة</strong> · <span data-l="product.reviews.items.0.city">الرياض</span></span><span class="pill" data-t="verified">مشتري موثّق</span></footer>
     </article>
     <article class="rcard">
-      <span><span class="stars" role="img" aria-label="5 من 5 نجوم"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="stars__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span>
+      <span><span class="stars" role="img" aria-label="5 من 5 نجوم"><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span></span>
       <p data-l="product.reviews.items.1.text">جلسته مريحة، والخشب على المساند يعطيه فخامة. وصلني قبل الموعد.</p>
       <footer><span><strong data-l="product.reviews.items.1.name">عبدالله</strong> · <span data-l="product.reviews.items.1.city">جدة</span></span><span class="pill" data-t="verified">مشتري موثّق</span></footer>
     </article>
     <article class="rcard">
-      <span><span class="stars" role="img" aria-label="4 من 5 نجوم"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="stars__fill" style="width:80%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span>
+      <span><span class="stars" role="img" aria-label="4 من 5 نجوم"><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:0%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span></span>
       <p data-l="product.reviews.items.2.text">حسّيت النقشة فيها روح القط العسيري وفرحت فيه. أتمنى يتوفر بمقاس أكبر.</p>
       <footer><span><strong data-l="product.reviews.items.2.name">ريم</strong> · <span data-l="product.reviews.items.2.city">أبها</span></span><span class="pill" data-t="verified">مشتري موثّق</span></footer>
     </article>
     <article class="rcard">
-      <span><span class="stars" role="img" aria-label="5 من 5 نجوم"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="stars__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span>
+      <span><span class="stars" role="img" aria-label="5 من 5 نجوم"><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span><span class="star"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg><span class="star__fill" style="width:100%"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"></path></svg></span></span></span></span>
       <p data-l="product.reviews.items.3.text">حطّيته في المجلس جنب طاولة جانبية، والكل يسأل عنه.</p>
       <footer><span><strong data-l="product.reviews.items.3.name">فهد</strong> · <span data-l="product.reviews.items.3.city">الدمام</span></span><span class="pill" data-t="verified">مشتري موثّق</span></footer>
     </article></div>
@@ -1018,7 +1019,7 @@ html.lenis, html.lenis body{ height:auto; }
     <div class="rel__track" id="relTrack">
     <article class="prod" data-reveal-item="">
       <div class="prod__media"><svg class="ph" viewBox="0 0 160 160" aria-hidden="true"><g fill="#DCDCDC"><path d="M30 78c0-26 20-40 50-40s50 14 50 40v6c10 0 15 8 15 18v24H15v-24c0-10 5-18 15-18Z"></path><rect x="34" y="126" width="8" height="12" rx="3"></rect><rect x="118" y="126" width="8" height="12" rx="3"></rect></g></svg>
-        <div class="prod__pills"><span class="pill pill--yellow" data-t="bestSeller">الأكثر مبيعًا</span><span class="pill pill--orange num" dir="ltr">-38%</span></div>
+        <div class="prod__pills"><span class="pill pill--yellow" data-t="bestSeller">الأكثر مبيعًا</span><span class="pill pill--orange num" dir="ltr" data-reloff="0"><span>-<span class="num cnt" data-cnt="rel0">38</span>%</span></span></div>
         <span class="prod__ph" data-t="placeholder">صورة توضيحية</span>
         <button class="prod__add" type="button" data-add="boucle" data-name-i="0" aria-label="إضافة سريعة: كرسي بوكليه أوف وايت"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
       </div>
@@ -1027,7 +1028,7 @@ html.lenis, html.lenis body{ height:auto; }
     </article>
     <article class="prod" data-reveal-item="">
       <div class="prod__media"><svg class="ph" viewBox="0 0 160 160" aria-hidden="true"><g fill="#DCDCDC"><circle cx="80" cy="72" r="46"></circle><ellipse cx="80" cy="100" rx="56" ry="18"></ellipse><rect x="74" y="112" width="12" height="20"></rect><ellipse cx="80" cy="134" rx="30" ry="6"></ellipse></g></svg>
-        <div class="prod__pills"><span class="pill pill--orange num" dir="ltr">-34%</span></div>
+        <div class="prod__pills"><span class="pill pill--orange num" dir="ltr" data-reloff="1"><span>-<span class="num cnt" data-cnt="rel1">34</span>%</span></span></div>
         <span class="prod__ph" data-t="placeholder">صورة توضيحية</span>
         <button class="prod__add" type="button" data-add="round" data-name-i="1" aria-label="إضافة سريعة: كرسي استرخاء دائري مبطّن"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
       </div>
@@ -1036,7 +1037,7 @@ html.lenis, html.lenis body{ height:auto; }
     </article>
     <article class="prod" data-reveal-item="">
       <div class="prod__media"><svg class="ph" viewBox="0 0 160 160" aria-hidden="true"><g fill="#DCDCDC"><ellipse cx="80" cy="56" rx="54" ry="12"></ellipse><rect x="26" y="52" width="108" height="10" rx="5"></rect><path d="M42 62 36 140h6l12-78ZM118 62l6 78h-6l-12-78ZM78 66h4v74h-4z"></path></g></svg>
-        <div class="prod__pills"><span class="pill pill--yellow" data-t="bestSeller">الأكثر مبيعًا</span><span class="pill pill--orange num" dir="ltr">-61%</span></div>
+        <div class="prod__pills"><span class="pill pill--yellow" data-t="bestSeller">الأكثر مبيعًا</span><span class="pill pill--orange num" dir="ltr" data-reloff="2"><span>-<span class="num cnt" data-cnt="rel2">61</span>%</span></span></div>
         <span class="prod__ph" data-t="placeholder">صورة توضيحية</span>
         <button class="prod__add" type="button" data-add="tm" data-name-i="2" aria-label="إضافة سريعة: طاولة التقديم TM"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
       </div>
@@ -1045,7 +1046,7 @@ html.lenis, html.lenis body{ height:auto; }
     </article>
     <article class="prod" data-reveal-item="">
       <div class="prod__media"><svg class="ph" viewBox="0 0 160 160" aria-hidden="true"><g fill="#DCDCDC"><path d="M30 54 80 36l50 18-50 18Z"></path><path d="M30 54v6l50 18 50-18v-6L80 72Z"></path><path d="M36 62v74h5V64ZM124 62v74h-5V64ZM78 80v62h4V80Z"></path></g></svg>
-        <div class="prod__pills"><span class="pill pill--orange num" dir="ltr">-60%</span></div>
+        <div class="prod__pills"><span class="pill pill--orange num" dir="ltr" data-reloff="3"><span>-<span class="num cnt" data-cnt="rel3">60</span>%</span></span></div>
         <span class="prod__ph" data-t="placeholder">صورة توضيحية</span>
         <button class="prod__add" type="button" data-add="hadaa" data-name-i="3" aria-label="إضافة سريعة: طاولة الزاوية هداء"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
       </div>
@@ -1183,10 +1184,23 @@ const ICON = {
 };
 const icon = (n, s = 22, sw = 1.5) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
 const STAR = '<path d="M12 3.2l2.6 5.6 6.1.7-4.5 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.1 6.1-.7L12 3.2Z"/>';
-const stars = (r, s = 15) => {
-  const row = Array.from({ length: 5 }, () => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${STAR}</svg>`).join('');
-  return `<span class="stars" role="img" aria-label="${t('stars', { n: r })}">${row}<span class="stars__fill" style="width:${(r / 5) * 100}%">${row}</span></span>`;
+const stars = (r, s = 15, anim = '') => {
+  const svg = `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${STAR}</svg>`;
+  const row = Array.from({ length: 5 }, (_, i) => {
+    const f = Math.max(0, Math.min(1, r - i)) * 100;
+    return `<span class="star">${svg}<span class="star__fill" style="width:${f}%">${svg}</span></span>`;
+  }).join('');
+  return `<span class="stars" role="img" aria-label="${t('stars', { n: r })}"${anim ? ` data-stars="${anim}"` : ''}>${row}</span>`;
 };
+/* Animated numbers ("speedometer" count-up). Each counter keeps its own value, so a language
+   switch re-renders the text without restarting or breaking a running count. */
+const COUNT = {};
+const fmtN = (v, dec) => (dec ? v : Math.round(v)).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+const cnum = (key, to, dec = 0, from = 0) => {
+  if (!COUNT[key]) COUNT[key] = { v: G ? from : to, to, dec };
+  return `<span class="num cnt" data-cnt="${key}">${fmtN(COUNT[key].v, COUNT[key].dec)}</span>`;
+};
+const writeCount = key => { const c = COUNT[key]; $$(`[data-cnt="${key}"]`).forEach(el => el.textContent = fmtN(c.v, c.dec)); };
 const WA = '<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8a9.2 9.2 0 0 0-7.9 13.9L3 21l4.4-1.1A9.2 9.2 0 1 0 12 2.8Zm0 16.7c-1.4 0-2.8-.4-4-1.1l-.3-.2-2.6.7.7-2.5-.2-.3a7.6 7.6 0 1 1 6.4 3.4Zm4.2-5.7c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.2 6.2 0 0 1-3.1-2.7c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.1 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1l-.6-.4Z"/></svg>';
 
 /* ---------------- BRAND SVG: logo, silhouettes, gazelle ---------------- */
@@ -1342,12 +1356,10 @@ function build() {
 
   // hero bits
   $('#starsHero').outerHTML = `<span id="starsHero">${stars(P.rating)}</span>`;
-  $('#priceOff').textContent = `-${pct(P.price, P.compareAt)}%`;
   $('#stockBar').style.setProperty('--w', Math.max(8, (P.stock / P.stockScale) * 100) + '%');
   $('#qtyDec').innerHTML = icon('minus', 18); $('#qtyInc').innerHTML = icon('plus', 18);
   $('#trust').innerHTML = [['boxcart', 't1', 't1s'], ['ret', 't2', 't2s'], ['lock', 't3', 't3s']].map(([ic, a, b]) => `<li>${icon(ic, 24, 1.3)}<div><strong data-t="${a}"></strong><span data-t="${b}"></span></div></li>`).join('');
   $('#qr').innerHTML = qr();
-  $('#decoBuy').innerHTML = SIL.bubble('#D4C4FF');
 
   // story
   $('#panels').innerHTML = P.story.regions.map((r, i) => `
@@ -1386,7 +1398,7 @@ function build() {
   $('#accc-care').innerHTML = `<p data-t="careBody"></p>`;
 
   // reviews
-  $('#revBars').innerHTML = P.reviews.distribution.map((v, i) => `<div class="rev__bar"><span>${5 - i}</span><i><b style="--w:${v}%"></b></i><span>${v}%</span></div>`).join('');
+  $('#revBars').innerHTML = P.reviews.distribution.map((v, i) => `<div class="rev__bar"><span>${5 - i}</span><i><b style="--w:${v}%"></b></i><span data-bar="${i}">${v}%</span></div>`).join('');
   $('#revTrack').innerHTML = P.reviews.items.map((r, i) => `
     <article class="rcard">
       <span>${stars(r.stars, 14)}</span>
@@ -1398,7 +1410,7 @@ function build() {
   $('#relTrack').innerHTML = STORE.related.map((p, i) => `
     <article class="prod" data-reveal-item>
       <div class="prod__media">${ph(p.shape)}
-        <div class="prod__pills">${p.best ? '<span class="pill pill--yellow" data-t="bestSeller"></span>' : ''}<span class="pill pill--orange num" dir="ltr">-${pct(p.price, p.compareAt)}%</span></div>
+        <div class="prod__pills">${p.best ? '<span class="pill pill--yellow" data-t="bestSeller"></span>' : ''}<span class="pill pill--orange num" dir="ltr" data-reloff="${i}">-${pct(p.price, p.compareAt)}%</span></div>
         <span class="prod__ph" data-t="placeholder"></span>
         <button class="prod__add" type="button" data-add="${p.id}" data-name-i="${i}">${icon('plus', 20)}</button>
       </div>
@@ -1438,10 +1450,17 @@ function applyLang(first) {
   $('#storyImgEl').alt = L(P.images[6].alt);
   $('#langBtn').textContent = t('langBtn'); $('#langBtn').setAttribute('aria-label', t('langAria'));
   $('#langBtn').lang = lang === 'ar' ? 'en' : 'ar';
-  $('#starsHero').innerHTML = stars(P.rating);
-  $('#starsRev').innerHTML = stars(P.rating, 18);
-  $('#revBased').textContent = t('basedOn', { n: P.reviewCount });
-  $('#stockText').textContent = t('stockLeft', { n: P.stock });
+  $('#starsHero').innerHTML = stars(P.rating, 15, 'hero');
+  $('#starsRev').innerHTML = stars(P.rating, 18, 'rev');
+  $('#soldPill').innerHTML = t('sold', { n: cnum('sold', 1000) });
+  $('#ratingVal').innerHTML = cnum('rate', P.rating, 1);
+  $('#ratingCount').innerHTML = cnum('reviews', P.reviewCount, 0, 1);
+  $('#revScore').innerHTML = cnum('rate2', P.rating, 1);
+  $('#revBased').innerHTML = t('basedOn', { n: cnum('reviews2', P.reviewCount, 0, 1) });
+  $('#stockText').innerHTML = t('stockLeft', { n: cnum('stock', P.stock, 0, P.stockScale) });  // counts down
+  $('#priceOff').innerHTML = `<span>-${cnum('off', pct(P.price, P.compareAt))}%</span>`;   // one span: the pill's gap would split it
+  $$('[data-bar]').forEach(el => el.innerHTML = `${cnum('bar' + el.dataset.bar, P.reviews.distribution[+el.dataset.bar])}%`);
+  $$('[data-reloff]').forEach(el => { const r = STORE.related[+el.dataset.reloff]; el.innerHTML = `<span>-${cnum('rel' + el.dataset.reloff, pct(r.price, r.compareAt))}%</span>`; });
   $$('[data-dim]').forEach(el => { const v = P.dimensions[el.dataset.dim]; el.textContent = v ? `${v} ${t('cm')}` : `${t('tbc')} ${t('cm')}`; });
   $('#dimsTable').innerHTML = [['height', 'height'], ['width', 'width'], ['depth', 'depth'], ['seatHeight', 'seatH']].map(([k, lab]) => { const v = P.dimensions[k]; return `<tr><th scope="row">${t(lab)}</th><td><span class="num">${v ?? '—'}</span> ${t('cm')}</td></tr>`; }).join('');
   $$('.price-cell').forEach(el => el.textContent = money(+el.dataset.price));
@@ -1704,8 +1723,27 @@ intro.fromTo(smile, { strokeDasharray: sl, strokeDashoffset: sl }, { strokeDasho
   .fromTo('.g-stage', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, .05)
   .fromTo('.g-slide:first-child img', { scale: 1.18 }, { scale: 1, duration: 1.8 }, .1)
   .fromTo('.intro-line > span', { yPercent: 110 }, { yPercent: 0, duration: 1.1, stagger: .09 }, .45)
-  .fromTo('.intro-fade', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .9, stagger: .06 }, .6)
-  .from('#stockBar', { scaleX: 0, duration: 1.2, ease: 'power3.out' }, 1);
+  .fromTo('.intro-fade', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .9, stagger: .06 }, .6);
+
+/* --- Animated numbers and stars --- */
+const countUp = (keys, trigger, delay = 0) => keys.filter(k => COUNT[k]).forEach(k =>
+  gsap.to(COUNT[k], { v: COUNT[k].to, duration: 1.8, delay, ease: 'power3.out', onUpdate: () => writeCount(k),
+    scrollTrigger: { trigger, start: 'top 90%', once: true } }));
+const popStars = (sel, trigger) => gsap.fromTo(`${sel} .star`, { scale: 0.2, opacity: 0, rotate: -35 },
+  { scale: 1, opacity: 1, rotate: 0, duration: 0.55, stagger: 0.16, ease: 'back.out(2.4)', scrollTrigger: { trigger, start: 'top 90%', once: true } });
+popStars('[data-stars="hero"]', '.rating');
+popStars('[data-stars="rev"]', '#revScore');
+countUp(['sold'], '#soldPill');
+countUp(['rate', 'reviews'], '.rating', 0.1);
+countUp(['off'], '#priceOff');
+countUp(['stock'], '#stockText');
+// stock bar starts full and shrinks with the count-down (400 → 80), green to orange, so it reads as "running out"
+gsap.fromTo('#stockBar', { width: '100%', backgroundColor: '#02A27A' },
+  { width: () => getComputedStyle($('#stockBar')).getPropertyValue('--w'), backgroundColor: '#FF6517', duration: 1.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#stockText', start: 'top 90%', once: true } });
+countUp(['rate2', 'reviews2'], '#revScore');
+countUp([0, 1, 2, 3, 4].map(i => 'bar' + i), '#revBars');
+STORE.related.forEach((_, i) => countUp(['rel' + i], '#relTrack'));
 
 /* --- Reveals --- */
 $$('[data-reveal]').forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } }));
