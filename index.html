@@ -85,6 +85,30 @@ const STORE = {
     }
   },
 
+  // CUSTOMER MOMENTS (تجارب العملاء): photos the store collects from customers, focused on the
+  // best sellers being marketed. In Zid Vitrin this is a theme-settings list (image, name, city,
+  // stars, date, quote, linked product).
+  // photo: an image URL, or (for the concept only) the index of a product image used as a stand-in.
+  // product: the id of the piece in the photo (this product's id, or one from `related`), so each card is shoppable.
+  // SAMPLE: the five entries below use the chair's own photos until the real customer photos arrive.
+  moments: [
+    { product: 'tuwaiq', photo: 1, pos: '42% 62%', stars: 5, date: '2026-09-14',
+      name: { ar: 'سارة', en: 'Sarah' }, city: { ar: 'الرياض', en: 'Riyadh' },
+      text: { ar: 'صار ركن القراءة أحلى زاوية في البيت، والنقشة أعطت المكان دفا.', en: 'My reading corner is now the best spot in the house. The pattern warms up the whole room.' } },
+    { product: 'tuwaiq', photo: 4, pos: '50% 45%', stars: 5, date: '2026-09-02',
+      name: { ar: 'خالد', en: 'Khalid' }, city: { ar: 'جدة', en: 'Jeddah' },
+      text: { ar: 'خشب المساند ثقيل وناعم، والقماش متين. القطعة على الطبيعة أفخم من صورها.', en: 'The wooden arms feel solid and smooth, and the fabric is sturdy. Even better in person.' } },
+    { product: 'tuwaiq', photo: 5, pos: '34% 74%', stars: 5, date: '2026-08-21',
+      name: { ar: 'منيرة', en: 'Munira' }, city: { ar: 'بريدة', en: 'Buraydah' },
+      text: { ar: 'وصلني مغلّف بعناية ومعه الهدية. شكرًا على الاهتمام بالتفاصيل.', en: 'Arrived carefully packed, with the gift. Thank you for the attention to detail.' } },
+    { product: 'tuwaiq', photo: 6, pos: '55% 40%', stars: 5, date: '2026-08-09',
+      name: { ar: 'تركي', en: 'Turki' }, city: { ar: 'الخبر', en: 'Khobar' },
+      text: { ar: 'ألوان النقشة أغنى من الصور، وكل من يزورنا يسأل عنه.', en: 'The colours are richer than in the photos, and every guest asks about it.' } },
+    { product: 'tuwaiq', photo: 3, pos: '50% 60%', stars: 4, date: '2026-07-28',
+      name: { ar: 'هيا', en: 'Haya' }, city: { ar: 'المدينة المنورة', en: 'Madinah' },
+      text: { ar: 'جلسته مريحة، ومقاسه مناسب لغرفتي الصغيرة.', en: 'Comfortable, and the size suits my small room.' } }
+  ],
+
   // "Complete the majlis" — neutral placeholders where no image is given
   related: [
     { id: 'boucle', shape: 'boucle', name: { ar: 'كرسي بوكليه أوف وايت', en: 'Bouclé Chair, Off-White' }, price: 995, compareAt: 1600, best: true },
@@ -113,6 +137,7 @@ const STORE = {
       returnsBody: 'تقدر ترجع المنتج خلال 7 أيام من الاستلام، بشرط يكون بحالته الأصلية ومعه تغليفه. تواصل معنا عبر واتساب ونرتّب الاستلام.',
       careBody: 'نظّف القماش بالمكنسة وفرشاة ناعمة مرة في الأسبوع. للبقع، استخدم قطعة قماش رطبة بدون فرك. امسح الخشب بقطعة جافة، وأبعد الكرسي عن الشمس المباشرة ليحافظ على ألوانه.',
       revEyebrow: 'آراء العملاء', revTitle: 'آراء عملائنا', basedOn: 'من {n} تقييم', sampleNote: 'عيّنة — تُستبدل بتقييمات زد الحقيقية', prev: 'السابق', next: 'التالي', verified: 'مشتري موثّق', stars: '{n} من 5 نجوم',
+      momEyebrow: 'تجارب العملاء', momTitle: 'من بيوت عملائنا', momLede: 'صور حقيقية أرسلها لنا عملاؤنا بعد ما وصلتهم قطعهم.', momAll: 'الكل', momShop: 'القطعة في الصورة', momSample: 'عيّنة: تُستبدل بصور العملاء الحقيقية', momShare: 'صوّرت قطعتك في بيتك؟ أرسلها لنا، ويمكن نعرضها هنا.', momShareBtn: 'شاركنا صورتك', momOpen: 'عرض صورة {name}', momAdd: 'أضف {name} إلى السلة', momDeck: 'صور العملاء', momFilter: 'تصفية حسب المنتج',
       relEyebrow: 'أكمل الجلسة', relTitle: 'كمّل مجلسك', bundleTitle: 'باقة مقترحة', bundleText: 'أضف طاولة التقديم TM بجانب كرسيك، ووفّر 50 ر.س إضافية.', bundleBtn: 'أضف الطاولة', quickAdd: 'إضافة سريعة: {name}', placeholder: 'صورة توضيحية',
       cartTitle: 'سلتك', close: 'إغلاق', addedMsg: 'تمت الإضافة. غزالنا جهّز الصندوق!', emptyTitle: 'سلتك فاضية', emptyBody: 'غزالنا ينتظر أول قطعة تختارها.', continue: 'كمّل التسوق', subtotal: 'المجموع', checkout: 'إتمام الطلب', freeShip: 'توصيلك مجاني', upsell: 'كمّل مجلسك', remove: 'حذف', add: 'أضف', taxNote: 'شامل الضريبة · التوصيل مجاني',
       wa: 'تواصل معنا عبر واتساب', tagline: 'صُنع بعناية، وصُمّم للحياة.', help: 'المساعدة', fShip: 'الشحن والتوصيل', fRet: 'سياسة الاسترجاع', fContact: 'تواصل معنا', about: 'عن ket', fStory: 'قصتنا', fShop: 'كل المنتجات', follow: 'تابعنا', pay: 'طرق الدفع', legal: 'الرقم الضريبي: — · السجل التجاري: —', rights: '© 2026 ket من تناسب. جميع الحقوق محفوظة.',
@@ -138,6 +163,7 @@ const STORE = {
       returnsBody: 'Return any item within 7 days of delivery, in its original condition and packaging. Message us on WhatsApp and we will arrange the pickup.',
       careBody: 'Vacuum the fabric weekly with a soft brush. Blot stains with a damp cloth; do not rub. Wipe the wood with a dry cloth, and keep the chair out of direct sun to protect the colours.',
       revEyebrow: 'Reviews', revTitle: 'What customers say', basedOn: 'from {n} reviews', sampleNote: 'Sample — replaced by live Zid reviews', prev: 'Previous', next: 'Next', verified: 'Verified buyer', stars: '{n} out of 5 stars',
+      momEyebrow: 'Customer moments', momTitle: 'Seen in their homes', momLede: 'Real photos our customers sent us once their pieces arrived.', momAll: 'All', momShop: 'In this photo', momSample: 'Sample: replaced by real customer photos', momShare: 'Got a photo of your piece at home? Send it over and it might appear here.', momShareBtn: 'Share your photo', momOpen: "View {name}'s photo", momAdd: 'Add {name} to cart', momDeck: 'Customer photos', momFilter: 'Filter by product',
       relEyebrow: 'Complete the look', relTitle: 'Complete the majlis', bundleTitle: 'Suggested bundle', bundleText: 'Add the TM service table beside it and save an extra 50 SAR.', bundleBtn: 'Add the table', quickAdd: 'Quick add: {name}', placeholder: 'Placeholder image',
       cartTitle: 'Your cart', close: 'Close', addedMsg: 'Added. Our gazelle has packed the box!', emptyTitle: 'Your cart is empty', emptyBody: 'Our gazelle is waiting for your first piece.', continue: 'Continue shopping', subtotal: 'Subtotal', checkout: 'Checkout', freeShip: 'Your delivery is free', upsell: 'Complete the majlis', remove: 'Remove', add: 'Add', taxNote: 'VAT included · Free delivery',
       wa: 'Chat with us on WhatsApp', tagline: 'Crafted with care, designed for life.', help: 'Help', fShip: 'Shipping & delivery', fRet: 'Returns policy', fContact: 'Contact us', about: 'About ket', fStory: 'Our story', fShop: 'All products', follow: 'Follow', pay: 'Payment', legal: 'VAT no.: — · CR no.: —', rights: '© 2026 ket by Tanasoub. All rights reserved.',
@@ -617,6 +643,60 @@ html.is-loading .intro-fade{ opacity:0; }
 html.lenis, html.lenis body{ height:auto; }
 .lenis.lenis-smooth{ scroll-behavior:auto!important; }
 .lenis.lenis-stopped{ overflow:hidden; }
+
+/* ===================== CUSTOMER MOMENTS (fanned photo deck) ===================== */
+.mom{ overflow-x:clip; }
+.mom__lede{ margin-top:var(--s4); max-width:52ch; font-size:var(--t-md); line-height:1.6; }
+.mom__bar{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:var(--s5); }
+.mom__bar .sample-note{ margin-top:0; }
+.mom__chips{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; max-width:100%; }
+.mom__chips::-webkit-scrollbar{ display:none; }
+.mom__chip{ height:40px; padding-inline:18px; border-radius:var(--r-pill); border:1px solid var(--g200); font-size:14px; font-weight:500; white-space:nowrap; transition:background-color .25s, color .25s, border-color .25s; }
+.mom__chip:hover{ border-color:var(--black); }
+.mom__chip[aria-pressed="true"]{ background:var(--black); color:var(--white); border-color:var(--black); }
+
+.mom__deck{ --cw:min(74vw, 340px); --sp:calc(var(--cw) * .56); --d:1; position:relative; display:grid; justify-items:center; align-items:start; padding-block:12px 36px; touch-action:pan-y; -webkit-user-select:none; user-select:none; border-radius:var(--r-card); }
+html[dir="rtl"] .mom__deck{ --d:-1; }
+@media (min-width:768px){ .mom__deck{ --cw:360px; --sp:calc(var(--cw) * .72); } }
+@media (min-width:1200px){ .mom__deck{ --cw:390px; --sp:calc(var(--cw) * .8); } }
+.mcard{ --o:0; --ao:0; grid-area:1 / 1; width:var(--cw); background:var(--white); border-radius:24px; padding:10px; cursor:pointer;
+  box-shadow:0 1px 2px rgba(0,0,0,.05), 0 24px 48px -22px rgba(0,0,0,.28);
+  transform:translateX(calc(var(--o) * var(--sp) * var(--d))) translateY(calc(var(--ao) * 22px)) rotate(calc(var(--o) * var(--d) * 4deg)) scale(calc(1 - var(--ao) * .1));
+  transition:transform .8s var(--ease), opacity .5s var(--ease); transition-delay:calc(var(--ao) * 60ms); }
+.mcard.is-active{ cursor:auto; }
+.mcard.is-hidden{ opacity:0; pointer-events:none; }
+.mom__deck.is-stacked .mcard{ transform:translateY(40px) rotate(calc(var(--o) * var(--d) * 1.5deg)) scale(.9); }
+.mcard__media{ position:relative; display:block; width:100%; aspect-ratio:4 / 5; border-radius:16px; overflow:hidden; background:var(--g100); }
+.mcard:not(.is-active) .mcard__media{ pointer-events:none; }
+.mcard__media img{ width:100%; height:100%; object-fit:cover; object-position:var(--pos, 50% 50%); transition:transform 1s var(--ease); }
+.mcard.is-active .mcard__media:hover img{ transform:scale(1.04); }
+.mcard__zoom{ position:absolute; top:10px; inset-inline-end:10px; width:38px; height:38px; display:grid; place-items:center; border-radius:50%; background:rgba(255,255,255,.92); opacity:0; transition:opacity .4s; }
+.mcard.is-active .mcard__zoom{ opacity:1; }
+.mcard__body{ display:grid; gap:12px; padding:14px 6px 4px; transition:opacity .4s var(--ease); }
+.mcard:not(.is-active) .mcard__body{ opacity:0; }
+.mcard__who{ display:grid; grid-template-columns:44px 1fr auto; align-items:center; gap:10px; }
+.mcard__av{ width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font-weight:700; font-size:17px; background:var(--av, var(--blush)); }
+.mcard__who strong{ display:block; font-size:15px; line-height:1.3; }
+.mcard__meta{ display:block; font-size:12.5px; color:var(--ink-2); }
+.mcard__quote{ font-size:15.5px; line-height:1.65; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; min-height:calc(1.65em * 2); }
+.mcard__shop{ display:grid; grid-template-columns:44px 1fr 40px; align-items:center; gap:10px; background:var(--g100); border-radius:14px; padding:8px; }
+.mcard__thumb{ width:44px; height:44px; border-radius:10px; overflow:hidden; background:var(--white); display:grid; place-items:center; }
+.mcard__thumb img{ width:100%; height:100%; object-fit:cover; }
+.mcard__thumb .ph{ width:80%; height:80%; }
+.mcard__kicker{ display:block; font-size:11.5px; color:var(--ink-2); line-height:1.3; }
+.mcard__pname{ display:block; font-size:13.5px; font-weight:600; line-height:1.35; }
+.mcard__price{ font:500 12.5px var(--f-latin); }
+.mcard__add{ width:40px; height:40px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .3s var(--ease), background-color .3s; }
+.mcard__add:hover{ transform:scale(1.08); }
+.mcard__add.is-done{ background:var(--green); }
+
+.mom__ctrl{ display:flex; justify-content:center; align-items:center; gap:18px; }
+.mom__nav{ width:48px; height:48px; border:1px solid var(--black); border-radius:50%; display:grid; place-items:center; transition:background-color .25s, color .25s; }
+.mom__nav:hover{ background:var(--black); color:var(--white); }
+.mom__count{ font:500 14px var(--f-latin); min-width:64px; text-align:center; }
+.mom__share{ margin-top:var(--s7); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; border-top:1px solid var(--g200); padding-top:var(--s5); }
+.mom__share p{ font-size:var(--t-md); max-width:46ch; }
+@media (prefers-reduced-motion: reduce){ .mcard, .mcard__media img{ transition:none; } }
 </style>
 </head>
 
@@ -973,13 +1053,40 @@ html.lenis, html.lenis body{ height:auto; }
 </section>
 
 <!-- =====================================================================
-     SECTION 10 · COMPLETE THE MAJLIS   → Vitrin: related products ({{ product.related }})
+     SECTION 10 · CUSTOMER MOMENTS (تجارب العملاء)   → Vitrin: theme-settings list of
+     customer photos (image, name, city, stars, quote, linked product). Rendered by JS.
+     ===================================================================== -->
+<section class="section mom" id="moments" aria-labelledby="momTitle" style="padding-top:0">
+  <div class="container">
+    <div class="sec-head" data-reveal="">
+      <p class="eyebrow"><span class="idx">08</span><span data-t="momEyebrow">تجارب العملاء</span></p>
+      <div><h2 class="h-xl" id="momTitle" data-t="momTitle">من بيوت عملائنا</h2><p class="mom__lede muted" data-t="momLede">صور حقيقية أرسلها لنا عملاؤنا بعد ما وصلتهم قطعهم.</p></div>
+    </div>
+    <div class="mom__bar" data-reveal="">
+      <div class="mom__chips" id="momChips" role="group" data-t-aria="momFilter" aria-label="تصفية حسب المنتج"></div>
+      <span class="pill pill--yellow sample-note" data-t="momSample">عيّنة: تُستبدل بصور العملاء الحقيقية</span>
+    </div>
+    <div class="mom__deck" id="momDeck" tabindex="0" role="region" aria-roledescription="carousel" data-t-aria="momDeck" aria-label="صور العملاء"></div>
+    <div class="mom__ctrl">
+      <button class="mom__nav" type="button" id="momPrev" data-t-aria="prev" aria-label="السابق"></button>
+      <span class="mom__count" id="momCount" aria-live="polite"></span>
+      <button class="mom__nav" type="button" id="momNext" data-t-aria="next" aria-label="التالي"></button>
+    </div>
+    <div class="mom__share">
+      <p data-t="momShare">صوّرت قطعتك في بيتك؟ أرسلها لنا، ويمكن نعرضها هنا.</p>
+      <a class="btn btn-outline" id="momShareBtn" href="#" target="_blank" rel="noopener"><span class="btn-label" data-t="momShareBtn">شاركنا صورتك</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     SECTION 11 · COMPLETE THE MAJLIS   → Vitrin: related products ({{ product.related }})
      + Zid "bundle offers" / "buy X get Y" for the nudge
      ===================================================================== -->
 <section class="section" id="related" aria-labelledby="relTitle" style="padding-top:0">
   <div class="container">
     <div class="sec-head" data-reveal="">
-      <p class="eyebrow"><span class="idx">08</span><span data-t="relEyebrow">أكمل الجلسة</span></p>
+      <p class="eyebrow"><span class="idx">09</span><span data-t="relEyebrow">أكمل الجلسة</span></p>
       <h2 class="h-xl" id="relTitle" data-t="relTitle">كمّل مجلسك</h2>
     </div>
     <div class="bundle" data-reveal="">
@@ -1444,13 +1551,15 @@ track.addEventListener('click', e => { const s = e.target.closest('.g-slide'); i
 $('#gZoom').onclick = () => openLB(gi);
 
 const lb = $('#lightbox'), lbImg = $('#lbImg'); let li = 0, lastFocus = null;
+let lbList = null; // null = product gallery; otherwise [{src, alt}] (customer photos)
+const lbItems = () => lbList || P.images.map(im => ({ src: im.src, alt: L(im.alt) }));
 function setLB(i) {
-  const n = P.images.length; li = (i + n) % n;
-  lbImg.classList.remove('is-zoomed'); lbImg.src = P.images[li].src; lbImg.alt = L(P.images[li].alt);
+  const list = lbItems(), n = list.length; li = (i + n) % n;
+  lbImg.classList.remove('is-zoomed'); lbImg.src = list[li].src; lbImg.alt = list[li].alt;
   $('#lbCount').textContent = `${li + 1} / ${n}`;
 }
-function openLB(i) { lastFocus = document.activeElement; setLB(i); lb.classList.add('is-open'); lb.setAttribute('aria-hidden', 'false'); lenis?.stop(); $('#lbClose').focus(); }
-function closeLB() { lb.classList.remove('is-open'); lb.setAttribute('aria-hidden', 'true'); lenis?.start(); gotoSlide(li, false); lastFocus?.focus(); }
+function openLB(i, list = null) { lbList = list; lastFocus = document.activeElement; setLB(i); lb.classList.add('is-open'); lb.setAttribute('aria-hidden', 'false'); lenis?.stop(); $('#lbClose').focus(); }
+function closeLB() { lb.classList.remove('is-open'); lb.setAttribute('aria-hidden', 'true'); lenis?.start(); if (!lbList) gotoSlide(li, false); lbList = null; lastFocus?.focus(); }
 $('#lbClose').onclick = closeLB; $('#lbPrev').onclick = () => setLB(li - 1); $('#lbNext').onclick = () => setLB(li + 1);
 const setOrigin = e => { const r = lbImg.getBoundingClientRect(); lbImg.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`; };
 let down = null;
@@ -1592,6 +1701,111 @@ $('#bundleBtn').onclick = e => {
   fly($('#bundleThumbs'), null, () => { bump(); justAdded = true; renderCart(); openDrawer(); });
 };
 
+
+/* =================================================================
+   CUSTOMER MOMENTS: fanned, swipeable, shoppable photo deck
+   ================================================================= */
+const MOM = STORE.moments || [];
+const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const momPhoto = m => typeof m.photo === 'number' ? ($$('.g-slide img')[m.photo]?.src || P.images[m.photo].src) : m.photo;
+const momProduct = id => id === P.id
+  ? { id, name: P.name, price: P.price, img: $$('.g-slide img')[0]?.src || P.images[0].src }
+  : (r => r && { id, name: r.name, price: r.price, shape: r.shape, img: r.img })(STORE.related.find(r => r.id === id));
+const AV = ['var(--blush)', 'var(--mint)', 'var(--lavender)', 'var(--yellow)', 'var(--peri)'];
+const deck = $('#momDeck');
+let mf = 'all', ma = 0, momList = [];
+const momDate = d => d ? new Date(d + 'T12:00:00').toLocaleDateString(lang === 'ar' ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+
+function renderMoments() {
+  if (!deck) return;
+  const sec = $('#moments');
+  if (!MOM.length) { sec.hidden = true; return; }
+  // product filter chips, shown only when the photos cover more than one product
+  const ids = [...new Set(MOM.map(m => m.product).filter(Boolean))];
+  if (!ids.includes(mf)) mf = 'all';
+  $('#momChips').innerHTML = ids.length > 1 ? ['all', ...ids].map(id => {
+    const p = id === 'all' ? null : momProduct(id);
+    return `<button class="mom__chip" type="button" data-mf="${esc(id)}" aria-pressed="${id === mf}">${esc(p ? L(p.name) : t('momAll'))}</button>`;
+  }).join('') : '';
+  momList = MOM.map((m, k) => ({ m, k })).filter(x => mf === 'all' || x.m.product === mf);
+  deck.innerHTML = momList.map(({ m, k }, i) => {
+    const p = momProduct(m.product), name = L(m.name);
+    return `
+    <article class="mcard" data-mi="${i}" role="group" aria-roledescription="slide" aria-label="${esc(t('slide', { i: i + 1, n: momList.length }))}">
+      <button class="mcard__media" type="button" data-mzoom="${i}" aria-label="${esc(t('momOpen', { name }))}" style="--pos:${esc(m.pos || '50% 50%')}">
+        <img src="${esc(momPhoto(m))}" alt="${esc(t('momOpen', { name }))}" loading="lazy" decoding="async" draggable="false">
+        <span class="mcard__zoom">${icon('zoom', 18)}</span>
+      </button>
+      <div class="mcard__body">
+        <div class="mcard__who">
+          <span class="mcard__av" style="--av:${AV[k % AV.length]}" aria-hidden="true">${esc([...name][0] || '')}</span>
+          <div><strong>${esc(name)}</strong><span class="mcard__meta">${esc(L(m.city))}${m.date ? ` · <span class="num">${esc(momDate(m.date))}</span>` : ''}</span></div>
+          ${stars(m.stars || 5, 14)}
+        </div>
+        <p class="mcard__quote">${esc(L(m.text))}</p>
+        ${p ? `<div class="mcard__shop">
+          <span class="mcard__thumb">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : ph(p.shape)}</span>
+          <span><span class="mcard__kicker">${esc(t('momShop'))}</span><span class="mcard__pname">${esc(L(p.name))}</span><span class="mcard__price">${esc(money(p.price))}</span></span>
+          <button class="mcard__add" type="button" data-madd="${esc(p.id)}" aria-label="${esc(t('momAdd', { name: L(p.name) }))}">${icon('plus', 20)}</button>
+        </div>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+  ma = Math.min(ma, momList.length - 1);
+  $('#momPrev').innerHTML = icon('chev', 20); $('#momPrev').firstChild.style.transform = 'scaleX(-1)';
+  $('#momNext').innerHTML = icon('chev', 20);
+  $('#momShareBtn').href = `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(t('momShare'))}`;
+  layoutMoments();
+}
+function layoutMoments() {
+  const n = momList.length, wide = matchMedia('(min-width:900px)').matches;
+  $$('.mcard', deck).forEach((c, i) => {
+    let o = i - ma; if (o > n / 2) o -= n; if (o < -n / 2) o += n; // circular: the fan always has both sides
+    const ao = Math.abs(o);
+    c.style.setProperty('--o', o); c.style.setProperty('--ao', ao);
+    c.style.zIndex = 20 - ao;
+    c.classList.toggle('is-active', o === 0);
+    c.classList.toggle('is-hidden', ao > (wide ? 2 : 1));
+    c.setAttribute('aria-hidden', o !== 0);
+    $$('button', c).forEach(b => b.tabIndex = o === 0 ? 0 : -1);
+  });
+  $('#momCount').textContent = `${String(ma + 1).padStart(2, '0')} / ${String(n).padStart(2, '0')}`;
+  const single = n < 2; $('#momPrev').hidden = single; $('#momNext').hidden = single;
+}
+const momGo = i => { const n = momList.length; if (!n) return; ma = (i + n) % n; layoutMoments(); };
+$('#momPrev').onclick = () => momGo(ma - 1);
+$('#momNext').onclick = () => momGo(ma + 1);
+$('#momChips').addEventListener('click', e => { const b = e.target.closest('[data-mf]'); if (!b || b.dataset.mf === mf) return; mf = b.dataset.mf; ma = 0; renderMoments(); });
+deck.addEventListener('keydown', e => {
+  const fwd = root.dir === 'rtl' ? 'ArrowLeft' : 'ArrowRight', back = root.dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+  if (e.key === fwd) { e.preventDefault(); momGo(ma + 1); } else if (e.key === back) { e.preventDefault(); momGo(ma - 1); }
+});
+// swipe: next card sits on the reading-forward side (left in Arabic, right in English)
+let mDown = null, mDragged = false;
+deck.addEventListener('pointerdown', e => { mDown = { x: e.clientX, y: e.clientY }; mDragged = false; });
+deck.addEventListener('pointerup', e => {
+  if (!mDown) return; const dx = e.clientX - mDown.x, dy = e.clientY - mDown.y; mDown = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { mDragged = true; momGo(ma + (dx < 0 ? 1 : -1) * (root.dir === 'rtl' ? -1 : 1)); }
+});
+deck.addEventListener('pointercancel', () => { mDown = null; });
+deck.addEventListener('click', e => {
+  if (mDragged) { mDragged = false; return; }
+  const add = e.target.closest('[data-madd]');
+  if (add) {
+    const p = momProduct(add.dataset.madd);
+    addToCart(p.id);
+    fly(add.closest('.mcard__shop').querySelector('.mcard__thumb'), p.img || null, () => { bump(); toast(t('toastAdded')); });
+    add.classList.add('is-done'); add.innerHTML = icon('check', 20);
+    setTimeout(() => { add.classList.remove('is-done'); add.innerHTML = icon('plus', 20); }, 1800);
+    return;
+  }
+  const card = e.target.closest('.mcard'); if (!card) return;
+  const i = +card.dataset.mi;
+  if (i !== ma) { momGo(i); return; }
+  if (e.target.closest('[data-mzoom]')) openLB(i, momList.map(({ m }) => ({ src: momPhoto(m), alt: t('momOpen', { name: L(m.name) }) })));
+});
+let momRT; addEventListener('resize', () => { clearTimeout(momRT); momRT = setTimeout(layoutMoments, 120); }, { passive: true });
+
 /* =================================================================
    MISC UI: header, sticky bar, accordions, sliders, toasts, AR, lang
    ================================================================= */
@@ -1620,7 +1834,7 @@ document.addEventListener('click', e => {
 let toastT; function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('is-on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('is-on'), 2800); }
 $$('[data-toast]').forEach(b => b.addEventListener('click', () => toast(t(b.dataset.toast))));
 $('#arBtn').onclick = () => toast(t('toastAR'));
-$('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(false); };
+$('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(false); renderMoments(); };
 
 // magnetic primary button (fine pointers only)
 if (G && finePointer) $$('.magnetic').forEach(btn => {
@@ -1632,7 +1846,7 @@ if (G && finePointer) $$('.magnetic').forEach(btn => {
    BOOT + MOTION
    ================================================================= */
 let lenis = null;
-if (!root.hasAttribute('data-built')) build(); root.setAttribute('data-built', ''); applyLang(true); renderCart();
+if (!root.hasAttribute('data-built')) build(); root.setAttribute('data-built', ''); applyLang(true); renderMoments(); renderCart();
 
 if (!G) { root.classList.remove('is-loading'); return; }
 gsap.registerPlugin(ScrollTrigger);
@@ -1680,6 +1894,7 @@ $$('[data-reveal]').forEach(el => gsap.from(el, { y: 40, opacity: 0, duration: 1
 ['#features', '#relTrack'].forEach(s => gsap.from(`${s} [data-reveal-item]`, { y: 50, opacity: 0, duration: 1, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 85%', once: true } }));
 gsap.from('.rcard', { x: () => 60 * (root.dir === 'rtl' ? -1 : 1), opacity: 0, duration: 1, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '#revTrack', start: 'top 85%', once: true } });
 gsap.from('.rev__bar b', { scaleX: 0, transformOrigin: () => root.dir === 'rtl' ? 'right' : 'left', duration: 1.2, stagger: .07, ease: 'expo.out', scrollTrigger: { trigger: '#revBars', start: 'top 85%', once: true } });
+if (deck && MOM.length) { deck.classList.add('is-stacked'); ScrollTrigger.create({ trigger: deck, start: 'top 80%', once: true, onEnter: () => deck.classList.remove('is-stacked') }); }
 $$('.sec-head .h-xl').forEach(h => gsap.from(h, { clipPath: 'inset(0 0 100% 0)', y: 30, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: h, start: 'top 90%', once: true } }));
 
 /* --- Feature crops: scroll zoom --- */
