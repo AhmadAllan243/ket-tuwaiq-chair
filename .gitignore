@@ -1,0 +1,9 @@
+# build outputs and local tooling (the site at the repo root is the only build output committed)
+.DS_Store
+src/ket-hero/node_modules/
+src/ket-hero/dist/
+src/ket-hero/assets-src/chair-fixed.glb
+src/site-preview/
+src/ket-hero.js
+src/models/
+src/ket-tuwaiq-chair.html

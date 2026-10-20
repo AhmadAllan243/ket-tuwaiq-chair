@@ -1,0 +1,12 @@
+const { chromium } = require('playwright-core')
+;(async () => {
+  const b = await chromium.launch({ channel: 'chrome', args: ['--enable-unsafe-swiftshader', '--use-angle=swiftshader'] })
+  const p = await (await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage()
+  const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()))
+  await p.goto('https://ahmadallan243.github.io/ket-tuwaiq-chair/?v=' + Date.now(), { waitUntil: 'networkidle' })
+  await p.waitForFunction(() => window.__tuwaiqHero, null, { timeout: 40000 })
+  const parts = await p.evaluate(() => Object.keys(window.__tuwaiqHero.rest))
+  await p.evaluate(() => scrollTo(0, innerHeight * 2.1)); await p.waitForTimeout(2500)
+  await p.screenshot({ path: process.argv[2] })
+  console.log(JSON.stringify({ parts, errs })); await b.close()
+})()
