@@ -1,0 +1,76 @@
+{
+ "hey-green": {
+  "w": 710,
+  "h": 945,
+  "layers": [
+   "spark",
+   "wave",
+   "arm",
+   "paw",
+   "box",
+   "body"
+  ],
+  "pivots": {
+   "arm": [
+    27.9,
+    59.5
+   ],
+   "pop": [
+    49.3,
+    59.5
+   ]
+  }
+ },
+ "hey-yellow": {
+  "w": 710,
+  "h": 945,
+  "layers": [
+   "spark",
+   "wave",
+   "arm",
+   "paw",
+   "box",
+   "body"
+  ],
+  "pivots": {
+   "arm": [
+    27.9,
+    59.5
+   ],
+   "pop": [
+    49.3,
+    59.5
+   ]
+  }
+ },
+ "hey-pink-paws": {
+  "w": 710,
+  "h": 945,
+  "layers": [
+   "spark",
+   "paw",
+   "box",
+   "body"
+  ],
+  "pivots": {
+   "pop": [
+    49.3,
+    59.5
+   ]
+  }
+ },
+ "sleep-cloud": {
+  "w": 1100,
+  "h": 910,
+  "layers": [
+   "zzz",
+   "body"
+  ],
+  "pivots": {
+   "breathe": [
+    50.0,
+    95.6
+   ]
+  }
+ }
+}
