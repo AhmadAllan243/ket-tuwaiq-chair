@@ -281,10 +281,12 @@ html[lang="ar"] .btn{ letter-spacing:0; font-size:16px; }
 .icon-btn{ display:inline-grid; place-items:center; width:44px; height:44px; border-radius:var(--r-pill); transition:background-color .25s; }
 .icon-btn:hover{ background:var(--g100); }
 
-/* Prototype label */
-.concept{ background:var(--black); color:var(--white); font-size:12px; line-height:1.4; text-align:center; padding:7px 16px; }
 /* ===================== 1. ANNOUNCEMENT ===================== */
-.announce{ background:var(--blush); height:36px; overflow:hidden; display:flex; align-items:center; font-size:13px; font-weight:500; }
+/* the hero starts at the top of the page, under the announcement bar and header (as it does while pinned),
+   so the whole first screen — chair and wording — fits on load */
+#ket-hero{ margin-top:calc(-36px - var(--header-h) - 1px); }
+#ket-hero .kh-canvas{ top:calc(36px + var(--header-h))!important; height:calc(100% - 36px - var(--header-h))!important; }   /* 3D pieces stay clear of the header */
+.announce{ position:relative; z-index:61; background:var(--blush); height:36px; overflow:hidden; display:flex; align-items:center; font-size:13px; font-weight:500; }
 .marquee{ display:flex; width:max-content; animation:marquee 32s linear infinite; }
 .marquee__group{ display:flex; align-items:center; gap:28px; padding-inline-end:28px; white-space:nowrap; }
 .marquee__group span{ display:inline-flex; align-items:center; gap:28px; }
@@ -834,7 +836,6 @@ html[dir="rtl"] .mom__deck{ --d:-1; }
 </head>
 
 <body>
-<div class="concept" role="note"><span data-t="concept">نموذج تصميم مقترح لصفحة المنتج — ليس المتجر الفعلي</span></div>
 <a class="skip" href="#product" data-t="skip">تخطَّ إلى المنتج</a>
 
 <!-- =====================================================================
