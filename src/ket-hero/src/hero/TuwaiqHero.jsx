@@ -296,6 +296,14 @@ export default function TuwaiqHero({ fallbackHTML = '' }) {
   const [, setLayoutTick] = useState(0)
   const prog = useRef({ intro: 0, labels: 1, base: 0, cushion: 0, back: 0, hitBase: 0, hitCushion: 0, hitBack: 0, turn: 0, cam: 0, ui: 0 })
   const [webgl] = useState(hasWebGL)
+  // stop rendering the 3D scene once it is off screen, so it does not cost frames while scrolling the page
+  const [onScreen, setOnScreen] = useState(true)
+  useEffect(() => {
+    if (!section.current || !('IntersectionObserver' in window)) return
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), { rootMargin: '200px 0px' })
+    io.observe(section.current)
+    return () => io.disconnect()
+  }, [])
 
   useLayoutEffect(() => {
     const p = prog.current
@@ -321,7 +329,7 @@ export default function TuwaiqHero({ fallbackHTML = '' }) {
         onUpdate: applyUI,
         scrollTrigger: {
           trigger: section.current, start: 'top top', end: '+=280%',
-          pin: true, pinSpacing: true, scrub: 1.2, anticipatePin: 1, invalidateOnRefresh: true,
+          pin: true, pinSpacing: true, scrub: 0.5, anticipatePin: 1, invalidateOnRefresh: true,
           refreshPriority: 10, // measure first, so pins further down (the story) include this pin's scroll length
         },
       })
@@ -351,7 +359,7 @@ export default function TuwaiqHero({ fallbackHTML = '' }) {
     <section ref={section} className="kh" aria-label={t.title} dir={dir} lang={lang}>
       <style>{HERO_CSS}</style>
       {webgl ? (
-        <Canvas className="kh-canvas" shadows dpr={Math.min(window.devicePixelRatio || 1, 2)}
+        <Canvas className="kh-canvas" shadows frameloop={onScreen ? 'always' : 'never'} dpr={Math.min(window.devicePixelRatio || 1, 1.75)}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance', toneMapping: THREE.ACESFilmicToneMapping, outputColorSpace: THREE.SRGBColorSpace }}
           camera={{ fov: 30, near: 0.1, far: 80, position: [0, 0.9, 12] }}>
           <LayoutSync layout={layout} dir={dir} onChange={setLayoutTick} />
