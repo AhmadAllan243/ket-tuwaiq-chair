@@ -43,11 +43,12 @@ function KetGazelle(A, opts = {}) {
     .kg__say a{ display:inline-flex; margin-top:8px; height:32px; align-items:center; padding-inline:14px; border-radius:99px; background:#111; color:#fff; text-decoration:none; font:600 13px 'IBM Plex Sans Arabic',sans-serif; text-shadow:none; }
     .kg__pole{ position:fixed; top:0; bottom:0; z-index:56; width:var(--kg-pw,3px); background:#111; transform-origin:50% 0; transform:scaleY(0); pointer-events:none; }
     body.bar-on .kg--walk{ bottom:calc(66px + env(safe-area-inset-bottom)); }
+    .wa{ transition:opacity .3s; } body.kg-hi .wa{ opacity:0; pointer-events:none; }
   </style>`);
 
   let live = null;   // the one rig on screen
   const busy = () => !!live;
-  function stop() { if (!live) return; cancelAnimationFrame(live.raf); live.nodes.forEach(n => n.remove()); const d = live.done; live = null; d && d(); }
+  function stop() { document.body.classList.remove('kg-hi'); if (!live) return; cancelAnimationFrame(live.raf); live.nodes.forEach(n => n.remove()); const d = live.done; live = null; d && d(); }
   function run(nodes, dur, frame, done) {
     const t0 = performance.now();
     live = { nodes, raf: 0, done };
@@ -110,6 +111,7 @@ function KetGazelle(A, opts = {}) {
     const pole = document.createElement('div'); pole.className = 'kg__pole';
     pole.style.cssText = `left:${poleX - 1.5}px; --kg-pw:${Math.max(2.5, A.pole_w * s)}px`;
     document.body.append(pole, box);
+    document.body.classList.add('kg-hi');   // the WhatsApp button steps aside while it plays
 
     const q = c => svg.querySelector(c);
     const slide = q('.kg-slide'), head = q('.kg-head'), earL = q('.kg-earL'), earR = q('.kg-earR'), pawT = q('.kg-pawT'), pawB = q('.kg-pawB');
@@ -171,10 +173,20 @@ function KetGazelle(A, opts = {}) {
   const HEAD_PATCH_FILL = '<path fill="#fff" d="M280 470C248 516 240 602 258 654C270 690 292 716 322 736L344 600L330 470Z"/>';
   const HEAD_PATCH_LINE = '<path fill="none" stroke="#111" stroke-width="17" stroke-linecap="round" d="M281 478C252 520 244 600 262 652C274 688 296 714 324 734"/>';
 
+  // the delivery box it pushes in front of it: black and white, with the pink outline round the box
+  const DBOX = `<g class="kg-dbox">
+      <path d="M40 1012H252V1236H40Z M40 1012L66 968H226L252 1012" fill="none" stroke="#FC98D3" stroke-width="58" stroke-linejoin="round"/>
+      <path d="M40 1012L4 950L52 930L80 1004Z M252 1012L290 952L242 930L212 1004Z" fill="#fff" stroke="#111" stroke-width="15" stroke-linejoin="round"/>
+      <path d="M40 1012L66 968H226L252 1012Z" fill="#f2f2f2" stroke="#111" stroke-width="15" stroke-linejoin="round"/>
+      <path d="M40 1012H252V1236H40Z" fill="#fff" stroke="#111" stroke-width="16" stroke-linejoin="round"/>
+      <path d="M104 1106Q146 1158 188 1106" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+    </g>`;
+
   function walk(kind = 'walk', line = '', small = '', link = null) {
     stop();
-    const mobile = innerWidth < 640, W = mobile ? 150 : 196;
-    const VB = { x: 250, y: 60, w: 780, h: GROUND - 60 + 12 };
+    const deliver = kind === 'deliver';
+    const VB = deliver ? { x: 0, y: 60, w: 1030, h: GROUND - 60 + 12 } : { x: 250, y: 60, w: 780, h: GROUND - 60 + 12 };
+    const mobile = innerWidth < 640, W = (mobile ? 150 : 196) * VB.w / 780;   // same gazelle size, wider frame for the box
     const s = W / VB.w;
     // walk in from the side away from the WhatsApp button (inline-start): left in Arabic, right in English
     const fromLeft = document.documentElement.dir === 'rtl';
@@ -190,6 +202,7 @@ function KetGazelle(A, opts = {}) {
         <g class="kg-head">${part('earL', 'kg-earL')}${part('earR', 'kg-earR')}${HEAD_PATCH_FILL}${part('head')}${HEAD_PATCH_LINE}${face()}</g>
       </g>
       ${leg('fn')}${leg('bn')}
+      ${deliver ? DBOX : ''}
     </g></g>`;
     box.appendChild(svg);
     const say = document.createElement('div'); say.className = 'kg__say'; say.setAttribute('role', 'status');
@@ -209,7 +222,7 @@ function KetGazelle(A, opts = {}) {
     // text sits above the head; mirror-aware horizontal position
     say.style.cssText = `bottom:${(GROUND - 95) * s}px; ${fromLeft ? 'left' : 'right'}:${W * .12}px; transform-origin:${fromLeft ? '20%' : '80%'} 100%`;
 
-    const T = { walk: { inEnd: 1.9, talk: [2.4, 2.2], leave: 6.4, end: 8.4 }, hop: { inEnd: 2.1, talk: [2.6, 2.2], leave: 6.6, end: 8.6 }, sit: { inEnd: 1.9, talk: [3.1, 2.2], leave: 7.0, end: 9.0 } }[kind];
+    const T = { deliver: { inEnd: 2.2, talk: [2.7, 2.2], leave: 6.6, end: 8.6 }, walk: { inEnd: 1.9, talk: [2.4, 2.2], leave: 6.4, end: 8.4 }, hop: { inEnd: 2.1, talk: [2.6, 2.2], leave: 6.6, end: 8.6 }, sit: { inEnd: 1.9, talk: [3.1, 2.2], leave: 7.0, end: 9.0 } }[kind];
     if (reduce) {
       setFace(svg, { open: 1, mouth: .38 }); Object.keys(HIPS).forEach(k => setLeg(k, 0));
       say.style.opacity = 1; run([box], 6, () => {}); return;
@@ -266,6 +279,8 @@ function KetGazelle(A, opts = {}) {
       // ears flop with the bounce and flick while it listens
       const ek = moving ? Math.sin(ph * 2 - .8) : Math.sin(tm * 9) * Math.exp(-((tm - T.inEnd) % 2.4) * 2.5);
       tf(earL, 0, 0, 9 * ek, ...EARL); tf(earR, 0, 0, -9 * ek, ...EARR);
+      // the box it pushes wobbles a little with every step
+      if (deliver) tf(q('.kg-dbox'), 0, moving ? -4 * Math.abs(Math.sin(ph)) : 0, moving ? 1.6 * Math.sin(ph) : 0, 146, 1236);
       // tail wags faster when it is happy
       tf(tail, 0, 0, (talking ? 16 : 8) * Math.sin(tm * (talking ? 16 : 7)), 944, 900);
       // face

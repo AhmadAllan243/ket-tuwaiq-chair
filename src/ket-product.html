@@ -73,7 +73,8 @@ const STORE = {
       { key: 'details', open: true },
       { key: 'shipping' },
       { key: 'returns' },
-      { key: 'care' }
+      { key: 'care' },
+      { key: 'reviews' }
     ],
     // SAMPLE — replaced by live Zid reviews
     reviews: {
@@ -144,7 +145,7 @@ const STORE = {
       dimEyebrow: 'المقاسات', dimTitle: 'مقاس مدروس', front: 'من الأمام', side: 'من الجانب', height: 'الارتفاع', width: 'العرض', depth: 'العمق', seatH: 'ارتفاع المقعد', cm: 'سم', tbc: '—',
       fitTitle: 'هل يناسب مساحتك؟', fitBody: 'قِس المكان قبل الطلب، واترك 60 سم على الأقل أمام الكرسي لراحة الحركة.',
       infoEyebrow: 'معلومات المنتج', infoTitle: 'كل ما تحتاج تعرفه',
-      accDetails: 'التفاصيل', accShipping: 'الشحن والتوصيل', accReturns: 'الاسترجاع', accCare: 'العناية بالمنتج',
+      accDetails: 'التفاصيل', accShipping: 'الشحن والتوصيل', accReturns: 'الاسترجاع', accCare: 'العناية بالمنتج', accReviews: 'التقييمات', allReviews: 'شوف كل التقييمات',
       shipBody: 'التوصيل مجاني لكل مدن المملكة. نجهّز طلبك ونغلّفه بعناية، ونرسل لك رابط التتبع أول ما يطلع مع شركة الشحن.', shipNote: 'غزالنا جهّز الصندوق.',
       returnsBody: 'تقدر تستبدل المنتج أو ترجعه خلال 24 ساعة من الاستلام، بشرط يكون بحالته الأصلية ومعه تغليفه. تواصل معنا عبر واتساب ونرتّب الاستلام.',
       careBody: 'نظّف القماش بالمكنسة وفرشاة ناعمة مرة في الأسبوع. للبقع، استخدم قطعة قماش رطبة بدون فرك. امسح الخشب بقطعة جافة، وأبعد الكرسي عن الشمس المباشرة ليحافظ على ألوانه.',
@@ -153,7 +154,7 @@ const STORE = {
       g1: 'ضمان تسليم', g1s: 'نضمن وصول طلبك سالمًا.', g2: 'توصيل مجاني', g2s: 'لجميع مناطق المملكة.', g3: 'استبدال واسترجاع خلال 24 ساعة', g3s: 'راحتك أولويتنا.',
       proofBuy: 'تم شراؤه', proofRev: 'تقييم', proofRate: 'تقييم العملاء', proofLabel: 'أرقام المنتج',
       hey: 'هلا', peekHi: 'هلا والله! حيّاك في ket، خذ راحتك وتفرّج.', arhab: 'ارحبوووو!',
-      peekBuyT: 'محتار؟', peekBuyS: 'كلّمنا على واتساب ونساعدك تختار.', peekRevT: '{n} عميل', peekRevS: 'قيّموه قبلك، شوف وش قالوا.', peekDimsT: 'قِس مكانك أول', peekDimsS: 'وخلّ له مساحة يتنفّس فيها.',
+      peekBuyT: 'محتار؟', peekBuyS: 'كلّمنا على واتساب ونساعدك تختار.', peekRevT: '{n} عميل', peekRevS: 'قيّموه قبلك، شوف وش قالوا.', peekDimsT: 'قِس مكانك أول', peekDimsS: 'وخلّ له مساحة يتنفّس فيها.', peekShipT: 'التوصيل علينا', peekShipS: 'لكل مدن المملكة، ونغلّف طلبك بعناية.',
       touch: 'تواصل معنا:', vatNo: 'الرقم الضريبي: {n}', crNo: 'رقم السجل التجاري: {n}', allRights: 'جميع الحقوق محفوظة', sbc: 'موثّق في المركز السعودي للأعمال',
       peekBuy: 'محتار؟ كلّمنا على واتساب ونساعدك تختار.', peekShip: 'التوصيل علينا، لكل مدن المملكة.', peekDims: 'قِس مكانك أول، وخلّ له مساحة يتنفّس فيها.', peekRev: '{n} عميل قيّموه قبلك.', peekIdle: 'خذ راحتك، إحنا هنا.', peekWa: 'كلّمنا',
       inspEyebrow: 'إلهام', inspTitle: 'اكتشف أفكار ديكور أكثر مع ket', inspBody: 'اختر الغرفة، ونوريك قطعًا تناسبها.',
@@ -177,7 +178,7 @@ const STORE = {
       dimEyebrow: 'Dimensions', dimTitle: 'Considered proportions', front: 'Front', side: 'Side', height: 'Height', width: 'Width', depth: 'Depth', seatH: 'Seat height', cm: 'cm', tbc: '—',
       fitTitle: 'Will it fit?', fitBody: 'Measure your spot before ordering and leave at least 60 cm in front of the chair to move freely.',
       infoEyebrow: 'Product information', infoTitle: 'Good to know',
-      accDetails: 'Details', accShipping: 'Shipping & delivery', accReturns: 'Returns', accCare: 'Care instructions',
+      accDetails: 'Details', accShipping: 'Shipping & delivery', accReturns: 'Returns', accCare: 'Care instructions', accReviews: 'Reviews', allReviews: 'See all reviews',
       shipBody: 'Delivery is free across the Kingdom. We pack your order with care and send you a tracking link as soon as it leaves with the courier.', shipNote: 'Our gazelle has packed the box.',
       returnsBody: 'Exchange or return any item within 24 hours of delivery, in its original condition and packaging. Message us on WhatsApp and we will arrange the pickup.',
       careBody: 'Vacuum the fabric weekly with a soft brush. Blot stains with a damp cloth; do not rub. Wipe the wood with a dry cloth, and keep the chair out of direct sun to protect the colours.',
@@ -186,7 +187,7 @@ const STORE = {
       g1: 'Delivery guarantee', g1s: 'We guarantee your order arrives safely.', g2: 'Free delivery', g2s: 'Across all of Saudi Arabia.', g3: 'Exchange & return within 24 hours', g3s: 'Your peace of mind is our priority.',
       proofBuy: 'Purchases', proofRev: 'Reviews', proofRate: 'Customer rating', proofLabel: 'Product numbers',
       hey: 'Hey', peekHi: 'Hi there! Welcome to ket. Take your time and look around.', arhab: 'Hello!',
-      peekBuyT: 'Still deciding?', peekBuyS: 'Message us and we will help you choose.', peekRevT: '{n} customers', peekRevS: 'rated it before you. See what they said.', peekDimsT: 'Measure first', peekDimsS: 'and give it room to breathe.',
+      peekBuyT: 'Still deciding?', peekBuyS: 'Message us and we will help you choose.', peekRevT: '{n} customers', peekRevS: 'rated it before you. See what they said.', peekDimsT: 'Measure first', peekDimsS: 'and give it room to breathe.', peekShipT: 'Delivery is on us', peekShipS: 'anywhere in the Kingdom, packed with care.',
       touch: 'Get in touch:', vatNo: 'The VAT number: {n}', crNo: 'The commercial register number: {n}', allRights: 'All Rights Reserved', sbc: 'Verified by the Saudi Business Center',
       peekBuy: 'Still deciding? Message us and we will help you choose.', peekShip: 'Delivery is on us, anywhere in the Kingdom.', peekDims: 'Measure first, and give it room to breathe.', peekRev: '{n} customers rated it before you.', peekIdle: 'Take your time. We are here.', peekWa: 'Message us',
       inspEyebrow: 'Inspiration', inspTitle: 'Find more decoration inspiration with ket', inspBody: 'Pick a room and we will show you pieces made for it.',
@@ -525,6 +526,13 @@ html[lang="ar"] .acc__btn{ font-weight:700; }
 .acc__panel{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .6s var(--ease); }
 .acc__panel > div{ overflow:hidden; }
 .acc__item.is-open .acc__panel{ grid-template-rows:1fr; }
+.acc__rate{ display:inline-flex; align-items:center; gap:8px; margin-inline-start:auto; font-size:13px; font-weight:500; }
+.acc__btn .acc__rate + .acc__icon{ margin-inline-start:4px; }
+.acc__revs{ display:grid; gap:12px; }
+@media (min-width:640px){ .acc__revs{ grid-template-columns:1fr 1fr; } }
+.acc__revs blockquote{ margin:0; background:var(--white); border-radius:16px; padding:14px 16px; display:grid; gap:6px; font-size:14.5px; }
+.acc__revs cite{ font-style:normal; font-size:12.5px; color:var(--ink-2); }
+.acc__more{ display:inline-flex; margin-top:14px; font-weight:600; font-size:14px; }
 .acc__content{ padding:0 22px 22px; max-width:68ch; font-size:15.5px; color:#1a1a1a; }
 .acc__content .spec{ font-size:14px; }
 .acc__ship{ display:grid; grid-template-columns:118px 1fr; gap:18px; align-items:center; }
@@ -1464,16 +1472,17 @@ function build() {
   $('#decoDims').innerHTML = SIL.arch('#02A27A');
 
   // accordions
-  const accKeys = { details: 'accDetails', shipping: 'accShipping', returns: 'accReturns', care: 'accCare' };
+  const accKeys = { details: 'accDetails', shipping: 'accShipping', returns: 'accReturns', care: 'accCare', reviews: 'accReviews' };
   $('#acc').innerHTML = P.accordions.map((a, i) => `
     <div class="acc__item${a.open ? ' is-open' : ''}">
-      <h3><button class="acc__btn" type="button" aria-expanded="${!!a.open}" aria-controls="accp${i}" id="accb${i}"><span data-t="${accKeys[a.key]}"></span><span class="acc__icon" aria-hidden="true"></span></button></h3>
+      <h3><button class="acc__btn" type="button" aria-expanded="${!!a.open}" aria-controls="accp${i}" id="accb${i}"><span data-t="${accKeys[a.key]}"></span>${a.key === 'reviews' ? `<span class="acc__rate">${stars(P.rating, 14)}<span class="num">(${P.reviewCount})</span></span>` : ''}<span class="acc__icon" aria-hidden="true"></span></button></h3>
       <div class="acc__panel" id="accp${i}" role="region" aria-labelledby="accb${i}"><div><div class="acc__content" id="accc-${a.key}"></div></div></div>
     </div>`).join('');
   $('#accc-details').innerHTML = `<table class="spec">${P.specs.map((s, i) => `<tr><th scope="row" data-l="product.specs.${i}.k"></th><td data-l="product.specs.${i}.v"></td></tr>`).join('')}</table>`;
   $('#accc-shipping').innerHTML = `<div class="acc__ship">${gazelleBox()}<p><span data-t="shipBody"></span><em data-t="shipNote"></em></p></div>`;
   $('#accc-returns').innerHTML = `<p data-t="returnsBody"></p>`;
   $('#accc-care').innerHTML = `<p data-t="careBody"></p>`;
+  if ($('#accc-reviews')) $('#accc-reviews').innerHTML = `<div class="acc__revs">${P.reviews.items.slice(0, 2).map((r, i) => `<blockquote>${stars(r.stars, 12)}<p data-l="product.reviews.items.${i}.text"></p><cite data-l="product.reviews.items.${i}.name"></cite></blockquote>`).join('')}</div><a class="acc__more" href="#reviews" data-t="allReviews"></a>`;
 
   // reviews
   $('#revBars').innerHTML = P.reviews.distribution.map((v, i) => `<div class="rev__bar"><span>${5 - i}</span><i><b style="--w:${v}%"></b></i><span data-bar="${i}">${v}%</span></div>`).join('');
@@ -1926,11 +1935,12 @@ function KetGazelle(A, opts = {}) {
     .kg__say a{ display:inline-flex; margin-top:8px; height:32px; align-items:center; padding-inline:14px; border-radius:99px; background:#111; color:#fff; text-decoration:none; font:600 13px 'IBM Plex Sans Arabic',sans-serif; text-shadow:none; }
     .kg__pole{ position:fixed; top:0; bottom:0; z-index:56; width:var(--kg-pw,3px); background:#111; transform-origin:50% 0; transform:scaleY(0); pointer-events:none; }
     body.bar-on .kg--walk{ bottom:calc(66px + env(safe-area-inset-bottom)); }
+    .wa{ transition:opacity .3s; } body.kg-hi .wa{ opacity:0; pointer-events:none; }
   </style>`);
 
   let live = null;   // the one rig on screen
   const busy = () => !!live;
-  function stop() { if (!live) return; cancelAnimationFrame(live.raf); live.nodes.forEach(n => n.remove()); const d = live.done; live = null; d && d(); }
+  function stop() { document.body.classList.remove('kg-hi'); if (!live) return; cancelAnimationFrame(live.raf); live.nodes.forEach(n => n.remove()); const d = live.done; live = null; d && d(); }
   function run(nodes, dur, frame, done) {
     const t0 = performance.now();
     live = { nodes, raf: 0, done };
@@ -1993,6 +2003,7 @@ function KetGazelle(A, opts = {}) {
     const pole = document.createElement('div'); pole.className = 'kg__pole';
     pole.style.cssText = `left:${poleX - 1.5}px; --kg-pw:${Math.max(2.5, A.pole_w * s)}px`;
     document.body.append(pole, box);
+    document.body.classList.add('kg-hi');   // the WhatsApp button steps aside while it plays
 
     const q = c => svg.querySelector(c);
     const slide = q('.kg-slide'), head = q('.kg-head'), earL = q('.kg-earL'), earR = q('.kg-earR'), pawT = q('.kg-pawT'), pawB = q('.kg-pawB');
@@ -2054,10 +2065,20 @@ function KetGazelle(A, opts = {}) {
   const HEAD_PATCH_FILL = '<path fill="#fff" d="M280 470C248 516 240 602 258 654C270 690 292 716 322 736L344 600L330 470Z"/>';
   const HEAD_PATCH_LINE = '<path fill="none" stroke="#111" stroke-width="17" stroke-linecap="round" d="M281 478C252 520 244 600 262 652C274 688 296 714 324 734"/>';
 
+  // the delivery box it pushes in front of it: black and white, with the pink outline round the box
+  const DBOX = `<g class="kg-dbox">
+      <path d="M40 1012H252V1236H40Z M40 1012L66 968H226L252 1012" fill="none" stroke="#FC98D3" stroke-width="58" stroke-linejoin="round"/>
+      <path d="M40 1012L4 950L52 930L80 1004Z M252 1012L290 952L242 930L212 1004Z" fill="#fff" stroke="#111" stroke-width="15" stroke-linejoin="round"/>
+      <path d="M40 1012L66 968H226L252 1012Z" fill="#f2f2f2" stroke="#111" stroke-width="15" stroke-linejoin="round"/>
+      <path d="M40 1012H252V1236H40Z" fill="#fff" stroke="#111" stroke-width="16" stroke-linejoin="round"/>
+      <path d="M104 1106Q146 1158 188 1106" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+    </g>`;
+
   function walk(kind = 'walk', line = '', small = '', link = null) {
     stop();
-    const mobile = innerWidth < 640, W = mobile ? 150 : 196;
-    const VB = { x: 250, y: 60, w: 780, h: GROUND - 60 + 12 };
+    const deliver = kind === 'deliver';
+    const VB = deliver ? { x: 0, y: 60, w: 1030, h: GROUND - 60 + 12 } : { x: 250, y: 60, w: 780, h: GROUND - 60 + 12 };
+    const mobile = innerWidth < 640, W = (mobile ? 150 : 196) * VB.w / 780;   // same gazelle size, wider frame for the box
     const s = W / VB.w;
     // walk in from the side away from the WhatsApp button (inline-start): left in Arabic, right in English
     const fromLeft = document.documentElement.dir === 'rtl';
@@ -2073,6 +2094,7 @@ function KetGazelle(A, opts = {}) {
         <g class="kg-head">${part('earL', 'kg-earL')}${part('earR', 'kg-earR')}${HEAD_PATCH_FILL}${part('head')}${HEAD_PATCH_LINE}${face()}</g>
       </g>
       ${leg('fn')}${leg('bn')}
+      ${deliver ? DBOX : ''}
     </g></g>`;
     box.appendChild(svg);
     const say = document.createElement('div'); say.className = 'kg__say'; say.setAttribute('role', 'status');
@@ -2092,7 +2114,7 @@ function KetGazelle(A, opts = {}) {
     // text sits above the head; mirror-aware horizontal position
     say.style.cssText = `bottom:${(GROUND - 95) * s}px; ${fromLeft ? 'left' : 'right'}:${W * .12}px; transform-origin:${fromLeft ? '20%' : '80%'} 100%`;
 
-    const T = { walk: { inEnd: 1.9, talk: [2.4, 2.2], leave: 6.4, end: 8.4 }, hop: { inEnd: 2.1, talk: [2.6, 2.2], leave: 6.6, end: 8.6 }, sit: { inEnd: 1.9, talk: [3.1, 2.2], leave: 7.0, end: 9.0 } }[kind];
+    const T = { deliver: { inEnd: 2.2, talk: [2.7, 2.2], leave: 6.6, end: 8.6 }, walk: { inEnd: 1.9, talk: [2.4, 2.2], leave: 6.4, end: 8.4 }, hop: { inEnd: 2.1, talk: [2.6, 2.2], leave: 6.6, end: 8.6 }, sit: { inEnd: 1.9, talk: [3.1, 2.2], leave: 7.0, end: 9.0 } }[kind];
     if (reduce) {
       setFace(svg, { open: 1, mouth: .38 }); Object.keys(HIPS).forEach(k => setLeg(k, 0));
       say.style.opacity = 1; run([box], 6, () => {}); return;
@@ -2149,6 +2171,8 @@ function KetGazelle(A, opts = {}) {
       // ears flop with the bounce and flick while it listens
       const ek = moving ? Math.sin(ph * 2 - .8) : Math.sin(tm * 9) * Math.exp(-((tm - T.inEnd) % 2.4) * 2.5);
       tf(earL, 0, 0, 9 * ek, ...EARL); tf(earR, 0, 0, -9 * ek, ...EARR);
+      // the box it pushes wobbles a little with every step
+      if (deliver) tf(q('.kg-dbox'), 0, moving ? -4 * Math.abs(Math.sin(ph)) : 0, moving ? 1.6 * Math.sin(ph) : 0, 146, 1236);
       // tail wags faster when it is happy
       tf(tail, 0, 0, (talking ? 16 : 8) * Math.sin(tm * (talking ? 16 : 7)), 944, 900);
       // face
@@ -2166,7 +2190,6 @@ function KetGazelle(A, opts = {}) {
 
   return { welcome, walk, busy, stop };
 }
-
 const KG = KetGazelle(ARHAB, { t: (k, v) => t(k, v), onDone: () => { if (peekNow && (peekNow.walker || peekNow.id === 'hi')) peekNow = null; } });
 
 /* =================================================================
@@ -2180,7 +2203,7 @@ document.addEventListener('click', e => { if (e.target.closest('[data-insp]')) {
 
 const PEEKS = [
   { id: 'buy', zone: '#buy', after: 6, walker: 'walk', say: ['peekBuyT', 'peekBuyS'], act: 'wa' },
-  { id: 'ship', zone: '#info', after: 2.5, rig: 'hey-pink-paws', mode: 'bottom', say: 'peekShip' },
+  { id: 'ship', zone: '#info', after: 2.5, walker: 'deliver', say: ['peekShipT', 'peekShipS'] },
   { id: 'dims', zone: '#dimensions', after: 2.5, walker: 'sit', say: ['peekDimsT', 'peekDimsS'] },
   { id: 'rev', zone: '#reviews', after: 2.5, walker: 'hop', say: ['peekRevT', 'peekRevS'] }
 ];
