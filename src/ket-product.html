@@ -772,22 +772,35 @@ body.bar-on .peek--bottom .peek__say{ bottom:calc(var(--pw,124px) * 1.12 + 72px)
 .peek__say a{ display:inline-flex; margin-top:8px; height:32px; align-items:center; padding-inline:14px; border-radius:var(--r-pill); background:#111; color:var(--white); text-shadow:none; text-decoration:none; font-size:13px; }
 
 /* Peeking gazelle (client's animation) */
-.gzv{ position:fixed; bottom:0; z-index:57; width:var(--gw,160px); mix-blend-mode:multiply; pointer-events:none; opacity:0; visibility:hidden;
+.gzv{ position:fixed; bottom:0; z-index:57; width:var(--gw,160px); pointer-events:none; opacity:0; visibility:hidden;
   transition:opacity .25s, transform .7s cubic-bezier(.55,0,.75,.2), visibility 0s .7s; }
 .gzv.is-on{ opacity:1; visibility:visible; transition:opacity .25s, transform .7s cubic-bezier(.55,0,.75,.2); }
 .gzv--l{ left:0; } .gzv--r{ right:0; }
-.gzv--txt{ mix-blend-mode:normal; height:calc(var(--gw,160px) * 1.52); }
-.gzv--r .gzv__v, .gzv--r .gzv__still{ transform:scaleX(-1); }
+.gzv--txt{ height:calc(var(--gw,160px) * 1.52); }
+.gzv--r .gzv__v{ transform:scaleX(-1); }
 .gzv--l.is-out{ transform:translateX(-106%); } .gzv--r.is-out{ transform:translateX(106%); }
-.gzv__v, .gzv__still{ display:block; width:100%; height:auto; background:#fff; }
+.gzv__v{ display:block; width:100%; height:auto; aspect-ratio:300/456; }
 body.bar-on .gzv{ bottom:calc(66px + env(safe-area-inset-bottom)); }
-.gzv__say{ position:absolute; bottom:92%; padding:22px 26px; margin:-22px -26px; background:radial-gradient(closest-side, rgba(255,255,255,.96) 55%, rgba(255,255,255,.75) 75%, rgba(255,255,255,0)); width:max-content; max-width:min(250px, 66vw); font:700 clamp(20px,2vw,26px)/1.15 'Marhey', var(--f-ar); color:#111;
-  text-shadow:0 0 2px #fff, 0 0 4px #fff, 0 0 8px #fff, 0 0 12px #fff, 0 0 18px #fff, 0 0 26px #fff, 0 0 34px #fff, 0 0 44px #fff; opacity:0; transform:translateY(12px) scale(.55); transition:opacity .25s, transform .55s cubic-bezier(.34,1.56,.64,1); pointer-events:auto; }
+.gzv__say{ position:absolute; bottom:92%; width:max-content; max-width:min(250px, 66vw); font:700 clamp(20px,2vw,26px)/1.15 'Marhey', var(--f-ar); color:#111;
+  -webkit-text-stroke:7px #fff; paint-order:stroke fill; text-shadow:0 0 6px #fff, 0 0 12px #fff; opacity:0; transform:translateY(12px) scale(.55); transition:opacity .25s, transform .55s cubic-bezier(.34,1.56,.64,1); pointer-events:auto; }
 .gzv--l .gzv__say{ left:10%; transform-origin:25% 100%; } .gzv--r .gzv__say{ right:10%; transform-origin:75% 100%; }
-.gzv.is-talk .gzv__say{ opacity:1; transform:none; }
+.gzv.is-talk .gzv__say, .gzw.is-talk .gzv__say{ opacity:1; transform:none; }
+.gzv__say small{ -webkit-text-stroke-width:5px; }
+/* Walking gazelle (Blender: walk + idle loops, transparent animated WebP) */
+.gzw{ position:fixed; bottom:0; z-index:57; width:var(--gw,150px); pointer-events:none; visibility:hidden; }
+.gzw.is-on{ visibility:visible; }
+.gzw--l{ left:0; } .gzw--r{ right:0; }
+.gzw--txt{ height:calc(var(--gw,150px) * 1.288); }
+body.bar-on .gzw{ bottom:calc(66px + env(safe-area-inset-bottom)); }
+.gzw__m{ position:relative; aspect-ratio:330/425; }
+.gzw__m img{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+.gzw__m [hidden]{ display:none; }
+.gzw__walk{ opacity:0; } .gzw.is-walk .gzw__walk{ opacity:1; } .gzw.is-walk .gzw__idle{ opacity:0; }
+.gzw--r .gzw__m, .gzw--l.is-back .gzw__m{ transform:scaleX(-1); } .gzw--r.is-back .gzw__m{ transform:none; }
+.gzw--l .gzv__say{ left:18%; transform-origin:25% 100%; } .gzw--r .gzv__say{ right:18%; transform-origin:75% 100%; }
 .gzv__say b{ display:block; font-weight:700; }
 .gzv__say small{ display:block; font:600 14px/1.45 var(--f-ar); margin-top:4px; white-space:normal; }
-@media (max-width:639px){ .gzv .gzv__say small{ display:none; } }
+@media (max-width:639px){ .gzv .gzv__say small, .gzw .gzv__say small{ display:none; } }
 .gzv__say a{ display:inline-flex; margin-top:8px; height:32px; align-items:center; padding-inline:14px; border-radius:var(--r-pill); background:#111; color:#fff; text-decoration:none; text-shadow:none; font:600 13px var(--f-ar); }
 .wa{ transition:opacity .3s; } body.kg-hi .wa{ opacity:0; pointer-events:none; }
 @media (prefers-reduced-motion: reduce){ .gzv, .gzv__say{ transition:opacity .2s!important; } .gzv--l.is-out, .gzv--r.is-out{ transform:none; opacity:0; } }
@@ -1918,58 +1931,106 @@ let momRT; addEventListener('resize', () => { clearTimeout(momRT); momRT = setTi
    Muted + inline so it can autoplay; mix-blend multiply makes its white background disappear.
    --------------------------------------------------------------------------------------------- */
 function gazellePeek() {
-  const SRC = 'media/gazelle-peek.mp4', STILL = 'media/gazelle-peek-end.webp';
+  // the client's animation as a transparent, play-once animated WebP (media/gazelle-peek.webp); each play gets a fresh
+  // object URL so it starts from the first frame again
+  const SRC = 'media/gazelle-peek.webp', STILL = 'media/gazelle-peek-end.webp';
   const box = document.createElement('div'); box.className = 'gzv'; box.setAttribute('aria-hidden', 'true');
-  box.innerHTML = '<video class="gzv__v" muted playsinline preload="none" disablepictureinpicture></video><img class="gzv__still" alt="" hidden>';
-  // the line sits in its own layer so the multiply blend (which removes the video's white) doesn't eat its white halo
+  box.innerHTML = '<img class="gzv__v" alt="" decoding="async">';
   const tb = document.createElement('div'); tb.className = 'gzv gzv--txt'; tb.innerHTML = '<div class="gzv__say" role="status"></div>';
   document.body.append(box, tb);
-  const v = $('video', box), still = $('img', box), say = $('.gzv__say', tb);
+  const img = $('img', box), say = $('.gzv__say', tb);
   const B = { add: (...c) => [box, tb].forEach(e => e.classList.add(...c)), rm: c => [box, tb].forEach(e => e.classList.remove(c)),
     set: c => { box.className = c; tb.className = c + ' gzv--txt'; }, gw: w => [box, tb].forEach(e => e.style.setProperty('--gw', w + 'px')) };
-  v.muted = true;
-  let on = false, loaded = false, timers = [], done = null;
-  const load = () => { if (loaded) return; loaded = true; v.src = v.canPlayType('video/mp4; codecs="avc1.42E01E"') ? SRC : SRC.replace('.mp4', '.webm'); v.preload = 'auto'; v.load(); };
+  let on = false, blob = null, fetching = null, url = null, timers = [], done = null;
+  const load = () => fetching || (fetching = fetch(reduce ? STILL : SRC).then(r => r.ok ? r.blob() : null).then(b => (blob = b)).catch(() => null));
   if (document.readyState === 'complete') setTimeout(load, 2500); else addEventListener('load', () => setTimeout(load, 2500), { once: true });
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   function stop() {
     timers.forEach(clearTimeout); timers = [];
-    B.set('gzv'); document.body.classList.remove('kg-hi'); v.pause(); on = false;
+    B.set('gzv'); document.body.classList.remove('kg-hi'); on = false;
     const d = done; done = null; d && d();
-  }
-  function showStill() {
-    v.hidden = true; still.src = STILL; still.hidden = false;
-    requestAnimationFrame(() => B.add('is-on', 'is-talk'));
-    at(6500, () => B.add('is-out')); at(7200, stop);
   }
   function play({ side = 'l', line = '', small = '', link = null, onDone = null } = {}) {
     if (on) stop();
-    on = true; done = onDone; load();
+    on = true; done = onDone;
     B.gw(innerWidth < 640 ? 150 : 220);
     say.innerHTML = `${line ? `<b>${line}</b>` : ''}${small ? `<small>${small}</small>` : ''}${link ? `<a href="${link.href}" target="_blank" rel="noopener">${link.label}</a>` : ''}`;
     B.set(`gzv gzv--${side}`);
     document.body.classList.add('kg-hi');            // the WhatsApp button steps aside while it plays
-    if (reduce) { showStill(); return; }
-    still.hidden = true; v.hidden = false;
-    const go = () => {
+    load().then(b => {
       if (!on) return;
-      try { v.currentTime = 0; } catch (e) { /* not seekable yet */ }
-      const p = v.play();
-      const started = () => {
+      if (!b) { stop(); return; }
+      if (url) URL.revokeObjectURL(url);
+      url = URL.createObjectURL(b);
+      img.onload = () => {
+        if (!on) return;
         requestAnimationFrame(() => B.add('is-on'));
-        at(4100, () => B.add('is-talk'));   // the happy face: time to say the line
-        at(7700, () => B.rm('is-talk'));
-        at(8000, () => B.add('is-out'));
-        at(8700, stop);
+        const talk = reduce ? 200 : 4100;            // the happy face: time to say the line
+        at(talk, () => B.add('is-talk'));
+        at(talk + 3600, () => B.rm('is-talk'));
+        at(talk + 3900, () => B.add('is-out'));
+        at(talk + 4600, stop);
       };
-      if (p && p.then) p.then(started).catch(showStill); else started();
-    };
-    if (v.readyState >= 3) go();
-    else { const t0 = Date.now(); const wait = () => (v.readyState >= 3 || Date.now() - t0 > 5000) ? (v.readyState >= 2 ? go() : showStill()) : setTimeout(wait, 120); wait(); }
+      img.src = url;
+    });
   }
   return { play, stop, busy: () => on };
 }
 const GV = gazellePeek();
+
+/* WALKING GAZELLE — modelled and animated in Blender (src/ket-hero/assets-src/mascot/3d): a 2 s walk loop and a
+   2 s idle loop (head tilt, ear flick, tail wag, blink), as transparent animated WebPs. It walks in from a screen edge, stops, says its line,
+   then turns round and walks back out. The CSS move matches the stride so the hooves don't skate. */
+function gazelleWalk() {
+  const mk = c => { const e = document.createElement('div'); e.className = c; e.setAttribute('aria-hidden', 'true'); return e; };
+  const box = mk('gzw'), tb = mk('gzw gzw--txt'), els = [box, tb];
+  box.innerHTML = '<div class="gzw__m"><img class="gzw__idle" alt="" decoding="async"><img class="gzw__walk" alt="" decoding="async"></div>';
+  tb.innerHTML = '<div class="gzv__say" role="status"></div>';
+  document.body.append(box, tb);
+  const walk = $('.gzw__walk', box), idle = $('.gzw__idle', box), say = $('.gzv__say', tb);
+  let loaded = false, on = false, timers = [], done = null;
+  const load = () => { if (loaded) return; loaded = true; idle.src = reduce ? 'media/gazelle-idle-still.webp' : 'media/gazelle-idle.webp'; if (!reduce) walk.src = 'media/gazelle-walk.webp'; };
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const cls = (fn, ...c) => els.forEach(e => e.classList[fn](...c));
+  const move = (x, ms) => els.forEach(e => { e.style.transition = ms ? `transform ${ms}ms linear` : 'none'; e.style.transform = `translateX(${x}px)`; });
+  function stop() {
+    timers.forEach(clearTimeout); timers = [];
+    cls('remove', 'is-on', 'is-talk', 'is-back', 'is-walk'); move(0, 0);
+    document.body.classList.remove('kg-hi'); on = false;
+    const d = done; done = null; d && d();
+  }
+  function play({ side = 'l', line = '', small = '', link = null, onDone = null } = {}) {
+    if (on) stop();
+    on = true; done = onDone; load();
+    const W = innerWidth < 640 ? 140 : 190, dir = side === 'l' ? 1 : -1;
+    els.forEach((e, i) => { e.style.setProperty('--gw', W + 'px'); e.className = `gzw gzw--${side}${i ? ' gzw--txt' : ''}`; });
+    say.innerHTML = `${line ? `<b>${line}</b>` : ''}${small ? `<small>${small}</small>` : ''}${link ? `<a href="${link.href}" target="_blank" rel="noopener">${link.label}</a>` : ''}`;
+    document.body.classList.add('kg-hi');
+    const off = -dir * (W + 24), inX = dir * 6;
+    const speed = 160 * W / 330;                              // px/s: one stride of the rendered walk, at this size
+    const tIn = Math.round(Math.abs(inX - off) / speed * 1000);
+    move(off, 0);
+    const ok = i => i.complete && i.naturalWidth > 0;
+    const t0 = Date.now();
+    const wait = (fn, imgs) => imgs.every(ok) ? fn() : Date.now() - t0 > 6000 ? stop() : setTimeout(() => wait(fn, imgs), 120);
+    if (reduce) {
+      wait(() => { move(inX, 0); cls('add', 'is-on', 'is-talk'); at(6000, () => cls('remove', 'is-on')); at(6300, stop); }, [idle]);
+      return;
+    }
+    const go = () => {
+      if (!on) return;
+      box.classList.add('is-walk');
+      requestAnimationFrame(() => requestAnimationFrame(() => { cls('add', 'is-on'); move(inX, tIn); }));
+      at(tIn, () => { box.classList.remove('is-walk'); cls('add', 'is-talk'); });
+      const back = tIn + 5400;
+      at(back, () => { cls('remove', 'is-talk'); cls('add', 'is-back'); box.classList.add('is-walk'); move(off, tIn); });
+      at(back + tIn + 80, stop);
+    };
+    wait(go, [walk, idle]);
+  }
+  return { play, stop, busy: () => on };
+}
+const GW = gazelleWalk();
 
 /* =================================================================
    INTERACTIVE GAZELLE — peeks in when the customer lingers on a section.
@@ -1981,9 +2042,9 @@ const GV = gazellePeek();
 document.addEventListener('click', e => { if (e.target.closest('[data-insp]')) { e.preventDefault(); toast(t('toastSoon')); } });
 
 const PEEKS = [
-  { id: 'buy', zone: '#buy', after: 6, video: 'end', say: ['peekBuyT', 'peekBuyS'], act: 'wa' },
+  { id: 'buy', zone: '#buy', after: 6, walk: 'end', say: ['peekBuyT', 'peekBuyS'], act: 'wa' },
   { id: 'ship', zone: '#info', after: 2.5, rig: 'hey-pink-paws', mode: 'bottom', say: 'peekShip' },
-  { id: 'dims', zone: '#dimensions', after: 2.5, rig: 'hey-yellow', mode: 'bottom', say: 'peekDims' },
+  { id: 'dims', zone: '#dimensions', after: 2.5, walk: 'start', say: ['peekDimsT', 'peekDimsS'] },
   { id: 'rev', zone: '#reviews', after: 2.5, video: 'start', say: ['peekRevT', 'peekRevS'] }
 ];
 const PEEK_IDLE = { id: 'idle', rig: 'sleep-cloud', mode: 'bottom', say: 'peekIdle', idle: 18 };
@@ -1996,9 +2057,17 @@ try { peekSeen = new Set(JSON.parse(sessionStorage.getItem('ket-peek') || '[]'))
 const peekSave = () => { try { sessionStorage.setItem('ket-peek', JSON.stringify([...peekSeen])); } catch (e) { /* storage blocked */ } };
 let peekNow = null, peekCount = 0, peekLast = -1e9, peekHideT = 0, lastScroll = 0, lastInput = Date.now();
 const dwell = {};
-const peekBusy = () => drawer.classList.contains('is-open') || lb.classList.contains('is-open') || document.hidden || GV.busy();
+const peekBusy = () => drawer.classList.contains('is-open') || lb.classList.contains('is-open') || document.hidden || GV.busy() || GW.busy();
 function showPeek(p) {
   peekNow = p; peekCount++; peekLast = Date.now(); peekSeen.add(p.id); peekSave();
+  if (p.walk) {    // the Blender gazelle walks in from 'end' (away from WhatsApp) or 'start'
+    const n = P.reviewCount, rtl = root.dir === 'rtl';
+    const side = p.walk === 'end' ? (rtl ? 'l' : 'r') : (rtl ? 'r' : 'l');
+    GW.play({ side, line: esc(t(p.say[0], { n })), small: esc(t(p.say[1], { n })),
+      link: p.act === 'wa' && STORE.whatsapp ? { href: $('#wa').href, label: esc(t('peekWa')) } : null,
+      onDone: () => { if (peekNow === p) peekNow = null; } });
+    return;
+  }
   if (p.video) {   // the client's peeking gazelle; 'end' = the edge away from the WhatsApp button, 'start' = the other one
     const n = P.reviewCount, rtl = root.dir === 'rtl';
     const side = p.video === 'end' ? (rtl ? 'l' : 'r') : (rtl ? 'r' : 'l');
@@ -2034,7 +2103,7 @@ peekFig.addEventListener('click', () => {
 });
 addEventListener('scroll', () => {
   lastScroll = lastInput = Date.now();
-  if (peekNow && peekNow.zone && !peekNow.video) { const r = $(peekNow.zone).getBoundingClientRect(); if (r.bottom < innerHeight * .2 || r.top > innerHeight * .8) hidePeek(); }
+  if (peekNow && peekNow.zone && !peekNow.video && !peekNow.walk) { const r = $(peekNow.zone).getBoundingClientRect(); if (r.bottom < innerHeight * .2 || r.top > innerHeight * .8) hidePeek(); }
 }, { passive: true });
 ['pointermove', 'pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, () => { lastInput = Date.now(); }, { passive: true }));
 setInterval(() => {

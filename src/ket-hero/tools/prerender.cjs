@@ -13,7 +13,7 @@ const [src, out] = process.argv.slice(2)
     const r = document.documentElement
     r.removeAttribute('class'); r.removeAttribute('style')
     document.querySelector('#toast').className = 'toast'
-    document.querySelectorAll('.gzv').forEach(e => e.remove()); document.body.classList.remove('kg-hi')   // the peeking gazelle is added at runtime
+    document.querySelectorAll('.gzv, .gzw').forEach(e => e.remove()); document.body.classList.remove('kg-hi')   // the peeking gazelle is added at runtime
     return '<!doctype html>\n' + r.outerHTML
   })
   fs.writeFileSync(out, html); await b.close()
