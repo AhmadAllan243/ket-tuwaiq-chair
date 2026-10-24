@@ -34,3 +34,10 @@ Rendered with a transparent film to `assets-src/mascot/3d/{walk,idle}/f_*.webp`;
 
 Text above every gazelle is plain bold text with a white letter outline (no cloud or bubble, per the client).
 `patch_round4.py` / `patch_round4b.py` applied this round. `media/` must ship next to `index.html`.
+
+## Oct 24: pop-ups off, sofa illustration moves
+
+- All pop-up gazelles (welcome, walkers, peeks, idle) are switched off with `GAZELLE_POPUPS = false` in `ket-product.html`
+  while they are refined; set it to `true` to bring them all back. The cart gazelles are unaffected.
+- `illus_fx.py` splits the sofa illustration into base / steam / gazelle layers (`assets-src/brand/illus-*.webp`) and packs
+  them as `ILLUS_FX`: the coffee steam sways and the sleeping gazelle breathes (CSS, off with reduced motion).
