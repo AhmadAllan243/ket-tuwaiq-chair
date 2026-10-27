@@ -5,7 +5,7 @@ Renders templates/product.jinja (with layout, header and footer) through plain J
 Vitrin-only parts stubbed: {% vitrin_head %} / {% vitrin_body %} and "vitrin:" includes render
 nothing, url_for / image_url return plain URLs, _() reads the Arabic .po file. The product is the
 Tuwaiq chair from the prototype. Zid's own scripts (cart, lightbox) do not run here, and the
-Growth styles come from the Tailwind browser build, so this is for checking the KET layout and
+Growth styles come from assets/styles.css (run `npm run build` first), so this is for checking the KET layout and
 motion only; the real check is `vitrin preview` on a development store.
 
 usage: python3 ket/preview.py [en]      (run from src/zid-theme; writes .preview/index.html)
@@ -146,7 +146,7 @@ env.filters['asset_url'] = lambda p: '../assets/' + p
 
 html = env.get_template('templates/product.jinja').render(product=product)
 # Growth's Tailwind classes, compiled in the browser (preview only; the real theme ships assets/styles.css)
-html = html.replace('</head>', '<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.13"></script>\n</head>', 1)
+# Growth styles: assets/styles.css (npm run build) is linked by the layout itself
 os.makedirs(OUT, exist_ok=True)
 open(os.path.join(OUT, 'index.html'), 'w').write(html)
 print('wrote', os.path.join(OUT, 'index.html'), len(html), 'bytes')

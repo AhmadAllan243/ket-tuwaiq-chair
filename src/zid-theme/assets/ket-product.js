@@ -22,6 +22,13 @@
   setHeaderH(); addEventListener('resize', setHeaderH);
   if (hero && heroSrc) { const s = document.createElement('script'); s.src = heroSrc; s.defer = true; document.body.append(s); }
 
+  /* ---------- Zid's sticky add-to-cart bar: only once the customer has scrolled past the buy box ---------- */
+  const actions = $('[data-product-actions]');
+  if (actions) {
+    const before = () => document.body.classList.toggle('ket-before-buy', actions.getBoundingClientRect().top > innerHeight);
+    before(); addEventListener('scroll', before, { passive: true });
+  }
+
   /* ---------- Gallery: count, progress bar, thumbs, arrows ---------- */
   const track = $('#gTrack');
   if (track) {

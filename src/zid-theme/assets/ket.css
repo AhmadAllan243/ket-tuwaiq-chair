@@ -702,3 +702,4 @@ html[dir="rtl"] :where(.ket) .mom__deck{ --d:-1; }
 .ket .ket-qty .qty-input-field{ height:46px; padding:0; line-height:46px; }
 .ket .rev > *{ min-width:0; }   /* the review slider must not widen the column on phones */
 .ket .ket-qty .qty-input{ display:inline-flex; align-items:center; }
+body.ket-before-buy #sticky-cta{ display:none!important; }   /* not over the 3D hero / gallery */
