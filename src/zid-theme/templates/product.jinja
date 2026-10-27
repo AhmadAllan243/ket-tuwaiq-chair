@@ -156,7 +156,7 @@
           <div class="price intro-fade">
             <span class="price__now num" data-product-price>{{ product.formatted_sale_price if product.formatted_sale_price else product.formatted_price }}</span>
             <s class="price__was num {{ 'hidden' if not product.formatted_sale_price }}" data-product-price-old>{{ product.formatted_price if product.formatted_sale_price else '' }}</s>
-            <span class="pill pill--orange num {{ 'hidden' if not (product.discount_percentage and product.discount_percentage > 0) }}" dir="ltr" data-product-discount>
+            <span class="pill pill--orange num {{ 'hidden' if not (product.discount_percentage and product.discount_percentage > 0) }}" dir="ltr">
               {% if product.discount_percentage and product.discount_percentage > 0 %}-{{ product.discount_percentage | round(0) | int }}%{% endif %}
             </span>
             {% if product.is_taxable %}<span class="price__vat">{{ _("Price includes VAT") }}</span>{% endif %}
@@ -171,9 +171,10 @@
           <hr class="divider">
 
           {% if qty_left is not none and qty_left > 0 and qty_left <= stock_scale %}
-            <div class="stock" data-low-stock-badge>
+            {# KET's own stock bar (theme setting "stock bar below this quantity"), not Zid's low-stock badge #}
+            <div class="stock">
               <div class="stock__row">
-                <strong data-low-stock-text>{{ _("Remaining %s only") | format(qty_left) }}</strong>
+                <strong>{{ _("Remaining %s only") | format(qty_left) }}</strong>
                 <span class="muted">{{ _("Selling fast") }}</span>
               </div>
               <div class="stock__bar" aria-hidden="true"><span style="--w:{{ [8, (qty_left / stock_scale * 100) | round(0)] | max }}%"></span></div>
@@ -306,11 +307,17 @@
 
     {# ===================== EVERYTHING YOU NEED TO KNOW (accordions) ===================== #}
     {# metafields the page already shows elsewhere (3D model, measurements, story) stay out of the details list #}
-    {% set ket_keys = ['model_3d', '3d_model', 'glb', 'width', 'height', 'depth', 'seat_height', 'story_title', 'story_text'] %}
+    {# (matched like the lookup above: by key, or by English / Arabic name) #}
+    {% set ket_keys = ['model_3d', '3d_model', 'glb', 'نموذج_ثلاثي_الأبعاد', 'width', 'العرض', 'height', 'الارتفاع', 'depth', 'العمق',
+                       'seat_height', 'ارتفاع_المقعد', 'story_title', 'عنوان_الحكاية', 'story_text', 'نص_الحكاية'] %}
     {% set extra_mf = [] %}
     {% for item in (product.metafields or []) %}
       {% set nm = item.name if item.name is mapping else {} %}
-      {% if (item.key or (nm.en or '') | lower | replace(' ', '_')) not in ket_keys %}{% set _x = extra_mf.append(item) %}{% endif %}
+      {% set hit = namespace(v=false) %}
+      {% for n in [item.key, nm.en, nm.ar] %}
+        {% if n and (n | string | trim | lower | replace(' ', '_') | replace('-', '_')) in ket_keys %}{% set hit.v = true %}{% endif %}
+      {% endfor %}
+      {% if not hit.v %}{% set _x = extra_mf.append(item) %}{% endif %}
     {% endfor %}
     {% set has_metafields = extra_mf and store.settings.products.is_metafields_enabled %}
     {% set acc = [] %}
