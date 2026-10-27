@@ -71,9 +71,15 @@ NULL = Null()
 
 
 class Obj(dict):
-    """dict with attribute access; missing keys are a chainable empty value, like the platform's objects"""
+    """dict with attribute access; missing keys are a chainable empty value, like the platform's objects.
+    Keys win over dict methods, so menu.items is the menu's items, not dict.items."""
+    def __getattribute__(self, k):
+        if not k.startswith('__') and dict.__contains__(self, k):
+            return dict.__getitem__(self, k)
+        return object.__getattribute__(self, k)
+
     def __getattr__(self, k):
-        return self[k] if k in self else NULL
+        return NULL
 
     def __getitem__(self, k):
         return dict.__getitem__(self, k) if k in self else NULL
@@ -130,11 +136,26 @@ product = obj({
     ],
     'related_products': [], 'categories': [],
 })
-layout = json.load(open(os.path.join(ROOT, 'layout.json')))[LANG]
-store = obj({'name': 'ket', 'settings': {'products': {'reviews_enabled': True, 'is_metafields_enabled': True, 'low_stock_label_enabled': True,
+# theme settings: schema defaults (header / footer / layout, as group_setting) under the layout.json values
+layout = {}
+for sch in ('header.schema.json', 'footer.schema.json', 'layout.schema.json'):
+    for grp in json.load(open(os.path.join(ROOT, sch)))['groups']:
+        for st in grp['settings']:
+            if 'default' in st:
+                layout[f"{grp['id']}_{st['id']}"] = st['default']
+layout.update(json.load(open(os.path.join(ROOT, 'layout.json')))[LANG])
+layout['link_groups_items'] = [{'title': 'المتجر' if LANG == 'ar' else 'Shop', 'links': [{'title': 'الكراسي' if LANG == 'ar' else 'Chairs', 'url': '#'}, {'title': 'الكنب' if LANG == 'ar' else 'Sofas', 'url': '#'}]},
+                               {'title': 'المساعدة' if LANG == 'ar' else 'Help', 'links': [{'title': 'الشحن والتوصيل' if LANG == 'ar' else 'Shipping', 'url': '#'}, {'title': 'سياسة الاسترجاع' if LANG == 'ar' else 'Returns policy', 'url': '#'}]}]
+store = obj({'name': 'ket', 'languages': [{'code': 'ar'}, {'code': 'en'}], 'countries': [{'code': 'SA'}],
+             'settings': {'contact': {'instagram': 'ketfurniture', 'tiktok': 'ketfurniture', 'snapchat': 'ketfurniture', 'phone': '+966500000000', 'email': 'hello@ketfurniture.com'},
+                          'general': {'tax_settings': {'tax_number': '310803678600003'}, 'commercial_registration_number': '4030396963'},
+                          'menus': {'main_menu': {'items': [{'label': 'الكراسي' if LANG == 'ar' else 'Chairs', 'url': '#', 'items': []}, {'label': 'الكنب' if LANG == 'ar' else 'Sofas', 'url': '#', 'items': []}, {'label': 'الطاولات' if LANG == 'ar' else 'Tables', 'url': '#', 'items': []}]}},
+                          'branding': {},
+'products': {'reviews_enabled': True, 'is_metafields_enabled': True, 'low_stock_label_enabled': True,
                                                       'low_stock_quantity_threshold': 100, 'questions_enabled': False},
-                                         'checkout': {'show_checkout_as_popup': True, 'is_loyalty_enabled': False, 'gift_order_settings': {}},
-                                         'general': {}}})
+                                         'checkout': {'show_checkout_as_popup': True, 'is_loyalty_enabled': False, 'gift_order_settings': {},
+                                                      'payment_methods': [{'name': n, 'icon': '../assets/images/zid-logo.svg'} for n in ('mada', 'Visa', 'Apple Pay', 'Tabby')]},
+                                         }})
 session = obj({'lang': LANG, 'template': 'product_details', 'is_guest': True,
                'locale': {'language': {'direction': 'rtl' if AR else 'ltr', 'code': LANG}}})
 
@@ -143,6 +164,7 @@ env = Environment(loader=Loader(), extensions=[VitrinTags, 'jinja2.ext.do'], aut
 env.globals.update(_=lambda s: CAT.get(s, s), url_for=lambda *a, **k: '#', image_url=lambda src, **k: src, safeget=safeget,
                    settings=obj(layout), store=store, session=session, request=obj({}), user_custom_css=None)
 env.filters['asset_url'] = lambda p: '../assets/' + p
+env.filters['localized_url'] = lambda u: u
 
 html = env.get_template('templates/product.jinja').render(product=product)
 # Growth's Tailwind classes, compiled in the browser (preview only; the real theme ships assets/styles.css)

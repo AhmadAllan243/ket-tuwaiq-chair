@@ -1,56 +1,29 @@
-{% if settings.announcement_bar_display %}
+{#
+  KET announcement bar: the pink scrolling strip (design: ket-product.html).
+  Texts, link, on/off and pages come from the theme editor (Header → Announcement bar);
+  with no texts entered it shows KET's three lines. Hover pauses it.
+#}
+{% if settings.announcement_bar_display | default(true) %}
   {% if not settings.announcement_bar_page_display or (session.template == 'home' and settings.announcement_bar_page_display == 'home') or settings.announcement_bar_page_display == 'all' %}
-    {% set enable_marquee = settings.announcement_bar_enable_marquee | default(false) %}
-    {% set marquee_speed = settings.announcement_bar_marquee_speed | default(30) %}
     {% set ns = namespace(texts=[]) %}
     {% for item in settings.announcement_bar_texts or [] %}
-      {% if item.text %}
-        {% set ns.texts = ns.texts + [item.text] %}
-      {% endif %}
+      {% if item.text %}{% set ns.texts = ns.texts + [item.text] %}{% endif %}
     {% endfor %}
-
-    <div
-      class="bg-primary text-primary-foreground overflow-hidden"
-      data-announcement-bar
-    >
-      {% if enable_marquee and ns.texts | length > 0 %}
-        {# Marquee Animation Mode #}
-        <div class="announcement-marquee py-2">
-          <div
-            class="announcement-marquee__content"
-            style="--marquee-speed: {{ marquee_speed }}s"
-          >
-            {% for _ in range(2) %}
-              {% for text in ns.texts %}
-                {% if settings.announcement_bar_url %}
-                  <a
-                    href="{{ settings.announcement_bar_url }}"
-                    class="text-sm px-8 whitespace-nowrap underline"
-                  >
-                    {{ text }}
-                  </a>
-                {% else %}
-                  <span class="text-sm px-8 whitespace-nowrap">{{ text }}</span>
-                {% endif %}
-              {% endfor %}
-            {% endfor %}
+    {% if not ns.texts %}
+      {% set ns.texts = ['توصيل مجاني لكل مدن المملكة', 'هدية مجانية مع كل طلب', 'عروض اليوم الوطني السعودي'] if session.lang == 'ar'
+                        else ['Free delivery across the Kingdom', 'A free gift with every order', 'Saudi National Day offer'] %}
+    {% endif %}
+    {% set speed = settings.announcement_bar_marquee_speed | default(32) %}
+    {% set tag = 'a' if settings.announcement_bar_url else 'div' %}
+    <{{ tag }} class="announce" data-announcement-bar role="region" aria-label="{{ _('Announcements') }}"
+       {% if settings.announcement_bar_url %}href="{{ settings.announcement_bar_url }}"{% endif %}>
+      <div class="marquee" style="animation-duration:{{ speed }}s">
+        {% for g in range(2) %}
+          <div class="marquee__group" {% if g %}aria-hidden="true"{% endif %}>
+            {% for _r in range(2) %}{% for text in ns.texts %}<span>{{ text }}</span>{% endfor %}{% endfor %}
           </div>
-        </div>
-      {% elif ns.texts | length > 0 %}
-        {# Static Mode #}
-        <div class="theme-container flex items-center justify-center p-2">
-          {% if settings.announcement_bar_url %}
-            <a
-              href="{{ settings.announcement_bar_url }}"
-              class="text-sm text-center underline"
-            >
-              {{ ns.texts[0] }}
-            </a>
-          {% else %}
-            <p class="text-sm text-center">{{ ns.texts[0] }}</p>
-          {% endif %}
-        </div>
-      {% endif %}
-    </div>
+        {% endfor %}
+      </div>
+    </{{ tag }}>
   {% endif %}
 {% endif %}

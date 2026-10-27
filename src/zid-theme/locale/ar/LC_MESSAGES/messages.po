@@ -1285,3 +1285,23 @@ msgstr "تقييم العملاء"
 #: KET product page
 msgid "from %s reviews"
 msgstr "من %s تقييم"
+
+#: KET header / footer
+msgid "All rights reserved"
+msgstr "جميع الحقوق محفوظة"
+
+#: KET header / footer
+msgid "Announcements"
+msgstr "الإعلانات"
+
+#: KET header / footer
+msgid "Get in touch:"
+msgstr "تواصل معنا:"
+
+#: KET header / footer
+msgid "Payment methods"
+msgstr "طرق الدفع"
+
+#: KET header / footer
+msgid "Verified by the Saudi Business Center"
+msgstr "موثّق في المركز السعودي للأعمال"

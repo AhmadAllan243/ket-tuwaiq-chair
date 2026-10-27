@@ -20,7 +20,7 @@
             "ar": "إخفاء اللغة",
             "en": "Hide language"
           },
-          "default": false
+          "default": true
         },
         {
           "id": "hide_country",
@@ -82,7 +82,7 @@
             "ar": "إظهار شريط الإعلانات",
             "en": "Display Announcement Bar"
           },
-          "default": false
+          "default": true
         },
         {
           "id": "enable_marquee",
@@ -91,7 +91,7 @@
             "ar": "تفعيل التمرير المتحرك",
             "en": "Enable Marquee Animation"
           },
-          "default": false
+          "default": true
         },
         {
           "id": "marquee_speed",
@@ -104,7 +104,7 @@
           "max": 60,
           "step": 5,
           "unit": "s",
-          "default": 30
+          "default": 32
         },
         {
           "id": "texts",
