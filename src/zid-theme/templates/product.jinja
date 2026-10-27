@@ -1,0 +1,418 @@
+{#
+  KET product page — the design of ket-product.html (the prototype on GitHub Pages), on real Zid data.
+
+  Everything that makes the page work as a shop is Zid's own (from the Growth theme): the product
+  form, options and custom fields, quantity, add to cart / buy now, preorder, notify-me, Tabby /
+  Tamara widgets, the checkout dialog, wishlist, sticky bar, related products. KET adds the look and
+  the extra sections, fed by product metafields (see ket/README.md):
+
+    model_3d       file (.glb) or text (URL)  → the 3D scroll-assembly hero
+    width, height, depth, seat_height  number (cm) → the dimensions section
+    story_title, story_text            text        → the story section
+  Sections with no data simply do not render.
+#}
+{% extends "layout.jinja" %}
+{% import 'components/ket/icons.jinja' as k %}
+
+{% block title %}{{ product.name }} – {{ store.name }}{% endblock %}
+
+{% block content %}
+  {% if product %}
+    {% set selected_product = selected_product if selected_product is defined else product.selected_product %}
+    {% set has_preorder = product.effective_preorder_campaign is not none %}
+    {% set can_preorder = product.can_be_preordered %}
+    {% set preorder_stock_behavior = product.preorder_stock_behavior %}
+    {% set can_buy = (selected_product and (selected_product.in_stock or can_preorder)) %}
+  {% else %}
+    {% set has_preorder = false %}
+    {% set can_preorder = false %}
+    {% set preorder_stock_behavior = '' %}
+    {% set can_buy = false %}
+  {% endif %}
+  {% set lang = session.lang or 'ar' %}
+
+  {# ---- metafields by key (or by their English / Arabic name), e.g. mf['width'] ---- #}
+  {% set ns = namespace(mf={}) %}
+  {% for item in (product.metafields or []) %}
+    {% set nm = item.name if item.name is mapping else {} %}
+    {% for n in [item.key, nm.en, nm.ar] %}
+      {% if n %}{% set _x = ns.mf.update({(n | string | trim | lower | replace(' ', '_') | replace('-', '_')): item}) %}{% endif %}
+    {% endfor %}
+  {% endfor %}
+  {% macro mfv(keys) -%}
+    {%- set it = namespace(v='') -%}
+    {%- for key in keys if not it.v -%}
+      {%- set m = ns.mf.get(key) -%}
+      {%- if m and m.value is not none -%}
+        {%- if m.value is mapping -%}{%- set it.v = m.value.url or m.value[lang] or m.value.ar or m.value.en or '' -%}
+        {%- else -%}{%- set it.v = m.value -%}{%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {{- it.v -}}
+  {%- endmacro %}
+  {% set model_url = mfv(['model_3d', '3d_model', 'glb', 'نموذج_ثلاثي_الأبعاد']) | trim %}
+  {% set dim_w = mfv(['width', 'العرض']) | trim %}
+  {% set dim_h = mfv(['height', 'الارتفاع']) | trim %}
+  {% set dim_d = mfv(['depth', 'العمق']) | trim %}
+  {% set dim_sh = mfv(['seat_height', 'ارتفاع_المقعد']) | trim %}
+  {% set story_title = mfv(['story_title', 'عنوان_الحكاية']) | trim %}
+  {% set story_text = mfv(['story_text', 'نص_الحكاية']) | trim %}
+
+  {% set images = product.images or [] %}
+  {% macro img_src(im, w=1200) -%}{{ image_url(im.image.large if im.image else im, w=w, q=88, f='auto') }}{%- endmacro %}
+  {% set sold_count = product.sold_products_count or (selected_product and selected_product.sold_products_count) %}
+  {% set rating = product.rating.average if product.rating else 0 %}
+  {% set rating_count = product.rating.total_count if product.rating else 0 %}
+  {% set stock_scale = (settings.ket_stock_scale | default(100)) | int %}
+  {% set qty_left = selected_product.quantity if selected_product and not selected_product.is_infinite else none %}
+
+  <div class="ket" data-ket-product>
+
+    {# ===================== 3D SCROLL HERO (only when the product has a 3D model) ===================== #}
+    {% if model_url and settings.ket_hero_enabled | default(true) %}
+      <div id="ket-hero"
+           data-model="{{ model_url }}"
+           data-title-{{ lang }}="{{ product.name }}"
+           {% if product.short_description %}data-sub-{{ lang }}="{{ product.short_description | striptags | trim }}"{% endif %}
+           data-cta-{{ lang }}="{{ _('Shop now') }}">
+        <section class="kh kh-static" aria-label="{{ product.name }}">
+          <div class="kh-static-media">{% if images %}<img src="{{ img_src(images[0], 900) }}" alt="{{ product.name }}" width="560" height="560">{% endif %}</div>
+          <h2>{{ product.name }}</h2>
+        </section>
+      </div>
+    {% endif %}
+
+    {# ===================== GALLERY + BUY BOX ===================== #}
+    <section class="pdp" id="product" aria-labelledby="pTitle"
+             data-has-preorder="{{ 'true' if has_preorder else 'false' }}"
+             data-can-preorder="{{ 'true' if can_preorder else 'false' }}"
+             data-stock-behavior="{{ preorder_stock_behavior or '' }}">
+      <div class="container pdp-grid" id="product-main-section">
+
+        {# Gallery: scroll-snap slides; tapping one opens Zid's lightbox (PhotoSwipe) #}
+        <div class="gallery" id="gallery">
+          <div id="product-gallery-lightbox" class="hidden" hidden>
+            {% for im in images %}
+              <a href="{{ img_src(im, 1600) }}" data-pswp-width="1600" data-pswp-height="1600">
+                <img src="{{ img_src(im, 1600) }}" alt="{{ product.name }}" data-lightbox-item data-lightbox-src="{{ img_src(im, 1600) }}" data-lightbox-width="1600" data-lightbox-height="1600">
+              </a>
+            {% endfor %}
+          </div>
+          <div class="g-stage">
+            <div class="g-track" id="gTrack" tabindex="0" role="region" aria-roledescription="carousel" aria-label="{{ _('Product images') }}">
+              {% for im in images %}
+                <div class="g-slide" role="group" aria-roledescription="slide" data-i="{{ loop.index0 }}">
+                  <img src="{{ img_src(im, 1200) }}"
+                       srcset="{{ img_src(im, 640) }} 640w, {{ img_src(im, 960) }} 960w, {{ img_src(im, 1400) }} 1400w"
+                       sizes="(min-width:1024px) 55vw, 100vw"
+                       alt="{{ im.alt_text | default(product.name) }}" width="1254" height="1254"
+                       data-lightbox-trigger="{{ loop.index0 }}" draggable="false" decoding="async"
+                       {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+                </div>
+              {% endfor %}
+            </div>
+            {% if images | length > 1 %}
+              <button class="g-arrow g-prev hide-mob" id="gPrev" type="button" aria-label="{{ _('Previous') }}"><span style="display:block;transform:scaleX(-1)">{{ k.icon('chev', 20) }}</span></button>
+              <button class="g-arrow g-next hide-mob" id="gNext" type="button" aria-label="{{ _('Next') }}">{{ k.icon('chev', 20) }}</button>
+              <span class="g-count" id="gCount" dir="ltr" aria-hidden="true">01 / {{ '%02d' | format(images | length) }}</span>
+            {% endif %}
+            <button class="icon-btn g-zoom" type="button" data-lightbox-trigger="0" aria-label="{{ _('Zoom') }}">{{ k.icon('zoom', 20) }}</button>
+          </div>
+          {% if images | length > 1 %}
+            <div class="g-prog" id="gProg" style="--n:{{ images | length }}" aria-hidden="true"><span></span></div>
+            <div class="g-thumbs" id="gThumbs">
+              {% for im in images %}
+                <button class="g-thumb{{ ' is-active' if loop.first }}" type="button" data-i="{{ loop.index0 }}" aria-label="{{ _('Image') }} {{ loop.index }}"><img src="{{ img_src(im, 160) }}" alt="" loading="lazy" width="64" height="64"></button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        {# Buy box #}
+        <div class="buy" id="buy">
+          <div class="buy__pills intro-fade" id="product-badges">
+            <span class="pill pill--mint {{ 'hidden' if not sold_count }}" data-sold-count-badge>
+              <span data-sold-count-text>{{ _("Sold more than %s times") | format(sold_count) if sold_count }}</span>
+            </span>
+            {% if product.badge and product.badge.body %}
+              <span class="pill pill--yellow">{{ product.badge.body[lang] if product.badge.body is mapping else product.badge.body }}</span>
+            {% endif %}
+            {% if product.preorder_campaign %}{% include 'vitrin:products/preorder_badge.jinja' %}{% endif %}
+          </div>
+
+          <h1 class="buy__title" id="pTitle"><span class="line-mask intro-line"><span>{{ product.name }}</span></span></h1>
+          {% if product.short_description %}
+            <div class="buy__sub intro-fade">{{ product.short_description | safe }}</div>
+          {% endif %}
+
+          {% if store.settings.products.reviews_enabled and rating %}
+            <a class="rating intro-fade" href="#reviews">
+              {{ k.stars(rating, 15, rating ~ ' / 5') }}
+              <span class="rating__val">{{ '%.1f' | format(rating) }}</span>
+              <span class="rating__count muted">({{ rating_count }} {{ _("reviews") }})</span>
+            </a>
+          {% endif %}
+
+          <div class="price intro-fade">
+            <span class="price__now num" data-product-price>{{ product.formatted_sale_price if product.formatted_sale_price else product.formatted_price }}</span>
+            <s class="price__was num {{ 'hidden' if not product.formatted_sale_price }}" data-product-price-old>{{ product.formatted_price if product.formatted_sale_price else '' }}</s>
+            <span class="pill pill--orange num {{ 'hidden' if not (product.discount_percentage and product.discount_percentage > 0) }}" dir="ltr" data-product-discount>
+              {% if product.discount_percentage and product.discount_percentage > 0 %}-{{ product.discount_percentage | round(0) | int }}%{% endif %}
+            </span>
+            {% if product.is_taxable %}<span class="price__vat">{{ _("Price includes VAT") }}</span>{% endif %}
+          </div>
+          <span class="hidden" data-product-sku-wrapper>SKU <span data-product-sku>{{ product.sku }}</span></span>
+
+          <div class="ket-bnpl intro-fade">
+            {% include 'vitrin:shared/bank_discounts.jinja' %}
+            {% include 'vitrin:products/payment_widgets.jinja' %}
+          </div>
+
+          <hr class="divider">
+
+          {% if qty_left is not none and qty_left > 0 and qty_left <= stock_scale %}
+            <div class="stock" data-low-stock-badge>
+              <div class="stock__row">
+                <strong data-low-stock-text>{{ _("Remaining %s only") | format(qty_left) }}</strong>
+                <span class="muted">{{ _("Selling fast") }}</span>
+              </div>
+              <div class="stock__bar" aria-hidden="true"><span style="--w:{{ [8, (qty_left / stock_scale * 100) | round(0)] | max }}%"></span></div>
+            </div>
+          {% endif %}
+          <p class="delivery" data-ket-delivery data-days="{{ settings.ket_delivery_days | default(3) }}" hidden>
+            {{ k.icon('calendar', 20, 1.4) }}<span></span>
+          </p>
+
+          <form id="product-form" class="ket-form" onsubmit="return false">
+            <input type="hidden" name="product_id" id="product-id" value="{{ product.selected_product.id }}">
+            {% with product=product %}{% include 'components/products/custom-input-fields.jinja' %}{% endwith %}
+            {% if product.has_options or product.has_fields %}
+              <div class="ket-options">
+                {% with options=product.options, product=product, style='list' %}{% include 'components/products/product-options.jinja' %}{% endwith %}
+              </div>
+            {% endif %}
+            {% if product.product_class == 'dynamic_bundle' %}{% include 'vitrin:products/bundle-products.jinja' %}{% endif %}
+
+            <div class="buy__actions" data-product-actions>
+              <div class="ket-actions {{ 'hidden' if not can_buy }}" data-in-stock>
+                <div class="ket-qty {{ 'hidden' if not product.in_stock }}" data-quantity-wrapper>
+                  {% with id='product-quantity', quantity=1, min=1, max=product.quantity if not product.is_infinite and product.quantity > 0 else (1 if can_preorder else none), sync_target='sticky-qty' %}
+                    {% include 'components/ui/quantity-input.jinja' %}
+                  {% endwith %}
+                </div>
+                <button type="button" class="btn btn-primary magnetic" data-add-to-cart-form="product-form" data-success-text="{{ _('Added!') }}">
+                  <span class="btn-label">{% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %}{{ _("Add to cart") }}{% endif %}</span>
+                </button>
+                <span id="product-view-add-to-cart"></span>
+                {% if not safeget(store, 'settings.general.availability.closed_now') and store.settings.checkout.show_checkout_as_popup and not product.preorder_campaign and product.selected_product.in_stock %}
+                  <button type="button" class="btn btn-outline btn-buy-now" data-buy-now-form="product-form"><span class="btn-label">{{ _("Buy now") }}</span></button>
+                {% endif %}
+              </div>
+              <div class="ket-actions ket-actions--out {{ 'hidden' if can_buy }}" data-out-of-stock>
+                <button type="button" class="btn btn-primary" data-notify-me-btn command="show-modal" commandfor="notify-me-dialog">
+                  <span class="btn-label">{{ _("Notify me when available") }}</span>
+                </button>
+              </div>
+            </div>
+
+            {% include 'vitrin:checkout/checkout_dialog.jinja' %}
+            {% include 'vitrin:products/loyalty_points_widget.jinja' %}
+            {% if store.settings.checkout.gift_order_settings.is_gift_order_enabled == '1' and (settings.gifting_product_page | default(true)) %}
+              {% include 'components/products/gift-order-link.jinja' %}
+            {% endif %}
+            {% include 'vitrin:products/preorder_countdown.jinja' %}
+            {% include 'vitrin:checkout/apple-pay-quick-checkout.jinja' %}
+          </form>
+
+          {# Social proof: Zid's own figures #}
+          {% if sold_count or rating_count %}
+            <div class="proof" role="group" aria-label="{{ _('Product figures') }}">
+              {% if sold_count %}
+                <div class="proof__item"><span class="proof__ic">{{ k.icon('bag', 22) }}</span><strong class="proof__num" dir="ltr" data-count="{{ sold_count }}">{{ sold_count }}+</strong><span class="proof__lab">{{ _("bought it") }}</span></div>
+              {% endif %}
+              {% if rating_count %}
+                <div class="proof__item"><span class="proof__ic">{{ k.icon('chat', 22) }}</span><strong class="proof__num" dir="ltr" data-count="{{ rating_count }}">{{ rating_count }}</strong><span class="proof__lab">{{ _("reviews") }}</span></div>
+                <div class="proof__item"><span class="proof__ic proof__ic--stars">{{ k.stars(rating, 14) }}</span><strong class="proof__num" dir="ltr">{{ '%.1f' | format(rating) }}<small>/5</small></strong><span class="proof__lab">{{ _("customer rating") }}</span></div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {# Purchase motivators (theme settings) #}
+          <ul class="trust">
+            {% for n in ['lav', 'green', 'blue'] %}
+              {% set ti = settings['ket_trust' ~ loop.index ~ '_title'] %}
+              {% if ti %}
+                <li style="--tint:{{ k.KET_SHAPE_TINT[n] }}">{{ k.shape(n) }}<div><strong>{{ ti }}</strong><span>{{ settings['ket_trust' ~ loop.index ~ '_text'] }}</span></div></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+        {% with product=product %}{% include 'components/products/notify-me-dialog.jinja' %}{% endwith %}
+      </div>
+    </section>
+
+    {# ===================== STORY (metafields story_title / story_text) ===================== #}
+    {% if story_title or story_text %}
+      <section class="story" id="story" aria-labelledby="storyWord">
+        <div class="container story__stage" id="storyStage">
+          <div class="story__head">
+            <p class="eyebrow"><span class="idx">02</span><span>{{ _("The story") }}</span></p>
+            <h2 class="story__word" id="storyWord"><span class="line-mask"><span id="storyTitle">{{ story_title or product.name }}</span></span></h2>
+          </div>
+          <div class="story__visual" id="storyVisual">
+            <div class="story__card" id="storyCard">
+              {% if images %}<img alt="" loading="lazy" decoding="async" id="storyProduct" src="{{ img_src(images[0], 1200) }}">{% endif %}
+              {% if images | length > 1 %}
+                <figure class="story__detail" id="storyDetail" style="margin:0">
+                  <img alt="" loading="lazy" decoding="async" id="storyImgEl" src="{{ img_src(images[1], 900) }}">
+                  <figcaption>{% if product.sku %}<span class="latin">{{ product.sku }}</span> · {% endif %}{{ product.name }}</figcaption>
+                </figure>
+              {% endif %}
+            </div>
+          </div>
+          {% if story_text %}<p class="story__body" id="storyBody">{{ story_text }}</p>{% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {# ===================== DIMENSIONS (metafields width / height / depth / seat_height) ===================== #}
+    {% if dim_w or dim_h or dim_d or dim_sh %}
+      <section class="section" id="dimensions" aria-labelledby="dimTitle">
+        <div class="container">
+          <div class="sec-head" data-reveal>
+            <p class="eyebrow"><span class="idx">03</span><span>{{ _("Dimensions") }}</span></p>
+            <h2 class="h-xl" id="dimTitle">{{ _("Considered proportions") }}</h2>
+          </div>
+          <div class="dims">
+            <div class="dims__drawings">{% include 'components/ket/dims.jinja' %}</div>
+            <div>
+              <table class="spec">
+                {% for label, v in [(_("Height"), dim_h), (_("Width"), dim_w), (_("Depth"), dim_d), (_("Seat height"), dim_sh)] %}
+                  <tr><th scope="row">{{ label }}</th><td class="num">{{ (v ~ ' ' ~ _("cm")) if v else '—' }}</td></tr>
+                {% endfor %}
+              </table>
+              {% if settings.ket_fit_text %}
+                <div class="fit" data-reveal>
+                  <span>{{ k.icon('house', 30, 1.3) }}</span>
+                  <div><h3>{{ _("Will it fit?") }}</h3><p>{{ settings.ket_fit_text }}</p></div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ===================== EVERYTHING YOU NEED TO KNOW (accordions) ===================== #}
+    {# metafields the page already shows elsewhere (3D model, measurements, story) stay out of the details list #}
+    {% set ket_keys = ['model_3d', '3d_model', 'glb', 'width', 'height', 'depth', 'seat_height', 'story_title', 'story_text'] %}
+    {% set extra_mf = [] %}
+    {% for item in (product.metafields or []) %}
+      {% set nm = item.name if item.name is mapping else {} %}
+      {% if (item.key or (nm.en or '') | lower | replace(' ', '_')) not in ket_keys %}{% set _x = extra_mf.append(item) %}{% endif %}
+    {% endfor %}
+    {% set has_metafields = extra_mf and store.settings.products.is_metafields_enabled %}
+    {% set acc = [] %}
+    {% if product.description or has_metafields %}{% set _x = acc.append('details') %}{% endif %}
+    {% if settings.ket_shipping_text %}{% set _x = acc.append('shipping') %}{% endif %}
+    {% if settings.ket_returns_text %}{% set _x = acc.append('returns') %}{% endif %}
+    {% if settings.ket_care_text %}{% set _x = acc.append('care') %}{% endif %}
+    {% if acc %}
+      <section class="section" id="info" aria-labelledby="infoTitle">
+        <div class="container info-grid">
+          <div class="sec-head" style="border:0; padding:0" data-reveal>
+            <p class="eyebrow"><span class="idx">04</span><span>{{ _("Details") }}</span></p>
+            <h2 class="h-xl" id="infoTitle">{{ _("Everything you need to know") }}</h2>
+          </div>
+          <div class="acc">
+            {% set titles = {'details': _("Details"), 'shipping': _("Shipping & delivery"), 'returns': _("Returns"), 'care': _("Product care")} %}
+            {% for key in acc %}
+              <div class="acc__item{{ ' is-open' if loop.first }}">
+                <h3><button class="acc__btn" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="accp{{ loop.index }}" id="accb{{ loop.index }}"><span>{{ titles[key] }}</span><span class="acc__icon" aria-hidden="true"></span></button></h3>
+                <div class="acc__panel" id="accp{{ loop.index }}" role="region" aria-labelledby="accb{{ loop.index }}"><div><div class="acc__content">
+                  {% if key == 'details' %}
+                    {% if product.description %}<div class="ket-prose">{{ product.description | safe }}</div>{% endif %}
+                    {% if has_metafields %}<dl class="ket-meta">{% with entity={'metafields': extra_mf} %}{% include 'components/shared/metafields.jinja' %}{% endwith %}</dl>{% endif %}
+                  {% else %}
+                    <p>{{ settings['ket_' ~ key ~ '_text'] }}</p>
+                  {% endif %}
+                </div></div></div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ===================== REVIEWS (Zid reviews) ===================== #}
+    {% if store.settings.products.reviews_enabled %}
+      <section class="section" id="reviews" aria-labelledby="revTitle">
+        <div class="container">
+          <div class="sec-head" data-reveal>
+            <p class="eyebrow"><span class="idx">05</span><span>{{ _("Reviews") }}</span></p>
+            <h2 class="h-xl" id="revTitle">{{ _("What our customers say") }}</h2>
+          </div>
+          {% if rating_count %}
+            <div class="rev">
+              <div data-reveal>
+                <p class="rev__score">{{ '%.1f' | format(rating) }}</p>
+                <div class="rev__meta">{{ k.stars(rating, 18) }}<span>{{ _("from %s reviews") | format(rating_count) }}</span></div>
+                <div class="rev__bars">
+                  {% for n in [5, 4, 3, 2, 1] %}
+                    {% set c = (product.rating['ratings_' ~ n].count if product.rating['ratings_' ~ n] else 0) or 0 %}
+                    {% set p = ((c / rating_count * 100) | round(0) | int) if rating_count else 0 %}
+                    <div class="rev__bar"><span>{{ n }}</span><i><b style="--w:{{ p }}%"></b></i><span>{{ p }}%</span></div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% if product.reviews and product.reviews.results %}
+                <div class="slider">
+                  <div class="slider__track" id="revTrack" tabindex="0">
+                    {% for review in product.reviews.results %}
+                      <article class="rcard">
+                        <span>{{ k.stars(review.rating, 14) }}</span>
+                        <p>{{ review.comment }}</p>
+                        <footer><span><strong>{{ review.customer.name if review.customer else '' }}</strong></span></footer>
+                      </article>
+                    {% endfor %}
+                  </div>
+                  <div class="slider__nav">
+                    <button type="button" data-slide="revTrack" data-step="-1" aria-label="{{ _('Previous') }}"><span style="display:block;transform:scaleX(-1)">{{ k.icon('chev', 20) }}</span></button>
+                    <button type="button" data-slide="revTrack" data-step="1" aria-label="{{ _('Next') }}">{{ k.icon('chev', 20) }}</button>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          {% else %}
+            {% with product=product, store=store, session=session %}{% include 'components/products/product-reviews.jinja' %}{% endwith %}
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+    {# ===================== COMPLETE THE MAJLIS (related products) ===================== #}
+    {% if product.related_products and product.related_products | length > 0 %}
+      <section class="section" id="related" aria-labelledby="relTitle">
+        <div class="container">
+          <div class="sec-head" data-reveal>
+            <p class="eyebrow"><span class="idx">06</span><span>{{ _("Complete the look") }}</span></p>
+            <h2 class="h-xl" id="relTitle">{{ _("Complete the majlis") }}</h2>
+          </div>
+          <div class="ket-related">
+            {% with products=product.related_products, title='', carousel_id="related-products" %}{% include 'components/products/products-carousel.jinja' %}{% endwith %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+
+  {% with product=product %}{% include 'components/products/sticky-product-actions.jinja' %}{% endwith %}
+{% endblock %}
+
+{% block footer_scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  {# ket-product.js loads the 3D hero bundle itself, only on products that have a 3D model #}
+  <script defer src="{{ 'ket-product.js' | asset_url }}" data-hero="{{ 'ket-hero.js' | asset_url }}"></script>
+{% endblock %}

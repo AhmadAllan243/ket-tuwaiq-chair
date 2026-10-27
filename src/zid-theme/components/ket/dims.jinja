@@ -1,0 +1,42 @@
+{#
+  KET dimension drawings (front + side), the same line drawings as the prototype.
+  Params: dim_w, dim_h, dim_d, dim_sh (numbers in cm, or empty for "—")
+#}
+{% set cm = _("cm") %}
+{% macro val(v) %}{{ (v ~ ' ' ~ cm) if v else '— ' ~ cm }}{% endmacro %}
+<figure class="dims__fig" data-reveal>
+  <figcaption>{{ _("Front") }}</figcaption>
+  <svg viewBox="0 0 230 270" aria-hidden="true">
+    <g class="chair">
+      <path class="dl" pathLength="1" d="M60 46 H150 A28 28 0 0 1 178 74 V92 A28 28 0 0 1 150 120 H60 A28 28 0 0 1 32 92 V74 A28 28 0 0 1 60 46 Z" transform="translate(10 0)"/>
+      <path class="dl" pathLength="1" d="M58 130 H172 A16 16 0 0 1 188 146 V160 A16 16 0 0 1 172 176 H58 A16 16 0 0 1 42 160 V146 A16 16 0 0 1 58 130 Z"/>
+      <path class="dl" pathLength="1" d="M36 124 L33 236 M194 124 L197 236 M44 184 H186"/>
+      <circle class="dl" pathLength="1" cx="36" cy="120" r="8"/><circle class="dl" pathLength="1" cx="194" cy="120" r="8"/>
+      <path class="dl" pathLength="1" d="M10 236 H220" stroke="#A8A8A8"/>
+    </g>
+    <g class="dims">
+      <path class="dm" pathLength="1" d="M33 24 H197 M33 18 V30 M197 18 V30"/>
+      <text class="dm-t" x="115" y="14" text-anchor="middle">{{ val(dim_w) }}</text>
+      <path class="dm" pathLength="1" d="M214 46 V236 M208 46 H220 M208 236 H220"/>
+      <text class="dm-t" x="214" y="140" text-anchor="middle" transform="rotate(-90 214 140)" dy="-6">{{ val(dim_h) }}</text>
+    </g>
+  </svg>
+</figure>
+<figure class="dims__fig" data-reveal>
+  <figcaption>{{ _("Side") }}</figcaption>
+  <svg viewBox="0 0 230 270" aria-hidden="true">
+    <g class="chair">
+      <path class="dl" pathLength="1" d="M52 52 C44 54 40 62 42 72 L54 124 C56 133 64 137 72 134 L76 132 C84 129 87 121 85 113 L74 64 C72 55 62 49 52 52 Z"/>
+      <path class="dl" pathLength="1" d="M76 132 H178 A16 16 0 0 1 194 148 V160 A16 16 0 0 1 178 176 H82 A16 16 0 0 1 66 160 Z"/>
+      <path class="dl" pathLength="1" d="M58 236 L80 120 M188 236 L184 126 M80 184 H186"/>
+      <path class="dl" pathLength="1" d="M70 112 H192 A8 8 0 0 1 192 128 H70 A8 8 0 0 1 70 112 Z"/>
+      <path class="dl" pathLength="1" d="M10 236 H220" stroke="#A8A8A8"/>
+    </g>
+    <g class="dims">
+      <path class="dm" pathLength="1" d="M42 252 H194 M42 246 V258 M194 246 V258"/>
+      <text class="dm-t" x="118" y="268" text-anchor="middle">{{ val(dim_d) }}</text>
+      <path class="dm" pathLength="1" d="M214 132 V236 M208 132 H220 M208 236 H220"/>
+      <text class="dm-t" x="214" y="184" text-anchor="middle" transform="rotate(-90 214 184)" dy="-6">{{ val(dim_sh) }}</text>
+    </g>
+  </svg>
+</figure>

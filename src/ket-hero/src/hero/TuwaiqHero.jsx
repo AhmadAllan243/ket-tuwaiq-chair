@@ -10,7 +10,10 @@ const gsap = window.gsap
 const ScrollTrigger = window.ScrollTrigger
 gsap.registerPlugin(ScrollTrigger)
 
-export const MODEL_URL = new URL('models/tuwaiq-chair.glb', document.baseURI).href
+// Per-product settings come from the mount's data attributes (the Zid theme fills them from the
+// product: data-model, data-title-ar, data-title-en, data-sub-ar, …); without them it is the Tuwaiq chair.
+const CFG = document.getElementById('ket-hero')?.dataset || {}
+export const MODEL_URL = CFG.model || new URL('models/tuwaiq-chair.glb', document.baseURI).href
 export const PARTS = ['ChairBase', 'SeatCushion', 'SeatBack']
 
 const { degToRad, lerp, clamp } = THREE.MathUtils
@@ -54,6 +57,12 @@ const FLIGHT = {
 const COPY = {
   ar: { eyebrow: 'ket · مجموعة ٢٠٢٦', title: 'كرسي طويق', sub: 'نقوش نجد والحجاز وعسير، تجتمع في قطعة واحدة.', cta: 'تسوّق الكرسي', hint: 'مرّر لتركيب الكرسي', parts: '٣ قطع · كرسي واحد', loading: 'جارٍ تحميل النموذج' },
   en: { eyebrow: 'ket · 2026 collection', title: 'Tuwaiq Chair', sub: 'The patterns of Najd, Hijaz and Asir, brought together in one piece.', cta: 'Shop the chair', hint: 'Scroll to assemble', parts: '3 parts · 1 chair', loading: 'Loading model' },
+}
+for (const lang of ['ar', 'en']) {
+  for (const k of Object.keys(COPY[lang])) {
+    const v = CFG[k + lang[0].toUpperCase() + lang.slice(1)]   // e.g. data-title-ar → titleAr
+    if (v) COPY[lang][k] = v
+  }
 }
 
 const popIn = gsap.parseEase('back.out(1.6)')

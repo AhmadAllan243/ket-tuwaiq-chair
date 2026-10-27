@@ -1,0 +1,52 @@
+/* Theme-only rules for the KET product page (appended to assets/ket.css by ket/extract_css.py).
+   They cover the places where the Zid page differs from the prototype: Zid's own components
+   (quantity input, options, payment widgets, metafields, related carousel) and the hero fallback. */
+.ket .hidden{ display:none!important; }
+.ket [hidden]{ display:none!important; }
+
+/* 3D hero: static fallback until the bundle mounts (and without WebGL / JS) */
+.ket #ket-hero .kh-static{ position:relative; min-height:100vh; min-height:100svh; display:grid; align-content:end; gap:16px; padding:96px clamp(16px,4vw,56px) 40px; background:radial-gradient(120% 80% at 50% 38%, #fff 0%, #f6f5f3 46%, #e9e7e4 100%); overflow:hidden; }
+.ket #ket-hero .kh-static-media{ position:absolute; inset:0; display:grid; place-items:center; padding-bottom:24vh; }
+.ket #ket-hero .kh-static-media img{ width:min(78vw,560px); height:auto; mix-blend-mode:multiply; }
+.ket #ket-hero .kh-static h2{ position:relative; margin:0; font-size:clamp(44px,9vw,128px); line-height:1.05; font-weight:700; text-transform:uppercase; }
+
+/* the description from Zid is HTML */
+.ket .buy__sub p{ margin:0; }
+.ket .ket-prose{ font-size:15px; line-height:1.75; color:var(--ink-2); }
+.ket .ket-prose p + p{ margin-top:.8em; }
+.ket .ket-prose ul{ list-style:disc; padding-inline-start:1.2em; }
+.ket .ket-meta{ display:grid; gap:10px; margin-top:16px; font-size:14px; }
+
+/* Tabby / Tamara / bank offers (Zid widgets) */
+.ket .ket-bnpl{ margin-top:var(--s4); display:grid; gap:10px; }
+.ket .ket-bnpl:empty{ display:none; }
+
+/* options + custom fields (Zid headless components) */
+.ket .ket-form{ display:grid; gap:var(--s4); margin-top:var(--s5); }
+.ket .ket-options .product-options__group{ display:grid; gap:10px; }
+
+/* actions: [quantity][add to cart] / [buy now] */
+.ket .buy__actions{ display:block; margin-top:0; }
+.ket .ket-actions{ display:grid; grid-template-columns:auto 1fr; gap:10px; }
+.ket .ket-actions > .btn-outline, .ket .ket-actions--out .btn{ grid-column:1 / -1; }
+.ket .ket-actions--out{ grid-template-columns:1fr; }
+.ket .ket-actions #product-view-add-to-cart:empty{ display:none; }
+/* Zid's quantity input, drawn as the KET pill stepper */
+.ket .ket-qty .qty-input{ height:56px; border:1px solid var(--black); border-radius:var(--r-pill); padding-inline:4px; gap:0; box-shadow:none; }
+.ket .ket-qty .qty-input:hover, .ket .ket-qty .qty-input:focus-within{ box-shadow:none; outline:0; }
+.ket .ket-qty .qty-input-btn{ width:40px; height:46px; border-radius:var(--r-pill); background:none; }
+.ket .ket-qty .qty-input-btn:hover{ background:var(--g100); }
+.ket .ket-qty .qty-input-btn svg{ width:18px; height:18px; }
+.ket .ket-qty .qty-input-field{ width:34px; border:0; background:none; text-align:center; font:600 17px/24px var(--f-latin); -moz-appearance:textfield; }
+.ket .ket-qty .qty-input-field::-webkit-inner-spin-button, .ket .ket-qty .qty-input-field::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+
+/* sections on the Zid page are not preceded by the prototype's own spacing */
+.ket #dimensions, .ket #info, .ket #reviews, .ket #related{ padding-top:0; }
+.ket .ket-related .theme-container, .ket .ket-related > div{ padding-inline:0; }
+.ket .ket-related h2:empty{ display:none; }
+
+/* Zid's header is sticky over the pinned 3D hero: keep the scene below it (height measured by ket-product.js) */
+.ket #ket-hero .kh-canvas{ top:var(--ket-header-h, 0px)!important; height:calc(100% - var(--ket-header-h, 0px))!important; }
+.ket .ket-qty .qty-input-field{ height:46px; padding:0; line-height:46px; }
+.ket .rev > *{ min-width:0; }   /* the review slider must not widen the column on phones */
+.ket .ket-qty .qty-input{ display:inline-flex; align-items:center; }

@@ -1,0 +1,473 @@
+{
+  "name": {
+    "ar": "إعدادات التخطيط",
+    "en": "Layout Settings"
+  },
+  "groups": [
+    {
+      "id": "product_card",
+      "icon": "fa fa-th-large",
+      "name": {
+        "ar": "بطاقة المنتج",
+        "en": "Product Card"
+      },
+      "settings": [
+        {
+          "id": "columns_desktop",
+          "type": "select",
+          "label": {
+            "ar": "عدد الأعمدة (سطح المكتب)",
+            "en": "Columns (Desktop)"
+          },
+          "options": [
+            {
+              "value": "2",
+              "label": {
+                "ar": "2 أعمدة",
+                "en": "2 Columns"
+              }
+            },
+            {
+              "value": "3",
+              "label": {
+                "ar": "3 أعمدة",
+                "en": "3 Columns"
+              }
+            },
+            {
+              "value": "4",
+              "label": {
+                "ar": "4 أعمدة",
+                "en": "4 Columns"
+              }
+            },
+            {
+              "value": "5",
+              "label": {
+                "ar": "5 أعمدة",
+                "en": "5 Columns"
+              }
+            },
+            {
+              "value": "6",
+              "label": {
+                "ar": "6 أعمدة",
+                "en": "6 Columns"
+              }
+            }
+          ],
+          "default": "5"
+        },
+        {
+          "id": "columns_mobile",
+          "type": "select",
+          "label": {
+            "ar": "عدد الأعمدة (موبايل)",
+            "en": "Columns (Mobile)"
+          },
+          "options": [
+            {
+              "value": "1",
+              "label": {
+                "ar": "1 عمود",
+                "en": "1 Column"
+              }
+            },
+            {
+              "value": "2",
+              "label": {
+                "ar": "2 أعمدة",
+                "en": "2 Columns"
+              }
+            }
+          ],
+          "default": "2"
+        },
+        {
+          "id": "image_aspect_ratio",
+          "type": "select",
+          "label": {
+            "ar": "نسبة أبعاد الصورة",
+            "en": "Image Aspect Ratio"
+          },
+          "options": [
+            {
+              "value": "adapt",
+              "label": {
+                "ar": "تكيّف مع الصورة",
+                "en": "Adapt to image"
+              }
+            },
+            {
+              "value": "portrait",
+              "label": {
+                "ar": "طولي (3:4)",
+                "en": "Portrait (3:4)"
+              }
+            },
+            {
+              "value": "square",
+              "label": {
+                "ar": "مربع (1:1)",
+                "en": "Square (1:1)"
+              }
+            }
+          ],
+          "default": "adapt"
+        }
+      ]
+    },
+    {
+      "id": "font",
+      "icon": "fa fa-font",
+      "name": {
+        "ar": "الخط",
+        "en": "Font"
+      },
+      "settings": [
+        {
+          "id": "family",
+          "type": "select",
+          "label": {
+            "ar": "نوع الخط",
+            "en": "Font Family"
+          },
+          "default": "IBM+Plex+Sans+Arabic",
+          "options": [
+            {
+              "label": {
+                "ar": "IBM Arabic",
+                "en": "IBM Arabic"
+              },
+              "value": "IBM+Plex+Sans+Arabic"
+            },
+            {
+              "label": {
+                "ar": "Roboto",
+                "en": "Roboto"
+              },
+              "value": "Roboto"
+            },
+            {
+              "label": {
+                "ar": "Cairo",
+                "en": "Cairo"
+              },
+              "value": "Cairo"
+            },
+            {
+              "label": {
+                "ar": "Changa",
+                "en": "Changa"
+              },
+              "value": "Changa"
+            },
+            {
+              "label": {
+                "ar": "Tajawal",
+                "en": "Tajawal"
+              },
+              "value": "Tajawal"
+            },
+            {
+              "label": {
+                "ar": "Almarai",
+                "en": "Almarai"
+              },
+              "value": "Almarai"
+            },
+            {
+              "label": {
+                "ar": "Amiri",
+                "en": "Amiri"
+              },
+              "value": "Amiri"
+            },
+            {
+              "label": {
+                "ar": "Mada",
+                "en": "Mada"
+              },
+              "value": "Mada"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "theme",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "ألوان الثيم",
+        "en": "Theme Colors"
+      },
+      "settings": [
+        {
+          "id": "primary",
+          "type": "color",
+          "label": {
+            "ar": "اللون الأساسي",
+            "en": "Primary Color"
+          },
+          "default": "#0B0A09"
+        },
+        {
+          "id": "primary_foreground",
+          "type": "color",
+          "label": {
+            "ar": "نص اللون الأساسي",
+            "en": "Primary Text Color"
+          },
+          "default": "#FFFFFF"
+        },
+        {
+          "id": "secondary",
+          "type": "color",
+          "label": {
+            "ar": "لون السطح",
+            "en": "Surface Color"
+          },
+          "default": "#F6F5F4"
+        },
+        {
+          "id": "accent",
+          "type": "color",
+          "label": {
+            "ar": "لون التمييز",
+            "en": "Accent Color"
+          },
+          "default": "#A89C90"
+        },
+        {
+          "id": "background",
+          "type": "color",
+          "label": {
+            "ar": "خلفية الصفحة",
+            "en": "Page Background"
+          },
+          "default": "#FFFFFF"
+        },
+        {
+          "id": "foreground",
+          "type": "color",
+          "label": {
+            "ar": "لون النص",
+            "en": "Text Color"
+          },
+          "default": "#0B0A09"
+        },
+        {
+          "id": "muted",
+          "type": "color",
+          "label": {
+            "ar": "لون النص الثانوي",
+            "en": "Muted Text Color"
+          },
+          "default": "#545352"
+        },
+        {
+          "id": "border",
+          "type": "color",
+          "label": {
+            "ar": "لون الحدود",
+            "en": "Border Color"
+          },
+          "default": "#B5B5B5"
+        },
+        {
+          "id": "input",
+          "type": "color",
+          "label": {
+            "ar": "لون حدود الإدخال",
+            "en": "Input Border Color"
+          },
+          "default": "#545352"
+        },
+        {
+          "id": "ring",
+          "type": "color",
+          "label": {
+            "ar": "لون حلقة التركيز",
+            "en": "Focus Ring Color"
+          },
+          "default": "#0B0A09"
+        },
+        {
+          "id": "radius",
+          "type": "range",
+          "label": {
+            "ar": "نصف قطر الحواف",
+            "en": "Border Radius"
+          },
+          "min": 0,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "default": 4
+        }
+      ]
+    },
+    {
+      "id": "gifting",
+      "icon": "fa fa-gift",
+      "name": {
+        "ar": "الإهداء",
+        "en": "Gifting"
+      },
+      "settings": [
+        {
+          "id": "cart_page",
+          "type": "checkbox",
+          "label": {
+            "ar": "إظهار زر الإهداء في صفحة السلة",
+            "en": "Show the gift widget on the cart page"
+          },
+          "default": true
+        },
+        {
+          "id": "product_page",
+          "type": "checkbox",
+          "label": {
+            "ar": "إظهار زر الإهداء في صفحة المنتج",
+            "en": "Show the gift widget on the product page"
+          },
+          "default": true
+        },
+        {
+          "id": "add_to_cart_popup",
+          "type": "checkbox",
+          "label": {
+            "ar": "إظهار تنبيه الإهداء بعد الإضافة إلى السلة",
+            "en": "Show a gifting hint after adding to cart"
+          },
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": "ket",
+      "icon": "fa fa-couch",
+      "name": {
+        "ar": "صفحة المنتج (ket)",
+        "en": "Product page (ket)"
+      },
+      "settings": [
+        {
+          "id": "hero_enabled",
+          "type": "checkbox",
+          "label": {
+            "ar": "إظهار المقطع ثلاثي الأبعاد للمنتجات التي لها نموذج",
+            "en": "Show the 3D hero on products that have a 3D model"
+          },
+          "default": true
+        },
+        {
+          "id": "delivery_days",
+          "type": "range",
+          "label": {
+            "ar": "أيام التوصيل المتوقعة",
+            "en": "Expected delivery (days)"
+          },
+          "min": 1,
+          "max": 14,
+          "step": 1,
+          "unit": "",
+          "default": 3
+        },
+        {
+          "id": "stock_scale",
+          "type": "range",
+          "label": {
+            "ar": "إظهار شريط الكمية عندما تقل عن",
+            "en": "Show the stock bar below this quantity"
+          },
+          "min": 10,
+          "max": 500,
+          "step": 10,
+          "unit": "",
+          "default": 100
+        },
+        {
+          "id": "trust1_title",
+          "type": "text",
+          "label": {
+            "ar": "ميزة 1: العنوان",
+            "en": "Promise 1: title"
+          }
+        },
+        {
+          "id": "trust1_text",
+          "type": "text",
+          "label": {
+            "ar": "ميزة 1: النص",
+            "en": "Promise 1: text"
+          }
+        },
+        {
+          "id": "trust2_title",
+          "type": "text",
+          "label": {
+            "ar": "ميزة 2: العنوان",
+            "en": "Promise 2: title"
+          }
+        },
+        {
+          "id": "trust2_text",
+          "type": "text",
+          "label": {
+            "ar": "ميزة 2: النص",
+            "en": "Promise 2: text"
+          }
+        },
+        {
+          "id": "trust3_title",
+          "type": "text",
+          "label": {
+            "ar": "ميزة 3: العنوان",
+            "en": "Promise 3: title"
+          }
+        },
+        {
+          "id": "trust3_text",
+          "type": "text",
+          "label": {
+            "ar": "ميزة 3: النص",
+            "en": "Promise 3: text"
+          }
+        },
+        {
+          "id": "fit_text",
+          "type": "text",
+          "label": {
+            "ar": "نص \"هل يناسب مساحتك؟\"",
+            "en": "\"Will it fit?\" text"
+          }
+        },
+        {
+          "id": "shipping_text",
+          "type": "text",
+          "label": {
+            "ar": "الشحن والتوصيل",
+            "en": "Shipping & delivery"
+          }
+        },
+        {
+          "id": "returns_text",
+          "type": "text",
+          "label": {
+            "ar": "الاسترجاع",
+            "en": "Returns"
+          }
+        },
+        {
+          "id": "care_text",
+          "type": "text",
+          "label": {
+            "ar": "العناية بالمنتج",
+            "en": "Product care"
+          }
+        }
+      ]
+    }
+  ]
+}
