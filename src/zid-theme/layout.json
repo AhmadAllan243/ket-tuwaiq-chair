@@ -22,7 +22,44 @@
     "ket_fit_text": "قِس المكان قبل الطلب، واترك 60 سم على الأقل أمام الكرسي لراحة الحركة.",
     "ket_shipping_text": "التوصيل مجاني لكل مدن المملكة. نجهّز طلبك ونغلّفه بعناية، ونرسل لك رابط التتبع أول ما يطلع مع شركة الشحن.",
     "ket_returns_text": "تقدر تستبدل المنتج أو ترجعه خلال 24 ساعة من الاستلام، بشرط يكون بحالته الأصلية ومعه تغليفه. تواصل معنا عبر واتساب ونرتّب الاستلام.",
-    "ket_care_text": "نظّف القماش بالمكنسة وفرشاة ناعمة مرة في الأسبوع. للبقع، استخدم قطعة قماش رطبة بدون فرك. امسح الخشب بقطعة جافة، وأبعد الكرسي عن الشمس المباشرة ليحافظ على ألوانه."
+    "ket_care_text": "نظّف القماش بالمكنسة وفرشاة ناعمة مرة في الأسبوع. للبقع، استخدم قطعة قماش رطبة بدون فرك. امسح الخشب بقطعة جافة، وأبعد الكرسي عن الشمس المباشرة ليحافظ على ألوانه.",
+    "ket_shipping_note": "غزالنا جهّز الصندوق.",
+    "ket_insp_enabled": true,
+    "ket_insp_title": "اكتشف أفكار ديكور أكثر مع ket",
+    "ket_insp_body": "اختر الغرفة، ونوريك قطعًا تناسبها.",
+    "ket_insp_rooms": [
+      {
+        "name": "غرفة المعيشة",
+        "url": "/categories",
+        "color": "#D4C4FF"
+      },
+      {
+        "name": "الحمّام",
+        "url": "/categories",
+        "color": "#F4F4F4"
+      },
+      {
+        "name": "الحديقة",
+        "url": "/categories",
+        "color": "#C6F7A6"
+      },
+      {
+        "name": "غرفة النوم",
+        "url": "/categories",
+        "color": "#7F94FF"
+      },
+      {
+        "name": "المطبخ",
+        "url": "/categories",
+        "color": "#F4F4F4"
+      },
+      {
+        "name": "المكتب",
+        "url": "/categories",
+        "color": "#F4F4F4"
+      }
+    ],
+    "ket_moments_items": []
   },
   "en": {
     "font_family": "Inter+Tight",
@@ -47,6 +84,43 @@
     "ket_fit_text": "Measure your spot before ordering and leave at least 60 cm in front of the chair to move freely.",
     "ket_shipping_text": "Delivery is free across the Kingdom. We pack your order with care and send you a tracking link as soon as it leaves with the courier.",
     "ket_returns_text": "Exchange or return any item within 24 hours of delivery, in its original condition and packaging. Message us on WhatsApp and we will arrange the pickup.",
-    "ket_care_text": "Vacuum the fabric weekly with a soft brush. Blot stains with a damp cloth; do not rub. Wipe the wood with a dry cloth, and keep the chair out of direct sun to protect the colours."
+    "ket_care_text": "Vacuum the fabric weekly with a soft brush. Blot stains with a damp cloth; do not rub. Wipe the wood with a dry cloth, and keep the chair out of direct sun to protect the colours.",
+    "ket_shipping_note": "Our gazelle has packed the box.",
+    "ket_insp_enabled": true,
+    "ket_insp_title": "Find more decoration inspiration with ket",
+    "ket_insp_body": "Pick a room and we will show you pieces made for it.",
+    "ket_insp_rooms": [
+      {
+        "name": "Living room",
+        "url": "/categories",
+        "color": "#D4C4FF"
+      },
+      {
+        "name": "Bath",
+        "url": "/categories",
+        "color": "#F4F4F4"
+      },
+      {
+        "name": "Garden",
+        "url": "/categories",
+        "color": "#C6F7A6"
+      },
+      {
+        "name": "Bedroom",
+        "url": "/categories",
+        "color": "#7F94FF"
+      },
+      {
+        "name": "Kitchen",
+        "url": "/categories",
+        "color": "#F4F4F4"
+      },
+      {
+        "name": "Office",
+        "url": "/categories",
+        "color": "#F4F4F4"
+      }
+    ],
+    "ket_moments_items": []
   }
 }

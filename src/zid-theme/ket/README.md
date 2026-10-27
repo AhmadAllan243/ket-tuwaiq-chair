@@ -32,7 +32,12 @@ Sections without data are simply not shown, so any product works with no setup.
 | --- | --- | --- |
 | `model_3d` | file (.glb) or text (URL of a .glb) | The 3D scroll-assembly hero at the top of the page. The model must have three parts named `ChairBase`, `SeatCushion`, `SeatBack` (like `models/tuwaiq-chair.glb`). |
 | `width`, `height`, `depth`, `seat_height` | number (cm) | The dimensions section (drawings + table). |
-| `story_title`, `story_text` | text (Arabic and English) | The story section (uses the product's first two photos). |
+| `story_title`, `story_text` | text (Arabic and English) | The story section: big title and the paragraph. |
+| `story_lines` | text, items separated by `\|` | The 2–3 short lines under the story title, e.g. `ثلاث مناطق. \| نقشٌ واحد. \| ثابتٌ كاسمه.` |
+| `story_chips` | text, items separated by `\|` | The tags that pop around the product (default: height × width). |
+| `story_photo` | number | Which photo is the story's "closer look" (default: the last photo). The first photo is the one that comes forward. |
+| `features` | text, `title: text \| title: text \| …` | "Every detail has a reason": up to 4 cards. |
+| `features_images` | text, `photo x% y% zoom \| …` | Optional crop per card, e.g. `6 50% 38% 1.5` = photo 6, focus at 50% 38%, zoomed 1.5×. |
 
 Fields are matched by key, or by English or Arabic name (e.g. "Seat height" or "ارتفاع المقعد").
 Other metafields appear under "Details".
@@ -40,7 +45,11 @@ Other metafields appear under "Details".
 ## Store-wide settings (theme editor → "Product page (ket)")
 
 3D hero on/off, delivery days (for "order today, delivered by …"), when the stock bar shows,
-the three promise cards, "Will it fit?", shipping, returns and care texts — each in Arabic and English.
+the three promise cards, "Will it fit?", shipping, returns and care texts, the note next to the
+shipping gazelle, customer moments (real photos from customers' homes: photo, name, city, date,
+quote, optional product slug) and the inspiration section (title, text, rooms with link and colour)
+— each in Arabic and English. Reviews are Zid's own (Customers → Reviews must be switched on);
+"Complete the majlis" shows the product's related products from Zid.
 
 ## Build, preview, upload
 
@@ -60,7 +69,7 @@ own scripts and styles, so it is only for checking the KET layout and motion.
 ## Not done yet
 
 - The announcement bar shows KET's three lines until texts are entered in the theme editor (Header → Announcement bar).
-- Customer moments, decoration inspiration and the AR "see it in your room" block from the prototype.
+- The AR "see it in your room" block and the suggested-bundle box from the prototype.
 - When a variant has its own photos, Growth's variant script updates its own gallery markup, not
   the KET gallery (fine for products without photo-specific variants).
 - Pop-up gazelles (switched off in the prototype too).

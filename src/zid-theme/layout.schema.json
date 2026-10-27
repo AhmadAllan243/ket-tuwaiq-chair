@@ -466,6 +466,176 @@
             "ar": "العناية بالمنتج",
             "en": "Product care"
           }
+        },
+        {
+          "id": "shipping_note",
+          "type": "text",
+          "label": {
+            "ar": "ملاحظة تحت نص الشحن (بجانب الغزال)",
+            "en": "Note under the shipping text (next to the gazelle)"
+          }
+        },
+        {
+          "id": "moments_items",
+          "type": "list",
+          "label": {
+            "ar": "تجارب العملاء: صور حقيقية من بيوت العملاء",
+            "en": "Customer moments: real photos from customers' homes"
+          },
+          "settings": [
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Photo"
+              }
+            },
+            {
+              "id": "name",
+              "type": "text",
+              "label": {
+                "ar": "الاسم",
+                "en": "Name"
+              }
+            },
+            {
+              "id": "city",
+              "type": "text",
+              "label": {
+                "ar": "المدينة",
+                "en": "City"
+              }
+            },
+            {
+              "id": "date",
+              "type": "text",
+              "label": {
+                "ar": "التاريخ (مثال 2026-09-14)",
+                "en": "Date (e.g. 2026-09-14)"
+              }
+            },
+            {
+              "id": "text",
+              "type": "text",
+              "label": {
+                "ar": "كلمة العميل",
+                "en": "Customer quote"
+              }
+            },
+            {
+              "id": "product",
+              "type": "text",
+              "label": {
+                "ar": "رابط المنتج في الصورة (اختياري؛ فارغ = كل المنتجات)",
+                "en": "Product in the photo: slug (optional; empty = all products)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "insp_enabled",
+          "type": "checkbox",
+          "label": {
+            "ar": "إظهار قسم الإلهام",
+            "en": "Show the inspiration section"
+          },
+          "default": true
+        },
+        {
+          "id": "insp_title",
+          "type": "text",
+          "label": {
+            "ar": "الإلهام: العنوان",
+            "en": "Inspiration: title"
+          }
+        },
+        {
+          "id": "insp_body",
+          "type": "text",
+          "label": {
+            "ar": "الإلهام: النص",
+            "en": "Inspiration: text"
+          }
+        },
+        {
+          "id": "insp_rooms",
+          "type": "list",
+          "label": {
+            "ar": "الإلهام: الغرف",
+            "en": "Inspiration: rooms"
+          },
+          "settings": [
+            {
+              "id": "name",
+              "type": "text",
+              "label": {
+                "ar": "اسم الغرفة",
+                "en": "Room name"
+              }
+            },
+            {
+              "id": "url",
+              "type": "text",
+              "label": {
+                "ar": "الرابط (تصنيف)",
+                "en": "Link (category)"
+              }
+            },
+            {
+              "id": "color",
+              "type": "select",
+              "label": {
+                "ar": "اللون",
+                "en": "Colour"
+              },
+              "default": "#F4F4F4",
+              "options": [
+                {
+                  "value": "#D4C4FF",
+                  "label": {
+                    "ar": "بنفسجي فاتح",
+                    "en": "Lavender"
+                  }
+                },
+                {
+                  "value": "#C6F7A6",
+                  "label": {
+                    "ar": "أخضر فاتح",
+                    "en": "Mint"
+                  }
+                },
+                {
+                  "value": "#7F94FF",
+                  "label": {
+                    "ar": "أزرق",
+                    "en": "Periwinkle"
+                  }
+                },
+                {
+                  "value": "#F7F976",
+                  "label": {
+                    "ar": "أصفر",
+                    "en": "Yellow"
+                  }
+                },
+                {
+                  "value": "#FCDFDB",
+                  "label": {
+                    "ar": "وردي",
+                    "en": "Blush"
+                  }
+                },
+                {
+                  "value": "#F4F4F4",
+                  "label": {
+                    "ar": "رمادي",
+                    "en": "Grey"
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     }

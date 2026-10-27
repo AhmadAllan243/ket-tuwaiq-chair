@@ -50,6 +50,7 @@
     {%- endfor -%}
     {{- it.v -}}
   {%- endmacro %}
+  {% set images = product.images or [] %}
   {% set model_url = mfv(['model_3d', '3d_model', 'glb', 'نموذج_ثلاثي_الأبعاد']) | trim %}
   {% set dim_w = mfv(['width', 'العرض']) | trim %}
   {% set dim_h = mfv(['height', 'الارتفاع']) | trim %}
@@ -57,8 +58,31 @@
   {% set dim_sh = mfv(['seat_height', 'ارتفاع_المقعد']) | trim %}
   {% set story_title = mfv(['story_title', 'عنوان_الحكاية']) | trim %}
   {% set story_text = mfv(['story_text', 'نص_الحكاية']) | trim %}
+  {# lists in one text field, items separated by | (e.g. "ثلاث مناطق. | نقشٌ واحد. | ثابتٌ كاسمه.") #}
+  {% set story_lines = [] %}
+  {% for x in (mfv(['story_lines', 'سطور_الحكاية']) | trim).split('|') %}{% if x | trim %}{% set _x = story_lines.append(x | trim) %}{% endif %}{% endfor %}
+  {# the story's closer look: photo number from story_photo, else the last photo #}
+  {% set n_img = images | length %}
+  {% set sp = (mfv(['story_photo', 'صورة_الحكاية']) | trim | float) | int %}
+  {% set story_detail = images[sp - 1] if 0 < sp <= n_img else (images[n_img - 1] if n_img else none) %}
+  {% set story_chips = [] %}
+  {% for x in (mfv(['story_chips', 'وسوم_الحكاية']) | trim).split('|') %}{% if x | trim %}{% set _x = story_chips.append(x | trim) %}{% endif %}{% endfor %}
+  {% if not story_chips and dim_h and dim_w %}{% set _x = story_chips.append(dim_h ~ ' × ' ~ dim_w ~ ' ' ~ _('cm')) %}{% endif %}
+  {# features: "title: text | title: text | …"; features_images: "7 50% 38% 1.5 | 5 40% 75% 1.4 | …" (photo number, focus, zoom) #}
+  {% set fimg = (mfv(['features_images', 'صور_المميزات']) | trim).split('|') %}
+  {% set features = [] %}
+  {% for x in (mfv(['features', 'المميزات']) | trim).split('|') %}
+    {% if x | trim %}
+      {% set parts = (x | trim).split(':', 1) if ':' in x else (x | trim).split('：', 1) %}
+      {% set spec = (fimg[loop.index0] | trim).split() if fimg | length > loop.index0 else [] %}
+      {% set n = (spec[0] | int) if spec else ((loop.index % (images | length)) + 1 if images else 0) %}
+      {% set _x = features.append({'title': parts[0] | trim, 'body': (parts[1] | trim) if parts | length > 1 else '',
+                                    'img': images[n - 1] if images and 0 < n <= images | length else (images[0] if images else none),
+                                    'pos': (spec[1] ~ ' ' ~ spec[2]) if spec | length > 2 else '50% 50%',
+                                    'z': spec[3] if spec | length > 3 else '1.4'}) %}
+    {% endif %}
+  {% endfor %}
 
-  {% set images = product.images or [] %}
   {% macro img_src(im, w=1200) -%}{{ image_url(im.image.large if im.image else im, w=w, q=88, f='auto') }}{%- endmacro %}
   {% set sold_count = product.sold_products_count or (selected_product and selected_product.sold_products_count) %}
   {% set rating = product.rating.average if product.rating else 0 %}
@@ -174,7 +198,7 @@
             {# KET's own stock bar (theme setting "stock bar below this quantity"), not Zid's low-stock badge #}
             <div class="stock">
               <div class="stock__row">
-                <strong>{{ _("Remaining %s only") | format(qty_left) }}</strong>
+                <strong>{{ _("Only %s pieces left") | format(qty_left) }}</strong>
                 <span class="muted">{{ _("Selling fast") }}</span>
               </div>
               <div class="stock__bar" aria-hidden="true"><span style="--w:{{ [8, (qty_left / stock_scale * 100) | round(0)] | max }}%"></span></div>
@@ -253,36 +277,71 @@
       </div>
     </section>
 
-    {# ===================== STORY (metafields story_title / story_text) ===================== #}
-    {% if story_title or story_text %}
+    {% set sec = namespace(n=1) %}
+
+    {# ===================== STORY (metafields story_title, story_lines, story_text, story_chips) ===================== #}
+    {% if story_title or story_text or story_lines %}
+      {% set sec.n = sec.n + 1 %}
       <section class="story" id="story" aria-labelledby="storyWord">
         <div class="container story__stage" id="storyStage">
           <div class="story__head">
-            <p class="eyebrow"><span class="idx">02</span><span>{{ _("The story") }}</span></p>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("The story") }}</span></p>
             <h2 class="story__word" id="storyWord"><span class="line-mask"><span id="storyTitle">{{ story_title or product.name }}</span></span></h2>
           </div>
+          {% if story_lines %}
+            <p class="story__lines" id="storyLines">{% for l in story_lines[:3] %}<span class="line-mask"><span>{{ l }}</span></span>{% endfor %}</p>
+          {% endif %}
           <div class="story__visual" id="storyVisual">
             <div class="story__card" id="storyCard">
-              {% if images %}<img alt="" loading="lazy" decoding="async" id="storyProduct" src="{{ img_src(images[0], 1200) }}">{% endif %}
+              {% if images %}<img alt="{{ product.name }}" loading="lazy" decoding="async" id="storyProduct" src="{{ img_src(images[0], 1200) }}">{% endif %}
               {% if images | length > 1 %}
+                {# the closer look: story_photo (photo number) or the product's last photo #}
                 <figure class="story__detail" id="storyDetail" style="margin:0">
-                  <img alt="" loading="lazy" decoding="async" id="storyImgEl" src="{{ img_src(images[1], 900) }}">
-                  <figcaption>{% if product.sku %}<span class="latin">{{ product.sku }}</span> · {% endif %}{{ product.name }}</figcaption>
+                  <img alt="" loading="lazy" decoding="async" id="storyImgEl" src="{{ img_src(story_detail, 1200) }}">
+                  <figcaption>{{ product.name }}</figcaption>
                 </figure>
               {% endif %}
             </div>
+            {% if story_chips %}
+              <div class="story__chips" id="storyChips" aria-hidden="true">{% for c in story_chips[:3] %}<span class="story__chip"><i></i><span>{{ c }}</span></span>{% endfor %}</div>
+            {% endif %}
           </div>
           {% if story_text %}<p class="story__body" id="storyBody">{{ story_text }}</p>{% endif %}
         </div>
       </section>
     {% endif %}
 
+    {# ===================== DETAILS & MATERIALS (metafield features, optional features_images) ===================== #}
+    {% if features %}
+      {% set sec.n = sec.n + 1 %}
+      <section class="section" id="details" aria-labelledby="featTitle">
+        <div class="container">
+          <div class="sec-head" data-reveal>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Details & materials") }}</span></p>
+            <h2 class="h-xl" id="featTitle">{{ _("Every detail has a reason") }}</h2>
+          </div>
+          <div class="features" id="features">
+            {% for f in features[:4] %}
+              <article class="feature" data-reveal-item>
+                <div class="feature__media"><span class="feature__idx">{{ '%02d' | format(loop.index) }}</span>
+                  <div class="feature__media-inner">{% if f.img %}<img src="{{ img_src(f.img, 900) }}" alt="" loading="lazy" decoding="async" style="--pos:{{ f.pos }}; --z:{{ f.z }}" data-z="{{ f.z }}">{% endif %}</div>
+                </div>
+                <h3>{{ f.title }}</h3>
+                {% if f.body %}<p>{{ f.body }}</p>{% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
     {# ===================== DIMENSIONS (metafields width / height / depth / seat_height) ===================== #}
     {% if dim_w or dim_h or dim_d or dim_sh %}
+      {% set sec.n = sec.n + 1 %}
       <section class="section" id="dimensions" aria-labelledby="dimTitle">
         <div class="container">
           <div class="sec-head" data-reveal>
-            <p class="eyebrow"><span class="idx">03</span><span>{{ _("Dimensions") }}</span></p>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Dimensions") }}</span></p>
             <h2 class="h-xl" id="dimTitle">{{ _("Considered proportions") }}</h2>
           </div>
           <div class="dims">
@@ -306,10 +365,11 @@
     {% endif %}
 
     {# ===================== EVERYTHING YOU NEED TO KNOW (accordions) ===================== #}
-    {# metafields the page already shows elsewhere (3D model, measurements, story) stay out of the details list #}
+    {# metafields the page already shows elsewhere (3D model, measurements, story, features) stay out of the details list #}
     {# (matched like the lookup above: by key, or by English / Arabic name) #}
     {% set ket_keys = ['model_3d', '3d_model', 'glb', 'نموذج_ثلاثي_الأبعاد', 'width', 'العرض', 'height', 'الارتفاع', 'depth', 'العمق',
-                       'seat_height', 'ارتفاع_المقعد', 'story_title', 'عنوان_الحكاية', 'story_text', 'نص_الحكاية'] %}
+                       'seat_height', 'ارتفاع_المقعد', 'story_title', 'عنوان_الحكاية', 'story_text', 'نص_الحكاية', 'story_lines', 'سطور_الحكاية',
+                       'story_chips', 'وسوم_الحكاية', 'story_photo', 'صورة_الحكاية', 'features', 'المميزات', 'features_images', 'صور_المميزات'] %}
     {% set extra_mf = [] %}
     {% for item in (product.metafields or []) %}
       {% set nm = item.name if item.name is mapping else {} %}
@@ -326,10 +386,11 @@
     {% if settings.ket_returns_text %}{% set _x = acc.append('returns') %}{% endif %}
     {% if settings.ket_care_text %}{% set _x = acc.append('care') %}{% endif %}
     {% if acc %}
+      {% set sec.n = sec.n + 1 %}
       <section class="section" id="info" aria-labelledby="infoTitle">
         <div class="container info-grid">
           <div class="sec-head" style="border:0; padding:0" data-reveal>
-            <p class="eyebrow"><span class="idx">04</span><span>{{ _("Details") }}</span></p>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Product information") }}</span></p>
             <h2 class="h-xl" id="infoTitle">{{ _("Everything you need to know") }}</h2>
           </div>
           <div class="acc">
@@ -341,6 +402,11 @@
                   {% if key == 'details' %}
                     {% if product.description %}<div class="ket-prose">{{ product.description | safe }}</div>{% endif %}
                     {% if has_metafields %}<dl class="ket-meta">{% with entity={'metafields': extra_mf} %}{% include 'components/shared/metafields.jinja' %}{% endwith %}</dl>{% endif %}
+                  {% elif key == 'shipping' %}
+                    <div class="acc__ship">
+                      <span class="gzbox"><img src="{{ 'images/gazelle-box.webp' | asset_url }}" alt="" width="340" height="440" loading="lazy" decoding="async"><span class="gzbox__logo">{{ k.smile(64) }}</span></span>
+                      <p><span>{{ settings.ket_shipping_text }}</span>{% if settings.ket_shipping_note %}<em>{{ settings.ket_shipping_note }}</em>{% endif %}</p>
+                    </div>
                   {% else %}
                     <p>{{ settings['ket_' ~ key ~ '_text'] }}</p>
                   {% endif %}
@@ -352,62 +418,167 @@
       </section>
     {% endif %}
 
-    {# ===================== REVIEWS (Zid reviews) ===================== #}
+    {# ===================== REVIEWS (Zid's own reviews; never sample ones) ===================== #}
     {% if store.settings.products.reviews_enabled %}
+      {% set sec.n = sec.n + 1 %}
       <section class="section" id="reviews" aria-labelledby="revTitle">
         <div class="container">
           <div class="sec-head" data-reveal>
-            <p class="eyebrow"><span class="idx">05</span><span>{{ _("Reviews") }}</span></p>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Customer reviews") }}</span></p>
             <h2 class="h-xl" id="revTitle">{{ _("What our customers say") }}</h2>
           </div>
-          {% if rating_count %}
-            <div class="rev">
-              <div data-reveal>
-                <p class="rev__score">{{ '%.1f' | format(rating) }}</p>
-                <div class="rev__meta">{{ k.stars(rating, 18) }}<span>{{ _("from %s reviews") | format(rating_count) }}</span></div>
-                <div class="rev__bars">
-                  {% for n in [5, 4, 3, 2, 1] %}
-                    {% set c = (product.rating['ratings_' ~ n].count if product.rating['ratings_' ~ n] else 0) or 0 %}
-                    {% set p = ((c / rating_count * 100) | round(0) | int) if rating_count else 0 %}
-                    <div class="rev__bar"><span>{{ n }}</span><i><b style="--w:{{ p }}%"></b></i><span>{{ p }}%</span></div>
+          <div class="rev">
+            <div data-reveal>
+              {% if rating_count %}<p class="rev__score">{{ '%.1f' | format(rating) }}</p>{% endif %}
+              <div class="rev__meta">{{ k.stars(rating, 18) }}<span>{% if rating_count %}{{ _("from %s reviews") | format(rating_count) }}{% else %}{{ _("No reviews yet") }}{% endif %}</span></div>
+              <div class="rev__bars {{ 'hidden' if not rating_count }}">
+                {% for n in [5, 4, 3, 2, 1] %}
+                  {% set c = (product.rating['ratings_' ~ n].count if product.rating and product.rating['ratings_' ~ n] else 0) or 0 %}
+                  {% set p = ((c / rating_count * 100) | round(0) | int) if rating_count else 0 %}
+                  <div class="rev__bar"><span>{{ n }}</span><i><b style="--w:{{ p }}%"></b></i><span>{{ p }}%</span></div>
+                {% endfor %}
+              </div>
+              <div class="rev__write">
+                <button type="button" class="btn btn-outline" data-login-redirect="{{ url_for('add_product_review', slug=product.id) }}" data-auth-guest><span class="btn-label">{{ _("Write a review") }}</span></button>
+                <a href="{{ url_for('add_product_review', slug=product.slug) }}" class="btn btn-outline hidden" data-auth-user><span class="btn-label">{{ _("Write a review") }}</span></a>
+              </div>
+            </div>
+            {% if product.reviews and product.reviews.results %}
+              <div class="slider">
+                <div class="slider__track" id="revTrack" tabindex="0">
+                  {% for review in product.reviews.results %}
+                    <article class="rcard">
+                      <span>{{ k.stars(review.rating, 14) }}</span>
+                      <p>{{ review.comment }}</p>
+                      <footer><span><strong>{{ review.customer.name if review.customer else '' }}</strong></span><span class="pill">{{ _("Verified buyer") }}</span></footer>
+                    </article>
                   {% endfor %}
                 </div>
+                <div class="slider__nav">
+                  <button type="button" data-slide="revTrack" data-step="-1" aria-label="{{ _('Previous') }}"><span style="display:block;transform:scaleX(-1)">{{ k.icon('chev', 20) }}</span></button>
+                  <button type="button" data-slide="revTrack" data-step="1" aria-label="{{ _('Next') }}">{{ k.icon('chev', 20) }}</button>
+                </div>
+                {% if product.reviews.pages_count > 1 %}<a class="acc__more" href="{{ url_for('product_reviews', slug=product.id) }}">{{ _("All reviews") }}</a>{% endif %}
               </div>
-              {% if product.reviews and product.reviews.results %}
-                <div class="slider">
-                  <div class="slider__track" id="revTrack" tabindex="0">
-                    {% for review in product.reviews.results %}
-                      <article class="rcard">
-                        <span>{{ k.stars(review.rating, 14) }}</span>
-                        <p>{{ review.comment }}</p>
-                        <footer><span><strong>{{ review.customer.name if review.customer else '' }}</strong></span></footer>
-                      </article>
-                    {% endfor %}
+            {% else %}
+              <div class="rev__empty" data-reveal>
+                <p>{{ _("There are no reviews yet. Be the first one to review this product") }}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ===================== CUSTOMER MOMENTS (theme editor: real photos from customers' homes) ===================== #}
+    {% set moments = [] %}
+    {% for m in settings.ket_moments_items or [] %}
+      {% if m.image and (not m.product or m.product | trim == product.slug) %}{% set _x = moments.append(m) %}{% endif %}
+    {% endfor %}
+    {% if moments %}
+      {% set sec.n = sec.n + 1 %}
+      {% set avs = ['var(--blush)', 'var(--mint)', 'var(--lavender)', 'var(--yellow)', 'var(--peri)'] %}
+      <section class="section mom" id="moments" aria-labelledby="momTitle">
+        <div class="container">
+          <div class="sec-head" data-reveal>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Customer moments") }}</span></p>
+            <div><h2 class="h-xl" id="momTitle">{{ _("Seen in their homes") }}</h2><p class="mom__lede muted">{{ _("Real photos our customers sent us once their pieces arrived.") }}</p></div>
+          </div>
+          <div class="mom__deck" id="momDeck" tabindex="0" role="region" aria-roledescription="carousel" aria-label="{{ _('Customer photos') }}">
+            {% for m in moments %}
+              <article class="mcard" data-mi="{{ loop.index0 }}" role="group" aria-roledescription="slide">
+                <div class="mcard__media"><img src="{{ image_url(m.image, w=800, q=85, f='auto') }}" alt="{{ m.name }}" loading="lazy" decoding="async" draggable="false"></div>
+                <div class="mcard__body">
+                  <div class="mcard__who">
+                    <span class="mcard__av" style="--av:{{ avs[loop.index0 % 5] }}" aria-hidden="true">{{ (m.name or ' ')[0] }}</span>
+                    <div><strong>{{ m.name }}</strong><span class="mcard__meta">{{ m.city }}{% if m.date %} · <span class="num">{{ m.date }}</span>{% endif %}</span></div>
+                    {{ k.stars(5, 14) }}
                   </div>
-                  <div class="slider__nav">
-                    <button type="button" data-slide="revTrack" data-step="-1" aria-label="{{ _('Previous') }}"><span style="display:block;transform:scaleX(-1)">{{ k.icon('chev', 20) }}</span></button>
-                    <button type="button" data-slide="revTrack" data-step="1" aria-label="{{ _('Next') }}">{{ k.icon('chev', 20) }}</button>
+                  {% if m.text %}<p class="mcard__quote">{{ m.text }}</p>{% endif %}
+                  <div class="mcard__shop">
+                    <span class="mcard__thumb">{% if images %}<img src="{{ img_src(images[0], 160) }}" alt="" loading="lazy">{% endif %}</span>
+                    <span><span class="mcard__kicker">{{ _("In this photo") }}</span><span class="mcard__pname">{{ product.name }}</span><span class="mcard__price">{{ product.formatted_sale_price or product.formatted_price }}</span></span>
+                    {% if can_buy and not (product.has_options or product.has_fields) %}
+                      <button class="mcard__add" type="button" data-add-to-cart="{{ product.id }}" aria-label="{{ _('Add to cart') }}">{{ k.icon('plus', 20) }}</button>
+                    {% endif %}
                   </div>
                 </div>
-              {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+          <div class="mom__ctrl">
+            <button class="mom__nav" type="button" id="momPrev" aria-label="{{ _('Previous') }}"><span style="display:block;transform:scaleX(-1)">{{ k.icon('chev', 20) }}</span></button>
+            <span class="mom__count num" id="momCount" dir="ltr" aria-live="polite"></span>
+            <button class="mom__nav" type="button" id="momNext" aria-label="{{ _('Next') }}">{{ k.icon('chev', 20) }}</button>
+          </div>
+          {% if store.settings.contact.phone %}
+            <div class="mom__share">
+              <p>{{ _("Photographed your piece at home? Send it to us and we may feature it here.") }}</p>
+              <a class="btn btn-outline" href="https://wa.me/{{ store.settings.contact.phone | replace('+', '') | replace(' ', '') }}" target="_blank" rel="noopener"><span class="btn-label">{{ _("Share your photo") }}</span></a>
             </div>
-          {% else %}
-            {% with product=product, store=store, session=session %}{% include 'components/products/product-reviews.jinja' %}{% endwith %}
           {% endif %}
         </div>
       </section>
     {% endif %}
 
-    {# ===================== COMPLETE THE MAJLIS (related products) ===================== #}
+    {# ===================== COMPLETE THE MAJLIS (Zid related products) ===================== #}
     {% if product.related_products and product.related_products | length > 0 %}
+      {% set sec.n = sec.n + 1 %}
       <section class="section" id="related" aria-labelledby="relTitle">
         <div class="container">
           <div class="sec-head" data-reveal>
-            <p class="eyebrow"><span class="idx">06</span><span>{{ _("Complete the look") }}</span></p>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Complete the look") }}</span></p>
             <h2 class="h-xl" id="relTitle">{{ _("Complete the majlis") }}</h2>
           </div>
-          <div class="ket-related">
-            {% with products=product.related_products, title='', carousel_id="related-products" %}{% include 'components/products/products-carousel.jinja' %}{% endwith %}
+          <div class="rel__track" id="relTrack">
+            {% for p in product.related_products %}
+              {% set pimg = p.main_image.image.large if p.main_image and p.main_image.image else (p.images[0].image.large if p.images and p.images[0].image else '') %}
+              {% set purl = url_for('product_details', slug=p.slug) %}
+              <article class="prod" data-reveal-item>
+                <div class="prod__media">
+                  <a href="{{ purl }}" class="prod__link" aria-label="{{ p.name }}">{% if pimg %}<img src="{{ image_url(pimg, w=700, q=88, f='auto') }}" alt="{{ p.name }}" loading="lazy">{% endif %}</a>
+                  <div class="prod__pills">{% if p.discount_percentage and p.discount_percentage > 0 %}<span class="pill pill--orange num" dir="ltr">-{{ p.discount_percentage | round(0) | int }}%</span>{% endif %}</div>
+                  {% if p.in_stock and not (p.has_options or p.has_fields) %}
+                    <button class="prod__add" type="button" data-add-to-cart="{{ p.id }}" aria-label="{{ _('Add to cart') }}">{{ k.icon('plus', 20) }}</button>
+                  {% else %}
+                    <a class="prod__add" href="{{ purl }}" aria-label="{{ p.name }}">{{ k.icon('plus', 20) }}</a>
+                  {% endif %}
+                </div>
+                <h3><a href="{{ purl }}">{{ p.name }}</a></h3>
+                <p class="prod__price"><span>{{ p.formatted_sale_price or p.formatted_price }}</span>{% if p.formatted_sale_price %}<s>{{ p.formatted_price }}</s>{% endif %}</p>
+              </article>
+            {% endfor %}
+          </div>
+          <div class="slider__nav">
+            <button type="button" data-slide="relTrack" data-step="-1" aria-label="{{ _('Previous') }}"><span style="display:block;transform:scaleX(-1)">{{ k.icon('chev', 20) }}</span></button>
+            <button type="button" data-slide="relTrack" data-step="1" aria-label="{{ _('Next') }}">{{ k.icon('chev', 20) }}</button>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    {# ===================== DECORATION INSPIRATION (theme editor) ===================== #}
+    {% if settings.ket_insp_enabled | default(true) and settings.ket_insp_title %}
+      {% set sec.n = sec.n + 1 %}
+      <section class="section" id="inspire" aria-labelledby="inspTitle">
+        <div class="container">
+          <div class="sec-head" data-reveal>
+            <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Inspiration") }}</span></p>
+            <h2 class="h-xl" id="inspTitle">{{ settings.ket_insp_title }}</h2>
+          </div>
+          <div class="insp__grid">
+            <div data-reveal>
+              {% if settings.ket_insp_body %}<p class="insp__body">{{ settings.ket_insp_body }}</p>{% endif %}
+              <div class="insp__chips">
+                {% for r in settings.ket_insp_rooms or [] %}{% if r.name %}<a class="insp__chip" href="{{ r.url or '/categories' }}" style="--chip:{{ r.color or '#F4F4F4' }}">{{ r.name }}</a>{% endif %}{% endfor %}
+              </div>
+            </div>
+            {# the sofa illustration in layers: the coffee steam rises and the sleeping gazelle breathes #}
+            <figure class="insp__art" data-reveal><div class="insp__fx" style="--belly:86.07%;--gzx:15.58%">
+              <img src="{{ 'images/illus-base.webp' | asset_url }}" alt="" loading="lazy" decoding="async" width="900" height="517">
+              <img class="insp__steam" src="{{ 'images/illus-steam.webp' | asset_url }}" alt="" aria-hidden="true" loading="lazy">
+              <img class="insp__gz" src="{{ 'images/illus-gz.webp' | asset_url }}" alt="" aria-hidden="true" loading="lazy">
+            </div></figure>
           </div>
         </div>
       </section>

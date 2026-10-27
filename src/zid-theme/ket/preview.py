@@ -130,11 +130,16 @@ product = obj({
         {'key': 'width', 'data_type': 'number', 'name': {'ar': 'العرض', 'en': 'Width'}, 'value': 60},
         {'key': 'height', 'data_type': 'number', 'name': {'ar': 'الارتفاع', 'en': 'Height'}, 'value': 70},
         {'key': 'story_title', 'data_type': 'text', 'name': {'ar': 'عنوان الحكاية', 'en': 'Story title'}, 'value': {'ar': 'طويق', 'en': 'TUWAIQ'}},
+        {'key': 'story_lines', 'data_type': 'text', 'name': {'ar': 'سطور الحكاية', 'en': 'Story lines'}, 'value': {'ar': 'ثلاث مناطق. | نقشٌ واحد. | ثابتٌ كاسمه.', 'en': 'THREE REGIONS. | ONE PATTERN. | STEADFAST BY NAME.'}},
+        {'key': 'story_chips', 'data_type': 'text', 'name': {'ar': 'وسوم الحكاية', 'en': 'Story chips'}, 'value': {'ar': 'قماش بنقوش تراثية | مساند خشب طبيعي | 70 × 60 سم', 'en': 'Heritage-pattern fabric | Natural wood arms | 70 × 60 cm'}},
+        {'key': 'features', 'data_type': 'text', 'name': {'ar': 'المميزات', 'en': 'Features'}, 'value': {'ar': 'قماش بنقوش تراثية: نسيج متعدد الألوان بزخارف هندسية مستوحاة من النقوش السعودية. | راحة محشوّة: مقعد وظهر محشوّان بالإسفنج، لجلسة طويلة بدون تعب. | مساند خشب طبيعي: مساند يدين من الخشب الطبيعي، دافئة الملمس. | هيكل معدني أسود: هيكل نحيف وثابت، يعطي القطعة خفّة بصرية.', 'en': 'Heritage-pattern upholstery: multi-coloured weave. | Padded comfort: foam seat and back. | Natural wood arms: warm to the touch. | Slim black metal frame: light and steady.'}},
+        {'key': 'features_images', 'data_type': 'text', 'name': {'ar': 'صور المميزات', 'en': 'Feature photos'}, 'value': {'ar': '7 50% 38% 1.5 | 5 40% 75% 1.4 | 5 88% 22% 2.0 | 1 22% 92% 2.2', 'en': '7 50% 38% 1.5 | 5 40% 75% 1.4 | 5 88% 22% 2.0 | 1 22% 92% 2.2'}},
         {'key': 'story_text', 'data_type': 'text', 'name': {'ar': 'نص الحكاية', 'en': 'Story text'},
          'value': {'ar': 'من مثلثات نجد، وشبك رواشين الحجاز، وألوان القط العسيري؛ جمعنا تنوّع النقوش السعودية في قطعة واحدة.',
                    'en': 'Najdi triangles, the lattice of Hijazi rawasheen, the colour of Asiri Al-Qatt, brought together in one piece.'}},
     ],
-    'related_products': [], 'categories': [],
+    'related_products': [{'id': 'r1', 'name': 'طاولة التقديم TM' if AR else 'TM side table', 'slug': 'tm', 'in_stock': True, 'formatted_price': '750.00', 'formatted_sale_price': '296.00', 'discount_percentage': 61,
+                          'main_image': {'image': {'large': IMG + IMAGES[2] + '.png'}}}], 'categories': [],
 })
 # theme settings: schema defaults (header / footer / layout, as group_setting) under the layout.json values
 layout = {}
@@ -144,6 +149,10 @@ for sch in ('header.schema.json', 'footer.schema.json', 'layout.schema.json'):
             if 'default' in st:
                 layout[f"{grp['id']}_{st['id']}"] = st['default']
 layout.update(json.load(open(os.path.join(ROOT, 'layout.json')))[LANG])
+# sample customer moments, for the local preview only (the store enters real photos in the theme editor)
+layout['ket_moments_items'] = [{'image': IMG + IMAGES[i] + '.png', 'name': n, 'city': c, 'date': d, 'text': t} for i, n, c, d, t in [
+    (1, 'سارة', 'الرياض', '2026-09-14', 'صار ركن القراءة أحلى زاوية في البيت.'), (3, 'خالد', 'جدة', '2026-09-02', 'خشب المساند ثقيل وناعم.'),
+    (4, 'منيرة', 'بريدة', '2026-08-21', 'وصلني مغلّف بعناية.'), (5, 'تركي', 'الخبر', '2026-08-09', 'القطعة أفخم من صورها.')]]
 layout['link_groups_items'] = [{'title': 'المتجر' if LANG == 'ar' else 'Shop', 'links': [{'title': 'الكراسي' if LANG == 'ar' else 'Chairs', 'url': '#'}, {'title': 'الكنب' if LANG == 'ar' else 'Sofas', 'url': '#'}]},
                                {'title': 'المساعدة' if LANG == 'ar' else 'Help', 'links': [{'title': 'الشحن والتوصيل' if LANG == 'ar' else 'Shipping', 'url': '#'}, {'title': 'سياسة الاسترجاع' if LANG == 'ar' else 'Returns policy', 'url': '#'}]}]
 store = obj({'name': 'ket', 'languages': [{'code': 'ar'}, {'code': 'en'}], 'countries': [{'code': 'SA'}],

@@ -1172,11 +1172,11 @@ msgstr "%(count)s منتج"
 
 #: KET product page
 msgid "Complete the look"
-msgstr "كمّل مجلسك"
+msgstr "أكمل الجلسة"
 
 #: KET product page
 msgid "Complete the majlis"
-msgstr "كمّل المجلس"
+msgstr "كمّل مجلسك"
 
 #: KET product page
 msgid "Considered proportions"
@@ -1256,7 +1256,7 @@ msgstr "الحكاية"
 
 #: KET product page
 msgid "What our customers say"
-msgstr "وش يقولون عملاؤنا"
+msgstr "آراء عملائنا"
 
 #: KET product page
 msgid "Width"
@@ -1305,3 +1305,55 @@ msgstr "طرق الدفع"
 #: KET header / footer
 msgid "Verified by the Saudi Business Center"
 msgstr "موثّق في المركز السعودي للأعمال"
+
+#: KET product page
+msgid "Customer moments"
+msgstr "تجارب العملاء"
+
+#: KET product page
+msgid "Customer photos"
+msgstr "صور العملاء"
+
+#: KET product page
+msgid "Details & materials"
+msgstr "التفاصيل والخامات"
+
+#: KET product page
+msgid "Every detail has a reason"
+msgstr "كل تفصيلة لها سبب"
+
+#: KET product page
+msgid "In this photo"
+msgstr "القطعة في الصورة"
+
+#: KET product page
+msgid "Inspiration"
+msgstr "إلهام"
+
+#: KET product page
+msgid "Photographed your piece at home? Send it to us and we may feature it here."
+msgstr "صوّرت قطعتك في بيتك؟ أرسلها لنا، ويمكن نعرضها هنا."
+
+#: KET product page
+msgid "Product information"
+msgstr "معلومات المنتج"
+
+#: KET product page
+msgid "Real photos our customers sent us once their pieces arrived."
+msgstr "صور حقيقية أرسلها لنا عملاؤنا بعد ما وصلتهم قطعهم."
+
+#: KET product page
+msgid "Seen in their homes"
+msgstr "من بيوت عملائنا"
+
+#: KET product page
+msgid "Share your photo"
+msgstr "شاركنا صورتك"
+
+#: KET product page
+msgid "Verified buyer"
+msgstr "مشتري موثّق"
+
+#: KET product page
+msgid "Only %s pieces left"
+msgstr "باقي %s قطعة فقط"

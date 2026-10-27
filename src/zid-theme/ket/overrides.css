@@ -84,3 +84,17 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
   .ket .footer__grid .pays, .ket .footer__grid .footer__legal{ justify-self:end; margin-inline:0; }
 }
 .ket-top .icon-btn.hidden{ display:none; }   /* Zid shows either login or profile */
+
+/* ===================== Sections added for parity with the prototype ===================== */
+.ket .rev__write{ margin-top:var(--s5); }
+.ket .rev__write .btn{ height:48px; }
+.ket .rev__empty{ display:grid; place-items:center; min-height:200px; padding:var(--s6); border-radius:var(--r-card); background:var(--g100); text-align:center; font-size:16px; color:var(--ink-2); }
+.ket .rcard footer .pill{ background:var(--white); }
+.ket .prod__media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .9s var(--ease); }
+.ket .prod:hover .prod__media img{ transform:scale(1.04); }
+.ket .prod__link{ position:absolute; inset:0; }
+.ket .prod__pills{ z-index:1; }
+.ket .prod__add{ z-index:1; display:grid; place-items:center; color:var(--white); text-decoration:none; }
+.ket .prod h3 a{ text-decoration:none; }
+.ket a.insp__chip{ color:var(--black); }
+.ket .mcard__add{ display:grid; place-items:center; }

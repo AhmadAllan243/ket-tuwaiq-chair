@@ -249,9 +249,9 @@ html[lang="ar"] :where(.ket) .story__lines{ font-weight:700; line-height:1.35; }
 :where(.ket) .story__chip:nth-child(3){ bottom:9%; inset-inline-start:4%; } :where(.ket) .story__chip:nth-child(3) i{ background:var(--peri); }
 @media (max-width:1023px){ :where(.ket) .story__chip{ font-size:12px; padding:7px 12px; } :where(.ket) .story__chip:nth-child(1){ inset-inline-start:2%; } :where(.ket) .story__chip:nth-child(2){ inset-inline-end:2%; } }
 :where(.ket) .story__body{ font-size:clamp(15px,1.3vw,18px); max-width:46ch; color:#1a1a1a; }
-html :where(.ket) :not(.motion) .story__detail{ opacity:1; position:relative; aspect-ratio:4/3; border-radius:24px; overflow:hidden; margin-top:12px; }
-html :where(.ket) :not(.motion) .story__visual{ display:flex; flex-direction:column; }
-html :where(.ket) :not(.motion) .story__card{ height:auto; aspect-ratio:1/1; }
+html:not(.motion) :where(.ket) .story__detail{ opacity:1; position:relative; aspect-ratio:4/3; border-radius:24px; overflow:hidden; margin-top:12px; }
+html:not(.motion) :where(.ket) .story__visual{ display:flex; flex-direction:column; }
+html:not(.motion) :where(.ket) .story__card{ height:auto; aspect-ratio:1/1; }
 
 /* ===================== 6. FEATURES ===================== */:where(.ket) .features{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:28px 12px; }
 @media (min-width:1024px){ :where(.ket) .features{ grid-template-columns:repeat(4, minmax(0,1fr)); gap:20px; } }
@@ -583,16 +583,16 @@ html[dir="rtl"] :where(.ket) .lightbox__nav svg{ transform:scaleX(-1); }
 
 /* Footer brand: full lockup + "from our hands to your home" stamp */
 
-/* Intro states (only while JS animates) */html :where(.ket) .is-loading .intro-line > span{ transform:translateY(110%); }
-html :where(.ket) .is-loading .g-stage{ clip-path:inset(100% 0 0 0); }
-html :where(.ket) .is-loading .intro-fade{ opacity:0; }
+/* Intro states (only while JS animates) */html.is-loading :where(.ket) .intro-line > span{ transform:translateY(110%); }
+html.is-loading :where(.ket) .g-stage{ clip-path:inset(100% 0 0 0); }
+html.is-loading :where(.ket) .intro-fade{ opacity:0; }
 
 @media (prefers-reduced-motion: reduce){
   :where(.ket) .klogo .kl, :where(.ket) .klogo__smile, :where(.ket) .peek__fig, :where(.ket) .peek__say{ transition:none!important; }
   :where(.ket) .peek.is-on .peek__fig img, :where(.ket) .stamp__ring, :where(.ket) .rig, :where(.ket) .rig *{ animation:none!important; }
   :where(.ket) *, :where(.ket) *::before, :where(.ket) *::after{ animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
 }
-/* Lenis */html :where(.ket) .lenis, html :where(.ket) .lenis body{ height:auto; }
+/* Lenis */html.lenis .ket, html.lenis :where(.ket) body{ height:auto; }
 :where(.ket) .lenis.lenis-smooth{ scroll-behavior:auto!important; }
 :where(.ket) .lenis.lenis-stopped{ overflow:hidden; }
 
@@ -736,3 +736,17 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
   .ket .footer__grid .pays, .ket .footer__grid .footer__legal{ justify-self:end; margin-inline:0; }
 }
 .ket-top .icon-btn.hidden{ display:none; }   /* Zid shows either login or profile */
+
+/* ===================== Sections added for parity with the prototype ===================== */
+.ket .rev__write{ margin-top:var(--s5); }
+.ket .rev__write .btn{ height:48px; }
+.ket .rev__empty{ display:grid; place-items:center; min-height:200px; padding:var(--s6); border-radius:var(--r-card); background:var(--g100); text-align:center; font-size:16px; color:var(--ink-2); }
+.ket .rcard footer .pill{ background:var(--white); }
+.ket .prod__media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .9s var(--ease); }
+.ket .prod:hover .prod__media img{ transform:scale(1.04); }
+.ket .prod__link{ position:absolute; inset:0; }
+.ket .prod__pills{ z-index:1; }
+.ket .prod__add{ z-index:1; display:grid; place-items:center; color:var(--white); text-decoration:none; }
+.ket .prod h3 a{ text-decoration:none; }
+.ket a.insp__chip{ color:var(--black); }
+.ket .mcard__add{ display:grid; place-items:center; }

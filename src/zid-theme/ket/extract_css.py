@@ -29,7 +29,7 @@ def scope_sel(sel):
     sel = sel.strip()
     if not sel or sel.startswith(('from', 'to')) or re.fullmatch(r'[\d.]+%(\s*,\s*[\d.]+%)*', sel):
         return sel
-    m = re.match(r'^(html(?:\[[^\]]*\])*|:root)(.*)$', sel)
+    m = re.match(r'^(html(?:\[[^\]]*\]|\.[\w-]+|:not\([^)]*\))*|:root)(.*)$', sel)   # html, html[lang], html.x, html:not(.x)
     if m:
         root, rest = m.group(1), m.group(2).strip()
         if root == ':root':
