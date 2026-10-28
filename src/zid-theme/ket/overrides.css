@@ -80,9 +80,15 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 .ket .footer__legal a{ color:inherit; }
 .ket .footer__legal img{ display:block; height:36px; width:auto; }
 @media (min-width:1024px){
-  .ket .footer__grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); align-items:center; text-align:start; justify-items:start; }
-  .ket .footer__grid .pays, .ket .footer__grid .footer__legal{ justify-self:end; margin-inline:0; }
+  .ket .footer__grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); align-items:start; }
+  .ket .footer__mark{ justify-self:start; justify-items:start; text-align:start; }
+  .ket .footer__touch{ justify-self:end; justify-items:start; text-align:start; }
+  .ket .footer__grid .pays, .ket .footer__grid .footer__legal{ grid-column:1 / -1; justify-self:center; }
 }
+.ket .pays{ max-width:none; }
+.ket .pay--img img{ filter:grayscale(1) contrast(1.2); }
+.ket .pay--tamara{ font-weight:800; letter-spacing:-.03em; }
+.ket .pay--stc{ font-weight:800; font-size:17px; letter-spacing:-.02em; }
 .ket-top .icon-btn.hidden{ display:none; }   /* Zid shows either login or profile */
 
 /* ===================== Sections added for parity with the prototype ===================== */
