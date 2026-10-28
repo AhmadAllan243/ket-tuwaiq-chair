@@ -102,7 +102,7 @@
         {% set langs = store.languages or [] %}
         {% if langs | length > 1 %}
           {% set other = 'en' if session.lang == 'ar' else 'ar' %}
-          <li><button type="button" class="lang-btn latin" onclick="selectMobileLanguage('{{ other }}')" aria-label="{{ 'Switch to English' if other == 'en' else 'التبديل إلى العربية' }}">{{ 'EN' if other == 'en' else 'ع' }}</button></li>
+          <li><button type="button" class="lang-btn latin" onclick="ketSwitchLang('{{ other }}')" aria-label="{{ 'Switch to English' if other == 'en' else 'التبديل إلى العربية' }}">{{ 'EN' if other == 'en' else 'ع' }}</button></li>
         {% endif %}
         {% include 'components/header/region-selector.jinja' %}
       </ul>
