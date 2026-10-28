@@ -30,6 +30,9 @@
 .ket .ket-actions{ display:grid; grid-template-columns:auto 1fr; gap:10px; }
 .ket .ket-actions > .btn-outline, .ket .ket-actions--out .btn{ grid-column:1 / -1; }
 .ket .ket-actions--out{ grid-template-columns:1fr; }
+/* Zid's gift-order link: icon beside two lines of plain text (the KET .btn is one uppercase line) */
+.ket [data-gift-order-link]{ display:grid; grid-template-columns:auto 1fr; align-items:center; column-gap:12px; row-gap:2px; height:auto; min-height:56px; padding:12px 22px; margin-top:var(--s3); white-space:normal; text-transform:none; letter-spacing:0; text-align:start; }
+.ket [data-gift-order-link] svg{ grid-row:span 2; }
 .ket .ket-actions #product-view-add-to-cart:empty{ display:none; }
 /* Zid's quantity input, drawn as the KET pill stepper */
 .ket .ket-qty .qty-input{ height:56px; border:1px solid var(--black); border-radius:var(--r-pill); padding-inline:4px; gap:0; box-shadow:none; }
