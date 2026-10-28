@@ -103,3 +103,9 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 .ket .prod:hover .prod__link svg.ph{ transform:scale(1.05) translateY(-2%); }
 .ket .bundle{ margin-bottom:var(--s5); }
 .ket .bundle__thumbs svg.ph{ width:80%; height:auto; }
+
+/* The 3D hero starts at the very top of the page, under the announcement bar and header (as it does
+   while pinned and as in the prototype), so the whole first screen, pieces and wording, fits on load.
+   --ket-header-h is measured by ket-product.js; the fallbacks are the bar + header heights. */
+.ket #ket-hero{ margin-top:calc(-1 * var(--ket-header-h, 97px)); }
+@media (min-width:1200px){ .ket #ket-hero{ margin-top:calc(-1 * var(--ket-header-h, 109px)); } }
