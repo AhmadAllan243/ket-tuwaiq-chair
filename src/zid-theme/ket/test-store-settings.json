@@ -1,0 +1,92 @@
+{
+  "ar": {
+    "ket_moments_sample": true,
+    "ket_moments_items": [
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/7cdd8e0e-a3f3-4cc3-8175-755ebaa52d26.png",
+        "name": "سارة",
+        "city": "الرياض",
+        "date": "2026-09-14",
+        "text": "صار ركن القراءة أحلى زاوية في البيت، والنقشة أعطت المكان دفا.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/dcfa343f-8d7a-49e5-8072-48425603d9e7.png",
+        "name": "خالد",
+        "city": "جدة",
+        "date": "2026-09-02",
+        "text": "خشب المساند ثقيل وناعم، والقماش متين. القطعة على الطبيعة أفخم من صورها.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/e325edf2-a03d-4afe-928a-4b08d2063965.png",
+        "name": "منيرة",
+        "city": "بريدة",
+        "date": "2026-08-21",
+        "text": "وصلني مغلّف بعناية ومعه الهدية. شكرًا على الاهتمام بالتفاصيل.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/255be32d-a8a5-48d8-b874-31208f331b04.png",
+        "name": "تركي",
+        "city": "الخبر",
+        "date": "2026-08-09",
+        "text": "اللون على الطبيعة أجمل، والجلسة مريحة لساعات.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/cfc5e61b-953a-4e89-88f7-855583b80073.png",
+        "name": "ريم",
+        "city": "أبها",
+        "date": "2026-07-30",
+        "text": "أخذته لمجلس الضيوف وصار أول شي يسألون عنه.",
+        "product": ""
+      }
+    ]
+  },
+  "en": {
+    "ket_moments_sample": true,
+    "ket_moments_items": [
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/7cdd8e0e-a3f3-4cc3-8175-755ebaa52d26.png",
+        "name": "Sarah",
+        "city": "Riyadh",
+        "date": "2026-09-14",
+        "text": "My reading corner is now the best spot in the house.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/dcfa343f-8d7a-49e5-8072-48425603d9e7.png",
+        "name": "Khalid",
+        "city": "Jeddah",
+        "date": "2026-09-02",
+        "text": "The wooden arms feel solid and smooth. Even better in person.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/e325edf2-a03d-4afe-928a-4b08d2063965.png",
+        "name": "Munira",
+        "city": "Buraydah",
+        "date": "2026-08-21",
+        "text": "Arrived carefully packed, with the gift.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/255be32d-a8a5-48d8-b874-31208f331b04.png",
+        "name": "Turki",
+        "city": "Khobar",
+        "date": "2026-08-09",
+        "text": "The colours are richer in person, and it is comfortable for hours.",
+        "product": ""
+      },
+      {
+        "image": "https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/cfc5e61b-953a-4e89-88f7-855583b80073.png",
+        "name": "Reem",
+        "city": "Abha",
+        "date": "2026-07-30",
+        "text": "It is the first thing guests ask about.",
+        "product": ""
+      }
+    ]
+  }
+}

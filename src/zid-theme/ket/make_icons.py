@@ -28,6 +28,10 @@ out.append('{% set KET_SHAPE_TINT = ' + json.dumps({n: v['c'] for n, v in B['SHA
 sm, K = B['SMILE'], B['KET']
 out.append(f'{{% macro smile(w=40) -%}}<svg viewBox="0 0 {sm["w"]} {sm["h"]}" width="{{{{ w }}}}" aria-hidden="true" fill="currentColor"><path d="{sm["d"]}"/></svg>{{%- endmacro %}}')
 out.append(f'{{% macro logo(w=64) -%}}<svg class="klogo" viewBox="0 0 {K["w"]} {K["h"]}" width="{{{{ w }}}}" role="img" aria-label="ket" style="direction:ltr" fill="currentColor"><g class="klogo__word"><path class="kl" d="{K["k"]}"/><path class="kl" fill-rule="evenodd" d="{K["e"]}"/><path class="kl" d="{K["t"]}"/></g><g transform="translate({K["smile"]["x"]} {K["smile"]["y"]})"><path class="klogo__smile" d="{K["smile"]["d"]}"/></g></svg>{{%- endmacro %}}')
+# grey product silhouettes for related products without a photo (chosen by name in product.jinja)
+ph = dict(re.findall(r"\s*(\w+): '([^']*)'", re.search(r'const PH = \{(.*?)\n\};', s, re.S).group(1)))
+out.append('{% set KET_PH = ' + json.dumps(ph) + ' %}')
+out.append('{% macro ph(shape) -%}<svg class="ph" viewBox="0 0 160 160" aria-hidden="true"><g fill="#DCDCDC">{{ KET_PH[shape] | safe }}</g></svg>{%- endmacro %}')
 dst = os.path.join(HERE, '..', 'components', 'ket', 'icons.jinja')
 open(dst, 'w').write('\n'.join(out) + '\n')
 print('wrote', dst, sorted(icons))

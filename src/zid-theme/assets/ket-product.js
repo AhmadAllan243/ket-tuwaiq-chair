@@ -71,9 +71,10 @@
     del.hidden = false;
   }
 
-  /* ---------- Numbers read 1,653 (Zid prints 1653) ---------- */
-  $$('[data-count]').forEach(el => { const plus = el.textContent.trim().endsWith('+') ? '+' : ''; el.textContent = (+el.dataset.count).toLocaleString('en-US') + plus; });
-  $$('[data-sold-count-text]').forEach(el => { el.textContent = el.textContent.replace(/\d{4,}/g, n => (+n).toLocaleString('en-US')); });
+  /* ---------- Numbers: 1,653 style (Zid prints 1653); animated below ---------- */
+  const fmtN = (v, dec) => (+v).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  const counters = $$('[data-count]', page);
+  counters.forEach(el => { el.textContent = fmtN(el.dataset.count, +el.dataset.dec || 0); });
 
   /* ---------- Story title: as large as the column allows ---------- */
   const fitStoryTitle = () => {
@@ -121,6 +122,31 @@
     if (G) { deck.classList.add('is-stacked'); }
   }
 
+  /* ---------- Suggested bundle: Zid bundle offers are not in the page data, so ask Zid's API.
+     The offer says what to add in its description; the related product named there gives the
+     picture and the add-to-cart button. ---------- */
+  const relTrack = $('#relTrack');
+  const pid = $('#product-id')?.value;
+  if (relTrack && pid && !$('.ket .bundle')) {
+    fetch('/api/v1/products/bundle-offers?product_ids=' + encodeURIComponent(pid), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(r => r.ok ? r.json() : null).then(d => {
+        const bo = d?.payload?.[0]; if (!bo) return;
+        const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const desc = (bo.description || '').toLowerCase();
+        const match = $$('.prod', relTrack).find(p => { const n = p.querySelector('h3')?.textContent.trim().toLowerCase(); return n && desc.includes(n); });
+        const own = $('.g-slide img')?.currentSrc || $('.g-slide img')?.src;
+        const media = match?.querySelector('.prod__link img, .prod__link svg');
+        const add = match?.querySelector('[data-add-to-cart]');
+        const box = document.createElement('div'); box.className = 'bundle';
+        box.innerHTML = `<div class="bundle__thumbs"><div>${own ? `<img src="${esc(own)}" alt="" loading="lazy">` : ''}</div>${media ? `<div style="display:grid;place-items:center">${media.outerHTML}</div>` : ''}</div>
+          <div class="bundle__text"><strong>${esc(bo.name)}</strong>${bo.description ? `<p>${esc(bo.description)}</p>` : ''}</div>
+          ${add ? `<button class="btn btn-primary" type="button" data-add-to-cart="${esc(add.dataset.addToCart)}"><span class="btn-label">${esc(page.dataset.bundleAdd || '')} ${esc(match.querySelector('h3')?.textContent.trim())}</span></button>` : ''}`;
+        relTrack.before(box);
+        if (add) box.querySelector('[data-add-to-cart]').addEventListener('click', e => { e.preventDefault(); add.click(); });
+        if (G) gsap.from(box, { y: 30, opacity: 0, duration: .9, ease: 'power3.out' });
+      }).catch(() => {});
+  }
+
   /* ---------- Accordions + review slider ---------- */
   page.addEventListener('click', e => {
     const b = e.target.closest('.acc__btn');
@@ -147,14 +173,17 @@
     .fromTo('.ket .intro-line > span', { yPercent: 110 }, { yPercent: 0, duration: 1.1, stagger: .09 }, .3)
     .fromTo('.ket .intro-fade', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .9, stagger: .06 }, .45);
 
-  /* ---------- Count-ups (proof numbers, review bars) and stars ---------- */
-  $$('[data-count]').forEach(el => {
-    const to = +el.dataset.count, suffix = el.textContent.trim().endsWith('+') ? '+' : '', o = { v: 0 };
-    gsap.to(o, { v: to, duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-      onUpdate: () => { el.textContent = Math.round(o.v).toLocaleString('en-US') + suffix; } });
+  /* ---------- Count-ups: every number runs from 0 (or from its data-from) to its value, like a speedometer ---------- */
+  counters.forEach(el => {
+    const to = +el.dataset.count, dec = +el.dataset.dec || 0, o = { v: +el.dataset.from || 0 };
+    el.textContent = fmtN(o.v, dec);
+    gsap.to(o, { v: to, duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: el.closest('.pill, .rating, .stock, .proof, .rev, .prod, .price') || el, start: 'top 92%', once: true },
+      onUpdate: () => { el.textContent = fmtN(dec ? o.v : Math.round(o.v), dec); } });
   });
-  $$('.ket .rating .star, .ket .proof .star').length && gsap.fromTo('.ket .rating .star, .ket .proof .star', { scale: .2, opacity: 0, rotate: -35 },
-    { scale: 1, opacity: 1, rotate: 0, duration: .55, stagger: .08, ease: 'back.out(2.4)', scrollTrigger: { trigger: '.ket .rating, .ket .proof', start: 'top 90%', once: true } });
+  // stars pop in one after the other
+  [['.ket .rating', '.ket .rating .star'], ['.ket .proof', '.ket .proof .star'], ['.ket .rev__meta', '.ket .rev__meta .star']].forEach(([trig, sel]) => {
+    if ($(sel)) gsap.fromTo(sel, { scale: .2, opacity: 0, rotate: -35 }, { scale: 1, opacity: 1, rotate: 0, duration: .55, stagger: .16, ease: 'back.out(2.4)', scrollTrigger: { trigger: trig, start: 'top 90%', once: true } });
+  });
   const bar = $('.ket .stock__bar span');
   if (bar) gsap.fromTo(bar, { width: '100%', backgroundColor: '#02A27A' },
     { width: () => getComputedStyle(bar).getPropertyValue('--w'), backgroundColor: '#FF6517', duration: 1.8, ease: 'power3.out', scrollTrigger: { trigger: bar, start: 'top 92%', once: true } });

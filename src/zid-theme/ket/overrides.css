@@ -98,3 +98,8 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 .ket .prod h3 a{ text-decoration:none; }
 .ket a.insp__chip{ color:var(--black); }
 .ket .mcard__add{ display:grid; place-items:center; }
+.ket .prod__link{ display:grid; place-items:center; }
+.ket .prod__link svg.ph{ width:62%; height:auto; transition:transform .9s var(--ease); }
+.ket .prod:hover .prod__link svg.ph{ transform:scale(1.05) translateY(-2%); }
+.ket .bundle{ margin-bottom:var(--s5); }
+.ket .bundle__thumbs svg.ph{ width:80%; height:auto; }

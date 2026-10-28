@@ -1357,3 +1357,19 @@ msgstr "مشتري موثّق"
 #: KET product page
 msgid "Only %s pieces left"
 msgstr "باقي %s قطعة فقط"
+
+#: KET product page
+msgid "Illustration"
+msgstr "صورة توضيحية"
+
+#: KET product page
+msgid "Suggested bundle"
+msgstr "باقة مقترحة"
+
+#: KET product page
+msgid "Sample: replaced by real customer photos"
+msgstr "عيّنة: تُستبدل بصور العملاء الحقيقية"
+
+#: KET product page
+msgid "Add"
+msgstr "أضف"

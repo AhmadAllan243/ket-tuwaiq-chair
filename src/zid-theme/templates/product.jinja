@@ -83,6 +83,10 @@
     {% endif %}
   {% endfor %}
 
+  {# animated number: shows the value, and ket-product.js counts it up (or down from `frm`) when it scrolls into view #}
+  {% macro cnt(v, dec=0, frm=0) -%}
+    <span class="num cnt" data-count="{{ v }}" data-dec="{{ dec }}" data-from="{{ frm }}">{{ ('%.' ~ dec ~ 'f') | format(v | float) }}</span>
+  {%- endmacro %}
   {% macro img_src(im, w=1200) -%}{{ image_url(im.image.large if im.image else im, w=w, q=88, f='auto') }}{%- endmacro %}
   {% set sold_count = product.sold_products_count or (selected_product and selected_product.sold_products_count) %}
   {% set rating = product.rating.average if product.rating else 0 %}
@@ -90,7 +94,7 @@
   {% set stock_scale = (settings.ket_stock_scale | default(100)) | int %}
   {% set qty_left = selected_product.quantity if selected_product and not selected_product.is_infinite else none %}
 
-  <div class="ket" data-ket-product>
+  <div class="ket" data-ket-product data-bundle-add="{{ _('Add') }}">
 
     {# ===================== 3D SCROLL HERO (only when the product has a 3D model) ===================== #}
     {% if model_url and settings.ket_hero_enabled | default(true) %}
@@ -156,7 +160,7 @@
         <div class="buy" id="buy">
           <div class="buy__pills intro-fade" id="product-badges">
             <span class="pill pill--mint {{ 'hidden' if not sold_count }}" data-sold-count-badge>
-              <span data-sold-count-text>{{ _("Sold more than %s times") | format(sold_count) if sold_count }}</span>
+              <span data-sold-count-text>{{ _("Sold more than %s times").replace('%s', cnt(sold_count) | string) | safe if sold_count }}</span>
             </span>
             {% if product.badge and product.badge.body %}
               <span class="pill pill--yellow">{{ product.badge.body[lang] if product.badge.body is mapping else product.badge.body }}</span>
@@ -172,8 +176,8 @@
           {% if store.settings.products.reviews_enabled and rating %}
             <a class="rating intro-fade" href="#reviews">
               {{ k.stars(rating, 15, rating ~ ' / 5') }}
-              <span class="rating__val">{{ '%.1f' | format(rating) }}</span>
-              <span class="rating__count muted">({{ rating_count }} {{ _("reviews") }})</span>
+              <span class="rating__val">{{ cnt(rating, 1) }}</span>
+              <span class="rating__count muted">({{ cnt(rating_count) }} {{ _("reviews") }})</span>
             </a>
           {% endif %}
 
@@ -181,7 +185,7 @@
             <span class="price__now num" data-product-price>{{ product.formatted_sale_price if product.formatted_sale_price else product.formatted_price }}</span>
             <s class="price__was num {{ 'hidden' if not product.formatted_sale_price }}" data-product-price-old>{{ product.formatted_price if product.formatted_sale_price else '' }}</s>
             <span class="pill pill--orange num {{ 'hidden' if not (product.discount_percentage and product.discount_percentage > 0) }}" dir="ltr">
-              {% if product.discount_percentage and product.discount_percentage > 0 %}-{{ product.discount_percentage | round(0) | int }}%{% endif %}
+              {% if product.discount_percentage and product.discount_percentage > 0 %}<span>-{{ cnt(product.discount_percentage | round(0) | int) }}%</span>{% endif %}
             </span>
             {% if product.is_taxable %}<span class="price__vat">{{ _("Price includes VAT") }}</span>{% endif %}
           </div>
@@ -198,7 +202,7 @@
             {# KET's own stock bar (theme setting "stock bar below this quantity"), not Zid's low-stock badge #}
             <div class="stock">
               <div class="stock__row">
-                <strong>{{ _("Only %s pieces left") | format(qty_left) }}</strong>
+                <strong>{{ _("Only %s pieces left").replace('%s', cnt(qty_left, 0, stock_scale) | string) | safe }}</strong>
                 <span class="muted">{{ _("Selling fast") }}</span>
               </div>
               <div class="stock__bar" aria-hidden="true"><span style="--w:{{ [8, (qty_left / stock_scale * 100) | round(0)] | max }}%"></span></div>
@@ -253,11 +257,11 @@
           {% if sold_count or rating_count %}
             <div class="proof" role="group" aria-label="{{ _('Product figures') }}">
               {% if sold_count %}
-                <div class="proof__item"><span class="proof__ic">{{ k.icon('bag', 22) }}</span><strong class="proof__num" dir="ltr" data-count="{{ sold_count }}">{{ sold_count }}+</strong><span class="proof__lab">{{ _("bought it") }}</span></div>
+                <div class="proof__item"><span class="proof__ic">{{ k.icon('bag', 22) }}</span><strong class="proof__num" dir="ltr">{{ cnt(sold_count) }}+</strong><span class="proof__lab">{{ _("bought it") }}</span></div>
               {% endif %}
               {% if rating_count %}
-                <div class="proof__item"><span class="proof__ic">{{ k.icon('chat', 22) }}</span><strong class="proof__num" dir="ltr" data-count="{{ rating_count }}">{{ rating_count }}</strong><span class="proof__lab">{{ _("reviews") }}</span></div>
-                <div class="proof__item"><span class="proof__ic proof__ic--stars">{{ k.stars(rating, 14) }}</span><strong class="proof__num" dir="ltr">{{ '%.1f' | format(rating) }}<small>/5</small></strong><span class="proof__lab">{{ _("customer rating") }}</span></div>
+                <div class="proof__item"><span class="proof__ic">{{ k.icon('chat', 22) }}</span><strong class="proof__num" dir="ltr">{{ cnt(rating_count) }}</strong><span class="proof__lab">{{ _("reviews") }}</span></div>
+                <div class="proof__item"><span class="proof__ic proof__ic--stars">{{ k.stars(rating, 14) }}</span><strong class="proof__num" dir="ltr">{{ cnt(rating, 1) }}<small>/5</small></strong><span class="proof__lab">{{ _("customer rating") }}</span></div>
               {% endif %}
             </div>
           {% endif %}
@@ -429,13 +433,13 @@
           </div>
           <div class="rev">
             <div data-reveal>
-              {% if rating_count %}<p class="rev__score">{{ '%.1f' | format(rating) }}</p>{% endif %}
-              <div class="rev__meta">{{ k.stars(rating, 18) }}<span>{% if rating_count %}{{ _("from %s reviews") | format(rating_count) }}{% else %}{{ _("No reviews yet") }}{% endif %}</span></div>
+              {% if rating_count %}<p class="rev__score">{{ cnt(rating, 1) }}</p>{% endif %}
+              <div class="rev__meta">{{ k.stars(rating, 18) }}<span>{% if rating_count %}{{ _("from %s reviews").replace('%s', cnt(rating_count) | string) | safe }}{% else %}{{ _("No reviews yet") }}{% endif %}</span></div>
               <div class="rev__bars {{ 'hidden' if not rating_count }}">
                 {% for n in [5, 4, 3, 2, 1] %}
                   {% set c = (product.rating['ratings_' ~ n].count if product.rating and product.rating['ratings_' ~ n] else 0) or 0 %}
                   {% set p = ((c / rating_count * 100) | round(0) | int) if rating_count else 0 %}
-                  <div class="rev__bar"><span>{{ n }}</span><i><b style="--w:{{ p }}%"></b></i><span>{{ p }}%</span></div>
+                  <div class="rev__bar"><span>{{ n }}</span><i><b style="--w:{{ p }}%"></b></i><span>{{ cnt(p) }}%</span></div>
                 {% endfor %}
               </div>
               <div class="rev__write">
@@ -484,10 +488,13 @@
             <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Customer moments") }}</span></p>
             <div><h2 class="h-xl" id="momTitle">{{ _("Seen in their homes") }}</h2><p class="mom__lede muted">{{ _("Real photos our customers sent us once their pieces arrived.") }}</p></div>
           </div>
+          {% if settings.ket_moments_sample %}
+            <div class="mom__bar" data-reveal><span class="pill pill--yellow sample-note">{{ _("Sample: replaced by real customer photos") }}</span></div>
+          {% endif %}
           <div class="mom__deck" id="momDeck" tabindex="0" role="region" aria-roledescription="carousel" aria-label="{{ _('Customer photos') }}">
             {% for m in moments %}
               <article class="mcard" data-mi="{{ loop.index0 }}" role="group" aria-roledescription="slide">
-                <div class="mcard__media"><img src="{{ image_url(m.image, w=800, q=85, f='auto') }}" alt="{{ m.name }}" loading="lazy" decoding="async" draggable="false"></div>
+                <a class="mcard__media" href="{{ image_url(m.image, w=1600, q=90, f='auto') }}" target="_blank" rel="noopener" aria-label="{{ m.name }}"><img src="{{ image_url(m.image, w=800, q=85, f='auto') }}" alt="{{ m.name }}" loading="lazy" decoding="async" draggable="false"><span class="mcard__zoom">{{ k.icon('zoom', 18) }}</span></a>
                 <div class="mcard__body">
                   <div class="mcard__who">
                     <span class="mcard__av" style="--av:{{ avs[loop.index0 % 5] }}" aria-hidden="true">{{ (m.name or ' ')[0] }}</span>
@@ -522,7 +529,7 @@
     {% endif %}
 
     {# ===================== COMPLETE THE MAJLIS (Zid related products) ===================== #}
-    {% if product.related_products and product.related_products | length > 0 %}
+    {% if (product.related_products and product.related_products | length > 0) or (product.bundle_offer and product.bundle_offer.products) %}
       {% set sec.n = sec.n + 1 %}
       <section class="section" id="related" aria-labelledby="relTitle">
         <div class="container">
@@ -530,14 +537,35 @@
             <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("Complete the look") }}</span></p>
             <h2 class="h-xl" id="relTitle">{{ _("Complete the majlis") }}</h2>
           </div>
+          {% set bo = product.bundle_offer %}
+          {% if bo and bo.products and bo.products.results %}
+            {% set others = [] %}
+            {% for bp in bo.products.results %}{% if bp.id != product.id %}{% set _x = others.append(bp) %}{% endif %}{% endfor %}
+            <div class="bundle" data-reveal>
+              <div class="bundle__thumbs">
+                <div>{% if images %}<img src="{{ img_src(images[0], 160) }}" alt="" loading="lazy">{% endif %}</div>
+                {% for bp in others[:2] %}
+                  {% set bimg = bp.main_image.image.large if bp.main_image and bp.main_image.image else '' %}
+                  <div style="display:grid;place-items:center">{% if bimg %}<img src="{{ image_url(bimg, w=160, q=85, f='auto') }}" alt="" loading="lazy">{% else %}{{ k.ph('tray') }}{% endif %}</div>
+                {% endfor %}
+              </div>
+              <div class="bundle__text"><strong>{{ bo.name or _("Suggested bundle") }}</strong>{% if bo.description %}<p>{{ bo.description }}</p>{% endif %}</div>
+              {% if others %}
+                <button class="btn btn-primary" type="button" data-add-to-cart="{{ others[0].id }}"><span class="btn-label">{{ _("Add") }} {{ others[0].name }}</span></button>
+              {% endif %}
+            </div>
+          {% endif %}
           <div class="rel__track" id="relTrack">
-            {% for p in product.related_products %}
+            {% for p in product.related_products or [] %}
               {% set pimg = p.main_image.image.large if p.main_image and p.main_image.image else (p.images[0].image.large if p.images and p.images[0].image else '') %}
               {% set purl = url_for('product_details', slug=p.slug) %}
+              {% set pn = p.name | lower %}
+              {% set shape = 'tray' if ('طاولة' in pn and 'زاوية' not in pn) or 'table' in pn else ('corner' if 'زاوية' in pn or 'corner' in pn else ('round' if 'دائري' in pn or 'round' in pn else 'boucle')) %}
+              {% set badge = (p.badge.body[lang] if p.badge.body is mapping else p.badge.body) if p.badge and p.badge.body else '' %}
               <article class="prod" data-reveal-item>
                 <div class="prod__media">
-                  <a href="{{ purl }}" class="prod__link" aria-label="{{ p.name }}">{% if pimg %}<img src="{{ image_url(pimg, w=700, q=88, f='auto') }}" alt="{{ p.name }}" loading="lazy">{% endif %}</a>
-                  <div class="prod__pills">{% if p.discount_percentage and p.discount_percentage > 0 %}<span class="pill pill--orange num" dir="ltr">-{{ p.discount_percentage | round(0) | int }}%</span>{% endif %}</div>
+                  <a href="{{ purl }}" class="prod__link" aria-label="{{ p.name }}">{% if pimg %}<img src="{{ image_url(pimg, w=700, q=88, f='auto') }}" alt="{{ p.name }}" loading="lazy">{% else %}{{ k.ph(shape) }}<span class="prod__ph">{{ _("Illustration") }}</span>{% endif %}</a>
+                  <div class="prod__pills">{% if badge %}<span class="pill pill--yellow">{{ badge }}</span>{% endif %}{% if p.discount_percentage and p.discount_percentage > 0 %}<span class="pill pill--orange num" dir="ltr"><span>-{{ cnt(p.discount_percentage | round(0) | int) }}%</span></span>{% endif %}</div>
                   {% if p.in_stock and not (p.has_options or p.has_fields) %}
                     <button class="prod__add" type="button" data-add-to-cart="{{ p.id }}" aria-label="{{ _('Add to cart') }}">{{ k.icon('plus', 20) }}</button>
                   {% else %}

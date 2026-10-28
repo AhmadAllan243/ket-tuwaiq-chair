@@ -44,3 +44,4 @@ dist/
 /playwright-report/
 /blob-report/
 .preview/
+.layout.json.bak

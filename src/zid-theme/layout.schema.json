@@ -534,6 +534,15 @@
           ]
         },
         {
+          "id": "moments_sample",
+          "type": "checkbox",
+          "label": {
+            "ar": "تجارب العملاء: إظهار شارة \"عيّنة\" (للتجربة فقط)",
+            "en": "Customer moments: show a \"sample\" label (testing only)"
+          },
+          "default": false
+        },
+        {
           "id": "insp_enabled",
           "type": "checkbox",
           "label": {

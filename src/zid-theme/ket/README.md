@@ -48,8 +48,17 @@ Other metafields appear under "Details".
 the three promise cards, "Will it fit?", shipping, returns and care texts, the note next to the
 shipping gazelle, customer moments (real photos from customers' homes: photo, name, city, date,
 quote, optional product slug) and the inspiration section (title, text, rooms with link and colour)
-— each in Arabic and English. Reviews are Zid's own (Customers → Reviews must be switched on);
-"Complete the majlis" shows the product's related products from Zid.
+— each in Arabic and English. Reviews are Zid's own (Customers → Reviews must be switched on).
+"Complete the majlis" shows the product's related products (product → "تخصيص المنتجات المشابهة"),
+with Zid's product label as the yellow pill and a grey silhouette when a product has no photo; a Zid
+marketing bundle (التسويق → الحزم التسويقية) on the product adds the "suggested bundle" box above them.
+Every number (sold count, rating, reviews, discount, stock, figures, review bars) counts up on scroll.
+
+## Test store
+
+`zsh ket/preview-test-store.sh` uploads the theme to the KET Test dev store with
+`ket/test-store-settings.json` merged in (sample customer moments with the "sample" label), then
+restores `layout.json`, so the samples never become the theme's defaults.
 
 ## Build, preview, upload
 
@@ -69,7 +78,7 @@ own scripts and styles, so it is only for checking the KET layout and motion.
 ## Not done yet
 
 - The announcement bar shows KET's three lines until texts are entered in the theme editor (Header → Announcement bar).
-- The AR "see it in your room" block and the suggested-bundle box from the prototype.
+- The AR "see it in your room" block from the prototype.
 - When a variant has its own photos, Growth's variant script updates its own gallery markup, not
   the KET gallery (fine for products without photo-specific variants).
 - Pop-up gazelles (switched off in the prototype too).
