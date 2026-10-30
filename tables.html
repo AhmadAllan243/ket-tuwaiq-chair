@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tables · ket</title>
+<meta name="description" content="طاولات ket — طاولات قهوة وجانبية وأطقم وكونسول، بتصاميم تجمع البيت.">
+<meta name="theme-color" content="#ffffff">
+<script>document.documentElement.classList.add('is-loading');</script>
+
+<!-- =====================================================================
+     DATA — single source of truth. In Zid Vitrin this becomes Jinja:
+     {{ category.name }}, category.products (name, price, sale price, images,
+     url), sub-categories / tags for the type filter, and theme settings.
+     ===================================================================== -->
+<script>
+const M = 'media/tables/';
+const STORE = {
+  currency: { ar: 'ر.س', en: 'SAR' },
+  vat: '310803678600003', cr: '4030396963',
+  category: { ar: 'الطاولات', en: 'Tables' },
+
+  // type filter (Zid: sub-categories or product tags). tint = card / tile colour
+  types: [
+    { id: 'coffee', ar: 'طاولات قهوة', en: 'Coffee tables', tint: '#F7F976', hero: 't03' },
+    { id: 'side', ar: 'طاولات جانبية', en: 'Side tables', tint: '#C6F7A6', hero: 't12' },
+    { id: 'sets', ar: 'أطقم', en: 'Sets', tint: '#D4C4FF', hero: 't09' },
+    { id: 'console', ar: 'كونسول وتلفاز', en: 'Console & TV', tint: '#FCDFDB', hero: 't05' }
+  ],
+
+  // every table in the category (prices from ketfurniture.com, Oct 2026)
+  products: [
+    { id: 't16', type: 'sets', col: 'laxi', ar: 'كولكشن طاولات لاكسي 2026', en: 'Laxi 2026 Table Collection', price: 2896, was: 8150 },
+    { id: 'life1', type: 'coffee', col: 'tm', ar: 'طاولة TM الرئيسية', en: 'TM Main Coffee Table', price: 1250, was: 2200, photo: true },
+    { id: 't03', type: 'coffee', col: 'wood', ar: 'طاولة قهوة مدار', en: 'Madar Coffee Table', price: 679, was: 1350 },
+    { id: 't01', type: 'side', col: 'golden', ar: 'طاولة غولدن ليفز', en: 'Golden Leaves Table', price: 449, was: 880 },
+    { id: 't08', type: 'sets', col: 'wood', ar: 'طقم طاولات قهوة فينزا', en: 'Venza Coffee Table Set', price: 2276, was: 4555 },
+    { id: 't15', type: 'coffee', col: 'laxi', ar: 'طاولة لاكسي O', en: 'Laxi O Table', price: 1496, was: 3980 },
+    { id: 't02', type: 'sets', col: 'link', ar: 'طاولات لينك', en: 'Link Nesting Tables', price: 399, was: 800 },
+    { id: 't05', type: 'console', col: 'teras', ar: 'طاولة تِراس - كونسول', en: 'Teras Console Table', price: 1200, was: 2499 },
+    { id: 't12', type: 'side', col: 'laxi', ar: 'طاولة لاكسي B', en: 'Laxi B Side Table', price: 296, was: 800 },
+    { id: 't07', type: 'coffee', col: 'wood', ar: 'طاولة قهوة كادن', en: 'Caden Coffee Table', price: 2070, was: 4140 },
+    { id: 't09', type: 'sets', col: 'wood', ar: 'طقم طاولات قهوة والنت', en: 'Walnut Coffee Table Set', price: 499, was: 1000 },
+    { id: 'life2', type: 'sets', col: 'tm', ar: 'طقم طاولات TM', en: 'TM Table Set, 2 pieces', price: 1475, was: 2950, photo: true },
+    { id: 't14', type: 'coffee', col: 'laxi', ar: 'طاولة لاكسي X', en: 'Laxi X Table', price: 1496, was: 2750 },
+    { id: 't17', type: 'side', col: 'solara', ar: 'طاولة سولارا - أكريلك', en: 'Solara Acrylic Side Table', price: 279, was: 558 },
+    { id: 't10', type: 'coffee', col: 'wood', ar: 'طاولة قهوة لورين', en: 'Loren Coffee Table', price: 2070, was: 4140 },
+    { id: 't11', type: 'sets', col: 'sola', ar: 'طقم طاولات سولا', en: 'Sola Coffee Table Set', price: 758, was: 1516 },
+    { id: 't04', type: 'console', col: 'teras', ar: 'طاولة تِراس - بلازما', en: 'Teras TV Stand', price: 1200, was: 2499 },
+    { id: 't13', type: 'side', col: 'laxi', ar: 'طاولة لاكسي A', en: 'Laxi A Side Table', price: 196, was: 600 },
+    { id: 't06', type: 'coffee', col: 'glass', ar: 'طاولة قهوة ميلانو', en: 'Milano Coffee Table', price: 499, was: 1000 }
+  ],
+
+  // collections (Zid: product tags or a collection field)
+  collections: [
+    { id: 'laxi', ar: 'لاكسي 2026', en: 'Laxi 2026', img: 't16', note: { ar: 'حجر بملمس الترافرتين', en: 'Travertine-look stone' } },
+    { id: 'tm', ar: 'TM', en: 'TM', img: 'life2', note: { ar: 'سطح معدني وقاعدة حجرية', en: 'Metal top, stone base' } },
+    { id: 'wood', ar: 'خشب ووالنت', en: 'Wood & Walnut', img: 't08', note: { ar: 'أدراج مخفية وتشطيب دافئ', en: 'Hidden drawers, warm finish' } },
+    { id: 'teras', ar: 'تِراس', en: 'Teras', img: 't05', note: { ar: 'نقش السدو في الخشب', en: 'Sadu pattern cut in wood' } },
+    { id: 'golden', ar: 'غولدن ليفز', en: 'Golden Leaves', img: 't01', note: { ar: 'زجاج وأوراق ذهبية', en: 'Glass and golden leaves' } }
+  ],
+
+  ui: {
+    ar: {
+      skip: 'تخطَّ إلى المنتجات', home: 'الرئيسية', tables: 'الطاولات', search: 'بحث', account: 'حسابي', cart: 'السلة',
+      ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'خصومات تصل إلى {n}٪ على الطاولات',
+      loadLine: 'طاولات تجمع البيت', skipIntro: 'تخطَّ',
+      bTop: 'مجموعة الطاولات', bShop: 'تسوّق الآن', bLine1: 'تجمعنا', bLine2: 'حول طاولة.', bSub: '{n} تصميم، من {p}', bWord: 'طاولات', bSpot: 'طاولة قهوة مدار',
+      whyEy: 'لماذا طاولات ket', whyA: 'اكتشف', whyB: 'طاولة لكل لحظة في البيت.',
+      chip1: 'قهوة الصباح', chip2: 'جلسة الضيوف', chip3: 'ركن القراءة',
+      acc1: 'خامات تعيش طويلًا', acc1b: 'خشب الجوز، حجر بملمس الترافرتين، معدن مطلي وأكريلك. كل خامة مختارة لتتحمل الاستخدام اليومي.',
+      acc2: 'توصيل وتركيب', acc2b: 'توصيل مجاني لكل مدن المملكة، والطاولات تصل جاهزة أو بتركيب بسيط.',
+      acc3: 'أطقم تكمل بعضها', acc3b: 'أطقم من قطعتين أو أكثر بارتفاعات مختلفة، تتداخل لتوفر المساحة.',
+      cardEy: '{n} تصميم', cardTx: 'تصاميم بسيطة بخامات طبيعية، صُنعت لتعيش معك سنوات.', cardH: 'قطع تُورَّث،\nلا تُستبدل.', cardBtn: 'تسوّق الكل',
+      saleChip: 'خصم حتى {n}٪', fromLbl: 'تبدأ من', statTx: '{n} تصميم في {k} أنواع',
+      typesEy: 'تسوّق حسب النوع', typesH: 'اختر شكل جلستك.', pieces: '{n} قطع', piece1: 'قطعة واحدة', pieces2: 'قطعتان',
+      stmt: 'كل طاولة يحتاجها [img] بيتك، بذوقك أنت. صُنعت لتجمع الأهل والضيوف [img2] حولها، كل يوم.',
+      colEy: 'المجموعات', colH: 'مجموعات صُممت لتكمل بعضها.', colMeta: '{n} · من {p}',
+      gridEy: 'كل الطاولات', gridH: 'الطاولات', all: 'الكل', sort: 'الترتيب', sFeat: 'المميزة', sLow: 'السعر: الأقل أولًا', sHigh: 'السعر: الأعلى أولًا', sDisc: 'أعلى خصم',
+      results: '{n} منتج', clear: 'إزالة', colFilter: 'مجموعة: {c}', add: 'أضف للسلة', added: 'أُضيفت {n} إلى السلة', off: '−{n}٪',
+      tileA: 'صُممت\nلتجمعنا.', tileAs: 'كل طاولة هنا مختارة لتكون مركز الجلسة.', tileB: 'من الحجر\nإلى الخشب.', tileBs: 'خامات طبيعية بألوان هادئة تناسب كل بيت.',
+      sizeEy: 'دليل المقاس', sizeH: 'كم يكون طول طاولة القهوة؟', sizeTx: 'القاعدة البسيطة: طاولة القهوة بطول ثلثَي الكنبة تقريبًا، وتبعد عنها ٤٠ إلى ٤٥ سم.',
+      sofa: 'طول الكنبة', rec: 'طول الطاولة المناسب', gap: 'المسافة عن الكنبة', cm: 'سم', sizeBtn: 'تسوّق طاولات القهوة',
+      helpH: 'محتار بين تصميمين؟', helpTx: 'أرسل لنا صورة جلستك، ونقترح عليك الطاولة والمقاس المناسبين.', helpBtn: 'تواصل عبر واتساب',
+      touch: 'تواصل معنا:', allRights: 'جميع الحقوق محفوظة', sbc: 'موثّق في المركز السعودي للأعمال', vatNo: 'الرقم الضريبي: {n}', crNo: 'رقم السجل التجاري: {n}',
+      soon: 'متاحة في المتجر الفعلي', wa: 'تواصل معنا عبر واتساب', prev: 'السابق', next: 'التالي'
+    },
+    en: {
+      skip: 'Skip to products', home: 'Home', tables: 'Tables', search: 'Search', account: 'Account', cart: 'Cart',
+      ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'Up to {n}% off tables',
+      loadLine: 'Tables that bring the home together', skipIntro: 'Skip',
+      bTop: 'The table collection', bShop: 'Shop now', bLine1: 'Gather', bLine2: 'around a table.', bSub: '{n} designs, from {p}', bWord: 'Tables', bSpot: 'Madar Coffee Table',
+      whyEy: 'Why ket tables', whyA: 'Explore', whyB: 'a table for every moment at home.',
+      chip1: 'Morning coffee', chip2: 'Guest evenings', chip3: 'Reading corner',
+      acc1: 'Materials that last', acc1b: 'Walnut, travertine-look stone, coated metal and acrylic, each chosen for everyday use.',
+      acc2: 'Delivery and assembly', acc2b: 'Free delivery across the Kingdom; tables arrive ready or with simple assembly.',
+      acc3: 'Sets that work together', acc3b: 'Two or more pieces at different heights that nest to save space.',
+      cardEy: '{n} designs', cardTx: 'Simple designs in natural materials, made to live with you for years.', cardH: 'Pieces you keep,\nnot replace.', cardBtn: 'Shop all',
+      saleChip: 'Up to {n}% off', fromLbl: 'From', statTx: '{n} designs in {k} types',
+      typesEy: 'Shop by type', typesH: 'Pick the shape of your sitting room.', pieces: '{n} pieces', piece1: '1 piece', pieces2: '2 pieces',
+      stmt: 'Every table your [img] home needs, in your own taste. Made to gather family and guests [img2] around it, every day.',
+      colEy: 'Collections', colH: 'Collections designed to go together.', colMeta: '{n} · from {p}',
+      gridEy: 'All tables', gridH: 'Tables', all: 'All', sort: 'Sort', sFeat: 'Featured', sLow: 'Price: low to high', sHigh: 'Price: high to low', sDisc: 'Biggest discount',
+      results: '{n} products', clear: 'Clear', colFilter: 'Collection: {c}', add: 'Add to cart', added: '{n} added to your cart', off: '−{n}%',
+      tileA: 'Made to\ngather us.', tileAs: 'Every table here is chosen to be the centre of the room.', tileB: 'From stone\nto wood.', tileBs: 'Natural materials in calm colours that suit every home.',
+      sizeEy: 'Size guide', sizeH: 'How long should a coffee table be?', sizeTx: 'The simple rule: about two thirds of your sofa, placed 40 to 45 cm away from it.',
+      sofa: 'Sofa length', rec: 'Coffee table length', gap: 'Distance from the sofa', cm: 'cm', sizeBtn: 'Shop coffee tables',
+      helpH: 'Torn between two designs?', helpTx: 'Send us a photo of your sitting room and we will suggest the right table and size.', helpBtn: 'Chat on WhatsApp',
+      touch: 'Get in touch:', allRights: 'All Rights Reserved', sbc: 'Verified by the Saudi Business Center', vatNo: 'The VAT number: {n}', crNo: 'The commercial register number: {n}',
+      soon: 'Available in the live store', wa: 'Chat with us on WhatsApp', prev: 'Previous', next: 'Next'
+    }
+  }
+};
+</script>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23000%22/%3E%3Cpath d=%22M9 19q7 7 14 0%22 stroke=%22%23fff%22 stroke-width=%223%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="media/tables/t03.webp">
+
+<style>
+/* ===================== TOKENS (same as ket-product.html) ===================== */
+:root{
+  --white:#fff; --black:#000; --g400:#A8A8A8; --g200:#DCDCDC; --g100:#F4F4F4; --page:#F2F2F4;
+  --ink-2:#555;
+  --yellow:#F7F976; --mint:#C6F7A6; --green:#02A27A; --peri:#7F94FF; --blue:#3F48FF; --lavender:#D4C4FF; --pink:#F4A7FC;
+  --blush:#FCDFDB; --orange:#FF6517; --amber:#FFAE15;
+  --f-latin:'Inter Tight', system-ui, sans-serif;
+  --f-ar:'IBM Plex Sans Arabic', 'Inter Tight', system-ui, sans-serif;
+  --font:var(--f-ar);
+  --t-xs:12px; --t-sm:14px; --t-base:16px;
+  --t-lg:clamp(22px, 2.4vw, 28px);
+  --t-xl:clamp(32px, 4.6vw, 60px);
+  --ls-caps:-0.02em; --ls-label:.08em;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+  --gutter:16px; --section:clamp(64px, 9vw, 128px);
+  --r-card:24px; --r-pill:999px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --header-h:60px; --dir:-1;
+}
+html[dir="ltr"]{ --dir:1; --font:var(--f-latin); }
+html[lang="ar"]{ --ls-caps:0; --ls-label:0; }
+@media (min-width:768px){ :root{ --gutter:32px; } }
+@media (min-width:1200px){ :root{ --gutter:48px; --header-h:72px; } }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; overflow-x:clip; }
+body{ margin:0; background:var(--page); color:var(--black); font-family:var(--font); font-size:var(--t-base); line-height:1.6; overflow-x:clip; -webkit-font-smoothing:antialiased; }
+img{ display:block; max-width:100%; height:auto; }
+button, select{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+a{ color:inherit; }
+svg{ display:block; }
+h1,h2,h3,p{ margin:0; }
+ul{ margin:0; padding:0; list-style:none; }
+.num, .latin{ font-family:var(--f-latin); }
+.visually-hidden{ position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+:focus-visible{ outline:2px solid var(--black); outline-offset:3px; border-radius:6px; }
+.skip{ position:fixed; inset-inline-start:12px; top:-60px; z-index:300; background:#000; color:#fff; padding:10px 16px; border-radius:var(--r-pill); text-decoration:none; transition:top .3s var(--ease); }
+.skip:focus{ top:12px; }
+.container{ width:100%; max-width:1440px; margin-inline:auto; padding-inline:var(--gutter); }
+.section{ padding-block:var(--section) 0; }
+.h-xl{ font-size:var(--t-xl); font-weight:600; line-height:1.02; letter-spacing:-.03em; text-wrap:balance; }
+html[lang="ar"] .h-xl{ font-weight:700; line-height:1.25; letter-spacing:0; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:var(--t-xs); font-weight:600; text-transform:uppercase; letter-spacing:var(--ls-label); }
+html[lang="ar"] .eyebrow{ font-size:13px; text-transform:none; }
+.eyebrow::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--peri); }
+.eyebrow--o::before{ background:var(--orange); }
+.muted{ color:var(--ink-2); }
+.line-mask{ display:block; overflow:hidden; padding-block:.06em; }
+.line-mask > span{ display:block; }
+
+.pill{ display:inline-flex; align-items:center; gap:6px; height:32px; padding-inline:12px; border-radius:var(--r-pill); font-size:13px; font-weight:500; white-space:nowrap; background:var(--white); }
+.pill svg{ flex:none; }
+.btn{ position:relative; display:inline-flex; align-items:center; justify-content:center; gap:12px; height:52px; padding-inline:22px 8px; border-radius:var(--r-pill); font-weight:600; font-size:15px; white-space:nowrap; overflow:hidden; isolation:isolate; text-decoration:none; }
+.btn-primary{ background:var(--black); color:var(--white); }
+.btn-primary::before{ content:""; position:absolute; inset:0; background:#262626; transform:translateY(101%); transition:transform .5s var(--ease); z-index:-1; }
+.btn-primary:hover::before{ transform:none; }
+.btn .arr{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center; background:var(--white); color:var(--black); transition:transform .5s var(--ease); }
+.btn:hover .arr{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+html[dir="rtl"] .arr svg, html[dir="rtl"] .flip svg{ transform:scaleX(-1); }
+.icon-btn{ display:inline-grid; place-items:center; width:44px; height:44px; border-radius:var(--r-pill); transition:background-color .25s; }
+.icon-btn:hover{ background:var(--g100); }
+.circ{ display:inline-grid; place-items:center; width:44px; height:44px; border-radius:50%; background:var(--orange); color:var(--black); flex:none; transition:transform .5s var(--ease), background-color .3s; }
+
+/* ===================== LOADER (ring of tables around the logo) ===================== */
+.loader{ position:fixed; inset:0; z-index:200; background:var(--white); display:grid; place-items:center; overflow:hidden; }
+.no-motion .loader{ display:none; }
+.loader__dots{ position:absolute; display:flex; gap:7px; }
+.loader__dots i{ width:9px; height:9px; border-radius:50%; background:var(--black); animation:dot 1s var(--ease) infinite; }
+.loader__dots i:nth-child(2){ animation-delay:.12s; } .loader__dots i:nth-child(3){ animation-delay:.24s; }
+@keyframes dot{ 0%,100%{ transform:translateY(0); opacity:.35; } 40%{ transform:translateY(-7px); opacity:1; } }
+.loader__line{ position:absolute; font-size:clamp(20px, 3vw, 30px); font-weight:500; letter-spacing:-.02em; opacity:0; white-space:nowrap; color:#3a3a3a; }
+.loader__logo{ position:absolute; opacity:0; color:var(--black); }
+.loader__logo svg{ width:clamp(96px, 14vw, 150px); height:auto; }
+.ring{ position:absolute; inset:0; pointer-events:none; }
+.ring__t{ position:absolute; left:50%; top:50%; width:var(--ts); height:var(--ts); margin:calc(var(--ts) / -2) 0 0 calc(var(--ts) / -2); background:var(--bg); overflow:hidden; opacity:0; will-change:transform; }
+.ring__t img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; padding:10%; }
+.ring__t.is-photo img{ object-fit:cover; padding:0; mix-blend-mode:normal; }
+.sh-circle{ border-radius:50%; } .sh-arch{ border-radius:999px 999px 18px 18px; height:calc(var(--ts) * 1.18)!important; } .sh-sq{ border-radius:22px; } .sh-pill{ border-radius:999px; width:calc(var(--ts) * .78)!important; height:calc(var(--ts) * 1.12)!important; }
+.loader__skip{ position:absolute; bottom:calc(20px + env(safe-area-inset-bottom)); inset-inline-end:20px; font-size:13px; font-weight:600; padding:8px 14px; border-radius:var(--r-pill); border:1px solid var(--g200); opacity:.75; }
+.loader__skip:hover{ opacity:1; background:var(--g100); }
+html.is-loading body{ overflow:hidden; }
+
+/* ===================== ANNOUNCEMENT + HEADER ===================== */
+.announce{ position:relative; z-index:61; background:var(--blush); height:36px; overflow:hidden; display:flex; align-items:center; font-size:13px; font-weight:500; }
+.marquee{ display:flex; width:max-content; animation:marquee 32s linear infinite; }
+.marquee__group{ display:flex; align-items:center; gap:28px; padding-inline-end:28px; white-space:nowrap; }
+.marquee__group span{ display:inline-flex; align-items:center; gap:28px; }
+.marquee__group span::after{ content:""; width:5px; height:5px; border-radius:50%; background:var(--black); }
+@keyframes marquee{ to{ transform:translateX(calc(50% * var(--dir) * -1)); } }
+.header{ position:sticky; top:0; z-index:60; background:var(--white); border-bottom:1px solid transparent; transition:border-color .35s; }
+.header.is-scrolled{ border-bottom-color:var(--g200); }
+.header__inner{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; height:var(--header-h); transition:height .4s var(--ease); }
+.header.is-scrolled .header__inner{ height:52px; }
+.header__start, .header__end{ display:flex; align-items:center; gap:2px; }
+.header__end{ justify-content:flex-end; }
+.logo{ display:block; color:var(--black); text-decoration:none; }
+.logo svg{ width:64px; height:auto; overflow:visible; transition:width .4s var(--ease); }
+.header.is-scrolled .logo svg{ width:58px; }
+.klogo .kl{ transform-box:fill-box; transform-origin:50% 100%; transition:transform .6s var(--ease), opacity .35s var(--ease); }
+.klogo .kl:nth-child(2){ transition-delay:.05s; } .klogo .kl:nth-child(3){ transition-delay:.1s; }
+.klogo__smile{ transform-box:fill-box; transform-origin:50% 50%; opacity:0; clip-path:inset(0 50% 0 50%); transform:translateY(-10%) scale(.7); transition:clip-path .55s var(--ease), opacity .25s, transform .6s var(--ease); }
+.header.is-scrolled .klogo .kl{ transform:translateY(10%) scale(.2, .04); opacity:0; }
+.header.is-scrolled .klogo .klogo__smile{ opacity:1; clip-path:inset(0 0 0 0); transform:translateY(-34%) scale(1.18); transition-delay:.18s; }
+.lang-btn{ height:36px; padding-inline:14px; border-radius:var(--r-pill); border:1px solid var(--black); font-size:13px; font-weight:600; margin-inline-start:6px; transition:background-color .25s,color .25s; }
+.lang-btn:hover{ background:var(--black); color:var(--white); }
+.cart-btn{ position:relative; }
+.cart-count{ position:absolute; top:4px; inset-inline-end:2px; min-width:18px; height:18px; padding-inline:5px; border-radius:var(--r-pill); background:var(--orange); color:#000; font:600 11px/18px var(--f-latin); text-align:center; transform:scale(0); transition:transform .4s var(--ease); }
+.cart-count.has-items{ transform:scale(1); }
+.cart-count.bump{ animation:bump .5s var(--ease); }
+@keyframes bump{ 40%{ transform:scale(1.45); } }
+.crumbs{ font-size:13px; color:var(--ink-2); display:none; gap:8px; }
+.crumbs a{ text-decoration:none; } .crumbs a:hover{ color:#000; }
+@media (min-width:1024px){ .crumbs{ display:flex; } }
+@media (max-width:1023px){ .hide-mob{ display:none!important; } }
+
+/* ===================== 1. BANNER (big word, table over it) ===================== */
+.banner{ padding-top:12px; }
+.banner__card{ position:relative; border-radius:var(--r-card); background:var(--peri); overflow:hidden; isolation:isolate; height:clamp(560px, calc(100svh - var(--header-h) - 36px - 24px), 920px); color:var(--black); }
+.banner__card::before{ content:""; position:absolute; inset:0; background:radial-gradient(70% 60% at 62% 38%, rgba(255,255,255,.28), transparent 70%); z-index:-1; }
+.banner__stripe{ position:absolute; z-index:-1; width:180%; height:clamp(26px, 3.2vw, 44px); background:var(--yellow); left:-40%; top:58%; transform:rotate(-14deg); transform-origin:50% 50%; }
+html[dir="rtl"] .banner__stripe{ transform:rotate(14deg); }
+.banner__top{ position:absolute; inset-inline:clamp(18px, 3vw, 36px); top:clamp(16px, 2.4vw, 28px); display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:var(--ls-label); }
+html[lang="ar"] .banner__top{ font-size:13px; }
+.banner__top a{ text-decoration:underline; text-underline-offset:4px; }
+.banner__intro{ position:absolute; inset-inline-start:clamp(18px, 9vw, 150px); top:clamp(76px, 15%, 150px); max-width:420px; }
+.banner__intro h1{ font-size:clamp(28px, 3.4vw, 46px); line-height:1.08; font-weight:500; letter-spacing:-.03em; }
+html[lang="ar"] .banner__intro h1{ line-height:1.35; letter-spacing:0; font-weight:600; }
+.banner__sub{ margin-top:14px; display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:500; }
+.banner__sub i{ width:22px; height:22px; border-radius:50%; background:var(--amber); display:grid; place-items:center; }
+.banner__word{ position:absolute; inset-inline:0; bottom:0; line-height:.78; text-align:center; color:var(--white); font-weight:700; font-size:clamp(108px, 25vw, 420px); letter-spacing:-.065em; white-space:nowrap; transform:translateY(.1em); pointer-events:none; }
+html[lang="ar"] .banner__word{ letter-spacing:0; line-height:1.12; font-size:clamp(100px, 24vw, 400px); transform:translateY(.24em); }
+.banner__word .ch{ display:inline-block; }
+.banner__card{ --tw:clamp(300px, 44vw, 640px); --tb:clamp(40px, 5vw, 90px); --te:clamp(0px, 8vw, 160px); }
+.banner__table{ position:absolute; z-index:2; width:var(--tw); inset-inline-end:var(--te); bottom:var(--tb); mix-blend-mode:multiply; will-change:transform; }
+.banner__table img{ width:100%; height:auto; }
+/* hotspot: a pulsing dot on the table top and a small product card beside it */
+.spot{ position:absolute; z-index:3; inset-inline-end:calc(var(--te) + var(--tw) * .5 - 11px); bottom:calc(var(--tb) + var(--tw) * .6); display:flex; align-items:center; gap:0; text-decoration:none; color:var(--black); }
+.spot__dot{ position:relative; width:22px; height:22px; border-radius:50%; background:var(--white); box-shadow:0 0 0 5px rgba(255,255,255,.35); flex:none; }
+.spot__dot::before{ content:""; position:absolute; inset:7px; border-radius:50%; background:var(--black); }
+.spot__dot::after{ content:""; position:absolute; inset:-5px; border-radius:50%; border:1.5px solid var(--white); animation:ping 2.2s var(--ease) infinite; }
+@keyframes ping{ 0%{ transform:scale(.8); opacity:1; } 80%,100%{ transform:scale(2.2); opacity:0; } }
+.spot__line{ transform-origin:var(--lo, right) center; width:34px; height:1.5px; background:var(--white); flex:none; }
+.spot__card{ display:grid; grid-template-columns:auto auto; align-items:center; gap:2px 14px; padding:10px 10px 10px 14px; border-radius:16px; background:var(--white); box-shadow:0 14px 34px rgba(20,30,90,.18); }
+html[dir="rtl"] .spot__line{ --lo:left; }
+html[dir="rtl"] .spot__card{ padding:10px 14px 10px 10px; }
+.spot__name{ font-size:13px; font-weight:600; line-height:1.3; white-space:nowrap; }
+.spot__price{ display:flex; align-items:baseline; gap:6px; font-family:var(--f-latin); font-size:15px; }
+.spot__price b{ font-weight:600; }
+.spot__price small{ font-family:var(--f-ar); font-size:11px; font-weight:500; margin-inline-start:3px; }
+.spot__price s{ font-size:12px; color:var(--g400); }
+.spot__go{ grid-row:1 / span 2; grid-column:2; width:34px; height:34px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease), background-color .3s; }
+.spot:hover .spot__go{ background:var(--orange); color:var(--black); transform:rotate(calc(-45deg * var(--dir) * -1)); }
+@media (max-width:767px){
+  .banner__card{ height:clamp(560px, 82svh, 720px); }
+  .banner__intro{ inset-inline-start:18px; top:64px; }
+  .banner__card{ --tw:100vw; --te:-12vw; --tb:16vw; }
+  .spot__line{ width:18px; }
+  .spot__name{ font-size:12px; }
+  .banner__stripe{ top:62%; }
+}
+
+/* ===================== 2. INTRO BENTO ===================== */
+.intro__grid{ display:grid; gap:16px; }
+@media (min-width:1024px){ .intro__grid{ grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:24px; align-items:stretch; } }
+.intro__left{ display:grid; align-content:start; gap:var(--s5); padding:clamp(8px, 2vw, 24px) 0; }
+.intro__h{ font-size:clamp(32px, 4vw, 54px); font-weight:500; line-height:1.08; letter-spacing:-.035em; text-wrap:balance; }
+html[lang="ar"] .intro__h{ font-weight:600; line-height:1.4; letter-spacing:0; }
+.ipill{ display:inline-block; vertical-align:middle; width:1.9em; height:.95em; border-radius:999px; overflow:hidden; margin-inline:.12em; background:var(--yellow); position:relative; top:-.06em; }
+.ipill img{ width:100%; height:100%; object-fit:cover; }
+.ipill--cut img{ object-fit:contain; mix-blend-mode:multiply; padding:2px; transform:scale(1.25); }
+.chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.acc{ display:grid; gap:10px; margin-top:var(--s3); }
+.acc__item{ background:var(--white); border-radius:18px; overflow:hidden; }
+.acc__btn{ width:100%; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:18px 20px; font-weight:500; font-size:16px; text-align:start; }
+.acc__btn .pm{ position:relative; width:14px; height:14px; flex:none; }
+.acc__btn .pm::before, .acc__btn .pm::after{ content:""; position:absolute; left:0; top:6px; width:14px; height:1.6px; background:currentColor; transition:transform .4s var(--ease); }
+.acc__btn .pm::after{ transform:rotate(90deg); }
+.acc__btn[aria-expanded="true"] .pm::after{ transform:rotate(0); }
+.acc__panel{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s var(--ease); }
+.acc__panel > div{ overflow:hidden; }
+.acc__panel p{ padding:0 20px 18px; font-size:14px; line-height:1.7; color:var(--ink-2); max-width:52ch; }
+.acc__btn[aria-expanded="true"] + .acc__panel{ grid-template-rows:1fr; }
+.intro__card{ background:var(--white); border-radius:var(--r-card); padding:clamp(20px, 2.4vw, 32px); display:grid; gap:20px; }
+@media (min-width:640px){ .intro__card{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }
+.intro__copy{ display:flex; flex-direction:column; gap:14px; }
+.intro__copy .eyebrow::before{ background:var(--orange); }
+.intro__copy p{ font-size:14px; color:var(--ink-2); max-width:30ch; }
+.intro__copy h3{ margin-top:auto; font-size:clamp(26px, 2.6vw, 36px); font-weight:500; line-height:1.1; letter-spacing:-.03em; white-space:pre-line; }
+html[lang="ar"] .intro__copy h3{ font-weight:600; line-height:1.4; letter-spacing:0; }
+.intro__copy .btn{ align-self:flex-start; }
+.photo{ position:relative; border-radius:20px; overflow:hidden; min-height:340px; background:#e9e7e4; }
+.photo > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.08); }
+.photo .tag{ position:absolute; top:12px; inset-inline-end:12px; }
+.stat{ position:absolute; inset-inline:14px; bottom:14px; background:rgba(255,255,255,.95); border-radius:18px; padding:14px; display:grid; gap:10px; }
+.stat__row{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+.stat__big{ font:600 28px/1 var(--f-latin); letter-spacing:-.03em; }
+.stat__lbl{ font-size:12px; color:var(--ink-2); }
+.stat__foot{ display:flex; align-items:center; gap:10px; padding-top:10px; border-top:1px solid var(--g200); }
+.stack{ display:flex; direction:ltr; }
+.stack span{ width:34px; height:34px; border-radius:50%; border:2px solid var(--white); background:var(--tint); overflow:hidden; margin-left:-10px; }
+.stack span:first-child{ margin-left:0; }
+.stack img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; padding:3px; }
+
+/* ===================== 3. TYPE TILES (colour blocks, cards spread on hover) ===================== */
+.types__head{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:var(--s5); }
+.types__grid{ display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0,1fr)); }
+@media (min-width:1024px){ .types__grid{ grid-template-columns:1.25fr 1fr 1fr; grid-template-rows:repeat(2, minmax(250px, 1fr)); gap:16px; } .tile:first-child{ grid-row:span 2; } .tile:last-child{ grid-column:2 / span 2; } }
+.tile{ position:relative; display:flex; flex-direction:column; justify-content:space-between; min-height:clamp(220px, 46vw, 260px); padding:18px; border-radius:var(--r-card); background:var(--tint); overflow:hidden; text-align:start; isolation:isolate; transition:transform .6s var(--ease); }
+.tile:hover{ transform:translateY(-4px); }
+.tile__name{ font-size:clamp(20px, 2.2vw, 30px); font-weight:600; line-height:1.1; letter-spacing:-.03em; }
+html[lang="ar"] .tile__name{ letter-spacing:0; line-height:1.35; }
+.tile__count{ font-size:13px; color:rgba(0,0,0,.6); margin-top:4px; }
+.tile__img{ position:absolute; z-index:-1; height:74%; width:auto; max-width:78%; object-fit:contain; inset-inline-end:2%; bottom:3%; mix-blend-mode:multiply; transition:transform .8s var(--ease); }
+.tile:first-child .tile__img{ height:auto; width:88%; max-width:none; inset-inline-end:6%; bottom:14%; }
+.tile[data-type="console"] .tile__img{ height:86%; bottom:0; }
+.tile:hover .tile__img{ transform:scale(1.06) translateY(-3%); }
+.tile__go{ align-self:flex-start; width:40px; height:40px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease); }
+.tile:hover .tile__go{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+.spread{ position:absolute; z-index:1; inset-inline-start:76px; bottom:18px; width:200px; height:100px; pointer-events:none; }
+.spread span{ position:absolute; inset-inline-start:0; bottom:0; width:76px; height:76px; border-radius:16px; background:var(--white); box-shadow:0 8px 20px rgba(0,0,0,.12); overflow:hidden; opacity:0; transform:translateY(16px) scale(.8); transition:transform .6s var(--ease), opacity .4s; }
+.spread img{ width:100%; height:100%; object-fit:contain; padding:4px; }
+.tile:hover .spread span, .tile:focus-visible .spread span{ opacity:1; }
+.tile:hover .spread span:nth-child(1){ transform:translateX(calc(104px * var(--dir))) translateY(-4px) rotate(-10deg); }
+.tile:hover .spread span:nth-child(2){ transform:translateX(calc(52px * var(--dir))) translateY(-14px) rotate(-2deg); transition-delay:.05s; }
+.tile:hover .spread span:nth-child(3){ transform:rotate(8deg); transition-delay:.1s; }
+@media (hover:none){ .spread{ display:none; } }
+
+/* ===================== 4. STATEMENT (words fill in on scroll) ===================== */
+.stmt{ padding-block:var(--section); }
+.stmt p{ font-size:clamp(28px, 4.4vw, 64px); font-weight:500; line-height:1.15; letter-spacing:-.035em; max-width:22ch; margin-inline:auto; text-align:center; text-wrap:balance; }
+html[lang="ar"] .stmt p{ font-weight:600; line-height:1.55; letter-spacing:0; max-width:24ch; }
+.stmt .w{ opacity:.16; transition:opacity .2s; }
+.motion .stmt .w{ transition:none; }
+.no-motion .stmt .w{ opacity:1; }
+.stmt .ipill{ width:2.1em; height:1em; }
+
+/* ===================== 5. COLLECTIONS (dark list, image follows the pointer) ===================== */
+.cols{ position:relative; background:var(--black); color:var(--white); border-radius:var(--r-card); padding:clamp(22px, 3vw, 40px); overflow:hidden; }
+.cols__head{ display:grid; gap:12px; margin-bottom:var(--s6); }
+@media (min-width:1024px){ .cols__head{ grid-template-columns:1fr 1.3fr; align-items:start; } .cols__head h2{ text-align:end; } html[dir="rtl"] .cols__head h2{ text-align:left; } }
+.cols__head .eyebrow::before{ background:var(--white); }
+.cols__head h2{ font-size:clamp(26px, 3vw, 40px); font-weight:500; line-height:1.15; letter-spacing:-.03em; }
+html[lang="ar"] .cols__head h2{ font-weight:600; line-height:1.45; letter-spacing:0; }
+.cols__list{ border-top:1px solid rgba(255,255,255,.18); }
+.crow{ position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px; width:100%; padding:20px 14px; border-bottom:1px solid rgba(255,255,255,.18); text-align:start; color:inherit; border-radius:16px; transition:background-color .35s, color .35s, border-color .35s; }
+.crow__idx{ font:500 13px/1 var(--f-latin); opacity:.6; width:2ch; }
+.crow__name{ font-size:clamp(20px, 2.4vw, 30px); font-weight:500; letter-spacing:-.02em; line-height:1.2; }
+.crow__meta{ display:block; font-size:13px; opacity:.65; margin-top:4px; letter-spacing:0; }
+.crow__go{ width:40px; height:40px; border-radius:50%; display:grid; place-items:center; border:1px solid rgba(255,255,255,.3); transition:transform .5s var(--ease), background-color .3s, border-color .3s; }
+.crow:hover, .crow.is-on{ background:var(--orange); color:var(--black); border-bottom-color:transparent; }
+.crow:hover .crow__go, .crow.is-on .crow__go{ background:var(--white); border-color:var(--white); transform:rotate(calc(-45deg * var(--dir) * -1)); }
+.crow__thumb{ display:none; }
+@media (hover:none), (max-width:1023px){
+  .crow{ grid-template-columns:auto 1fr auto; }
+  .crow__thumb{ display:block; grid-column:1 / -1; height:0; overflow:hidden; border-radius:14px; background:var(--white); transition:height .5s var(--ease); }
+  .crow.is-on .crow__thumb{ height:200px; }
+  .crow__thumb img{ width:100%; height:200px; object-fit:contain; }
+  .crow__thumb.is-photo img{ object-fit:cover; }
+}
+.cfloat{ position:absolute; z-index:5; left:0; top:0; width:260px; height:200px; border-radius:20px; overflow:hidden; background:var(--white); pointer-events:none; opacity:0; transform:scale(.6); box-shadow:0 20px 50px rgba(0,0,0,.35); }
+.cfloat img{ width:100%; height:100%; object-fit:contain; padding:8px; }
+.cfloat.is-photo img{ object-fit:cover; padding:0; }
+@media (hover:none), (max-width:1023px){ .cfloat{ display:none; } }
+
+/* ===================== 6. PRODUCT GRID ===================== */
+.grid__head{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:var(--s5); }
+.grid__head .h-xl{ display:flex; align-items:baseline; gap:12px; }
+.grid__head sup{ font:500 clamp(16px, 1.6vw, 22px)/1 var(--f-latin); color:var(--ink-2); }
+.bar{ position:sticky; top:calc(var(--header-h) - 8px); z-index:30; display:flex; align-items:center; gap:10px; padding:10px 0; margin-bottom:var(--s4); background:var(--page); }
+.filters{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; flex:1; padding-block:2px; }
+.filters::-webkit-scrollbar{ display:none; }
+.fbtn{ display:inline-flex; align-items:center; gap:8px; height:40px; padding-inline:16px; border-radius:var(--r-pill); background:var(--white); font-size:14px; font-weight:500; white-space:nowrap; transition:background-color .3s, color .3s; }
+.fbtn sup{ font:600 11px/1 var(--f-latin); opacity:.55; }
+.fbtn[aria-pressed="true"]{ background:var(--black); color:var(--white); }
+.fbtn--col{ background:var(--orange); }
+.sortw{ position:relative; flex:none; }
+.sortw select{ appearance:none; height:40px; padding-inline:16px 36px; border-radius:var(--r-pill); background:var(--white); font-size:14px; font-weight:500; }
+html[dir="rtl"] .sortw select{ padding-inline:16px 36px; }
+.sortw svg{ position:absolute; inset-inline-end:12px; top:50%; transform:translateY(-50%) rotate(90deg); pointer-events:none; }
+.count{ font-size:13px; color:var(--ink-2); margin-bottom:12px; }
+.pgrid{ display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0,1fr)); }
+@media (min-width:768px){ .pgrid{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; } }
+@media (min-width:1200px){ .pgrid{ grid-template-columns:repeat(4, minmax(0,1fr)); } }
+.card{ position:relative; display:flex; flex-direction:column; background:var(--white); border-radius:20px; padding:8px; }
+.card__media{ position:relative; aspect-ratio:1 / 1.08; border-radius:14px; overflow:hidden; background:var(--tint, var(--g100)); }
+.card__media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; padding:8%; transition:transform .9s var(--ease); }
+.card__media.is-photo img{ object-fit:cover; padding:0; mix-blend-mode:normal; }
+.card:hover .card__media img{ transform:scale(1.06); }
+.card__off{ position:absolute; top:10px; inset-inline-start:10px; height:26px; padding-inline:10px; border-radius:var(--r-pill); background:var(--white); font:600 12px/26px var(--f-latin); }
+.card__add{ position:absolute; bottom:10px; inset-inline-end:10px; width:44px; height:44px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease), background-color .3s; }
+.card__add:hover{ background:var(--orange); color:var(--black); transform:rotate(90deg); }
+.card__body{ padding:12px 6px 6px; display:grid; gap:4px; }
+.card__name{ font-size:15px; font-weight:500; line-height:1.35; }
+.card__name a{ text-decoration:none; }
+.card__name a::after{ content:""; position:absolute; inset:0; border-radius:20px; }
+.card__add, .card__off{ z-index:1; }
+.card__price{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-family:var(--f-latin); }
+.card__price b{ font-size:16px; font-weight:600; }
+.card__price s{ font-size:13px; color:var(--g400); }
+.stat__big small{ font-family:var(--f-ar); font-size:14px; font-weight:500; margin-inline-start:4px; letter-spacing:0; }
+.card__price small, .ttile small{ font-family:var(--f-ar); font-size:12px; font-weight:500; margin-inline-start:3px; }
+.ttile{ border-radius:20px; padding:clamp(18px, 2vw, 28px); display:flex; flex-direction:column; justify-content:space-between; gap:16px; min-height:100%; }
+.ttile h3{ font-size:clamp(24px, 2.6vw, 38px); font-weight:500; line-height:1.05; letter-spacing:-.035em; white-space:pre-line; }
+html[lang="ar"] .ttile h3{ font-weight:600; line-height:1.4; letter-spacing:0; }
+.ttile p{ font-size:14px; color:var(--ink-2); max-width:26ch; }
+.ttile--dark{ background:var(--black); color:var(--white); }
+.ttile--dark p{ color:rgba(255,255,255,.7); }
+.ttile--photo{ position:relative; overflow:hidden; color:var(--white); background:#7b7368; }
+.ttile--photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+.ttile--photo::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.45), transparent 45%); }
+.ttile--photo > *{ position:relative; z-index:1; }
+.ttile--photo p{ color:rgba(255,255,255,.85); }
+@media (max-width:767px){ .ttile{ grid-column:1 / -1; min-height:260px; } }
+.pgrid > *{ will-change:auto; }
+
+/* ===================== 7. SIZE GUIDE ===================== */
+.size{ background:var(--white); border-radius:var(--r-card); padding:clamp(20px, 3vw, 44px); display:grid; gap:var(--s6); }
+@media (min-width:1024px){ .size{ grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); align-items:center; } }
+.size__copy{ display:grid; gap:16px; align-content:start; }
+.size__copy h2{ font-size:clamp(28px, 3.2vw, 44px); font-weight:500; line-height:1.1; letter-spacing:-.03em; }
+html[lang="ar"] .size__copy h2{ font-weight:600; line-height:1.45; letter-spacing:0; }
+.size__copy > p{ color:var(--ink-2); max-width:44ch; }
+.range{ display:grid; gap:10px; margin-top:8px; }
+.range label{ display:flex; justify-content:space-between; font-size:14px; font-weight:500; }
+.range output{ font-family:var(--f-latin); font-weight:600; }
+input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:6px; background:linear-gradient(to var(--rdir, right), var(--black) var(--p, 50%), var(--g200) var(--p, 50%)); outline-offset:6px; }
+html[dir="rtl"] input[type=range]{ --rdir:left; }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:28px; height:28px; border-radius:50%; background:var(--orange); border:4px solid var(--white); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:grab; }
+input[type=range]::-moz-range-thumb{ width:22px; height:22px; border-radius:50%; background:var(--orange); border:4px solid var(--white); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:grab; }
+.size__res{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.size__res div{ background:var(--page); border-radius:16px; padding:14px; }
+.size__res span{ display:block; font-size:12px; color:var(--ink-2); }
+.size__res b{ font:600 clamp(26px, 3vw, 34px)/1.2 var(--f-latin); letter-spacing:-.03em; }
+.size__res small{ font-size:13px; font-weight:500; margin-inline-start:4px; }
+.size__plan{ background:var(--page); border-radius:20px; padding:clamp(12px, 2vw, 24px); }
+.size__plan svg{ width:100%; height:auto; direction:ltr; }
+
+/* ===================== 8. HELP ===================== */
+.help{ position:relative; padding-block:var(--section); }
+.help__card{ position:relative; z-index:2; display:grid; gap:20px; max-width:760px; margin-inline:auto; background:var(--white); border-radius:var(--r-card); padding:10px; box-shadow:0 30px 60px rgba(0,0,0,.08); }
+@media (min-width:640px){ .help__card{ grid-template-columns:220px 1fr; align-items:center; } }
+.help__img{ border-radius:18px; overflow:hidden; background:var(--blush); aspect-ratio:1; }
+.help__img img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; padding:10%; }
+.help__copy{ display:grid; gap:12px; padding:8px 14px 14px; justify-items:start; }
+.help__copy h2{ font-size:clamp(24px, 2.6vw, 32px); font-weight:600; letter-spacing:-.03em; line-height:1.15; }
+html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
+.help__copy p{ color:var(--ink-2); font-size:15px; }
+.btn-wa{ background:var(--green); color:var(--white); }
+
+/* ===================== FOOTER (as ket-product.html) ===================== */
+.footer{ background:var(--blush); padding-block:var(--s7); }
+.footer__grid{ display:grid; gap:var(--s5); justify-items:center; text-align:center; }
+.footer__mark{ display:grid; justify-items:center; gap:10px; }
+.footer__mark svg{ width:64px; height:auto; }
+.footer__copy{ font-size:13px; color:var(--ink-2); }
+@media (max-width:1023px){ .footer__touch{ order:1; } .pays{ order:2; } .footer__legal{ order:3; } .footer__mark{ order:4; margin-top:var(--s3); } }
+.footer__touch{ display:grid; justify-items:center; gap:12px; }
+.footer__touch p{ font-size:15px; font-weight:500; }
+.social{ display:flex; gap:4px; }
+.social a{ width:40px; height:40px; border-radius:50%; display:grid; place-items:center; color:#111; }
+.social a:hover{ background:rgba(0,0,0,.07); }
+.pays{ direction:ltr; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:16px 26px; }
+.pay{ display:inline-flex; align-items:center; color:#111; font:700 19px/1 var(--f-latin); letter-spacing:-.02em; }
+.pay--visa{ font-style:italic; font-weight:800; font-size:21px; }
+.pay--mada{ font-size:15px; flex-direction:column; gap:1px; align-items:flex-start; }
+.pay--mada i{ display:block; width:32px; height:4px; background:#111; border-radius:1px; }
+.pay--amex{ font-size:9.5px; font-weight:800; background:#111; color:var(--blush); padding:6px 5px; border-radius:3px; }
+.footer__legal{ display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:10px 18px; font-size:12px; color:#111; }
+.footer__legal .sbc{ padding:6px 10px; border:1px solid rgba(0,0,0,.25); border-radius:8px; font-size:11px; }
+.footer__legal .ids{ display:grid; gap:2px; text-align:start; }
+@media (min-width:1024px){
+  .footer__grid{ grid-template-columns:1fr 1fr; justify-items:stretch; text-align:start; row-gap:var(--s6); }
+  .footer__mark{ grid-column:1; grid-row:1; justify-items:start; }
+  .footer__touch{ grid-column:2; grid-row:1; justify-items:end; }
+  .pays, .footer__legal{ grid-column:1 / -1; justify-self:center; }
+}
+.wa{ position:fixed; bottom:calc(16px + env(safe-area-inset-bottom)); inset-inline-start:16px; z-index:54; width:54px; height:54px; border-radius:50%; background:var(--green); color:var(--white); display:grid; place-items:center; box-shadow:0 8px 24px rgba(0,0,0,.18); text-decoration:none; }
+.toast{ position:fixed; z-index:110; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); transform:translate(-50%, 20px); background:var(--black); color:var(--white); padding:12px 18px; border-radius:var(--r-pill); font-size:14px; max-width:calc(100vw - 32px); width:max-content; text-align:center; opacity:0; visibility:hidden; transition:all .45s var(--ease); }
+.toast.is-on{ opacity:1; visibility:visible; transform:translate(-50%,0); }
+
+/* reveal on scroll (GSAP sets the start state only when motion is on) */
+@media (prefers-reduced-motion: reduce){ *{ animation:none!important; transition:none!important; } }
+</style>
+</head>
+
+<body>
+<a class="skip" href="#all" data-t="skip"></a>
+
+<!-- LOADER: dots → line → logo → tables gather in a ring (plays on each visit; tap to skip) -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__dots" id="ldDots"><i></i><i></i><i></i></div>
+  <p class="loader__line" id="ldLine" data-t="loadLine"></p>
+  <div class="ring" id="ring"></div>
+  <div class="loader__logo" id="ldLogo"></div>
+  <button class="loader__skip" id="ldSkip" type="button" data-t="skipIntro"></button>
+</div>
+
+<div class="announce" role="region" aria-label="Announcements"><div class="marquee" id="marquee"></div></div>
+
+<header class="header" id="header">
+  <div class="container header__inner">
+    <div class="header__start">
+      <button class="icon-btn" data-toast="soon" data-t-aria="search" id="searchBtn"></button>
+      <nav class="crumbs hide-mob" aria-label="Breadcrumb"><a href="index.html" data-t="home"></a><span>/</span><span data-t="tables" aria-current="page"></span></nav>
+    </div>
+    <a href="index.html" class="logo" aria-label="ket — home" id="logo"></a>
+    <div class="header__end">
+      <button class="icon-btn hide-mob" data-toast="soon" data-t-aria="account" id="accountBtn"></button>
+      <button class="icon-btn cart-btn" id="cartBtn" data-t-aria="cart" data-toast="soon"><span class="cart-count" id="cartCount" aria-live="polite">0</span></button>
+      <button class="lang-btn latin" id="langBtn">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<!-- 1 · BANNER   → Vitrin: category banner (image + title from theme settings) -->
+<section class="banner container" aria-labelledby="bTitle">
+  <div class="banner__card" id="bannerCard">
+    <div class="banner__stripe" id="bStripe"></div>
+    <div class="banner__top"><span data-t="bTop"></span><a href="#all" data-t="bShop"></a></div>
+    <div class="banner__intro">
+      <h1 id="bTitle"><span class="line-mask"><span data-t="bLine1"></span></span><span class="line-mask"><span data-t="bLine2"></span></span></h1>
+      <p class="banner__sub"><i id="bSubIcon"></i><span id="bSub"></span></p>
+    </div>
+    <p class="banner__word" id="bWord" aria-hidden="true"></p>
+    <div class="banner__table" id="bTable"><img src="media/tables/t03.webp" alt="" width="1100" height="1100" fetchpriority="high"></div>
+    <a class="spot" id="bSpot" href="#all"><span class="spot__card"><span class="spot__name" data-t="bSpot"></span><span class="spot__price" id="bSpotPrice"></span><span class="spot__go flip" id="bSpotGo"></span></span><span class="spot__line"></span><span class="spot__dot"></span></a>
+  </div>
+</section>
+
+<!-- 2 · INTRO BENTO   → Vitrin: category description + theme settings -->
+<section class="section container" aria-labelledby="whyTitle">
+  <div class="intro__grid">
+    <div class="intro__left">
+      <p class="eyebrow" data-t="whyEy"></p>
+      <h2 class="intro__h" id="whyTitle" data-reveal><span data-t="whyA"></span><span class="ipill ipill--cut"><img src="media/tables/t08.webp" alt="" loading="lazy"></span><span data-t="whyB"></span></h2>
+      <div class="chips" id="chips"></div>
+      <div class="acc" id="acc"></div>
+    </div>
+    <div class="intro__card" data-reveal>
+      <div class="intro__copy">
+        <p class="eyebrow" id="cardEy"></p>
+        <p data-t="cardTx"></p>
+        <h3 data-t="cardH"></h3>
+        <a class="btn btn-primary" href="#all"><span data-t="cardBtn"></span><span class="arr flip" id="cardArr"></span></a>
+      </div>
+      <div class="photo">
+        <img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730" data-par>
+        <span class="pill tag" id="saleChip"></span>
+        <div class="stat">
+          <div class="stat__row"><span class="stat__lbl" data-t="fromLbl"></span><span class="stat__big" id="statFrom"></span></div>
+          <div class="stat__foot"><span class="stack" id="statStack"></span><span class="stat__lbl" id="statTx"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · SHOP BY TYPE   → Vitrin: sub-categories -->
+<section class="section container" aria-labelledby="typesTitle">
+  <div class="types__head">
+    <div><p class="eyebrow eyebrow--o" data-t="typesEy"></p><h2 class="h-xl" id="typesTitle" data-t="typesH" style="margin-top:10px"></h2></div>
+  </div>
+  <div class="types__grid" id="types"></div>
+</section>
+
+<!-- 4 · STATEMENT -->
+<section class="stmt container" aria-label="ket"><p id="stmt"></p></section>
+
+<!-- 5 · COLLECTIONS -->
+<section class="container" aria-labelledby="colTitle">
+  <div class="cols" id="cols">
+    <div class="cols__head"><p class="eyebrow" data-t="colEy"></p><h2 id="colTitle" data-t="colH"></h2></div>
+    <div class="cols__list" id="colList"></div>
+    <div class="cfloat" id="cfloat"><img alt=""></div>
+  </div>
+</section>
+
+<!-- 6 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->
+<section class="section container" id="all" aria-labelledby="gridTitle">
+  <div class="grid__head">
+    <div><p class="eyebrow" data-t="gridEy"></p><h2 class="h-xl" id="gridTitle" style="margin-top:10px"><span data-t="gridH"></span><sup id="gridSup"></sup></h2></div>
+  </div>
+  <div class="bar">
+    <div class="filters" id="filters" role="group"></div>
+    <label class="sortw"><span class="visually-hidden" data-t="sort"></span><select id="sort"></select><span id="sortIco"></span></label>
+  </div>
+  <p class="count" id="count" aria-live="polite"></p>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+
+<!-- 7 · SIZE GUIDE -->
+<section class="section container" aria-labelledby="sizeTitle">
+  <div class="size">
+    <div class="size__copy">
+      <p class="eyebrow eyebrow--o" data-t="sizeEy"></p>
+      <h2 id="sizeTitle" data-t="sizeH"></h2>
+      <p data-t="sizeTx"></p>
+      <div class="range"><label for="sofa"><span data-t="sofa"></span><output id="sofaOut" for="sofa"></output></label><input type="range" id="sofa" min="160" max="320" step="10" value="240"></div>
+      <div class="size__res"><div><span data-t="rec"></span><b id="recOut"></b></div><div><span data-t="gap"></span><b class="num"><span dir="ltr">40–45</span><small data-t="cm"></small></b></div></div>
+      <button class="btn btn-primary" id="sizeBtn" type="button" style="justify-self:start;margin-top:6px"><span data-t="sizeBtn"></span><span class="arr flip" id="sizeArr"></span></button>
+    </div>
+    <div class="size__plan"><svg id="plan" viewBox="0 0 400 300" role="img" aria-label="Sofa and coffee table, top view"></svg></div>
+  </div>
+</section>
+
+<!-- 8 · HELP -->
+<section class="help" aria-labelledby="helpTitle">
+  <div class="container">
+    <div class="help__card" data-reveal>
+      <div class="help__img"><img src="media/tables/t11.webp" alt="" loading="lazy"></div>
+      <div class="help__copy"><h2 id="helpTitle" data-t="helpH"></h2><p data-t="helpTx"></p><a class="btn btn-wa" href="#" data-toast="soon"><span data-t="helpBtn"></span><span class="arr" id="helpArr"></span></a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__mark"><span id="footerSmile"></span><p class="footer__copy">© <span data-t="allRights"></span></p></div>
+    <div class="footer__touch"><p data-t="touch"></p><div class="social" id="social"></div></div>
+    <div class="pays" aria-label="Payment methods">
+      <span class="pay pay--visa">VISA</span><span class="pay">Pay</span><span class="pay">tabby</span><span class="pay pay--mada"><i></i>mada</span><span class="pay">Flow</span><span class="pay pay--amex">AMERICAN<br>EXPRESS</span>
+    </div>
+    <div class="footer__legal"><span class="sbc" data-t="sbc"></span><span class="ids"><span id="vatNo"></span><span id="crNo"></span></span></div>
+  </div>
+</footer>
+<a class="wa" id="wa" href="#" data-toast="soon" data-t-aria="wa"></a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="ket-brand.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+const root = document.documentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const G = !!(window.gsap && window.ScrollTrigger) && !reduce;
+root.classList.add(G ? 'motion' : 'no-motion');
+const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+if (G) gsap.registerPlugin(ScrollTrigger);
+
+let lang = 'ar';
+const t = (k, v) => { let s = STORE.ui[lang][k] ?? k; if (v) for (const x in v) s = s.replace(`{${x}}`, v[x]); return s; };
+const L = o => (o && typeof o === 'object' && 'ar' in o) ? o[lang] : o;
+const fmt = n => n.toLocaleString('en-US');
+const money = n => `${fmt(n)}<small>${STORE.currency[lang]}</small>`;
+const moneyTxt = n => `${fmt(n)} ${STORE.currency[lang]}`;
+const off = p => Math.round((1 - p.price / p.was) * 100);
+const img = id => `${M}${id}.webp`;
+const P = STORE.products, byId = Object.fromEntries(P.map(p => [p.id, p]));
+const typeOf = id => STORE.types.find(x => x.id === id);
+const ARROW = '<path d="M5 12h14M13 6l6 6-6 6"/>';
+ICON.arrow = ARROW; ICON.ne = '<path d="M7 17 17 7M9 7h8v8"/>';
+ICON.coffee = '<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8 3.5c-.6 1 .6 2-.2 3M11.5 3.5c-.6 1 .6 2-.2 3"/>';
+ICON.people = '<circle cx="8.5" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.4"/><path d="M3 19c.8-3.4 3-5 5.5-5s4.7 1.6 5.5 5M14 14.2c2.6-.4 5 .8 6 4.3"/>';
+ICON.book = '<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6v13c-2.5-1.5-5.5-1.5-8-.5V5.5ZM20 5.5c-2.5-1-5.5-1-8 .5v13c2.5-1.5 5.5-1.5 8-.5V5.5Z"/>';
+const minPrice = Math.min(...P.map(p => p.price)), maxOff = Math.max(...P.map(off));
+
+/* ---------------- static chrome ---------------- */
+$('#searchBtn').innerHTML = icon('search');
+$('#accountBtn').innerHTML = icon('user');
+$('#cartBtn').insertAdjacentHTML('afterbegin', icon('bag'));
+$('#logo').innerHTML = logo(64);
+$('#ldLogo').innerHTML = logo(140);
+$('#footerSmile').innerHTML = smileMark(64);
+$('#wa').innerHTML = icon('wa', 28);
+['#cardArr', '#sizeArr', '#helpArr'].forEach(s => $(s).innerHTML = icon('arrow', 18, 1.8));
+$('#sortIco').innerHTML = icon('chev', 16, 1.8);
+$('#bSubIcon').innerHTML = icon('check', 14, 2.2);
+$('#social').innerHTML = [['snap', 'Snapchat'], ['ig', 'Instagram'], ['tiktok', 'TikTok'], ['wa', 'WhatsApp'], ['mail', 'Email'], ['globe', 'Website']].map(([i, n]) => `<a href="#" data-toast="soon" aria-label="${n}">${icon(i, 20)}</a>`).join('');
+const grp = () => `<div class="marquee__group">${[1, 2, 3, 1, 2, 3].map(i => `<span data-t="ann${i}"></span>`).join('')}</div>`;
+$('#marquee').innerHTML = grp() + grp().replace('class="marquee__group"', 'class="marquee__group" aria-hidden="true"');
+
+/* ---------------- state ---------------- */
+const state = { type: 'all', col: null, sort: 'feat' };
+let cart = 0;
+
+/* ---------------- render (re-run on language switch) ---------------- */
+function renderBanner() {
+  const word = t('bWord');
+  // Latin letters are split for the rise-in; Arabic stays whole so the letters keep joining
+  $('#bWord').innerHTML = lang === 'en' ? [...word].map(c => `<span class="ch">${c}</span>`).join('') : `<span class="ch">${word}</span>`;
+  $('#bSub').textContent = t('bSub', { n: P.length, p: moneyTxt(minPrice) });
+  $('#bSpotPrice').innerHTML = `<b>${money(byId.t03.price)}</b><s>${fmt(byId.t03.was)}</s>`;
+  $('#bSpotGo').innerHTML = icon('arrow', 16, 1.8);
+}
+function renderIntro() {
+  const chips = [['coffee', 'chip1'], ['people', 'chip2'], ['book', 'chip3']];
+  $('#chips').innerHTML = chips.map(([i, k]) => `<span class="pill">${icon(i, 16)}<span>${t(k)}</span></span>`).join('');
+  const open = $$('#acc .acc__btn').findIndex(b => b.getAttribute('aria-expanded') === 'true');
+  $('#acc').innerHTML = [1, 2, 3].map((i, n) => `<div class="acc__item"><button class="acc__btn" type="button" aria-expanded="${n === (open < 0 ? 0 : open)}" aria-controls="accP${i}"><span>${t('acc' + i)}</span><span class="pm"></span></button><div class="acc__panel" id="accP${i}" role="region"><div><p>${t('acc' + i + 'b')}</p></div></div></div>`).join('');
+  $('#cardEy').textContent = t('cardEy', { n: P.length });
+  $('#saleChip').innerHTML = `${icon('boxcart', 15)}<span>${t('saleChip', { n: maxOff })}</span>`;
+  $('#statFrom').innerHTML = money(minPrice);
+  $('#statStack').innerHTML = STORE.types.map(x => `<span style="--tint:${x.tint}"><img src="${img(x.hero)}" alt="" loading="lazy"></span>`).join('');
+  $('#statTx').textContent = t('statTx', { n: P.length, k: STORE.types.length });
+}
+$('#acc').addEventListener('click', e => {
+  const b = e.target.closest('.acc__btn'); if (!b) return;
+  const on = b.getAttribute('aria-expanded') === 'true';
+  $$('#acc .acc__btn').forEach(x => x.setAttribute('aria-expanded', 'false'));
+  b.setAttribute('aria-expanded', String(!on));
+});
+function renderTypes() {
+  $('#types').innerHTML = STORE.types.map(x => {
+    const items = P.filter(p => p.type === x.id), n = items.length;
+    const cut = items.filter(p => !p.photo), thumbs = (cut.length > 3 ? cut.filter(p => p.id !== x.hero) : cut).slice(0, 3);
+    return `<button class="tile" type="button" data-type="${x.id}" style="--tint:${x.tint}">
+      <span><span class="tile__name">${L(x)}</span><span class="tile__count" style="display:block">${n === 1 ? t('piece1') : n === 2 ? t('pieces2') : t('pieces', { n })}</span></span>
+      <span class="tile__go">${icon('arrow', 18, 1.8)}</span>
+      <img class="tile__img" src="${img(x.hero)}" alt="" loading="lazy">
+      <span class="spread">${thumbs.map(p => `<span><img src="${img(p.id)}" alt="" loading="lazy"></span>`).join('')}</span>
+    </button>`;
+  }).join('');
+  $$('#types .tile__go svg').forEach(s => s.parentElement.classList.add('flip'));
+}
+$('#types').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b) { setFilter({ type: b.dataset.type, col: null }); goGrid(); } });
+
+function renderStmt() {
+  const pill = (id, cut) => `<span class="ipill${cut ? ' ipill--cut' : ''}" style="background:${cut ? 'var(--mint)' : '#d8d3cc'}"><img src="${img(id)}" alt="" loading="lazy"></span>`;
+  $('#stmt').innerHTML = t('stmt').split(' ').map(w => w === '[img]' ? pill('life1') : w === '[img2]' ? pill('t11', true) : `<span class="w">${w}</span>`).join(' ');
+  if (G) stmtST && stmtST.refresh();
+}
+function renderCols() {
+  $('#colList').innerHTML = STORE.collections.map((c, i) => {
+    const items = P.filter(p => p.col === c.id), ph = !!byId[c.img]?.photo;
+    return `<button class="crow" type="button" data-col="${c.id}" data-img="${img(c.img)}" data-photo="${ph}">
+      <span class="crow__idx">${String(i + 1).padStart(2, '0')}</span>
+      <span><span class="crow__name">${L(c)}</span><span class="crow__meta">${L(c.note)} · ${t('colMeta', { n: items.length === 1 ? t('piece1') : items.length === 2 ? t('pieces2') : t('pieces', { n: items.length }), p: moneyTxt(Math.min(...items.map(p => p.price))) })}</span></span>
+      <span class="crow__go flip">${icon('arrow', 18, 1.8)}</span>
+      <span class="crow__thumb${ph ? ' is-photo' : ''}"><img src="${img(c.img)}" alt="" loading="lazy"></span>
+    </button>`;
+  }).join('');
+}
+function renderControls() {
+  const counts = { all: P.length }; STORE.types.forEach(x => counts[x.id] = P.filter(p => p.type === x.id).length);
+  const btn = (id, label) => `<button class="fbtn" type="button" data-type="${id}" aria-pressed="${!state.col && state.type === id}">${label}<sup>${counts[id]}</sup></button>`;
+  const col = state.col && STORE.collections.find(c => c.id === state.col);
+  $('#filters').setAttribute('aria-label', t('gridH'));
+  $('#filters').innerHTML = (col ? `<button class="fbtn fbtn--col" type="button" data-clear aria-pressed="true">${t('colFilter', { c: L(col) })} ${icon('close', 14, 2)}</button>` : '')
+    + btn('all', t('all')) + STORE.types.map(x => btn(x.id, L(x))).join('');
+  const opts = [['feat', 'sFeat'], ['low', 'sLow'], ['high', 'sHigh'], ['disc', 'sDisc']];
+  $('#sort').innerHTML = opts.map(([v, k]) => `<option value="${v}"${state.sort === v ? ' selected' : ''}>${t(k)}</option>`).join('');
+  $('#sort').setAttribute('aria-label', t('sort'));
+}
+$('#filters').addEventListener('click', e => {
+  const b = e.target.closest('.fbtn'); if (!b) return;
+  if (b.hasAttribute('data-clear')) setFilter({ col: null, type: 'all' }); else setFilter({ type: b.dataset.type, col: null });
+});
+$('#sort').addEventListener('change', e => { state.sort = e.target.value; renderGrid(true); });
+
+const cardHTML = p => {
+  const ty = typeOf(p.type);
+  return `<article class="card" data-id="${p.id}">
+    <div class="card__media${p.photo ? ' is-photo' : ''}" style="--tint:${ty.tint}33"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600">
+      <span class="card__off" dir="ltr">−${off(p)}%</span>
+      <button class="card__add" type="button" data-add="${p.id}" aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></div>
+    <div class="card__body"><h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p></div>
+  </article>`;
+};
+const tiles = () => [
+  `<div class="ttile ttile--dark"><h3>${t('tileA')}</h3><p>${t('tileAs')}</p></div>`,
+  `<div class="ttile ttile--photo"><img src="${img('life1')}" alt="" loading="lazy"><h3>${t('tileB')}</h3><p>${t('tileBs')}</p></div>`
+];
+function list() {
+  let r = P.filter(p => (state.col ? p.col === state.col : state.type === 'all' || p.type === state.type));
+  if (state.sort === 'low') r = [...r].sort((a, b) => a.price - b.price);
+  if (state.sort === 'high') r = [...r].sort((a, b) => b.price - a.price);
+  if (state.sort === 'disc') r = [...r].sort((a, b) => off(b) - off(a));
+  return r;
+}
+function renderGrid(animate) {
+  const r = list(), plain = state.type === 'all' && !state.col && state.sort === 'feat';
+  const html = r.map(cardHTML);
+  if (plain) { const [a, b] = tiles(); html.splice(4, 0, a); html.splice(11, 0, b); }
+  $('#gridSup').textContent = r.length;
+  $('#count').textContent = t('results', { n: r.length });
+  const g = $('#pgrid');
+  const swap = () => { g.innerHTML = html.join(''); if (G) gsap.fromTo(g.children, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .7, stagger: .035, ease: 'power3.out', clearProps: 'transform,opacity' }); };
+  if (animate && G && g.children.length) gsap.to(g.children, { opacity: 0, y: -10, duration: .2, stagger: .01, onComplete: swap }); else g.innerHTML = html.join('');
+}
+function setFilter(s) { Object.assign(state, s); renderControls(); renderGrid(true); }
+const goGrid = () => { const y = $('#all').getBoundingClientRect().top + scrollY - 70; lenis ? lenis.scrollTo(y, { duration: 1.4 }) : scrollTo({ top: y, behavior: 'smooth' }); };
+
+$('#pgrid').addEventListener('click', e => {
+  const b = e.target.closest('[data-add]'); if (!b) return;
+  cart++; const c = $('#cartCount'); c.textContent = cart; c.classList.add('has-items'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+  toast(t('added', { n: L(byId[b.dataset.add]) }));
+});
+$('#colList').addEventListener('click', e => { const b = e.target.closest('.crow'); if (!b) return;
+  if (!fine && !b.classList.contains('is-on')) { $$('.crow').forEach(x => x.classList.toggle('is-on', x === b)); return; }
+  setFilter({ col: b.dataset.col, type: 'all' }); goGrid(); });
+
+/* size guide: sofa length → coffee table ≈ 2/3, drawn from above */
+function renderSize() {
+  const s = +$('#sofa').value, tl = Math.round(s * 2 / 3 / 5) * 5;
+  $('#sofaOut').innerHTML = `${s} <small>${t('cm')}</small>`;
+  $('#recOut').innerHTML = `<span dir="ltr">${tl - 10}–${tl + 10}</span><small>${t('cm')}</small>`;
+  $('#sofa').style.setProperty('--p', ((s - 160) / 160 * 100) + '%');
+  const k = 340 / 320, sw = s * k, tw = tl * k, cx = 200;
+  $('#plan').innerHTML = `
+    <rect x="${cx - sw / 2}" y="40" width="${sw}" height="74" rx="18" fill="#D4C4FF"/>
+    <rect x="${cx - sw / 2 + 10}" y="52" width="${sw - 20}" height="46" rx="12" fill="#fff" fill-opacity=".55"/>
+    <ellipse cx="${cx}" cy="${200}" rx="${tw / 2}" ry="44" fill="#F7F976" stroke="#000" stroke-width="1.5"/>
+    <path d="M${cx + tw / 2 + 14} 114 V156" stroke="#FF6517" stroke-width="2" stroke-dasharray="4 4"/>
+    <text x="${cx + tw / 2 + 22}" y="140" font-family="Inter Tight" font-size="13" font-weight="600">40–45</text>
+    <path d="M${cx - tw / 2} 268 H${cx + tw / 2}" stroke="#000" stroke-width="1.5"/><path d="M${cx - tw / 2} 262 v12 M${cx + tw / 2} 262 v12" stroke="#000" stroke-width="1.5"/>
+    <text x="${cx}" y="290" text-anchor="middle" font-family="Inter Tight" font-size="14" font-weight="600">≈ ${tl} cm</text>
+    <text x="${cx}" y="30" text-anchor="middle" font-family="Inter Tight" font-size="13" fill="#555">${s} cm</text>`;
+  if (G) gsap.from('#plan ellipse', { attr: { rx: tw / 2 * .9 }, duration: .5, ease: 'back.out(2)' });
+}
+$('#sofa').addEventListener('input', renderSize);
+$('#sizeBtn').onclick = () => { setFilter({ type: 'coffee', col: null }); goGrid(); };
+
+function applyLang() {
+  root.lang = lang; root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = `${STORE.category[lang]} · ket`;
+  $$('[data-t]').forEach(el => el.textContent = t(el.dataset.t, { n: maxOff }));
+  $$('[data-t-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.tAria)));
+  $('#langBtn').textContent = lang === 'ar' ? 'EN' : 'ع';
+  $('#langBtn').setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
+  $('#vatNo').textContent = t('vatNo', { n: STORE.vat }); $('#crNo').textContent = t('crNo', { n: STORE.cr });
+  renderBanner(); renderIntro(); renderTypes(); renderStmt(); renderCols(); renderControls(); renderGrid(false); renderSize();
+  if (G) requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+$('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(); };
+
+/* toast */
+let tt; const toast = m => { const el = $('#toast'); el.textContent = m; el.classList.add('is-on'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('is-on'), 2400); };
+document.addEventListener('click', e => { const a = e.target.closest('[data-toast]'); if (a) { e.preventDefault(); toast(t(a.dataset.toast)); } });
+
+/* header state */
+const header = $('#header');
+addEventListener('scroll', () => header.classList.toggle('is-scrolled', scrollY > 40), { passive: true });
+
+let stmtST = null, lenis = null;
+applyLang();
+
+/* ---------------- smooth scroll ---------------- */
+if (G && window.Lenis) {
+  lenis = new Lenis({ lerp: .11, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(time => lenis.raf(time * 1000)); gsap.ticker.lagSmoothing(0);
+  lenis.stop();
+}
+
+/* ---------------- collections: image follows the pointer ---------------- */
+if (fine && G) {
+  const box = $('#cols'), fl = $('#cfloat'), fi = $('img', fl);
+  const xTo = gsap.quickTo(fl, 'x', { duration: .55, ease: 'power3' }), yTo = gsap.quickTo(fl, 'y', { duration: .55, ease: 'power3' });
+  let rot = 0, lastX = 0;
+  box.addEventListener('pointermove', e => {
+    const r = box.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    xTo(x - 130 + (lang === 'ar' ? -150 : 150)); yTo(y - 100);
+    rot = gsap.utils.clamp(-10, 10, (e.clientX - lastX) * .6); lastX = e.clientX;
+    gsap.to(fl, { rotation: rot, duration: .6, ease: 'power3' });
+  });
+  $('#colList').addEventListener('pointerover', e => {
+    const b = e.target.closest('.crow'); if (!b) return;
+    if (fi.getAttribute('src') !== b.dataset.img) { fi.src = b.dataset.img; fl.classList.toggle('is-photo', b.dataset.photo === 'true'); gsap.fromTo(fi, { scale: 1.15 }, { scale: 1, duration: .6, ease: 'power3' }); }
+    gsap.to(fl, { opacity: 1, scale: 1, duration: .45, ease: 'back.out(1.6)' });
+  });
+  $('#colList').addEventListener('pointerleave', () => gsap.to(fl, { opacity: 0, scale: .6, duration: .3 }));
+}
+
+/* ---------------- scroll motion ---------------- */
+function scrollMotion() {
+  if (!G) return;
+  // banner: the table lifts and turns as the page scrolls; the word sinks
+  gsap.to('#bTable', { yPercent: -16, rotation: lang === 'ar' ? 6 : -6, ease: 'none', scrollTrigger: { trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('#bWord', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('#bStripe', { xPercent: 8, ease: 'none', scrollTrigger: { trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true } });
+  $$('[data-reveal]').forEach(el => gsap.from(el, { y: 50, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } }));
+  $$('[data-par]').forEach(el => gsap.fromTo(el, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
+  gsap.from('.tile', { y: 60, opacity: 0, duration: .9, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '#types', start: 'top 82%' } });
+  gsap.from('.crow', { y: 30, opacity: 0, duration: .8, stagger: .07, ease: 'power3.out', scrollTrigger: { trigger: '#colList', start: 'top 85%' } });
+  gsap.from('.cols', { clipPath: 'inset(8% 6% 8% 6% round 24px)', duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: '#cols', start: 'top 85%' } });
+  // statement: words fill in one by one while scrolling through it
+  stmtST = ScrollTrigger.create({ trigger: '#stmt', start: 'top 80%', end: 'bottom 45%', scrub: true,
+    onUpdate: s => { const w = $$('#stmt .w'), n = s.progress * w.length * 1.05; w.forEach((el, i) => el.style.opacity = Math.max(.16, Math.min(1, n - i))); } });
+}
+
+/* ---------------- banner entrance (runs as the loader leaves) ---------------- */
+function bannerIn() {
+  if (!G) return;
+  const tl = gsap.timeline();
+  tl.from('#bannerCard', { scale: .94, borderRadius: 60, duration: 1.3, ease: 'expo.out' }, 0)
+    .from('#bWord .ch', { yPercent: 110, duration: 1.2, stagger: .05, ease: 'expo.out' }, .1)
+    .from('#bTable', { yPercent: -70, rotation: lang === 'ar' ? 25 : -25, opacity: 0, duration: 1.4, ease: 'bounce.out' }, .25)
+    .from('#bStripe', { scaleX: 0, duration: 1.2, ease: 'expo.out' }, .2)
+    .from('.banner__intro .line-mask > span', { yPercent: 110, duration: 1, stagger: .08, ease: 'expo.out' }, .45)
+    .from('.banner__sub, .banner__top', { opacity: 0, y: 12, duration: .8, stagger: .06 }, .7)
+    .from('#bSpot .spot__dot', { scale: 0, duration: .6, ease: 'back.out(2.5)' }, 1.2)
+    .from('#bSpot .spot__line', { scaleX: 0, duration: .4, ease: 'power3.out' }, 1.45)
+    .from('#bSpot .spot__card', { opacity: 0, x: () => (lang === 'ar' ? 16 : -16), duration: .6, ease: 'power3.out' }, 1.6)
+    .from('#logo .klogo__word', { y: 30, opacity: 0, duration: .9, ease: 'back.out(1.7)' }, .2);
+  // the hotspot breathes so it reads as tappable
+}
+
+/* ---------------- loader ---------------- */
+function done() {
+  root.classList.remove('is-loading');
+  if (lenis) lenis.start();
+  scrollMotion(); bannerIn();
+  ScrollTrigger && G && ScrollTrigger.refresh();
+}
+function runLoader() {
+  const ldr = $('#loader');
+  if (!G) { done(); return; }
+  // ring of 8 tables in mixed shapes and brand tints
+  const pick = [['t03', 'circle', '#F7F976'], ['t12', 'arch', '#C6F7A6'], ['life1', 'sq', '#e9e7e4'], ['t01', 'pill', '#FCDFDB'], ['t08', 'circle', '#D4C4FF'], ['t17', 'sq', '#F4F4F4'], ['t15', 'arch', '#FCDFDB'], ['t02', 'circle', '#C6F7A6']];
+  const ring = $('#ring');
+  ring.innerHTML = pick.map(([id, sh, bg]) => `<span class="ring__t sh-${sh}${byId[id]?.photo ? ' is-photo' : ''}" style="--bg:${bg}"><img src="${img(id)}" alt=""></span>`).join('');
+  const T = $$('.ring__t', ring);
+  const geo = () => { const m = Math.min(innerWidth, innerHeight); return { R: Math.min(m * .36, 300), ts: Math.min(m * .2, 150) }; };
+  let { R, ts } = geo(); ring.style.setProperty('--ts', ts + 'px');
+  const a0 = T.map((_, i) => -Math.PI / 2 + i * Math.PI * 2 / T.length);
+  const st = { spin: 0, r: R * .55 };
+  const place = () => T.forEach((el, i) => { const a = a0[i] + st.spin; gsap.set(el, { x: Math.cos(a) * st.r, y: Math.sin(a) * st.r }); });
+  gsap.ticker.add(place);
+
+  let skipped = false;
+  const tl = gsap.timeline({ onComplete: finish });
+  tl.to('#ldDots', { opacity: 0, scale: .6, duration: .35, delay: .55 })
+    .fromTo('#ldLine', { opacity: 0, y: 14, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .6, ease: 'power3.out' })
+    .to('#ldLine', { opacity: 0, y: -10, filter: 'blur(6px)', duration: .45, delay: .45 })
+    .fromTo('#ldLogo', { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .6, ease: 'back.out(1.8)' }, '-=.15')
+    .addLabel('ring')
+    .to(st, { r: R, duration: 1.2, ease: 'expo.out' }, 'ring')
+    .fromTo(T, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: .55, stagger: .09, ease: 'back.out(1.8)' }, 'ring')
+    .to(st, { spin: Math.PI * .9, duration: 2.4, ease: 'power2.inOut' }, 'ring')
+    .addLabel('out', '-=.55')
+    .to(st, { r: () => Math.hypot(innerWidth, innerHeight) * .75, duration: .9, ease: 'power3.in' }, 'out')
+    .to(T, { scale: 1.6, opacity: 0, duration: .9, ease: 'power3.in', stagger: .02 }, 'out')
+    .to('#ldLogo', { scale: .45, opacity: 0, y: () => -innerHeight * .35, duration: .7, ease: 'power3.in' }, 'out+=.1')
+    .to(ldr, { opacity: 0, duration: .45 }, 'out+=.6')
+    .add(() => { if (!skipped) bannerStart(); }, 'out+=.2');
+  let started = false;
+  function bannerStart() { if (started) return; started = true; done(); }
+  function finish() { gsap.ticker.remove(place); ldr.remove(); bannerStart(); }
+  const skip = () => { if (skipped) return; skipped = true; tl.kill(); gsap.to(ldr, { opacity: 0, duration: .3, onComplete: finish }); bannerStart(); };
+  $('#ldSkip').onclick = skip;
+  addEventListener('keydown', e => { if (e.key === 'Escape') skip(); }, { once: true });
+  addEventListener('resize', () => ({ R, ts } = geo(), ring.style.setProperty('--ts', ts + 'px')));
+  // wait until the ring images are decoded (max 1.2s) so the tiles never pop in empty
+  tl.pause();
+  const ready = Promise.all($$('img', ring).map(i => i.decode().catch(() => {})));
+  Promise.race([ready, new Promise(r => setTimeout(r, 1200))]).then(() => tl.play());
+}
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(runLoader); else runLoader();
+})();
+</script>
+</body>
+</html>
