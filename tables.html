@@ -20,12 +20,12 @@ const STORE = {
   vat: '310803678600003', cr: '4030396963',
   category: { ar: 'الطاولات', en: 'Tables' },
 
-  // type filter (Zid: sub-categories or product tags). tint = card / tile colour
+  // type filter (Zid: sub-categories or product tags). hero = the tile picture
   types: [
-    { id: 'coffee', ar: 'طاولات قهوة', en: 'Coffee tables', tint: '#F7F976', hero: 't03' },
-    { id: 'side', ar: 'طاولات جانبية', en: 'Side tables', tint: '#C6F7A6', hero: 't12' },
-    { id: 'sets', ar: 'أطقم', en: 'Sets', tint: '#D4C4FF', hero: 't09' },
-    { id: 'console', ar: 'كونسول وتلفاز', en: 'Console & TV', tint: '#FCDFDB', hero: 't05' }
+    { id: 'coffee', ar: 'طاولات قهوة', en: 'Coffee tables', hero: 't03' },
+    { id: 'side', ar: 'طاولات جانبية', en: 'Side tables', hero: 't12' },
+    { id: 'sets', ar: 'أطقم', en: 'Sets', hero: 't09' },
+    { id: 'console', ar: 'كونسول وتلفاز', en: 'Console & TV', hero: 't05' }
   ],
 
   // every table in the category (prices from ketfurniture.com, Oct 2026)
@@ -65,7 +65,10 @@ const STORE = {
       skip: 'تخطَّ إلى المنتجات', home: 'الرئيسية', tables: 'الطاولات', search: 'بحث', account: 'حسابي', cart: 'السلة',
       ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'خصومات تصل إلى {n}٪ على الطاولات',
       loadLine: 'طاولات تجمع البيت', skipIntro: 'تخطَّ',
-      bTop: 'مجموعة الطاولات', bShop: 'تسوّق الآن', bLine1: 'تجمعنا', bLine2: 'حول طاولة.', bSub: '{n} تصميم، من {p}', bWord: 'طاولات', bSpot: 'طاولة قهوة مدار',
+      bAll: 'تسوّق الكل', bShop: 'اختر النوع', bLine1: 'تجمعنا', bLine2: 'حول', bLine3: 'طاولة.', bWord: 'طاولات',
+      bSub: 'طاولات قهوة وجانبية وأطقم وكونسول، بخامات طبيعية وتوصيل مجاني لكل مدن المملكة.',
+      bDesigns: 'تصميم', bOff: 'خصم حتى', bFrom: 'تبدأ من، ر.س', ribbon: 'طاولة لكل جلسة',
+      shapeTx: 'من قهوة الصباح إلى جلسة الضيوف، ابدأ بالشكل الذي يناسب مساحتك.', shapeAll: 'كل الطاولات', shapeSale: 'أعلى خصم', shapeStat: 'تصميم في {k} أنواع، تبدأ من {p}',
       whyEy: 'لماذا طاولات ket', whyA: 'اكتشف', whyB: 'طاولة لكل لحظة في البيت.',
       chip1: 'قهوة الصباح', chip2: 'جلسة الضيوف', chip3: 'ركن القراءة',
       acc1: 'خامات تعيش طويلًا', acc1b: 'خشب الجوز، حجر بملمس الترافرتين، معدن مطلي وأكريلك. كل خامة مختارة لتتحمل الاستخدام اليومي.',
@@ -89,7 +92,10 @@ const STORE = {
       skip: 'Skip to products', home: 'Home', tables: 'Tables', search: 'Search', account: 'Account', cart: 'Cart',
       ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'Up to {n}% off tables',
       loadLine: 'Tables that bring the home together', skipIntro: 'Skip',
-      bTop: 'The table collection', bShop: 'Shop now', bLine1: 'Gather', bLine2: 'around a table.', bSub: '{n} designs, from {p}', bWord: 'Tables', bSpot: 'Madar Coffee Table',
+      bAll: 'Shop all', bShop: 'Pick a type', bLine1: 'Gather', bLine2: 'around', bLine3: 'a table.', bWord: 'tables',
+      bSub: 'Coffee, side, nesting and console tables in natural materials, delivered free across the Kingdom.',
+      bDesigns: 'designs', bOff: 'off, up to', bFrom: 'from, SAR', ribbon: 'A TABLE FOR EVERY ROOM',
+      shapeTx: 'From morning coffee to guest evenings, start with the shape that fits your space.', shapeAll: 'All tables', shapeSale: 'Biggest discount', shapeStat: 'designs in {k} types, from {p}',
       whyEy: 'Why ket tables', whyA: 'Explore', whyB: 'a table for every moment at home.',
       chip1: 'Morning coffee', chip2: 'Guest evenings', chip3: 'Reading corner',
       acc1: 'Materials that last', acc1b: 'Walnut, travertine-look stone, coated metal and acrylic, each chosen for everyday use.',
@@ -124,8 +130,8 @@ const STORE = {
 :root{
   --white:#fff; --black:#000; --g400:#A8A8A8; --g200:#DCDCDC; --g100:#F4F4F4; --page:#F2F2F4;
   --ink-2:#555;
-  --yellow:#F7F976; --mint:#C6F7A6; --green:#02A27A; --peri:#7F94FF; --blue:#3F48FF; --lavender:#D4C4FF; --pink:#F4A7FC;
-  --blush:#FCDFDB; --orange:#FF6517; --amber:#FFAE15;
+  /* one colour family: blush pink (the console / TV tile), a deeper rose for accents, plus black and white */
+  --blush:#FCDFDB; --rose:#F5BDB4; --green:#02A27A;
   --f-latin:'Inter Tight', system-ui, sans-serif;
   --f-ar:'IBM Plex Sans Arabic', 'Inter Tight', system-ui, sans-serif;
   --font:var(--f-ar);
@@ -164,8 +170,8 @@ ul{ margin:0; padding:0; list-style:none; }
 html[lang="ar"] .h-xl{ font-weight:700; line-height:1.25; letter-spacing:0; }
 .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:var(--t-xs); font-weight:600; text-transform:uppercase; letter-spacing:var(--ls-label); }
 html[lang="ar"] .eyebrow{ font-size:13px; text-transform:none; }
-.eyebrow::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--peri); }
-.eyebrow--o::before{ background:var(--orange); }
+.eyebrow::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--black); }
+.eyebrow--o::before{ background:var(--rose); }
 .muted{ color:var(--ink-2); }
 .line-mask{ display:block; overflow:hidden; padding-block:.06em; }
 .line-mask > span{ display:block; }
@@ -181,7 +187,7 @@ html[lang="ar"] .eyebrow{ font-size:13px; text-transform:none; }
 html[dir="rtl"] .arr svg, html[dir="rtl"] .flip svg{ transform:scaleX(-1); }
 .icon-btn{ display:inline-grid; place-items:center; width:44px; height:44px; border-radius:var(--r-pill); transition:background-color .25s; }
 .icon-btn:hover{ background:var(--g100); }
-.circ{ display:inline-grid; place-items:center; width:44px; height:44px; border-radius:50%; background:var(--orange); color:var(--black); flex:none; transition:transform .5s var(--ease), background-color .3s; }
+.circ{ display:inline-grid; place-items:center; width:44px; height:44px; border-radius:50%; background:var(--rose); color:var(--black); flex:none; transition:transform .5s var(--ease), background-color .3s; }
 
 /* ===================== LOADER (ring of tables around the logo) ===================== */
 .loader{ position:fixed; inset:0; z-index:200; background:var(--white); display:grid; place-items:center; overflow:hidden; }
@@ -226,7 +232,7 @@ html.is-loading body{ overflow:hidden; }
 .lang-btn{ height:36px; padding-inline:14px; border-radius:var(--r-pill); border:1px solid var(--black); font-size:13px; font-weight:600; margin-inline-start:6px; transition:background-color .25s,color .25s; }
 .lang-btn:hover{ background:var(--black); color:var(--white); }
 .cart-btn{ position:relative; }
-.cart-count{ position:absolute; top:4px; inset-inline-end:2px; min-width:18px; height:18px; padding-inline:5px; border-radius:var(--r-pill); background:var(--orange); color:#000; font:600 11px/18px var(--f-latin); text-align:center; transform:scale(0); transition:transform .4s var(--ease); }
+.cart-count{ position:absolute; top:4px; inset-inline-end:2px; min-width:18px; height:18px; padding-inline:5px; border-radius:var(--r-pill); background:var(--rose); color:#000; font:600 11px/18px var(--f-latin); text-align:center; transform:scale(0); transition:transform .4s var(--ease); }
 .cart-count.has-items{ transform:scale(1); }
 .cart-count.bump{ animation:bump .5s var(--ease); }
 @keyframes bump{ 40%{ transform:scale(1.45); } }
@@ -235,50 +241,61 @@ html.is-loading body{ overflow:hidden; }
 @media (min-width:1024px){ .crumbs{ display:flex; } }
 @media (max-width:1023px){ .hide-mob{ display:none!important; } }
 
-/* ===================== 1. BANNER (big word, table over it) ===================== */
+/* ===================== 1. BANNER (pink: big word, table inside a white orbit, arched ribbon) ===================== */
 .banner{ padding-top:12px; }
-.banner__card{ position:relative; border-radius:var(--r-card); background:var(--peri); overflow:hidden; isolation:isolate; height:clamp(560px, calc(100svh - var(--header-h) - 36px - 24px), 920px); color:var(--black); }
-.banner__card::before{ content:""; position:absolute; inset:0; background:radial-gradient(70% 60% at 62% 38%, rgba(255,255,255,.28), transparent 70%); z-index:-1; }
-.banner__stripe{ position:absolute; z-index:-1; width:180%; height:clamp(26px, 3.2vw, 44px); background:var(--yellow); left:-40%; top:58%; transform:rotate(-14deg); transform-origin:50% 50%; }
-html[dir="rtl"] .banner__stripe{ transform:rotate(14deg); }
-.banner__top{ position:absolute; inset-inline:clamp(18px, 3vw, 36px); top:clamp(16px, 2.4vw, 28px); display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:var(--ls-label); }
-html[lang="ar"] .banner__top{ font-size:13px; }
-.banner__top a{ text-decoration:underline; text-underline-offset:4px; }
-.banner__intro{ position:absolute; inset-inline-start:clamp(18px, 9vw, 150px); top:clamp(76px, 15%, 150px); max-width:420px; }
-.banner__intro h1{ font-size:clamp(28px, 3.4vw, 46px); line-height:1.08; font-weight:500; letter-spacing:-.03em; }
-html[lang="ar"] .banner__intro h1{ line-height:1.35; letter-spacing:0; font-weight:600; }
-.banner__sub{ margin-top:14px; display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:500; }
-.banner__sub i{ width:22px; height:22px; border-radius:50%; background:var(--amber); display:grid; place-items:center; }
-.banner__word{ position:absolute; inset-inline:0; bottom:0; line-height:.78; text-align:center; color:var(--white); font-weight:700; font-size:clamp(108px, 25vw, 420px); letter-spacing:-.065em; white-space:nowrap; transform:translateY(.1em); pointer-events:none; }
-html[lang="ar"] .banner__word{ letter-spacing:0; line-height:1.12; font-size:clamp(100px, 24vw, 400px); transform:translateY(.24em); }
-.banner__word .ch{ display:inline-block; }
-.banner__card{ --tw:clamp(300px, 44vw, 640px); --tb:clamp(40px, 5vw, 90px); --te:clamp(0px, 8vw, 160px); }
-.banner__table{ position:absolute; z-index:2; width:var(--tw); inset-inline-end:var(--te); bottom:var(--tb); mix-blend-mode:multiply; will-change:transform; }
-.banner__table img{ width:100%; height:auto; }
-/* hotspot: a pulsing dot on the table top and a small product card beside it */
-.spot{ position:absolute; z-index:3; inset-inline-end:calc(var(--te) + var(--tw) * .5 - 11px); bottom:calc(var(--tb) + var(--tw) * .6); display:flex; align-items:center; gap:0; text-decoration:none; color:var(--black); }
-.spot__dot{ position:relative; width:22px; height:22px; border-radius:50%; background:var(--white); box-shadow:0 0 0 5px rgba(255,255,255,.35); flex:none; }
-.spot__dot::before{ content:""; position:absolute; inset:7px; border-radius:50%; background:var(--black); }
-.spot__dot::after{ content:""; position:absolute; inset:-5px; border-radius:50%; border:1.5px solid var(--white); animation:ping 2.2s var(--ease) infinite; }
-@keyframes ping{ 0%{ transform:scale(.8); opacity:1; } 80%,100%{ transform:scale(2.2); opacity:0; } }
-.spot__line{ transform-origin:var(--lo, right) center; width:34px; height:1.5px; background:var(--white); flex:none; }
-.spot__card{ display:grid; grid-template-columns:auto auto; align-items:center; gap:2px 14px; padding:10px 10px 10px 14px; border-radius:16px; background:var(--white); box-shadow:0 14px 34px rgba(20,30,90,.18); }
-html[dir="rtl"] .spot__line{ --lo:left; }
-html[dir="rtl"] .spot__card{ padding:10px 14px 10px 10px; }
-.spot__name{ font-size:13px; font-weight:600; line-height:1.3; white-space:nowrap; }
-.spot__price{ display:flex; align-items:baseline; gap:6px; font-family:var(--f-latin); font-size:15px; }
-.spot__price b{ font-weight:600; }
-.spot__price small{ font-family:var(--f-ar); font-size:11px; font-weight:500; margin-inline-start:3px; }
-.spot__price s{ font-size:12px; color:var(--g400); }
-.spot__go{ grid-row:1 / span 2; grid-column:2; width:34px; height:34px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease), background-color .3s; }
-.spot:hover .spot__go{ background:var(--orange); color:var(--black); transform:rotate(calc(-45deg * var(--dir) * -1)); }
+.bn{ position:relative; border-radius:var(--r-card); background:var(--blush); overflow:hidden; isolation:isolate; height:clamp(620px, calc(100svh - var(--header-h) - 36px - 24px), 920px); --sw:clamp(340px, 38vw, 580px); }
+.bn::before{ content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(55% 50% at 50% 30%, rgba(255,255,255,.7), transparent 70%); }
+.bn__nav{ position:absolute; top:clamp(14px, 2vw, 24px); inset-inline:clamp(14px, 2vw, 24px); display:flex; justify-content:center; align-items:center; gap:6px; }
+.bn__nav a{ height:32px; padding-inline:14px; display:inline-flex; align-items:center; border-radius:var(--r-pill); background:rgba(255,255,255,.55); font-size:13px; font-weight:500; text-decoration:none; transition:background-color .3s; }
+.bn__nav a:hover{ background:var(--white); }
+.bn__all{ position:absolute; top:clamp(14px, 2vw, 24px); inset-inline-end:clamp(14px, 2vw, 24px); display:inline-flex; align-items:center; gap:8px; height:36px; padding-inline:4px 14px; border-radius:var(--r-pill); background:var(--white); font-size:13px; font-weight:600; text-decoration:none; }
+.bn__all i{ width:28px; height:28px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease); }
+.bn__all:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+.bn__word{ position:absolute; inset-inline:0; top:clamp(48px, 7%, 80px); text-align:center; font-weight:800; font-size:clamp(110px, 17vw, 270px); line-height:.86; letter-spacing:-.065em; white-space:nowrap; pointer-events:none; }
+html[lang="ar"] .bn__word{ font-weight:700; letter-spacing:0; line-height:1.05; font-size:clamp(96px, 14.5vw, 230px); }
+.bn__word .ch{ display:inline-block; }
+.bn__wordwrap{ overflow:hidden; display:inline-block; padding-inline:.06em; }
+.bn__cta{ position:absolute; left:50%; top:calc(clamp(48px, 7%, 80px) + clamp(110px, 17vw, 270px) * .92); transform:translateX(-50%); display:inline-flex; align-items:center; gap:8px; height:36px; padding-inline:4px 14px; border-radius:var(--r-pill); background:var(--black); color:var(--white); font-size:13px; font-weight:600; text-decoration:none; z-index:4; }
+html[lang="ar"] .bn__cta{ top:calc(clamp(48px, 7%, 80px) + clamp(96px, 14.5vw, 230px) * 1.06); }
+.bn__cta i{ width:28px; height:28px; border-radius:50%; background:var(--white); color:var(--black); display:grid; place-items:center; transition:transform .5s var(--ease); }
+.bn__cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+/* the table and its orbit sit low on the start side; the headline on the end side */
+/* no z-index here: the table's multiply blend must reach the pink behind it */
+.bn__stage{ position:absolute; width:var(--sw); aspect-ratio:1; inset-inline-start:clamp(48px, 7vw, 120px); bottom:calc(var(--sw) * -.26); }
+.bn__orbit{ position:absolute; inset:0; border-radius:50%; border:clamp(10px, 1.1vw, 16px) solid var(--white); }
+.bn__table{ position:absolute; left:11%; top:6%; width:78%; mix-blend-mode:multiply; will-change:transform; }
+.bn__table img{ width:100%; height:auto; }
+.bn__b{ position:absolute; left:50%; top:50%; width:clamp(82px, 7.6vw, 112px); aspect-ratio:1; margin:calc(clamp(82px, 7.6vw, 112px) / -2) 0 0 calc(clamp(82px, 7.6vw, 112px) / -2); }
+.bn__bi{ width:100%; height:100%; border-radius:50%; background:var(--white); display:grid; place-content:center; text-align:center; gap:2px; box-shadow:0 10px 30px rgba(120,40,30,.08); }
+.bn__bi b{ font:700 clamp(20px, 2vw, 28px)/1 var(--f-latin); letter-spacing:-.04em; }
+.bn__bi span{ font-size:11px; line-height:1.25; color:var(--ink-2); padding-inline:8px; }
+.bn__copy{ position:absolute; z-index:3; inset-inline-end:clamp(20px, 6vw, 100px); top:40%; width:min(460px, 38vw); }
+.bn__copy h1{ font-weight:800; font-size:clamp(40px, 4.8vw, 78px); line-height:.9; letter-spacing:-.045em; text-transform:uppercase; }
+html[lang="ar"] .bn__copy h1{ font-weight:700; line-height:1.15; letter-spacing:0; font-size:clamp(38px, 4.2vw, 66px); }
+.bn__copy h1 .line-mask:first-child{ color:var(--white); }
+.bn__copy p{ margin-top:16px; font-size:15px; line-height:1.6; color:#5a4542; max-width:34ch; }
+/* arched ribbon: a black band with text running along it */
+.bn__ribbon{ position:absolute; z-index:4; inset-inline:0; bottom:0; pointer-events:none; }
+.bn__ribbon svg{ width:100%; height:auto; overflow:visible; direction:ltr; }   /* ltr keeps Arabic on the path (it still joins) */
+.bn__ribbon text{ font-family:var(--f-latin); font-weight:800; fill:var(--blush); letter-spacing:.02em; }
+html[lang="ar"] .bn__ribbon text{ font-family:var(--f-ar); font-weight:700; letter-spacing:0; }
+@media (max-width:1023px){ .bn__nav{ display:none; } }
 @media (max-width:767px){
-  .banner__card{ height:clamp(560px, 82svh, 720px); }
-  .banner__intro{ inset-inline-start:18px; top:64px; }
-  .banner__card{ --tw:100vw; --te:-12vw; --tb:16vw; }
-  .spot__line{ width:18px; }
-  .spot__name{ font-size:12px; }
-  .banner__stripe{ top:62%; }
+  .bn{ height:calc(330px + 28vw + 78vw * .9); --sw:78vw; }   /* text block + most of the table */
+  .bn__word{ top:62px; font-size:28vw; }
+  html[lang="ar"] .bn__word{ font-size:25vw; }
+  .bn__cta{ top:calc(62px + 28vw * .92); }
+  html[lang="ar"] .bn__cta{ top:calc(62px + 25vw * 1.06); }
+  .bn__all{ inset-inline-start:14px; inset-inline-end:auto; }
+  .bn__copy{ inset-inline:20px; width:auto; top:calc(120px + 28vw); text-align:center; }
+  html[lang="ar"] .bn__copy{ top:calc(118px + 26vw); }
+  .bn__copy h1{ font-size:11.5vw; }
+  html[lang="ar"] .bn__copy h1{ font-size:10.5vw; }
+  .bn__copy p{ margin-inline:auto; font-size:14px; }
+  .bn__stage{ inset-inline-start:calc((100% - var(--sw)) / 2); bottom:calc(var(--sw) * -.22); }
+  .bn__b{ width:68px; margin:-34px 0 0 -34px; }
+  .bn__bi b{ font-size:17px; }
+  .bn__bi span{ font-size:10px; }
 }
 
 /* ===================== 2. INTRO BENTO ===================== */
@@ -287,7 +304,7 @@ html[dir="rtl"] .spot__card{ padding:10px 14px 10px 10px; }
 .intro__left{ display:grid; align-content:start; gap:var(--s5); padding:clamp(8px, 2vw, 24px) 0; }
 .intro__h{ font-size:clamp(32px, 4vw, 54px); font-weight:500; line-height:1.08; letter-spacing:-.035em; text-wrap:balance; }
 html[lang="ar"] .intro__h{ font-weight:600; line-height:1.4; letter-spacing:0; }
-.ipill{ display:inline-block; vertical-align:middle; width:1.9em; height:.95em; border-radius:999px; overflow:hidden; margin-inline:.12em; background:var(--yellow); position:relative; top:-.06em; }
+.ipill{ display:inline-block; vertical-align:middle; width:1.9em; height:.95em; border-radius:999px; overflow:hidden; margin-inline:.12em; background:var(--blush); position:relative; top:-.06em; }
 .ipill img{ width:100%; height:100%; object-fit:cover; }
 .ipill--cut img{ object-fit:contain; mix-blend-mode:multiply; padding:2px; transform:scale(1.25); }
 .chips{ display:flex; flex-wrap:wrap; gap:8px; }
@@ -305,7 +322,7 @@ html[lang="ar"] .intro__h{ font-weight:600; line-height:1.4; letter-spacing:0; }
 .intro__card{ background:var(--white); border-radius:var(--r-card); padding:clamp(20px, 2.4vw, 32px); display:grid; gap:20px; }
 @media (min-width:640px){ .intro__card{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }
 .intro__copy{ display:flex; flex-direction:column; gap:14px; }
-.intro__copy .eyebrow::before{ background:var(--orange); }
+.intro__copy .eyebrow::before{ background:var(--rose); }
 .intro__copy p{ font-size:14px; color:var(--ink-2); max-width:30ch; }
 .intro__copy h3{ margin-top:auto; font-size:clamp(26px, 2.6vw, 36px); font-weight:500; line-height:1.1; letter-spacing:-.03em; white-space:pre-line; }
 html[lang="ar"] .intro__copy h3{ font-weight:600; line-height:1.4; letter-spacing:0; }
@@ -319,36 +336,61 @@ html[lang="ar"] .intro__copy h3{ font-weight:600; line-height:1.4; letter-spacin
 .stat__lbl{ font-size:12px; color:var(--ink-2); }
 .stat__foot{ display:flex; align-items:center; gap:10px; padding-top:10px; border-top:1px solid var(--g200); }
 .stack{ display:flex; direction:ltr; }
-.stack span{ width:34px; height:34px; border-radius:50%; border:2px solid var(--white); background:var(--tint); overflow:hidden; margin-left:-10px; }
+.stack span{ width:34px; height:34px; border-radius:50%; border:2px solid var(--white); background:var(--blush); overflow:hidden; margin-left:-10px; }
 .stack span:first-child{ margin-left:0; }
 .stack img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; padding:3px; }
 
-/* ===================== 3. TYPE TILES (colour blocks, cards spread on hover) ===================== */
-.types__head{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:var(--s5); }
-.types__grid{ display:grid; gap:12px; grid-template-columns:repeat(2, minmax(0,1fr)); }
-@media (min-width:1024px){ .types__grid{ grid-template-columns:1.25fr 1fr 1fr; grid-template-rows:repeat(2, minmax(250px, 1fr)); gap:16px; } .tile:first-child{ grid-row:span 2; } .tile:last-child{ grid-column:2 / span 2; } }
-.tile{ position:relative; display:flex; flex-direction:column; justify-content:space-between; min-height:clamp(220px, 46vw, 260px); padding:18px; border-radius:var(--r-card); background:var(--tint); overflow:hidden; text-align:start; isolation:isolate; transition:transform .6s var(--ease); }
-.tile:hover{ transform:translateY(-4px); }
-.tile__name{ font-size:clamp(20px, 2.2vw, 30px); font-weight:600; line-height:1.1; letter-spacing:-.03em; }
-html[lang="ar"] .tile__name{ letter-spacing:0; line-height:1.35; }
-.tile__count{ font-size:13px; color:rgba(0,0,0,.6); margin-top:4px; }
-.tile__img{ position:absolute; z-index:-1; height:74%; width:auto; max-width:78%; object-fit:contain; inset-inline-end:2%; bottom:3%; mix-blend-mode:multiply; transition:transform .8s var(--ease); }
-.tile:first-child .tile__img{ height:auto; width:88%; max-width:none; inset-inline-end:6%; bottom:14%; }
-.tile[data-type="console"] .tile__img{ height:86%; bottom:0; }
-.tile:hover .tile__img{ transform:scale(1.06) translateY(-3%); }
-.tile__go{ align-self:flex-start; width:40px; height:40px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease); }
-.tile:hover .tile__go{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
-.spread{ position:absolute; z-index:1; inset-inline-start:76px; bottom:18px; width:200px; height:100px; pointer-events:none; }
-.spread span{ position:absolute; inset-inline-start:0; bottom:0; width:76px; height:76px; border-radius:16px; background:var(--white); box-shadow:0 8px 20px rgba(0,0,0,.12); overflow:hidden; opacity:0; transform:translateY(16px) scale(.8); transition:transform .6s var(--ease), opacity .4s; }
-.spread img{ width:100%; height:100%; object-fit:contain; padding:4px; }
-.tile:hover .spread span, .tile:focus-visible .spread span{ opacity:1; }
-.tile:hover .spread span:nth-child(1){ transform:translateX(calc(104px * var(--dir))) translateY(-4px) rotate(-10deg); }
-.tile:hover .spread span:nth-child(2){ transform:translateX(calc(52px * var(--dir))) translateY(-14px) rotate(-2deg); transition-delay:.05s; }
-.tile:hover .spread span:nth-child(3){ transform:rotate(8deg); transition-delay:.1s; }
-@media (hover:none){ .spread{ display:none; } }
+/* ===================== 3. PICK THE SHAPE (bento: white product tiles, stat card, big photo card) ===================== */
+.shape{ display:grid; gap:12px; }
+.shape__cols{ display:grid; grid-auto-flow:column; grid-auto-columns:43vw; gap:10px; overflow-x:auto; scrollbar-width:none; margin-inline:calc(var(--gutter) * -1); padding-inline:var(--gutter); scroll-snap-type:x proximity; }
+.shape__cols::-webkit-scrollbar{ display:none; }
+.sc{ display:flex; flex-direction:column; gap:10px; min-width:0; scroll-snap-align:start; }
+.st{ position:relative; display:block; border-radius:22px; background:var(--white); overflow:hidden; text-align:start; text-decoration:none; isolation:isolate; }
+.st img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:6% 6% 26%; mix-blend-mode:multiply; transition:transform .8s var(--ease); }
+.st.is-photo img{ object-fit:cover; padding:0; mix-blend-mode:normal; }
+.st:hover img{ transform:scale(1.05); }
+.st__lbl{ position:absolute; inset-inline:12px; bottom:10px; display:flex; justify-content:space-between; align-items:flex-end; gap:8px; }
+.st__lbl b{ display:block; font-size:14px; font-weight:600; line-height:1.3; }
+.st__lbl small{ display:block; font-size:12px; color:var(--ink-2); }
+.st.is-photo .st__lbl{ color:var(--white); }
+.st.is-photo .st__lbl small{ color:rgba(255,255,255,.8); }
+.st.is-photo::after{ content:""; position:absolute; inset:0; background:linear-gradient(transparent 55%, rgba(0,0,0,.45)); z-index:0; }
+.st.is-photo .st__lbl{ z-index:1; }
+.st__go{ width:30px; height:30px; flex:none; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease); }
+.st:hover .st__go{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+.st--a{ aspect-ratio:1 / .9; } .st--short{ aspect-ratio:1 / .68; } .st--tall{ aspect-ratio:1 / 1.45; } .st--sq{ aspect-ratio:1 / 1.12; } .st--full{ aspect-ratio:1 / 2.1; }
+.st--short img{ padding:4% 6% 30%; }
+.srow{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding-inline:2px; height:40px; }
+.srow .stack span{ width:36px; height:36px; background:var(--white); border-color:var(--page); }
+.srow__plus{ width:36px; height:36px; border-radius:50%; display:grid; place-items:center; color:var(--ink-2); }
+.sstat{ position:relative; z-index:2; margin:-46px 10px 0; padding:14px 10px; border-radius:18px; background:rgba(255,255,255,.96); border:1px solid var(--g200); text-align:center; box-shadow:0 12px 30px rgba(0,0,0,.06); }
+.sstat b{ display:block; font:600 clamp(22px, 2.2vw, 30px)/1.1 var(--f-latin); letter-spacing:-.03em; }
+.sstat span{ display:block; margin-top:4px; font-size:12px; line-height:1.4; color:var(--ink-2); }
+.shape__big{ position:relative; min-height:clamp(320px, 88vw, 420px); border-radius:26px; overflow:hidden; color:var(--white); display:flex; flex-direction:column; justify-content:space-between; padding:clamp(18px, 2.4vw, 32px); isolation:isolate; background:#8c8178; }
+.shape__big > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transform:scale(1.06); }
+.shape__big::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.08) 55%, rgba(0,0,0,.3)); }
+.shape__big h2{ font-size:clamp(36px, 4.6vw, 68px); font-weight:500; line-height:1; letter-spacing:-.04em; max-width:10ch; }
+html[lang="ar"] .shape__big h2{ font-weight:600; line-height:1.3; letter-spacing:0; }
+.shape__big p{ margin-top:12px; font-size:14px; max-width:30ch; color:rgba(255,255,255,.88); }
+.shape__bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.sbtn{ width:44px; height:44px; border-radius:50%; border:1.5px solid rgba(255,255,255,.8); display:grid; place-items:center; color:var(--white); transition:transform .5s var(--ease), background-color .3s; }
+.sbtn:hover{ background:rgba(255,255,255,.15); transform:rotate(calc(-45deg * var(--dir) * -1)); }
+.sseg{ display:flex; gap:4px; padding:4px; border-radius:var(--r-pill); background:rgba(255,255,255,.22); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+.sseg a{ height:40px; padding-inline:16px; display:inline-flex; align-items:center; gap:8px; border-radius:var(--r-pill); color:var(--white); font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; transition:background-color .3s, color .3s; }
+.sseg a.is-on, .sseg a:hover{ background:var(--white); color:var(--black); }
+.sav{ width:44px; height:44px; border-radius:50%; background:var(--white); overflow:hidden; border:2px solid rgba(255,255,255,.8); }
+.sav img{ width:100%; height:100%; object-fit:contain; padding:3px; }
+@media (min-width:768px){ .shape__cols{ grid-auto-columns:minmax(0, 1fr); overflow:visible; margin-inline:0; padding-inline:0; } }
+@media (min-width:1024px){
+  .shape{ grid-template-columns:minmax(0, 1.55fr) minmax(0, 1fr); gap:16px; align-items:stretch; }
+  .shape__cols{ gap:16px; }
+  .sc{ gap:16px; }
+  .sc > .st:last-child{ flex:1; aspect-ratio:auto; min-height:220px; }
+  .shape__big{ min-height:0; }
+}
 
 /* ===================== 4. STATEMENT (words fill in on scroll) ===================== */
-.stmt{ padding-block:var(--section); }
+.stmt{ padding-block:var(--section) 0; }
 .stmt p{ font-size:clamp(28px, 4.4vw, 64px); font-weight:500; line-height:1.15; letter-spacing:-.035em; max-width:22ch; margin-inline:auto; text-align:center; text-wrap:balance; }
 html[lang="ar"] .stmt p{ font-weight:600; line-height:1.55; letter-spacing:0; max-width:24ch; }
 .stmt .w{ opacity:.16; transition:opacity .2s; }
@@ -369,7 +411,7 @@ html[lang="ar"] .cols__head h2{ font-weight:600; line-height:1.45; letter-spacin
 .crow__name{ font-size:clamp(20px, 2.4vw, 30px); font-weight:500; letter-spacing:-.02em; line-height:1.2; }
 .crow__meta{ display:block; font-size:13px; opacity:.65; margin-top:4px; letter-spacing:0; }
 .crow__go{ width:40px; height:40px; border-radius:50%; display:grid; place-items:center; border:1px solid rgba(255,255,255,.3); transition:transform .5s var(--ease), background-color .3s, border-color .3s; }
-.crow:hover, .crow.is-on{ background:var(--orange); color:var(--black); border-bottom-color:transparent; }
+.crow:hover, .crow.is-on{ background:var(--rose); color:var(--black); border-bottom-color:transparent; }
 .crow:hover .crow__go, .crow.is-on .crow__go{ background:var(--white); border-color:var(--white); transform:rotate(calc(-45deg * var(--dir) * -1)); }
 .crow__thumb{ display:none; }
 @media (hover:none), (max-width:1023px){
@@ -394,7 +436,7 @@ html[lang="ar"] .cols__head h2{ font-weight:600; line-height:1.45; letter-spacin
 .fbtn{ display:inline-flex; align-items:center; gap:8px; height:40px; padding-inline:16px; border-radius:var(--r-pill); background:var(--white); font-size:14px; font-weight:500; white-space:nowrap; transition:background-color .3s, color .3s; }
 .fbtn sup{ font:600 11px/1 var(--f-latin); opacity:.55; }
 .fbtn[aria-pressed="true"]{ background:var(--black); color:var(--white); }
-.fbtn--col{ background:var(--orange); }
+.fbtn--col{ background:var(--rose); }
 .sortw{ position:relative; flex:none; }
 .sortw select{ appearance:none; height:40px; padding-inline:16px 36px; border-radius:var(--r-pill); background:var(--white); font-size:14px; font-weight:500; }
 html[dir="rtl"] .sortw select{ padding-inline:16px 36px; }
@@ -404,13 +446,13 @@ html[dir="rtl"] .sortw select{ padding-inline:16px 36px; }
 @media (min-width:768px){ .pgrid{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; } }
 @media (min-width:1200px){ .pgrid{ grid-template-columns:repeat(4, minmax(0,1fr)); } }
 .card{ position:relative; display:flex; flex-direction:column; background:var(--white); border-radius:20px; padding:8px; }
-.card__media{ position:relative; aspect-ratio:1 / 1.08; border-radius:14px; overflow:hidden; background:var(--tint, var(--g100)); }
+.card__media{ position:relative; aspect-ratio:1 / 1.08; border-radius:14px; overflow:hidden; background:var(--white); }
 .card__media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; padding:8%; transition:transform .9s var(--ease); }
 .card__media.is-photo img{ object-fit:cover; padding:0; mix-blend-mode:normal; }
 .card:hover .card__media img{ transform:scale(1.06); }
 .card__off{ position:absolute; top:10px; inset-inline-start:10px; height:26px; padding-inline:10px; border-radius:var(--r-pill); background:var(--white); font:600 12px/26px var(--f-latin); }
 .card__add{ position:absolute; bottom:10px; inset-inline-end:10px; width:44px; height:44px; border-radius:50%; background:var(--black); color:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease), background-color .3s; }
-.card__add:hover{ background:var(--orange); color:var(--black); transform:rotate(90deg); }
+.card__add:hover{ background:var(--rose); color:var(--black); transform:rotate(90deg); }
 .card__body{ padding:12px 6px 6px; display:grid; gap:4px; }
 .card__name{ font-size:15px; font-weight:500; line-height:1.35; }
 .card__name a{ text-decoration:none; }
@@ -447,8 +489,8 @@ html[lang="ar"] .size__copy h2{ font-weight:600; line-height:1.45; letter-spacin
 .range output{ font-family:var(--f-latin); font-weight:600; }
 input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:6px; background:linear-gradient(to var(--rdir, right), var(--black) var(--p, 50%), var(--g200) var(--p, 50%)); outline-offset:6px; }
 html[dir="rtl"] input[type=range]{ --rdir:left; }
-input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:28px; height:28px; border-radius:50%; background:var(--orange); border:4px solid var(--white); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:grab; }
-input[type=range]::-moz-range-thumb{ width:22px; height:22px; border-radius:50%; background:var(--orange); border:4px solid var(--white); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:grab; }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:28px; height:28px; border-radius:50%; background:var(--rose); border:4px solid var(--white); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:grab; }
+input[type=range]::-moz-range-thumb{ width:22px; height:22px; border-radius:50%; background:var(--rose); border:4px solid var(--white); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:grab; }
 .size__res{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .size__res div{ background:var(--page); border-radius:16px; padding:14px; }
 .size__res span{ display:block; font-size:12px; color:var(--ink-2); }
@@ -537,20 +579,67 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
 <main id="main">
 <!-- 1 · BANNER   → Vitrin: category banner (image + title from theme settings) -->
 <section class="banner container" aria-labelledby="bTitle">
-  <div class="banner__card" id="bannerCard">
-    <div class="banner__stripe" id="bStripe"></div>
-    <div class="banner__top"><span data-t="bTop"></span><a href="#all" data-t="bShop"></a></div>
-    <div class="banner__intro">
-      <h1 id="bTitle"><span class="line-mask"><span data-t="bLine1"></span></span><span class="line-mask"><span data-t="bLine2"></span></span></h1>
-      <p class="banner__sub"><i id="bSubIcon"></i><span id="bSub"></span></p>
+  <div class="bn" id="bannerCard">
+    <nav class="bn__nav" id="bNav" aria-label="Table types"></nav>
+    <a class="bn__all" href="#all"><i class="flip" id="bAllIco"></i><span data-t="bAll"></span></a>
+    <p class="bn__word" aria-hidden="true"><span class="bn__wordwrap" id="bWord"></span></p>
+    <a class="bn__cta" id="bCta" href="#shape"><i class="flip" id="bCtaIco"></i><span data-t="bShop"></span></a>
+    <div class="bn__stage" id="bStage">
+      <div class="bn__orbit" id="bOrbit"></div>
+      <div class="bn__table" id="bTable"><img src="media/tables/t03.webp" alt="" width="1100" height="1100" fetchpriority="high"></div>
+      <div id="bBubbles"></div>
     </div>
-    <p class="banner__word" id="bWord" aria-hidden="true"></p>
-    <div class="banner__table" id="bTable"><img src="media/tables/t03.webp" alt="" width="1100" height="1100" fetchpriority="high"></div>
-    <a class="spot" id="bSpot" href="#all"><span class="spot__card"><span class="spot__name" data-t="bSpot"></span><span class="spot__price" id="bSpotPrice"></span><span class="spot__go flip" id="bSpotGo"></span></span><span class="spot__line"></span><span class="spot__dot"></span></a>
+    <div class="bn__copy">
+      <h1 id="bTitle"><span class="line-mask"><span data-t="bLine1"></span></span><span class="line-mask"><span data-t="bLine2"></span></span><span class="line-mask"><span data-t="bLine3"></span></span></h1>
+      <p id="bSub"></p>
+    </div>
+    <div class="bn__ribbon" aria-hidden="true"><svg id="bRibbon"></svg></div>
   </div>
 </section>
 
-<!-- 2 · INTRO BENTO   → Vitrin: category description + theme settings -->
+<!-- 2 · PICK THE SHAPE   → Vitrin: sub-categories (tiles) + theme settings (photo, headline) -->
+<section class="section container" id="shape" aria-labelledby="shapeTitle">
+  <p class="eyebrow" data-t="typesEy" style="margin-bottom:16px"></p>
+  <div class="shape">
+    <div class="shape__cols" id="shapeCols"></div>
+    <div class="shape__big" data-reveal>
+      <img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730">
+      <div><h2 id="shapeTitle" data-t="typesH"></h2><p data-t="shapeTx"></p></div>
+      <div class="shape__bar">
+        <a class="sbtn flip" href="#all" id="shapeGo" data-t-aria="cardBtn"></a>
+        <div class="sseg" id="shapeSeg"></div>
+        <span class="sav"><img src="media/tables/t03.webp" alt="" loading="lazy"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · STATEMENT -->
+<section class="stmt container" aria-label="ket"><p id="stmt"></p></section>
+
+<!-- 4 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->
+<section class="section container" id="all" aria-labelledby="gridTitle">
+  <div class="grid__head">
+    <div><p class="eyebrow" data-t="gridEy"></p><h2 class="h-xl" id="gridTitle" style="margin-top:10px"><span data-t="gridH"></span><sup id="gridSup"></sup></h2></div>
+  </div>
+  <div class="bar">
+    <div class="filters" id="filters" role="group"></div>
+    <label class="sortw"><span class="visually-hidden" data-t="sort"></span><select id="sort"></select><span id="sortIco"></span></label>
+  </div>
+  <p class="count" id="count" aria-live="polite"></p>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+
+<!-- 5 · COLLECTIONS -->
+<section class="section container" aria-labelledby="colTitle">
+  <div class="cols" id="cols">
+    <div class="cols__head"><p class="eyebrow" data-t="colEy"></p><h2 id="colTitle" data-t="colH"></h2></div>
+    <div class="cols__list" id="colList"></div>
+    <div class="cfloat" id="cfloat"><img alt=""></div>
+  </div>
+</section>
+
+<!-- 6 · INTRO BENTO   → Vitrin: category description + theme settings -->
 <section class="section container" aria-labelledby="whyTitle">
   <div class="intro__grid">
     <div class="intro__left">
@@ -576,39 +665,6 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
       </div>
     </div>
   </div>
-</section>
-
-<!-- 3 · SHOP BY TYPE   → Vitrin: sub-categories -->
-<section class="section container" aria-labelledby="typesTitle">
-  <div class="types__head">
-    <div><p class="eyebrow eyebrow--o" data-t="typesEy"></p><h2 class="h-xl" id="typesTitle" data-t="typesH" style="margin-top:10px"></h2></div>
-  </div>
-  <div class="types__grid" id="types"></div>
-</section>
-
-<!-- 4 · STATEMENT -->
-<section class="stmt container" aria-label="ket"><p id="stmt"></p></section>
-
-<!-- 5 · COLLECTIONS -->
-<section class="container" aria-labelledby="colTitle">
-  <div class="cols" id="cols">
-    <div class="cols__head"><p class="eyebrow" data-t="colEy"></p><h2 id="colTitle" data-t="colH"></h2></div>
-    <div class="cols__list" id="colList"></div>
-    <div class="cfloat" id="cfloat"><img alt=""></div>
-  </div>
-</section>
-
-<!-- 6 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->
-<section class="section container" id="all" aria-labelledby="gridTitle">
-  <div class="grid__head">
-    <div><p class="eyebrow" data-t="gridEy"></p><h2 class="h-xl" id="gridTitle" style="margin-top:10px"><span data-t="gridH"></span><sup id="gridSup"></sup></h2></div>
-  </div>
-  <div class="bar">
-    <div class="filters" id="filters" role="group"></div>
-    <label class="sortw"><span class="visually-hidden" data-t="sort"></span><select id="sort"></select><span id="sortIco"></span></label>
-  </div>
-  <p class="count" id="count" aria-live="polite"></p>
-  <div class="pgrid" id="pgrid"></div>
 </section>
 
 <!-- 7 · SIZE GUIDE -->
@@ -675,11 +731,11 @@ const moneyTxt = n => `${fmt(n)} ${STORE.currency[lang]}`;
 const off = p => Math.round((1 - p.price / p.was) * 100);
 const img = id => `${M}${id}.webp`;
 const P = STORE.products, byId = Object.fromEntries(P.map(p => [p.id, p]));
-const typeOf = id => STORE.types.find(x => x.id === id);
 const ARROW = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 ICON.arrow = ARROW; ICON.ne = '<path d="M7 17 17 7M9 7h8v8"/>';
 ICON.coffee = '<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8 3.5c-.6 1 .6 2-.2 3M11.5 3.5c-.6 1 .6 2-.2 3"/>';
 ICON.people = '<circle cx="8.5" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.4"/><path d="M3 19c.8-3.4 3-5 5.5-5s4.7 1.6 5.5 5M14 14.2c2.6-.4 5 .8 6 4.3"/>';
+ICON.spark = '<path d="M12 3c.6 4.6 2.4 6.4 9 9-6.6 2.6-8.4 4.4-9 9-.6-4.6-2.4-6.4-9-9 6.6-2.6 8.4-4.4 9-9Z"/>';
 ICON.book = '<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6v13c-2.5-1.5-5.5-1.5-8-.5V5.5ZM20 5.5c-2.5-1-5.5-1-8 .5v13c2.5-1.5 5.5-1.5 8-.5V5.5Z"/>';
 const minPrice = Math.min(...P.map(p => p.price)), maxOff = Math.max(...P.map(off));
 
@@ -691,9 +747,9 @@ $('#logo').innerHTML = logo(64);
 $('#ldLogo').innerHTML = logo(140);
 $('#footerSmile').innerHTML = smileMark(64);
 $('#wa').innerHTML = icon('wa', 28);
-['#cardArr', '#sizeArr', '#helpArr'].forEach(s => $(s).innerHTML = icon('arrow', 18, 1.8));
+['#cardArr', '#sizeArr', '#helpArr', '#shapeGo'].forEach(s => $(s).innerHTML = icon('arrow', 18, 1.8));
+['#bAllIco', '#bCtaIco'].forEach(s => $(s).innerHTML = icon('arrow', 14, 2));
 $('#sortIco').innerHTML = icon('chev', 16, 1.8);
-$('#bSubIcon').innerHTML = icon('check', 14, 2.2);
 $('#social').innerHTML = [['snap', 'Snapchat'], ['ig', 'Instagram'], ['tiktok', 'TikTok'], ['wa', 'WhatsApp'], ['mail', 'Email'], ['globe', 'Website']].map(([i, n]) => `<a href="#" data-toast="soon" aria-label="${n}">${icon(i, 20)}</a>`).join('');
 const grp = () => `<div class="marquee__group">${[1, 2, 3, 1, 2, 3].map(i => `<span data-t="ann${i}"></span>`).join('')}</div>`;
 $('#marquee').innerHTML = grp() + grp().replace('class="marquee__group"', 'class="marquee__group" aria-hidden="true"');
@@ -703,14 +759,38 @@ const state = { type: 'all', col: null, sort: 'feat' };
 let cart = 0;
 
 /* ---------------- render (re-run on language switch) ---------------- */
+/* banner: stat bubbles ride the white orbit; the ribbon text runs along an arch */
+const orbit = { intro: 0, scroll: 0 }, ANG = () => innerWidth < 768 ? [200, 245, 330] : [160, 205, 250];
+const bubbles = () => [[P.length, 'bDesigns'], [`${maxOff}%`, 'bOff'], [fmt(minPrice), 'bFrom']];
+function placeOrbit() {
+  const w = $('#bStage').offsetWidth, bw = parseFloat(getComputedStyle($('#bOrbit')).borderTopWidth) || 12, R = w / 2 - bw / 2;
+  $$('#bBubbles .bn__b').forEach((el, i) => {
+    const a = (ANG()[i] + orbit.intro + orbit.scroll) * Math.PI / 180;
+    el.style.translate = `${Math.cos(a) * R * (lang === 'ar' ? -1 : 1)}px ${Math.sin(a) * R}px`;
+  });
+}
+const rib = { off: 0, unit: 1, tp: null };
+function drawRibbon() {
+  const svg = $('#bRibbon'), W = $('#bannerCard').offsetWidth, mob = W < 768;
+  const bw = mob ? 40 : Math.round(Math.min(74, W * .052)), H = mob ? 86 : Math.round(W * .1);
+  const end = H + bw * 1.2, ctrl = 6 - H - bw * .2 + bw * .5;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.style.height = H + 'px';
+  const word = `${t('ribbon')} ✦ `;
+  svg.innerHTML = `<path id="ribP" d="M ${-W * .12} ${end} Q ${W / 2} ${ctrl} ${W * 1.12} ${end}" fill="none" stroke="#000" stroke-width="${bw}"/>
+    <text font-size="${Math.round(bw * .5)}" dominant-baseline="central"><textPath href="#ribP" id="ribT">${word.repeat(14)}</textPath></text>`;
+  rib.tp = $('#ribT');
+  rib.unit = rib.tp.getComputedTextLength() / 14 || 300;
+}
 function renderBanner() {
   const word = t('bWord');
   // Latin letters are split for the rise-in; Arabic stays whole so the letters keep joining
   $('#bWord').innerHTML = lang === 'en' ? [...word].map(c => `<span class="ch">${c}</span>`).join('') : `<span class="ch">${word}</span>`;
-  $('#bSub').textContent = t('bSub', { n: P.length, p: moneyTxt(minPrice) });
-  $('#bSpotPrice').innerHTML = `<b>${money(byId.t03.price)}</b><s>${fmt(byId.t03.was)}</s>`;
-  $('#bSpotGo').innerHTML = icon('arrow', 16, 1.8);
+  $('#bNav').innerHTML = STORE.types.map(x => `<a href="#all" data-type="${x.id}">${L(x)}</a>`).join('');
+  $('#bSub').textContent = t('bSub');
+  $('#bBubbles').innerHTML = bubbles().map(([n, k]) => `<span class="bn__b"><span class="bn__bi"><b>${n}</b><span>${t(k)}</span></span></span>`).join('');
+  placeOrbit(); drawRibbon();
 }
+$('#bNav').addEventListener('click', e => { const a = e.target.closest('[data-type]'); if (!a) return; e.preventDefault(); setFilter({ type: a.dataset.type, col: null }); goGrid(); });
 function renderIntro() {
   const chips = [['coffee', 'chip1'], ['people', 'chip2'], ['book', 'chip3']];
   $('#chips').innerHTML = chips.map(([i, k]) => `<span class="pill">${icon(i, 16)}<span>${t(k)}</span></span>`).join('');
@@ -719,7 +799,7 @@ function renderIntro() {
   $('#cardEy').textContent = t('cardEy', { n: P.length });
   $('#saleChip').innerHTML = `${icon('boxcart', 15)}<span>${t('saleChip', { n: maxOff })}</span>`;
   $('#statFrom').innerHTML = money(minPrice);
-  $('#statStack').innerHTML = STORE.types.map(x => `<span style="--tint:${x.tint}"><img src="${img(x.hero)}" alt="" loading="lazy"></span>`).join('');
+  $('#statStack').innerHTML = STORE.types.map(x => `<span><img src="${img(x.hero)}" alt="" loading="lazy"></span>`).join('');
   $('#statTx').textContent = t('statTx', { n: P.length, k: STORE.types.length });
 }
 $('#acc').addEventListener('click', e => {
@@ -728,23 +808,37 @@ $('#acc').addEventListener('click', e => {
   $$('#acc .acc__btn').forEach(x => x.setAttribute('aria-expanded', 'false'));
   b.setAttribute('aria-expanded', String(!on));
 });
-function renderTypes() {
-  $('#types').innerHTML = STORE.types.map(x => {
-    const items = P.filter(p => p.type === x.id), n = items.length;
-    const cut = items.filter(p => !p.photo), thumbs = (cut.length > 3 ? cut.filter(p => p.id !== x.hero) : cut).slice(0, 3);
-    return `<button class="tile" type="button" data-type="${x.id}" style="--tint:${x.tint}">
-      <span><span class="tile__name">${L(x)}</span><span class="tile__count" style="display:block">${n === 1 ? t('piece1') : n === 2 ? t('pieces2') : t('pieces', { n })}</span></span>
-      <span class="tile__go">${icon('arrow', 18, 1.8)}</span>
-      <img class="tile__img" src="${img(x.hero)}" alt="" loading="lazy">
-      <span class="spread">${thumbs.map(p => `<span><img src="${img(p.id)}" alt="" loading="lazy"></span>`).join('')}</span>
-    </button>`;
-  }).join('');
-  $$('#types .tile__go svg').forEach(s => s.parentElement.classList.add('flip'));
+/* pick the shape: white tiles in staggered columns (the third peeks and scrolls on phones) */
+function renderShape() {
+  const ty = id => STORE.types.find(x => x.id === id);
+  const pieces = n => n === 1 ? t('piece1') : n === 2 ? t('pieces2') : t('pieces', { n });
+  const lbl = (name, n) => `<span class="st__lbl"><span><b>${name}</b><small>${pieces(n)}</small></span><span class="st__go flip">${icon('arrow', 14, 2)}</span></span>`;
+  const tile = (id, cls) => `<button class="st ${cls}" type="button" data-type="${id}"><img src="${img(ty(id).hero)}" alt="" loading="lazy">${lbl(L(ty(id)), P.filter(p => p.type === id).length)}</button>`;
+  const col = (id, cls, im, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;
+    return `<button class="st ${cls}${ph ? ' is-photo' : ''}" type="button" data-col="${id}" aria-label="${L(c)}"><img src="${img(im)}" alt="" loading="lazy">${label ? lbl(L(c), P.filter(p => p.col === id).length) : ''}</button>`; };
+  $('#shapeCols').innerHTML = `
+    <div class="sc">${tile('coffee', 'st--a')}
+      <div class="srow"><button class="stack" type="button" data-type="all" aria-label="${t('shapeAll')}">${STORE.types.map(x => `<span><img src="${img(x.hero)}" alt=""></span>`).join('')}</button><span class="srow__plus">${icon('spark', 20, 1.4)}</span></div>
+      ${tile('side', 'st--tall')}</div>
+    <div class="sc">${tile('sets', 'st--short')}${col('tm', 'st--short', 'life1')}
+      <div class="sstat"><b>${P.length}</b><span>${t('shapeStat', { k: STORE.types.length, p: moneyTxt(minPrice) })}</span></div>
+      ${tile('console', 'st--sq')}</div>
+    <div class="sc">${col('laxi', 'st--full', 't16', true)}</div>`;
+  $('#shapeSeg').innerHTML = `<a href="#all" data-seg="feat" class="${state.sort === 'disc' ? '' : 'is-on'}">${t('shapeAll')}</a><a href="#all" data-seg="disc" class="${state.sort === 'disc' ? 'is-on' : ''}">${t('shapeSale')}</a>`;
 }
-$('#types').addEventListener('click', e => { const b = e.target.closest('.tile'); if (b) { setFilter({ type: b.dataset.type, col: null }); goGrid(); } });
+$('#shapeCols').addEventListener('click', e => {
+  const b = e.target.closest('[data-type], [data-col]'); if (!b) return;
+  setFilter(b.dataset.col ? { col: b.dataset.col, type: 'all' } : { type: b.dataset.type, col: null }); goGrid();
+});
+$('#shapeSeg').addEventListener('click', e => {
+  const a = e.target.closest('[data-seg]'); if (!a) return; e.preventDefault();
+  $$('#shapeSeg a').forEach(x => x.classList.toggle('is-on', x === a));
+  state.sort = a.dataset.seg; setFilter({ type: 'all', col: null }); goGrid();
+});
+$('#shapeGo').addEventListener('click', e => { e.preventDefault(); goGrid(); });
 
 function renderStmt() {
-  const pill = (id, cut) => `<span class="ipill${cut ? ' ipill--cut' : ''}" style="background:${cut ? 'var(--mint)' : '#d8d3cc'}"><img src="${img(id)}" alt="" loading="lazy"></span>`;
+  const pill = (id, cut) => `<span class="ipill${cut ? ' ipill--cut' : ''}" style="background:${cut ? 'var(--blush)' : '#d8d3cc'}"><img src="${img(id)}" alt="" loading="lazy"></span>`;
   $('#stmt').innerHTML = t('stmt').split(' ').map(w => w === '[img]' ? pill('life1') : w === '[img2]' ? pill('t11', true) : `<span class="w">${w}</span>`).join(' ');
   if (G) stmtST && stmtST.refresh();
 }
@@ -777,9 +871,8 @@ $('#filters').addEventListener('click', e => {
 $('#sort').addEventListener('change', e => { state.sort = e.target.value; renderGrid(true); });
 
 const cardHTML = p => {
-  const ty = typeOf(p.type);
   return `<article class="card" data-id="${p.id}">
-    <div class="card__media${p.photo ? ' is-photo' : ''}" style="--tint:${ty.tint}33"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600">
+    <div class="card__media${p.photo ? ' is-photo' : ''}"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600">
       <span class="card__off" dir="ltr">−${off(p)}%</span>
       <button class="card__add" type="button" data-add="${p.id}" aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></div>
     <div class="card__body"><h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p></div>
@@ -826,10 +919,10 @@ function renderSize() {
   $('#sofa').style.setProperty('--p', ((s - 160) / 160 * 100) + '%');
   const k = 340 / 320, sw = s * k, tw = tl * k, cx = 200;
   $('#plan').innerHTML = `
-    <rect x="${cx - sw / 2}" y="40" width="${sw}" height="74" rx="18" fill="#D4C4FF"/>
+    <rect x="${cx - sw / 2}" y="40" width="${sw}" height="74" rx="18" fill="#FCDFDB"/>
     <rect x="${cx - sw / 2 + 10}" y="52" width="${sw - 20}" height="46" rx="12" fill="#fff" fill-opacity=".55"/>
-    <ellipse cx="${cx}" cy="${200}" rx="${tw / 2}" ry="44" fill="#F7F976" stroke="#000" stroke-width="1.5"/>
-    <path d="M${cx + tw / 2 + 14} 114 V156" stroke="#FF6517" stroke-width="2" stroke-dasharray="4 4"/>
+    <ellipse cx="${cx}" cy="${200}" rx="${tw / 2}" ry="44" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <path d="M${cx + tw / 2 + 14} 114 V156" stroke="#000" stroke-width="2" stroke-dasharray="4 4"/>
     <text x="${cx + tw / 2 + 22}" y="140" font-family="Inter Tight" font-size="13" font-weight="600">40–45</text>
     <path d="M${cx - tw / 2} 268 H${cx + tw / 2}" stroke="#000" stroke-width="1.5"/><path d="M${cx - tw / 2} 262 v12 M${cx + tw / 2} 262 v12" stroke="#000" stroke-width="1.5"/>
     <text x="${cx}" y="290" text-anchor="middle" font-family="Inter Tight" font-size="14" font-weight="600">≈ ${tl} cm</text>
@@ -847,7 +940,7 @@ function applyLang() {
   $('#langBtn').textContent = lang === 'ar' ? 'EN' : 'ع';
   $('#langBtn').setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
   $('#vatNo').textContent = t('vatNo', { n: STORE.vat }); $('#crNo').textContent = t('crNo', { n: STORE.cr });
-  renderBanner(); renderIntro(); renderTypes(); renderStmt(); renderCols(); renderControls(); renderGrid(false); renderSize();
+  renderBanner(); renderShape(); renderIntro(); renderStmt(); renderCols(); renderControls(); renderGrid(false); renderSize();
   if (G) requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 $('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(); };
@@ -893,13 +986,15 @@ if (fine && G) {
 /* ---------------- scroll motion ---------------- */
 function scrollMotion() {
   if (!G) return;
-  // banner: the table lifts and turns as the page scrolls; the word sinks
-  gsap.to('#bTable', { yPercent: -16, rotation: lang === 'ar' ? 6 : -6, ease: 'none', scrollTrigger: { trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('#bWord', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('#bStripe', { xPercent: 8, ease: 'none', scrollTrigger: { trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true } });
+  // banner: the table turns, the bubbles travel along the orbit, the word sinks and the ribbon rises
+  const bt = () => ({ trigger: '#bannerCard', start: 'top top', end: 'bottom top', scrub: true });
+  gsap.to('#bTable', { rotation: lang === 'ar' ? -10 : 10, yPercent: -6, ease: 'none', scrollTrigger: bt() });
+  gsap.to(orbit, { scroll: 50, ease: 'none', onUpdate: placeOrbit, scrollTrigger: bt() });
+  gsap.to('#bWord', { yPercent: 30, ease: 'none', scrollTrigger: bt() });
+  gsap.fromTo('#bRibbon', { yPercent: 30 }, { yPercent: -10, ease: 'none', scrollTrigger: bt() });
   $$('[data-reveal]').forEach(el => gsap.from(el, { y: 50, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } }));
   $$('[data-par]').forEach(el => gsap.fromTo(el, { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
-  gsap.from('.tile', { y: 60, opacity: 0, duration: .9, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: '#types', start: 'top 82%' } });
+  gsap.from('#shapeCols .sc > *', { y: 60, opacity: 0, duration: .9, stagger: .06, ease: 'power3.out', scrollTrigger: { trigger: '#shapeCols', start: 'top 85%' } });
   gsap.from('.crow', { y: 30, opacity: 0, duration: .8, stagger: .07, ease: 'power3.out', scrollTrigger: { trigger: '#colList', start: 'top 85%' } });
   gsap.from('.cols', { clipPath: 'inset(8% 6% 8% 6% round 24px)', duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: '#cols', start: 'top 85%' } });
   // statement: words fill in one by one while scrolling through it
@@ -913,29 +1008,42 @@ function bannerIn() {
   const tl = gsap.timeline();
   tl.from('#bannerCard', { scale: .94, borderRadius: 60, duration: 1.3, ease: 'expo.out' }, 0)
     .from('#bWord .ch', { yPercent: 110, duration: 1.2, stagger: .05, ease: 'expo.out' }, .1)
-    .from('#bTable', { yPercent: -70, rotation: lang === 'ar' ? 25 : -25, opacity: 0, duration: 1.4, ease: 'bounce.out' }, .25)
-    .from('#bStripe', { scaleX: 0, duration: 1.2, ease: 'expo.out' }, .2)
-    .from('.banner__intro .line-mask > span', { yPercent: 110, duration: 1, stagger: .08, ease: 'expo.out' }, .45)
-    .from('.banner__sub, .banner__top', { opacity: 0, y: 12, duration: .8, stagger: .06 }, .7)
-    .from('#bSpot .spot__dot', { scale: 0, duration: .6, ease: 'back.out(2.5)' }, 1.2)
-    .from('#bSpot .spot__line', { scaleX: 0, duration: .4, ease: 'power3.out' }, 1.45)
-    .from('#bSpot .spot__card', { opacity: 0, x: () => (lang === 'ar' ? 16 : -16), duration: .6, ease: 'power3.out' }, 1.6)
+    .from('#bOrbit', { scale: .5, opacity: 0, duration: 1.4, ease: 'expo.out' }, .3)
+    .from('#bTable', { yPercent: -30, rotation: lang === 'ar' ? 24 : -24, opacity: 0, duration: 1.5, ease: 'expo.out' }, .35)
+    .from(orbit, { intro: -80, duration: 2, ease: 'expo.out', onUpdate: placeOrbit }, .45)
+    .from('#bBubbles .bn__bi', { scale: 0, duration: .7, stagger: .1, ease: 'back.out(2)' }, .6)
+    .from('.bn__copy .line-mask > span', { yPercent: 110, duration: 1, stagger: .08, ease: 'expo.out' }, .5)
+    .from('#bSub, .bn__all, .bn__nav a', { opacity: 0, y: 12, duration: .8, stagger: .04 }, .8)
+    .from('#bCta', { opacity: 0, duration: .8 }, .7)
+    .from('.bn__ribbon', { yPercent: 100, duration: 1.3, ease: 'expo.out' }, .6)
     .from('#logo .klogo__word', { y: 30, opacity: 0, duration: .9, ease: 'back.out(1.7)' }, .2);
-  // the hotspot breathes so it reads as tappable
 }
+
+/* ribbon text keeps running; scrolling speeds it up */
+function ribbonRun() {
+  if (!G) return;
+  gsap.ticker.add(() => {
+    if (!rib.tp) return;
+    const v = lenis ? Math.min(Math.abs(lenis.velocity), 60) : 0;
+    rib.off = (rib.off + (.6 + v * .25) * (lang === 'ar' ? 1 : -1) + rib.unit) % rib.unit;
+    rib.tp.setAttribute('startOffset', rib.off - rib.unit);
+  });
+}
+addEventListener('resize', () => { placeOrbit(); drawRibbon(); });
 
 /* ---------------- loader ---------------- */
 function done() {
   root.classList.remove('is-loading');
   if (lenis) lenis.start();
-  scrollMotion(); bannerIn();
+  drawRibbon(); placeOrbit();   // re-measure now that the fonts are in
+  scrollMotion(); bannerIn(); ribbonRun();
   ScrollTrigger && G && ScrollTrigger.refresh();
 }
 function runLoader() {
   const ldr = $('#loader');
   if (!G) { done(); return; }
-  // ring of 8 tables in mixed shapes and brand tints
-  const pick = [['t03', 'circle', '#F7F976'], ['t12', 'arch', '#C6F7A6'], ['life1', 'sq', '#e9e7e4'], ['t01', 'pill', '#FCDFDB'], ['t08', 'circle', '#D4C4FF'], ['t17', 'sq', '#F4F4F4'], ['t15', 'arch', '#FCDFDB'], ['t02', 'circle', '#C6F7A6']];
+  // ring of 8 tables in mixed shapes on pink and grey
+  const pick = [['t03', 'circle', '#FCDFDB'], ['t12', 'arch', '#F4F4F4'], ['life1', 'sq', '#e9e7e4'], ['t01', 'pill', '#FCDFDB'], ['t08', 'circle', '#F4F4F4'], ['t17', 'sq', '#FCDFDB'], ['t15', 'arch', '#F4F4F4'], ['t02', 'circle', '#FCDFDB']];
   const ring = $('#ring');
   ring.innerHTML = pick.map(([id, sh, bg]) => `<span class="ring__t sh-${sh}${byId[id]?.photo ? ' is-photo' : ''}" style="--bg:${bg}"><img src="${img(id)}" alt=""></span>`).join('');
   const T = $$('.ring__t', ring);
