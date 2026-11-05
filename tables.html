@@ -66,7 +66,7 @@ const STORE = {
       skip: 'تخطَّ إلى المنتجات', home: 'الرئيسية', tables: 'الطاولات', search: 'بحث', account: 'حسابي', cart: 'السلة',
       ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'خصومات تصل إلى {n}٪ على الطاولات',
       loadLine: 'طاولات تجمع البيت', skipIntro: 'تخطَّ',
-      hLine1: 'كل طاولة يحتاجها بيتك،', hPink: 'بذوقك', hMark: 'أنت.', hSub: 'صُنعت لتجمع الأهل والضيوف حولها، كل يوم.', hShop: 'تسوّق الآن', hStatL: 'تصميم طاولات',
+      hLine1: 'كل طاولة يحتاجها بيتك،', hPink: 'بذوقك', hMark: 'أنت.', hSub: 'صُنعت لتجمع الأهل والضيوف حولها، كل يوم.', hShop: 'تسوّق الآن', hStatL: 'تصميم طاولات', liveTag: 'مباشر', liveNow: 'يتصفحون الآن', liveDay: '{n} زيارة اليوم',
       shapeTx: 'من قهوة الصباح إلى جلسة الضيوف، ابدأ بالشكل الذي يناسب مساحتك.', shapeAll: 'كل الطاولات', shapeSale: 'أعلى خصم', shapeStat: 'تصميم في {k} أنواع، تبدأ من {p}',
       whyEy: 'لماذا طاولات ket', whyA: 'اكتشف', whyB: 'طاولة لكل لحظة في البيت.',
       chip1: 'قهوة الصباح', chip2: 'جلسة الضيوف', chip3: 'ركن القراءة',
@@ -90,7 +90,7 @@ const STORE = {
       skip: 'Skip to products', home: 'Home', tables: 'Tables', search: 'Search', account: 'Account', cart: 'Cart',
       ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'Up to {n}% off tables',
       loadLine: 'Tables that bring the home together', skipIntro: 'Skip',
-      hLine1: 'Every table your home needs,', hPink: 'in your own', hMark: 'taste.', hSub: 'Made to gather family and guests around it, every day.', hShop: 'Shop now', hStatL: 'Table designs',
+      hLine1: 'Every table your home needs,', hPink: 'in your own', hMark: 'taste.', hSub: 'Made to gather family and guests around it, every day.', hShop: 'Shop now', hStatL: 'Table designs', liveTag: 'Live', liveNow: 'browsing now', liveDay: '{n} visits today',
       shapeTx: 'From morning coffee to guest evenings, start with the shape that fits your space.', shapeAll: 'All tables', shapeSale: 'Biggest discount', shapeStat: 'designs in {k} types, from {p}',
       whyEy: 'Why ket tables', whyA: 'Explore', whyB: 'a table for every moment at home.',
       chip1: 'Morning coffee', chip2: 'Guest evenings', chip3: 'Reading corner',
@@ -261,8 +261,34 @@ html[dir="rtl"] .hero__stat{ padding:12px 16px 12px 28px; }
 .hero__shop{ position:absolute; z-index:3; bottom:clamp(14px, 2.4vw, 32px); inset-inline-end:clamp(14px, 2.4vw, 32px); display:inline-flex; align-items:center; gap:18px; height:clamp(56px, 5vw, 72px); padding-inline:clamp(22px, 2vw, 30px) 8px; border-radius:var(--r-pill); background:var(--lime); color:var(--black); font-size:clamp(17px, 1.5vw, 22px); font-weight:600; text-decoration:none; box-shadow:0 14px 30px rgba(0,0,0,.12); }
 .hero__shop i{ width:clamp(42px, 3.8vw, 56px); height:clamp(42px, 3.8vw, 56px); border-radius:50%; background:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease); }
 .hero__shop:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+/* live visitors: a pill on the photo's top edge, opposite the designs pill */
+.live{ position:absolute; z-index:3; top:calc(clamp(30px, 3.6vw, 44px) * -1); inset-inline-end:clamp(16px, 4%, 56px); display:flex; align-items:center; gap:14px; padding:10px 22px 10px 12px; border-radius:var(--r-pill); background:var(--white); box-shadow:0 20px 44px rgba(0,0,0,.08); }
+html[dir="rtl"] .live{ padding:10px 12px 10px 22px; }
+.live__faces{ display:flex; direction:ltr; }
+.live__faces span{ width:34px; height:34px; margin-left:-10px; border-radius:50%; border:2px solid var(--white); display:grid; place-items:center; background:var(--lime); }
+.live__faces span:first-child{ margin-left:0; }
+.live__faces span:nth-child(2){ background:var(--pink); }
+.live__faces span:last-child{ background:var(--white); box-shadow:inset 0 0 0 1px var(--line); font:600 11px/1 var(--f-latin); }
+.live__body{ display:grid; gap:2px; }
+.live__row{ display:flex; align-items:center; gap:8px; }
+.live__tag{ display:inline-flex; align-items:center; gap:6px; height:20px; padding-inline:8px; border-radius:var(--r-pill); background:var(--lime); font:700 10px/1 var(--f-latin); letter-spacing:.08em; text-transform:uppercase; }
+html[lang="ar"] .live__tag{ font-family:var(--f-ar); font-size:11px; letter-spacing:0; }
+.live__dot{ position:relative; width:7px; height:7px; border-radius:50%; background:var(--black); }
+.live__dot::after{ content:""; position:absolute; inset:-4px; border-radius:50%; border:1.5px solid var(--black); animation:ping 1.8s var(--ease) infinite; }
+@keyframes ping{ 0%{ transform:scale(.5); opacity:.9; } 80%,100%{ transform:scale(1.6); opacity:0; } }
+.live__n{ font:600 clamp(20px, 1.8vw, 26px)/1.1 var(--f-latin); letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.live__now{ font-size:14px; font-weight:500; }
+.live__day{ font-size:13px; color:var(--g400); }
+.live__day b{ font-family:var(--f-latin); font-weight:600; color:var(--black); font-variant-numeric:tabular-nums; }
+.live__n.bump{ animation:livebump .6s var(--ease); }
+@keyframes livebump{ 30%{ transform:translateY(-3px); color:#9bd76f; } }
 @media (max-width:767px){
   .hero__card{ aspect-ratio:4 / 5; }
+  /* phones: the live pill sits inside the photo's top corner so it does not meet the designs pill */
+  .live{ top:auto; bottom:calc(clamp(56px, 5vw, 72px) + 26px); inset-inline-end:auto; inset-inline-start:14px; gap:10px; padding:8px 16px 8px 8px; background:rgba(255,255,255,.92); }
+  html[dir="rtl"] .live{ padding:8px 8px 8px 16px; }
+  .live__faces span{ width:28px; height:28px; }
+  .live__faces span:last-child{ display:none; }
   .hero__card > img{ object-position:42% 50%; }
   .hero__stat{ gap:10px; padding:8px 20px 8px 10px; }
   html[dir="rtl"] .hero__stat{ padding:8px 10px 8px 20px; }
@@ -549,6 +575,7 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
       <a class="hero__shop" href="#all"><span data-t="hShop"></span><i class="flip" id="hShopIco"></i></a>
     </div>
     <div class="hero__stat" id="hStat"></div>
+    <div class="live" id="live" aria-live="off"></div>
   </div>
 </section>
 
@@ -712,9 +739,34 @@ const state = { type: 'all', col: null, sort: 'feat' };
 let cart = 0;
 
 /* ---------------- render (re-run on language switch) ---------------- */
+/* live visitors. The prototype has no analytics, so it simulates believable numbers: a count of people
+   browsing that drifts every few seconds, and today's visits that keep growing. In the live theme
+   these two numbers come from the store's analytics (see notes). */
+const live = { now: 0, day: 0, shown: 0 };
+(() => { const h = new Date().getHours() + new Date().getMinutes() / 60;
+  live.now = Math.round(70 + 60 * Math.sin(Math.PI * Math.max(0, h - 8) / 16) + Math.random() * 20);
+  live.day = Math.round(380 + h * 96 + Math.random() * 60);
+  if (!G) live.shown = live.now; })();
+function renderLive() {
+  const face = icon('user', 16, 1.8);
+  $('#live').innerHTML = `<span class="live__faces"><span>${face}</span><span>${face}</span><span>+${Math.max(1, Math.round(live.now / 10))}</span></span>
+    <span class="live__body"><span class="live__row"><span class="live__tag"><i class="live__dot"></i>${t('liveTag')}</span><b class="live__n" id="liveN">${fmt(Math.round(live.shown))}</b><span class="live__now">${t('liveNow')}</span></span>
+    <span class="live__day">${t('liveDay', { n: `<b id="liveDay">${fmt(live.day)}</b>` })}</span></span>`;
+}
+function liveTick() {
+  const step = Math.round((Math.random() - .45) * 6);
+  live.now = Math.min(240, Math.max(40, live.now + step));
+  if (Math.random() < .7) live.day += 1 + Math.floor(Math.random() * 3);
+  const n = $('#liveN'), d = $('#liveDay'); if (!n) return;
+  if (G) gsap.to(live, { shown: live.now, duration: .8, ease: 'power2.out', onUpdate: () => n.textContent = fmt(Math.round(live.shown)) });
+  else n.textContent = fmt(live.now);
+  d.textContent = fmt(live.day);
+  if (step) { n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); }
+}
 function renderBanner() {
   const W = str => str.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
   $('#hTitle').innerHTML = `${W(t('hLine1'))} <span class="w hero__pill is-cut"><img src="${img('t03')}" alt=""></span> <span class="hero__pink">${W(t('hPink'))}</span> <span class="w hero__mark">${t('hMark')}</span> <span class="w hero__pill hero__pill--p"><img src="${img('life1')}" alt="" style="object-position:28% 62%"></span> ${W(t('hSub'))}`;
+  renderLive();
   $('#hStat').innerHTML = `${icon('people', 46, 1.5)}<span><b dir="ltr">+${P.length}</b><span>${t('hStatL')}</span></span>`;
 }
 function renderIntro() {
@@ -923,11 +975,14 @@ function bannerIn() {
     .from('#heroCard', { clipPath: 'inset(14% 10% 0% 10% round 60px)', duration: 1.5, ease: 'expo.out' }, .35)
     .from('#heroImg', { scale: 1.3, duration: 1.8, ease: 'expo.out' }, .35)
     .from('#hStat', { y: 30, opacity: 0, scale: .8, duration: .9, ease: 'back.out(1.8)' }, .95)
+    .from('#live', { y: 30, opacity: 0, scale: .8, duration: .9, ease: 'back.out(1.8)' }, 1.1)
+    .to(live, { shown: live.now, duration: 1.6, ease: 'power3.out', onUpdate: () => { const n = $('#liveN'); if (n) n.textContent = fmt(Math.round(live.shown)); } }, 1.2)
     .from('.hero__shop', { x: () => (lang === 'ar' ? -40 : 40), opacity: 0, duration: .9, ease: 'expo.out' }, 1.05)
     .from('#logo .klogo__word', { y: 30, opacity: 0, duration: .9, ease: 'back.out(1.7)' }, .2);
 }
 
 /* ---------------- loader ---------------- */
+setInterval(liveTick, 3200);
 function done() {
   root.classList.remove('is-loading');
   if (lenis) lenis.start();
