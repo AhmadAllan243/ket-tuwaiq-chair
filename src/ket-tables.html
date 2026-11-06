@@ -125,10 +125,9 @@ const STORE = {
 :root{
   --white:#fff; --black:#000; --g400:#A8A8A8; --g200:#DCDCDC; --g100:#F4F4F4; --page:#F2F2F4;
   --ink-2:#555;
-  /* two brand colours only (ket green + ket pink), their light washes for big surfaces, a little white; black is for text */
-  --blush:#FCDFDB; --rose:#F5BDB4; --rose-d:#B5574F; --green:#02A27A;
-  /* ket green + ket pink: small touches only */
-  --lime:#C6F7A6; --pink:#F4A7FC; --lime-l:#E9FCDD; --pink-l:#FCE6FE; --line:rgba(0,0,0,.08);
+  --green:#02A27A;
+  /* ket green + ket pink: small touches; the old blush and rose now use the ket pink */
+  --lime:#C6F7A6; --pink:#F4A7FC; --blush:var(--pink); --rose:var(--pink); --lime-l:#E9FCDD; --pink-l:#FCE6FE; --line:rgba(0,0,0,.08);
   --f-latin:'Inter Tight', system-ui, sans-serif;
   --f-ar:'IBM Plex Sans Arabic', 'Inter Tight', system-ui, sans-serif;
   --font:var(--f-ar);
@@ -190,8 +189,8 @@ html[dir="rtl"] .arr svg, html[dir="rtl"] .flip svg{ transform:scaleX(-1); }
 .loader{ position:fixed; inset:0; z-index:200; background:var(--white); display:grid; place-items:center; overflow:hidden; }
 .no-motion .loader{ display:none; }
 .loader__dots{ position:absolute; display:flex; gap:7px; }
-.loader__dots i{ width:9px; height:9px; border-radius:50%; background:var(--black); animation:dot 1s var(--ease) infinite; }
-.loader__dots i:nth-child(2){ animation-delay:.12s; } .loader__dots i:nth-child(3){ animation-delay:.24s; }
+.loader__dots i{ width:11px; height:11px; border-radius:50%; background:var(--lime); animation:dot 1s var(--ease) infinite; }
+.loader__dots i:nth-child(2){ animation-delay:.12s; background:var(--pink); } .loader__dots i:nth-child(3){ animation-delay:.24s; }
 @keyframes dot{ 0%,100%{ transform:translateY(0); opacity:.35; } 40%{ transform:translateY(-7px); opacity:1; } }
 .loader__line{ position:absolute; font-size:clamp(20px, 3vw, 30px); font-weight:500; letter-spacing:-.02em; opacity:0; white-space:nowrap; color:var(--black); }
 .loader__logo{ position:absolute; opacity:0; color:var(--black); }
@@ -253,27 +252,27 @@ html[dir="rtl"] .hero__mark::before{ --mo:right; }
 .hero__pill img{ width:100%; height:100%; object-fit:cover; }
 .hero__pill.is-cut img{ object-fit:contain; mix-blend-mode:multiply; transform:scale(1.35); }
 .hero__media{ position:relative; margin-top:clamp(44px, 4.6vw, 68px); text-align:start; }
-.hero__card{ position:relative; aspect-ratio:838 / 474; max-height:calc(100svh - 120px); width:100%; border-radius:clamp(30px, 4vw, 60px); overflow:hidden; background:#e9e7e4; isolation:isolate; }
+.hero__card{ position:relative; aspect-ratio:838 / 474; max-height:calc(100svh - 120px); width:100%; border-radius:clamp(30px, 4vw, 60px); overflow:hidden; background:var(--pink-l); isolation:isolate; }
 .hero__card > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; }
 .hero__stat{ position:absolute; z-index:3; top:calc(clamp(30px, 3.6vw, 44px) * -1); inset-inline-start:clamp(16px, 4%, 56px); display:flex; align-items:center; gap:14px; padding:12px 28px 12px 16px; border-radius:var(--r-pill); background:var(--white); box-shadow:0 20px 44px rgba(0,0,0,.08); }
 html[dir="rtl"] .hero__stat{ padding:12px 16px 12px 28px; }
-.hero__stat svg{ color:var(--rose-d); }
+.hero__stat svg{ color:var(--pink); }
 .hero__stat b{ display:block; font:600 clamp(20px, 1.8vw, 26px)/1.1 var(--f-latin); letter-spacing:-.02em; }
 .hero__stat span{ display:block; font-size:clamp(14px, 1.2vw, 17px); color:var(--g400); }
-.hero__shop{ position:absolute; z-index:3; bottom:clamp(14px, 2.4vw, 32px); inset-inline-end:clamp(14px, 2.4vw, 32px); display:inline-flex; align-items:center; gap:18px; height:clamp(56px, 5vw, 72px); padding-inline:clamp(22px, 2vw, 30px) 8px; border-radius:var(--r-pill); background:var(--black); color:var(--white); font-size:clamp(17px, 1.5vw, 22px); font-weight:600; text-decoration:none; box-shadow:0 14px 30px rgba(0,0,0,.12); }
-.hero__shop i{ width:clamp(42px, 3.8vw, 56px); height:clamp(42px, 3.8vw, 56px); border-radius:50%; background:var(--rose); color:var(--black); display:grid; place-items:center; transition:transform .5s var(--ease); }
+.hero__shop{ position:absolute; z-index:3; bottom:clamp(14px, 2.4vw, 32px); inset-inline-end:clamp(14px, 2.4vw, 32px); display:inline-flex; align-items:center; gap:18px; height:clamp(56px, 5vw, 72px); padding-inline:clamp(22px, 2vw, 30px) 8px; border-radius:var(--r-pill); background:var(--lime); color:var(--black); font-size:clamp(17px, 1.5vw, 22px); font-weight:600; text-decoration:none; box-shadow:0 14px 30px rgba(0,0,0,.12); }
+.hero__shop i{ width:clamp(42px, 3.8vw, 56px); height:clamp(42px, 3.8vw, 56px); border-radius:50%; background:var(--white); display:grid; place-items:center; transition:transform .5s var(--ease); }
 .hero__shop:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
 /* live visitors: a pill on the photo's top edge, opposite the designs pill */
 .live{ position:absolute; z-index:3; top:calc(clamp(30px, 3.6vw, 44px) * -1); inset-inline-end:clamp(16px, 4%, 56px); display:flex; align-items:center; gap:14px; padding:10px 22px 10px 12px; border-radius:var(--r-pill); background:var(--white); box-shadow:0 20px 44px rgba(0,0,0,.08); }
 html[dir="rtl"] .live{ padding:10px 12px 10px 22px; }
 .live__faces{ display:flex; direction:ltr; }
-.live__faces span{ width:34px; height:34px; margin-left:-10px; border-radius:50%; border:2px solid var(--white); display:grid; place-items:center; background:var(--blush); }
+.live__faces span{ width:34px; height:34px; margin-left:-10px; border-radius:50%; border:2px solid var(--white); display:grid; place-items:center; background:var(--lime); }
 .live__faces span:first-child{ margin-left:0; }
-.live__faces span:nth-child(2){ background:var(--rose); }
+.live__faces span:nth-child(2){ background:var(--pink); }
 .live__faces span:last-child{ background:var(--white); box-shadow:inset 0 0 0 1px var(--line); font:600 11px/1 var(--f-latin); }
 .live__body{ display:grid; gap:2px; }
 .live__row{ display:flex; align-items:center; gap:8px; }
-.live__tag{ display:inline-flex; align-items:center; gap:6px; height:20px; padding-inline:8px; border-radius:var(--r-pill); background:var(--blush); font:700 10px/1 var(--f-latin); letter-spacing:.08em; text-transform:uppercase; }
+.live__tag{ display:inline-flex; align-items:center; gap:6px; height:20px; padding-inline:8px; border-radius:var(--r-pill); background:var(--lime); font:700 10px/1 var(--f-latin); letter-spacing:.08em; text-transform:uppercase; }
 html[lang="ar"] .live__tag{ font-family:var(--f-ar); font-size:11px; letter-spacing:0; }
 .live__dot{ position:relative; width:7px; height:7px; border-radius:50%; background:var(--black); }
 .live__dot::after{ content:""; position:absolute; inset:-4px; border-radius:50%; border:1.5px solid var(--black); animation:ping 1.8s var(--ease) infinite; }
@@ -896,7 +895,7 @@ function renderSize() {
   $('#sofa').style.setProperty('--p', ((s - 160) / 160 * 100) + '%');
   const k = 340 / 320, sw = s * k, tw = tl * k, cx = 200;
   $('#plan').innerHTML = `
-    <rect x="${cx - sw / 2}" y="40" width="${sw}" height="74" rx="18" fill="#FCDFDB"/>
+    <rect x="${cx - sw / 2}" y="40" width="${sw}" height="74" rx="18" fill="#F4A7FC"/>
     <rect x="${cx - sw / 2 + 10}" y="52" width="${sw - 20}" height="46" rx="12" fill="#fff" fill-opacity=".55"/>
     <ellipse cx="${cx}" cy="${200}" rx="${tw / 2}" ry="44" fill="#fff" stroke="#000" stroke-width="1.5"/>
     <path d="M${cx + tw / 2 + 14} 114 V156" stroke="#000" stroke-width="2" stroke-dasharray="4 4"/>
@@ -997,7 +996,7 @@ function runLoader() {
   const ldr = $('#loader');
   if (!G) { done(); return; }
   // ring of 8 tables in mixed shapes on pink and grey
-  const pick = [['t03', 'circle', '#FCDFDB'], ['t12', 'arch', '#F4F4F4'], ['life1', 'sq', '#e9e7e4'], ['t01', 'pill', '#FCDFDB'], ['t08', 'circle', '#F4F4F4'], ['t17', 'sq', '#FCDFDB'], ['t15', 'arch', '#F4F4F4'], ['t02', 'circle', '#FCDFDB']];
+  const pick = [['t03', 'circle', '#C6F7A6'], ['t12', 'arch', '#F4F4F4'], ['life1', 'sq', '#e9e7e4'], ['t01', 'pill', '#F4A7FC'], ['t08', 'circle', '#F4F4F4'], ['t17', 'sq', '#C6F7A6'], ['t15', 'arch', '#F4F4F4'], ['t02', 'circle', '#F4F4F4']];
   const ring = $('#ring');
   ring.innerHTML = pick.map(([id, sh, bg]) => `<span class="ring__t sh-${sh}${byId[id]?.photo ? ' is-photo' : ''}" style="--bg:${bg}"><img src="${img(id)}" alt=""></span>`).join('');
   const T = $$('.ring__t', ring);
