@@ -126,7 +126,7 @@ const STORE = {
       trend: ['طاولة قهوة', 'أبجورة', 'شجرة زيتون', 'سجاد', 'مرآة', 'فازة'],
       scroll: 'انزل تحت',
       stEy: 'ليش ket؟', st: [['وجهتك للأثاث والديكور', 'الترندي.', ''], ['قطع مميزة، تفاصيل مختلفة،', 'وأسعار تستاهل.', ''], ['كل زاوية في بيتك تستاهل', 'لمسة حلوة.', '']],
-      catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، اختر قسمك',
+      catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، ابحث عن قطعتك', pill1: 'جودة', pill2: 'موثوق', brandT: 'قطع تعيش معك،', brandT2: 'كل يوم.',
       clrEy: 'تصفية 24 ساعة', clrH: 'أقوى عروضنا – تصفيات لمدة 24 ساعة فقط!', clrTx: 'كميات محدودة من المستودع، والأسعار تنتهي مع نهاية العداد.',
       hrs: 'ساعة', min: 'دقيقة', sec: 'ثانية', clrTag: 'تصفية 24 ساعة', left: 'باقي {n} قطع فقط', left1: 'آخر قطعة!', buy: 'اشترِ الآن', endsIn: 'ينتهي بعد', ended: 'انتهى العرض',
       prev: 'السابق', next: 'التالي', save: 'وفّر {n}',
@@ -149,7 +149,7 @@ const STORE = {
       trend: ['Coffee table', 'Lamp', 'Olive tree', 'Rugs', 'Mirror', 'Vase'],
       scroll: 'Scroll down',
       stEy: 'Why ket', st: [['Your place for', 'trendy', 'furniture and décor.'], ['Standout pieces, different details,', 'prices worth it.', ''], ['Every corner of your home deserves', 'a lovely touch.', '']],
-      catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces across {n} departments, pick yours',
+      catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces in {n} departments, find yours', pill1: 'Quality', pill2: 'Reliable', brandT: 'Pieces that live with you,', brandT2: 'every day.',
       clrEy: '24-hour clearance', clrH: 'Our best deals, a 24-hour clearance only!', clrTx: 'Limited warehouse stock, and the prices end when the timer does.',
       hrs: 'hours', min: 'min', sec: 'sec', clrTag: '24-hour clearance', left: 'Only {n} left', left1: 'Last one!', buy: 'Buy now', endsIn: 'Ends in', ended: 'Offer ended',
       prev: 'Previous', next: 'Next', save: 'Save {n}',
@@ -290,18 +290,20 @@ html.is-intro body{ overflow:hidden; }
 @keyframes bump{ 40%{ transform:scale(1.45); } }
 @media (max-width:767px){ .hide-mob{ display:none!important; } }
 
-/* ===================== 1. HERO: greeting, then a slowly turning globe of ket photos with the smart search across it ===================== */
-.hero{ position:relative; --gs:min(600px, 90vw, max(300px, calc(100svh - 36px - var(--header-h) - 215px))); min-height:calc(100svh - 36px - var(--header-h)); display:grid; align-content:center; justify-items:center; gap:clamp(14px, 2.6vh, 30px); padding-block:clamp(14px, 3vh, 40px); }
+/* ===================== 1. HERO: greeting, then a round window of ket photos with the smart search across it ===================== */
+.hero{ position:relative; --gs:min(600px, 90vw, max(300px, calc(100svh - 36px - var(--header-h) - 290px))); min-height:calc(100svh - 36px - var(--header-h)); display:grid; align-content:center; justify-items:center; gap:clamp(14px, 2.6vh, 30px); padding-block:clamp(14px, 3vh, 40px); }
 .hero__top{ position:relative; z-index:6; display:grid; justify-items:center; gap:clamp(10px, 1.6vh, 16px); text-align:center; padding-inline:var(--gutter); }
 .greet{ display:inline-flex; align-items:center; gap:10px; height:42px; padding-inline:6px 16px; border-radius:var(--r-pill); background:var(--surface); box-shadow:inset 0 0 0 1px var(--line); font-weight:600; font-size:14.5px; }
 .greet .wave{ font-size:19px; display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--surface-2); }
 .greet__txt{ display:inline-block; min-width:12ch; }
 .hero__h{ font-size:clamp(28px, 3.6vw, 54px); font-weight:600; line-height:1.05; letter-spacing:-.04em; }
 html[lang="ar"] .hero__h{ font-weight:700; line-height:1.3; letter-spacing:0; }
+.hero__tx{ color:var(--ink-2); font-size:clamp(14px, 1.2vw, 17px); max-width:44ch; }
+.hero__chips{ position:relative; z-index:6; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; padding-inline:var(--gutter); }
+.hero__chips .chip{ height:40px; padding-inline:16px; background:var(--surface); }
 
 .gw{ position:relative; width:100%; height:var(--gs); display:grid; place-items:center; }
-.globe{ position:relative; width:var(--gs); height:var(--gs); border-radius:50%; cursor:grab; touch-action:pan-y; -webkit-user-select:none; user-select:none; }
-.globe.is-drag{ cursor:grabbing; }
+.globe{ position:relative; width:var(--gs); height:var(--gs); border-radius:50%; }
 .globe canvas{ display:block; width:100%; height:100%; }
 .globe.is-flat{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; overflow:hidden; cursor:auto; }
 .globe.is-flat img{ width:100%; height:100%; object-fit:cover; border-radius:14px; }
@@ -381,9 +383,9 @@ html[lang="en"] .sres h4{ text-transform:uppercase; letter-spacing:.08em; }
 html[lang="ar"] .ss{ font-weight:700; line-height:1.4; letter-spacing:0; }
 .wm{ display:inline-block; overflow:hidden; vertical-align:top; padding-block:.14em; margin-block:-.14em; }
 .wi{ display:inline-block; will-change:transform; }
-.hl-m{ background:linear-gradient(var(--mark), var(--mark)) no-repeat; background-size:var(--hs, 100%) 76%; background-position:0 60%; border-radius:.16em; padding-inline:.1em; margin-inline:-.04em; -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+.hl-m{ color:#fff; background:linear-gradient(var(--bar), var(--bar)) no-repeat; background-size:var(--hs, 100%) 76%; background-position:0 60%; border-radius:.16em; padding-inline:.1em; margin-inline:-.04em; -webkit-box-decoration-break:clone; box-decoration-break:clone; }
 html[dir="rtl"] .hl-m{ background-position:100% 60%; }
-.hl-p{ color:var(--ink-3); }
+.hl-p{ color:var(--bar); }
 .story__bars{ display:flex; gap:8px; }
 .story__bars i{ position:relative; flex:1; max-width:90px; height:4px; border-radius:4px; background:var(--line-2); overflow:hidden; }
 .story__bars i::after{ content:""; position:absolute; inset:0; border-radius:inherit; background:var(--text); transform:scaleX(var(--p, 0)); transform-origin:left; }
@@ -411,8 +413,9 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 .no-motion .sa:not(:first-child), .no-motion .story__bars, .no-motion .story__count{ display:none; }
 
 /* ===================== 3. DEPARTMENTS: a bento of photo tiles that pop in one by one ===================== */
-.bento{ display:grid; gap:clamp(10px, 1.2vw, 16px); grid-template-columns:1fr 1.1fr 1fr; grid-template-rows:repeat(6, 1fr); height:clamp(560px, 84svh, 820px);
-  grid-template-areas:"tables home brand" "tables home brand" "tables home lamps" "trees home lamps" "trees rugs lamps" "trees rugs lamps"; }
+/* photo tiles for the departments, plus filler boxes: the green ket card, a white logo box, a grey pill and a green deals bar */
+.bento{ display:grid; gap:clamp(10px, 1.2vw, 16px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:repeat(8, 1fr); height:clamp(640px, 96svh, 920px);
+  grid-template-areas:"brand trees logo" "brand trees logo" "brand trees logo" "rugs trees home" "rugs tables home" "lamps tables home" "lamps pill home" "lamps cta home"; }
 .dc{ position:relative; display:block; border-radius:clamp(22px, 2.4vw, 32px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
 .dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.03); transition:transform 1.4s var(--ease); }
 .dc:hover .dc__img{ transform:scale(1.08); }
@@ -427,27 +430,42 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 html[lang="ar"] .dc__body h3{ font-weight:700; line-height:1.35; letter-spacing:0; }
 .dc--home .dc__body h3{ font-size:clamp(28px, 3.2vw, 48px); }
 .dc__body p{ max-width:34ch; font-size:clamp(13px, 1.05vw, 15px); opacity:.9; }
+.dc--tables .dc__body p, .dc--rugs .dc__body p{ display:none; }   /* the short tiles: title and button only */
 .dc__go{ display:inline-flex; align-items:center; gap:8px; height:clamp(42px, 3.6vw, 50px); margin-top:6px; padding-inline:18px 6px; border-radius:var(--r-pill); background:#fff; color:#0B0B0B; font-size:14px; font-weight:600; white-space:nowrap; transition:transform .4s var(--ease); }
 html[dir="rtl"] .dc__go{ padding-inline:18px 6px; }
 .dc__go i{ width:clamp(32px, 2.8vw, 38px); height:clamp(32px, 2.8vw, 38px); border-radius:50%; display:grid; place-items:center; background:#0B0B0B; color:#fff; transition:transform .5s var(--ease); }
 .dc:hover .dc__go i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
 .dc:active .dc__go{ transform:scale(.97); }
 /* the brand tile: ket, the count, the line */
-.dc--brand{ display:grid; align-content:space-between; padding:clamp(18px, 2vw, 28px); background:#0B0B0B; }
-.dc--brand .logo{ color:#fff; }
-.dc--brand .logo svg{ width:clamp(70px, 7vw, 104px); }
-.dc--brand b{ display:block; font:700 clamp(30px, 3.4vw, 52px)/1 var(--f-latin); letter-spacing:-.04em; }
-.dc--brand span{ display:block; margin-top:6px; font-size:clamp(13px, 1.05vw, 15px); color:rgba(255,255,255,.72); }
+.dc--brand{ display:flex; flex-direction:column; justify-content:flex-end; gap:14px; padding:clamp(18px, 2vw, 30px); background:var(--bar); overflow:hidden; }
+.dc--brand .mark{ position:absolute; z-index:-1; top:-14%; inset-inline-end:-30%; width:120%; color:#066B36; transform:rotate(calc(-18deg * var(--dir))); }
+.dc--brand .mark svg{ width:100%; height:auto; }
+.dc__pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.dc__pills span{ display:inline-flex; align-items:center; gap:6px; height:30px; padding-inline:8px 12px; border-radius:var(--r-pill); background:rgba(255,255,255,.92); color:#0B0B0B; font-size:12.5px; font-weight:600; }
+.dc__pills span:nth-child(2){ margin-inline-start:22%; background:#fff; }
+.dc__pills i{ width:18px; height:18px; border-radius:50%; display:grid; place-items:center; background:#0B0B0B; color:#fff; font-size:10px; font-style:normal; }
+.dc--brand h3{ font-size:clamp(26px, 2.8vw, 42px); font-weight:600; line-height:1.1; letter-spacing:-.03em; }
+html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:0; }
+.dc--brand h3 em{ font-style:normal; opacity:.72; }
+.dc--logo{ display:grid; place-items:center; background:#fff; color:#0B0B0B; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.dc--logo svg{ width:42%; height:auto; }
+.dc--pill{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); border-radius:var(--r-pill); background:var(--mark); color:var(--text); box-shadow:none; font-weight:600; font-size:clamp(13px, 1.1vw, 15px); }
+.dc--pill b{ font:700 clamp(18px, 1.8vw, 26px)/1 var(--f-latin); margin-inline-end:6px; }
+.dc--cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); background:var(--bar); font-weight:700; font-size:clamp(14px, 1.2vw, 17px); }
+.dc--cta small{ display:block; font:600 12.5px/1.3 var(--f-latin); opacity:.8; font-variant-numeric:tabular-nums; }
+.dc--cta i{ width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; transition:transform .5s var(--ease); }
+.dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
 @media (max-width:767px){
   .bento{ grid-template-columns:1fr 1fr; grid-template-rows:none; grid-auto-rows:clamp(92px, 27vw, 124px); height:auto;
-    grid-template-areas:"brand brand" "tables home" "tables home" "tables trees" "rugs trees" "rugs trees" "lamps lamps" "lamps lamps"; }
+    grid-template-areas:"brand brand" "brand brand" "trees logo" "trees tables" "trees tables" "rugs home" "rugs home" "lamps home" "lamps pill" "lamps cta"; }
   .dc__body p, .dc__n{ display:none; }
   .dc__go{ height:36px; font-size:12.5px; padding-inline:12px 4px; gap:6px; }
   html[dir="rtl"] .dc__go{ padding-inline:12px 4px; }
   .dc__go i{ width:28px; height:28px; }
   .dc__body h3, .dc--home .dc__body h3{ font-size:20px; }
-  .dc--brand{ grid-template-columns:auto 1fr; align-items:center; gap:16px; padding:16px 20px; }
-  .dc--brand > div{ text-align:end; }
+  .dc--brand h3{ font-size:24px; }
+  .dc--pill, .dc--cta{ font-size:12.5px; padding-inline:14px; }
+  .dc--cta i{ width:30px; height:30px; }
 }
 
 /* ===================== 4. 24-HOUR CLEARANCE: a light studio; swipe the pieces and the card below changes with them ===================== */
@@ -622,6 +640,7 @@ html[dir="rtl"] .vbox__bar::after{ transform-origin:right; }
     <div class="hero__top">
       <div class="greet" id="greet"><span class="wave is-on" aria-hidden="true">👋🏼</span><span class="greet__txt" id="greetTxt"></span></div>
       <h1 class="hero__h" id="heroH" data-t="heroH"></h1>
+      <p class="hero__tx" data-t="heroTx"></p>
     </div>
     <div class="gw" id="gw">
       <div class="floats" id="floats" aria-hidden="true"></div>
@@ -639,6 +658,7 @@ html[dir="rtl"] .vbox__bar::after{ transform-origin:right; }
         <div class="sres" id="sres" role="listbox" data-lenis-prevent></div>
       </form>
     </div>
+    <div class="hero__chips" id="heroChips"></div>
   </section>
 
   <!-- 2. ABOUT -->
@@ -949,72 +969,75 @@ const wrapD = (i, n) => { let d = ((i % n) + n) % n; if (d > n / 2) d -= n; retu
 const pad = n => String(n).padStart(2, '0');
 
 /* ======================================================================
-   1. HERO GLOBE: ket photos laid on a slowly turning ball (WebGL), with the
-   search bar across it. Drag it to spin. Without WebGL: a round photo grid.
+   1. HERO: a round window of ket photos, a flat grid seen through a soft
+   lens (bigger in the middle, gently curved toward the edge), with the
+   search bar across it. It drifts a little with the pointer. WebGL draws
+   the lens; without it the photos sit in a plain round grid.
    ====================================================================== */
-const GLOBE = ['home/life/lamps', 'tables/t03', 'home/life/trees', 'home/lp03', 'home/life/family', 'home/v1', 'tables/t12', 'home/life/home',
-  'home/tr06', 'home/life/tables', 'home/ac03', 'home/v3', 'home/life/rugs', 'home/lp11', 'tables/life1', 'home/ac05',
-  'home/v5', 'tables/t08', 'tables/life2', 'home/rg04', 'home/v2', 'home/tr03', 'home/v4', 'tables/hero-joy'];
+// the grid, row by row: [photo, width share]
+const LENS = [
+  [['home/v1', 1], ['home/life/trees', 1.2], ['tables/t03', .9], ['home/v3', 1.1]],
+  [['home/life/family', 1.1], ['home/lp03', .8], ['home/life/lamps', 1.2], ['tables/life1', 1]],
+  [['home/v5', .9], ['home/life/rugs', 1.1], ['tables/life2', 1.2], ['home/ac03', .8]],
+  [['home/life/tables', 1.2], ['home/tr06', .8], ['home/life/home', 1.1], ['tables/hero-joy', 1]],
+  [['home/v2', 1], ['home/rg04', .9], ['home/v4', 1.2], ['tables/t08', 1]]];
 const isCut = s => /\/(t|lp|tr|ac|rg)\d\d$/.test(s);   // product photos on white (shown whole, not cropped)
-// [side, photo, width, aspect, gap from the globe, top, tilt, seconds]
+// [side, photo, width, aspect, gap from the circle, top, tilt, seconds]
 const FLOATS = [['s', 'home/lp03', 112, .78, 70, '2%', -3, 7], ['s', 'home/life/family', 132, .76, 150, '33%', 2, 8.5], ['s', 'home/tr06', 104, .82, 64, '70%', -2, 6.5],
   ['e', 'tables/t12', 116, .9, 66, '4%', 3, 7.5], ['e', 'home/life/tables', 140, 1.06, 146, '37%', -2, 9], ['e', 'home/life/home', 120, .9, 58, '70%', 2, 6]];
 $('#floats').innerHTML = FLOATS.map(([sd, s, w, ar, x, y, r, d], i) => `<span class="fl fl--${sd}${isCut(s) ? ' fl--p' : ''}" style="--w:${w}px;--ar:${ar};--x:${x}px;--y:${y};--r:${r}deg;--d:${d}s;--dl:${-i * 1.3}s"><span class="fl__in"><img src="media/${s}.webp" alt="" loading="lazy"></span></span>`).join('');
 
-const globe = (() => {
-  const el = $('#globe'), cv = $('#globeCv'), COLS = 10, ROWS = 4;
-  const st = { rot: .6, vel: 0, base: reduce ? 0 : .11, tilt: .14, tiltT: .14, seen: true, drag: false };
-  const flat = () => { el.classList.add('is-flat'); el.innerHTML = GLOBE.filter(s => !isCut(s)).slice(0, 9).map(s => `<img src="media/${s}.webp" alt="">`).join(''); };
+(() => {
+  const el = $('#globe'), cv = $('#globeCv'), PICS = LENS.flat().map(([s]) => s);
+  const flat = () => { el.classList.add('is-flat'); el.innerHTML = PICS.filter(s => !isCut(s)).slice(0, 9).map(s => `<img src="media/${s}.webp" alt="">`).join(''); };
   let gl = null; try { gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true }); } catch (e) {}
-  if (!gl) { flat(); return st; }
+  if (!gl) { flat(); return; }
   const shader = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
   const prog = gl.createProgram();
   gl.attachShader(prog, shader(gl.VERTEX_SHADER, 'attribute vec2 a; varying vec2 p; void main(){ p = a; gl_Position = vec4(a, 0., 1.); }'));
-  // each pixel of the disc is a point on the ball; its longitude/latitude pick the spot in the flat photo sheet
-  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, `precision highp float; varying vec2 p; uniform sampler2D tx; uniform float rot, tilt, px;
+  // r is the distance from the middle (0..1); the grid is read a little magnified in the middle and squeezed toward the rim
+  gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, `precision highp float; varying vec2 p; uniform sampler2D tx; uniform vec2 pan; uniform float px;
     void main(){
       float r = length(p), edge = 1. - smoothstep(1. - px * 1.5, 1., r);
       if (edge <= 0.) { gl_FragColor = vec4(0.); return; }
-      vec3 n = vec3(p, sqrt(max(0., 1. - r * r)));
-      float c = cos(tilt), s = sin(tilt);
-      vec3 m = vec3(n.x, n.y * c + n.z * s, n.z * c - n.y * s);
-      float lon = atan(m.x, m.z) + rot, lat = asin(clamp(m.y, -1., 1.));
-      vec4 col = texture2D(tx, vec2(fract(lon / 6.2831853), .5 - lat / 3.1415927));
-      gl_FragColor = vec4(col.rgb * (.9 + .1 * n.z), col.a) * edge;
+      float k = r > 0. ? mix(r, asin(min(r, 1.)) / 1.5707963, .55) / r : .5;
+      vec2 q = p * k * .92 + pan;
+      vec4 col = texture2D(tx, vec2(.5 + q.x * .5, .5 - q.y * .5));
+      gl_FragColor = col * edge;
     }`));
   gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { flat(); return st; }
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { flat(); return; }
   gl.useProgram(prog);
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
   const aLoc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
-  const uRot = gl.getUniformLocation(prog, 'rot'), uTilt = gl.getUniformLocation(prog, 'tilt'), uPx = gl.getUniformLocation(prog, 'px');
+  const uPan = gl.getUniformLocation(prog, 'pan'), uPx = gl.getUniformLocation(prog, 'px');
   gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
   [[gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE], [gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR]].forEach(([k, v]) => gl.texParameteri(gl.TEXTURE_2D, k, v));
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
   let pics = null, built = 0, ready = false;
+  const pan = [0, 0], panT = [0, 0];
   const tile = (x, im, cut, X, Y, w, h) => {
-    x.save(); x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, w * .06); else x.rect(X, Y, w, h); x.clip();
+    x.save(); x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, Math.min(w, h) * .07); else x.rect(X, Y, w, h); x.clip();
     x.fillStyle = cut ? '#E9E9EC' : '#D9D9DC'; x.fillRect(X, Y, w, h);
     x.globalCompositeOperation = cut ? 'multiply' : 'source-over';   // product photos are on white: let the grey through
-    if (im) { const k = cut ? Math.min(w / im.width, h / im.height) * .82 : Math.max(w / im.width, h / im.height), iw = im.width * k, ih = im.height * k; x.drawImage(im, X + (w - iw) / 2, Y + (h - ih) / 2, iw, ih); }
+    if (im) { const k = cut ? Math.min(w / im.width, h / im.height) * .8 : Math.max(w / im.width, h / im.height), iw = im.width * k, ih = im.height * k; x.drawImage(im, X + (w - iw) / 2, Y + (h - ih) / 2, iw, ih); }
     x.restore();
   };
-  // the photos laid out flat in a brick pattern (gaps stay see-through), then wrapped round the ball by the shader
+  // the flat grid: rows of photos with see-through gaps, a little wider than the circle so it can drift
   function build(px) {
-    const W = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096, Math.max(1024, Math.round(px * 2.3 / 2) * 2)), H = W / 2;
-    const cw = W / COLS, ch = H / ROWS, g = cw * .05, c = document.createElement('canvas'); c.width = W; c.height = H;
-    const x = c.getContext('2d');
-    for (let r = 0; r < ROWS; r++) for (let col = 0; col < COLS; col++) {
-      const i = (r * COLS + col) % pics.length, X = col * cw + (r % 2) * cw / 2 + g / 2;
-      [X, X - W].forEach(x0 => tile(x, pics[i], isCut(GLOBE[i]), x0, r * ch + g / 2, cw - g, ch - g));
-    }
+    const W = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096, Math.max(1024, Math.round(px * 1.4))), c = document.createElement('canvas'); c.width = c.height = W;
+    const x = c.getContext('2d'), g = W * .016, rh = W / LENS.length; let n = 0;
+    LENS.forEach((row, r) => {
+      const sum = row.reduce((s, [, w]) => s + w, 0); let X = -(r % 2) * W * .06;
+      row.forEach(([s, w]) => { const tw = (W + W * .12) * w / sum; tile(x, pics[n++], isCut(s), X + g / 2, r * rh + g / 2, tw - g, rh - g); X += tw; });
+    });
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
     built = px; ready = true;
   }
-  const draw = () => { if (!ready) return; gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uRot, st.rot); gl.uniform1f(uTilt, st.tilt); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+  const draw = () => { if (!ready) return; gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform2f(uPan, pan[0], pan[1]); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
   function size() {
     const s = el.clientWidth, px = Math.round(s * Math.min(2, devicePixelRatio || 1)); if (!s) return;
     if (cv.width !== px) { cv.width = cv.height = px; gl.viewport(0, 0, px, px); gl.uniform1f(uPx, 2 / px); }
@@ -1022,28 +1045,15 @@ const globe = (() => {
     draw();
   }
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(size, 120); });
-  new IntersectionObserver(([en]) => { st.seen = en.isIntersecting; }).observe(el);
-  Promise.all(GLOBE.map(s => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = `media/${s}.webp`; })))
+  Promise.all(PICS.map(s => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = `media/${s}.webp`; })))
     .then(list => { pics = list; size(); });
-  let last = performance.now();
-  const loop = now => {
-    requestAnimationFrame(loop); const dt = Math.min(.05, (now - last) / 1000); last = now;
-    if (!ready || !st.seen) return;
-    if (!st.drag) st.vel += (st.base - st.vel) * Math.min(1, dt * 1.4);
-    st.rot += st.vel * dt; st.tilt += (st.tiltT - st.tilt) * Math.min(1, dt * 3);
-    draw();
-  };
-  if (!reduce) requestAnimationFrame(loop);
-  // drag to spin (it keeps the throw, then settles back to its slow turn)
-  let x0 = 0, r0 = 0, lx = 0, lt = 0;
-  el.addEventListener('pointerdown', e => { if (e.button) return; st.drag = true; x0 = lx = e.clientX; lt = performance.now(); r0 = st.rot; st.vel = 0; el.classList.add('is-drag'); });
-  addEventListener('pointermove', e => {
-    if (st.drag) { const now = performance.now(), k = 2.6 / el.clientWidth; st.rot = r0 - (e.clientX - x0) * k; st.vel = Math.max(-6, Math.min(6, -(e.clientX - lx) * k / Math.max(.008, (now - lt) / 1000))); lx = e.clientX; lt = now; if (reduce) draw(); }
-    else if (fine && !reduce) st.tiltT = .14 + (e.clientY / innerHeight - .5) * .2;
-  }, { passive: true });
-  const up = () => { if (!st.drag) return; st.drag = false; el.classList.remove('is-drag'); if (reduce) st.vel = 0; };
-  addEventListener('pointerup', up); addEventListener('pointercancel', up);
-  return st;
+  // the photos drift a touch toward the pointer
+  if (fine && !reduce) {
+    let seen = true, raf = 0;
+    new IntersectionObserver(([en]) => { seen = en.isIntersecting; }).observe(el);
+    const step = () => { raf = 0; pan[0] += (panT[0] - pan[0]) * .08; pan[1] += (panT[1] - pan[1]) * .08; draw(); if (Math.abs(panT[0] - pan[0]) + Math.abs(panT[1] - pan[1]) > .0005) raf = requestAnimationFrame(step); };
+    addEventListener('pointermove', e => { if (!seen) return; panT[0] = (e.clientX / innerWidth - .5) * .07; panT[1] = -(e.clientY / innerHeight - .5) * .05; if (!raf) raf = requestAnimationFrame(step); }, { passive: true });
+  }
 })();
 
 /* the round button in the search: dots in a ring that turn */
@@ -1073,7 +1083,11 @@ const DEPT_IMG = { tables: ['tables', '30% 50%'], trees: ['trees', '50% 50%'], h
 const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);
 function renderCats() {
   const n = STORE.cats.length;
-  $('#catGrid').innerHTML = `<div class="dc dc--brand" style="grid-area:brand" data-pop="brand"><span class="logo" aria-hidden="true">${logo(104)}</span><div><b class="latin">${total()}</b><span>${t('deptSum', { n })}</span></div></div>` +
+  $('#catGrid').innerHTML = `<div class="dc dc--brand" style="grid-area:brand" data-pop="brand"><span class="mark" aria-hidden="true">${smileMark(300)}</span>
+      <div class="dc__pills"><span><i>★</i>${t('pill1')}</span><span><i>✓</i>${t('pill2')}</span></div><h3>${t('brandT')}<br><em>${t('brandT2')}</em></h3></div>
+    <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true">${logo(160)}</div>
+    <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
+    <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>` +
     STORE.cats.map((c, i) => { const [im, op] = DEPT_IMG[c.id], src = `media/home/life/${im}.webp`;
     return `<a class="dc dc--${c.id}" style="grid-area:${c.id}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
       <img class="dc__img" src="${src}" alt="" loading="lazy" style="object-position:${op}">
@@ -1089,11 +1103,11 @@ function bentoIn() {
   const g = $('#catGrid'), gr = g.getBoundingClientRect(), cx = gr.left + gr.width / 2, cy = gr.top + gr.height / 2;
   g.classList.add('is-in');
   const tl = gsap.timeline();
-  ['home', 'lamps', 'tables', 'brand', 'trees', 'rugs'].forEach((id, k) => {
+  ['trees', 'brand', 'logo', 'home', 'tables', 'rugs', 'lamps', 'pill', 'cta'].forEach((id, k) => {
     const el = $(`[data-pop="${id}"]`, g), r = el.getBoundingClientRect(), dx = (r.left + r.width / 2 - cx) * .28, dy = (r.top + r.height / 2 - cy) * .28;
-    tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .14);
-    const b = $('.dc__body, div', el);
-    if (b) tl.from(b, { y: 18, opacity: 0, duration: .7, ease: 'power3.out', clearProps: 'transform,opacity' }, k * .14 + .35);
+    tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
+    const b = $('.dc__body, h3', el);
+    if (b) tl.from(b, { y: 18, opacity: 0, duration: .7, ease: 'power3.out', clearProps: 'transform,opacity' }, k * .11 + .35);
   });
 }
 
@@ -1149,7 +1163,7 @@ function swapDeal(on) {
   old.forEach(o => { o.classList.add('is-out'); gsap.to([...o.children], { y: 22, opacity: 0, filter: 'blur(6px)', duration: .32, stagger: .03, ease: 'power2.in', onComplete: () => o.remove() }); });
   gsap.fromTo([...nu.children], { y: -22, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .55, stagger: .05, delay: .1, ease: 'power3.out', clearProps: 'transform,filter,opacity' });
 }
-const tickTimes = () => $$('#sbTxt [data-ends]').forEach(el => { const [h, m, s] = split(+el.dataset.ends - Date.now()); el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`; });
+const tickTimes = () => $$('#sbTxt [data-ends], #catGrid [data-ends]').forEach(el => { const [h, m, s] = split(+el.dataset.ends - Date.now()); el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`; });
 function tickDeals() {
   tickTimes();
   if (live().length !== deals.length) renderDeals();   // an offer ran out: it leaves by itself
@@ -1257,12 +1271,16 @@ function applyLang() {
   $('#langBtn').setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
   $('#vatNo').textContent = t('vatNo', { n: STORE.vat }); $('#crNo').textContent = t('crNo', { n: STORE.cr });
   $('#greetTxt').textContent = t('greets')[gI % t('greets').length];
+  $('#heroChips').innerHTML = STORE.cats.map(c => `<button class="chip" type="button" data-cat-chip="${c.id}">${L(c)}</button>`).join('');
   renderStory(); renderCats(); renderDeals(); renderVideos(); renderClock();
   if (sbox.classList.contains('is-open')) renderRes();
   phI = 0; typeHints();
   if (G) { storyMotion(); requestAnimationFrame(() => ScrollTrigger.refresh()); }
 }
 $('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(); };
+document.addEventListener('click', e => { const a = e.target.closest('[data-focus-search]'); if (a) { e.preventDefault(); $('#searchBtn').click(); } });
+$('#catGrid').addEventListener('click', e => { const a = e.target.closest('a[href="#deals"]'); if (a) { e.preventDefault(); if (lenis) lenis.scrollTo('#deals', { offset: -70, duration: 1.2 }); else $('#deals').scrollIntoView({ behavior: 'smooth' }); } });
+$('#heroChips').addEventListener('click', e => { const b = e.target.closest('[data-cat-chip]'); if (b) { q.value = L(catOf(b.dataset.catChip)); q.focus(); openRes(); } });
 
 const header = $('#header');
 addEventListener('scroll', () => header.classList.toggle('is-scrolled', scrollY > 40), { passive: true });
@@ -1318,7 +1336,9 @@ function heroIn(t0 = 0) {
   gsap.timeline({ delay: t0 })
     .from('#greet', { y: 20, opacity: 0, scale: .9, duration: .8, ease: 'back.out(2)' }, 0)
     .from('#heroH', { y: 40, opacity: 0, duration: 1, ease: 'expo.out' }, .05)
-    .from('#globe', { scale: .7, opacity: 0, duration: 1.6, ease: 'expo.out', clearProps: 'transform,opacity', onStart: () => { globe.vel = 3.4; } }, 0)
+    .from('#globe', { scale: .7, opacity: 0, duration: 1.6, ease: 'expo.out', clearProps: 'transform,opacity' }, 0)
+    .from('.hero__tx', { y: 24, opacity: 0, duration: .9, ease: 'expo.out', clearProps: 'transform,opacity' }, .12)
+    .from('#heroChips', { y: 16, opacity: 0, duration: .8, ease: 'back.out(2)', clearProps: 'transform,opacity' }, .4)
     .from('.fl', { scale: .3, opacity: 0, duration: 1.1, stagger: .07, ease: 'back.out(1.6)', clearProps: 'transform,opacity' }, .3)
     .from('#logo .klogo__word', { y: 30, opacity: 0, duration: .9, ease: 'back.out(1.7)' }, 0);
 }
