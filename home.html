@@ -126,7 +126,7 @@ const STORE = {
       trend: ['طاولة قهوة', 'أبجورة', 'شجرة زيتون', 'سجاد', 'مرآة', 'فازة'],
       scroll: 'انزل تحت',
       stEy: 'ليش ket؟', st: [['وجهتك للأثاث والديكور', 'الترندي.', ''], ['قطع مميزة، تفاصيل مختلفة،', 'وأسعار تستاهل.', ''], ['كل زاوية في بيتك تستاهل', 'لمسة حلوة.', '']],
-      catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، ابحث عن قطعتك', pill1: 'جودة', pill2: 'موثوق', brandT: 'قطع تعيش معك،', brandT2: 'كل يوم.',
+      catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، ابحث عن قطعتك', featT: 'بيت يجمعنا 🤍', pill1: 'جودة', pill2: 'موثوق', brandT: 'قطع تعيش معك،', brandT2: 'كل يوم.',
       clrEy: 'تصفية 24 ساعة', clrH: 'أقوى عروضنا – تصفيات لمدة 24 ساعة فقط!', clrTx: 'كميات محدودة من المستودع، والأسعار تنتهي مع نهاية العداد.',
       hrs: 'ساعة', min: 'دقيقة', sec: 'ثانية', clrTag: 'تصفية 24 ساعة', left: 'باقي {n} قطع فقط', left1: 'آخر قطعة!', buy: 'اشترِ الآن', endsIn: 'ينتهي بعد', ended: 'انتهى العرض',
       prev: 'السابق', next: 'التالي', save: 'وفّر {n}',
@@ -149,7 +149,7 @@ const STORE = {
       trend: ['Coffee table', 'Lamp', 'Olive tree', 'Rugs', 'Mirror', 'Vase'],
       scroll: 'Scroll down',
       stEy: 'Why ket', st: [['Your place for', 'trendy', 'furniture and décor.'], ['Standout pieces, different details,', 'prices worth it.', ''], ['Every corner of your home deserves', 'a lovely touch.', '']],
-      catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces in {n} departments, find yours', pill1: 'Quality', pill2: 'Reliable', brandT: 'Pieces that live with you,', brandT2: 'every day.',
+      catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces in {n} departments, find yours', featT: 'A home that gathers us 🤍', pill1: 'Quality', pill2: 'Reliable', brandT: 'Pieces that live with you,', brandT2: 'every day.',
       clrEy: '24-hour clearance', clrH: 'Our best deals, a 24-hour clearance only!', clrTx: 'Limited warehouse stock, and the prices end when the timer does.',
       hrs: 'hours', min: 'min', sec: 'sec', clrTag: '24-hour clearance', left: 'Only {n} left', left1: 'Last one!', buy: 'Buy now', endsIn: 'Ends in', ended: 'Offer ended',
       prev: 'Previous', next: 'Next', save: 'Save {n}',
@@ -463,13 +463,13 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
 .dc--cta small{ display:block; font:600 12.5px/1.3 var(--f-latin); opacity:.8; font-variant-numeric:tabular-nums; }
 .dc--cta i{ width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; transition:transform .5s var(--ease); }
 .dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
-.dc--feat{ display:none; }   /* the Tuwaiq chair tile: phones only */
+.dc--feat{ display:none; }   /* a filler photo: phones only */
 /* phones: the ket line runs across the top, then three columns like the laptop's */
 @media (max-width:767px){
   .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:0; }
   .dept .head{ display:none; }
   .bento{ gap:6px; grid-template-rows:auto repeat(8, 1fr);
-    grid-template-areas:"brand brand brand" "trees home logo" "trees home logo" "trees home logo" "tables home feat" "tables rugs feat" "lamps rugs feat" "lamps pill feat" "lamps cta feat"; }
+    grid-template-areas:"brand brand brand" "trees feat logo" "trees feat logo" "trees feat logo" "tables feat home" "tables rugs home" "lamps rugs home" "lamps pill home" "lamps cta home"; }
   .dc--feat{ display:block; }
   .dc{ border-radius:16px; }
   .dc__img, .dc__blur img{ object-position:var(--opm, var(--op)); }
@@ -1040,7 +1040,7 @@ $('#storyArt').addEventListener('click', e => { const a = e.target.closest('[dat
    ====================================================================== */
 // [photo, laptop framing, phone framing, phone fit, phone photo]
 // [photo, laptop framing, phone framing]
-const DEPT_IMG = { tables: ['tables', '30% 50%', '35% 50%'], trees: ['trees', '50% 50%', '45% 50%'], home: ['home', '50% 40%', '55% 50%'], rugs: ['rugs', '50% 34%', '50% 35%'], lamps: ['lamps', '70% 60%', '72% 50%'] };
+const DEPT_IMG = { tables: ['tables', '30% 50%', '35% 50%'], trees: ['trees', '50% 50%', '45% 50%'], home: ['home', '50% 40%', '50% 50%'], rugs: ['rugs', '50% 34%', '50% 35%'], lamps: ['lamps', '70% 60%', '72% 50%'] };
 const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);
 function renderCats() {
   const n = STORE.cats.length;
@@ -1049,9 +1049,9 @@ function renderCats() {
     <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true">${logo(160)}</div>
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
-    <a class="dc dc--feat" style="grid-area:feat;--op:50% 40%" href="${byId.tc.url}" data-pop="feat"><img class="dc__img" src="media/home/v1.webp" alt="" loading="lazy">
-      <span class="dc__blur" aria-hidden="true"><img src="media/home/v1.webp" alt="" loading="lazy"></span>
-      <span class="dc__body"><h3>${L(byId.tc)}</h3><span class="dc__go"><i class="flip">${icon('arrow', 16, 2)}</i></span></span></a>` +
+    <div class="dc dc--feat" style="grid-area:feat;--op:50% 50%" data-pop="feat" aria-hidden="true"><img class="dc__img" src="media/home/life/family.webp" alt="" loading="lazy">
+      <span class="dc__blur"><img src="media/home/life/family.webp" alt="" loading="lazy"></span>
+      <span class="dc__body"><h3>${t('featT')}</h3></span></div>` +
     STORE.cats.map((c, i) => { const [im, op, opm] = DEPT_IMG[c.id], src = `media/home/life/${im}.webp?v=5`;
     return `<a class="dc dc--${c.id}" style="grid-area:${c.id};--op:${op};--opm:${opm}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
       <img class="dc__img" src="${src}" alt="" loading="lazy">
