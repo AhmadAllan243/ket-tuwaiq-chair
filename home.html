@@ -117,7 +117,7 @@ const STORE = {
       skip: 'تخطَّ إلى البحث', search: 'بحث', account: 'حسابي', cart: 'السلة', theme: 'الوضع الليلي', wa: 'واتساب',
       ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'تصفيات يومية لمدة 24 ساعة',
       hello: 'Hello!', helloLine: 'أسفرت وأنورت، يا هلا والله!', skipIntro: 'تخطَّ',
-      greets: ['يا مرحبا، نورتونا!', 'Hello! 👋 نورت متجرنا', 'حيّاكم الله، خلّونا نوريكم الزين!', 'أسفرت وأنورت، يا هلا والله!'],
+      gMorning: 'صباح الخير ☀️ نورتونا', gNoon: 'مساء الخير، حيّاكم الله', gNight: 'مساء النور 🌙 نورتونا', greets: ['يا مرحبا، نورتونا!', 'Hello! 👋 نورت متجرنا', 'حيّاكم الله، خلّونا نوريكم الزين!', 'أسفرت وأنورت، يا هلا والله!'],
       heroH: 'وش تدوّر عليه اليوم؟', heroTx: 'اكتب اسم المنتج أو رقمه للاطلاع على التفاصيل والطلب',
       ph: ['تدوّر على طاولة ترندي؟', 'وش ناقص ديكور بيتك؟', 'خلّنا نساعدك تختار', 'أبجورة لغرفة النوم؟', 'شجرة تزيّن الزاوية؟', 'اكتب رقم المنتج، مثل TC-2030'],
       sLabel: 'ابحث عن منتج بالاسم أو الرقم', sGo: 'ابحث', sClear: 'مسح', idleTip: 'جرّب تكتب «أبجورة» ✨',
@@ -140,7 +140,7 @@ const STORE = {
       skip: 'Skip to search', search: 'Search', account: 'Account', cart: 'Cart', theme: 'Dark mode', wa: 'WhatsApp',
       ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'Daily 24-hour clearance',
       hello: 'Hello!', helloLine: 'Welcome in, we are so glad you are here!', skipIntro: 'Skip',
-      greets: ['Hey, welcome in!', 'Hello! 👋 Glad you dropped by', 'Make yourself at home', 'Come in, let us show you the good stuff'],
+      gMorning: 'Good morning ☀️ welcome in', gNoon: 'Good afternoon, come on in', gNight: 'Good evening 🌙 welcome in', greets: ['Hey, welcome in!', 'Hello! 👋 Glad you dropped by', 'Make yourself at home', 'Come in, let us show you the good stuff'],
       heroH: 'What are you looking for today?', heroTx: 'Type a product name or number to see the details and order',
       ph: ['Looking for a trendy table?', 'What is your home missing?', 'Let us help you choose', 'A lamp for the bedroom?', 'A tree for that empty corner?', 'Type a product number, like TC-2030'],
       sLabel: 'Search for a product by name or number', sGo: 'Search', sClear: 'Clear', idleTip: 'Try typing “lamp” ✨',
@@ -303,6 +303,13 @@ html[lang="ar"] .hero__h{ font-weight:700; line-height:1.3; letter-spacing:0; }
 .hero__chips .chip{ height:40px; padding-inline:16px; background:var(--surface); }
 
 .gw{ position:relative; width:100%; height:var(--gs); display:grid; place-items:center; }
+/* the name and price of the tile under the pointer (or tapped) */
+.lchip{ position:absolute; z-index:16; left:0; top:0; display:flex; align-items:center; gap:10px; padding:5px; padding-inline-end:14px; border-radius:var(--r-pill); background:var(--surface); color:var(--text); box-shadow:var(--shadow), inset 0 0 0 1px var(--line); text-align:start; white-space:nowrap; opacity:0; visibility:hidden; transform:translate(-50%, calc(-100% - 18px)) scale(.9); transition:opacity .2s, transform .35s var(--ease), visibility 0s .35s; }
+@media (hover:hover) and (pointer:fine){ .lchip{ pointer-events:none; } }
+.lchip.is-on{ opacity:1; visibility:visible; transform:translate(-50%, calc(-100% - 18px)); transition:opacity .2s, transform .35s var(--ease); }
+.lchip img{ width:36px; height:36px; border-radius:50%; object-fit:cover; background:#fff; }
+.lchip b{ display:block; font-size:13px; font-weight:600; line-height:1.3; }
+.lchip small{ display:block; font:600 11.5px/1.2 var(--f-latin); color:var(--ink-2); }
 .globe{ position:relative; width:var(--gs); height:var(--gs); border-radius:50%; }
 .globe canvas{ display:block; width:100%; height:100%; }
 .globe.is-flat{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; overflow:hidden; cursor:auto; }
@@ -393,9 +400,9 @@ html[dir="rtl"] .story__bars i::after{ transform-origin:right; }
 .story__art{ position:relative; width:min(100%, 500px, calc(100svh - var(--header-h) - 120px)); aspect-ratio:1; justify-self:center; }
 .sa{ position:absolute; inset:0; display:grid; place-items:center; }
 /* the piece on its own, no background: a cut-out with a soft shadow on the floor */
-.sa__t{ position:relative; width:88%; height:80%; }
-.sa__t img{ position:absolute; z-index:1; inset:0; width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 26px 24px rgba(0,0,0,.12)); }
-.sa__t::after{ content:""; position:absolute; left:18%; right:18%; bottom:-3%; height:8%; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.16), transparent); }
+.sa__t{ position:relative; width:84%; height:84%; background:#fff; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.08), inset 0 0 0 1px rgba(0,0,0,.04); }
+.sa__t img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:13%; }
+.sa__t.sh-c{ border-radius:50%; } .sa__t.sh-a{ width:66%; border-radius:999px 999px 36px 36px; } .sa__t.sh-p{ width:58%; border-radius:999px; }
 .sa__chip{ position:absolute; bottom:4%; inset-inline-start:2%; z-index:2; display:flex; align-items:center; gap:10px; padding:8px 16px 8px 8px; border-radius:var(--r-pill); background:var(--surface); box-shadow:var(--shadow), inset 0 0 0 1px var(--line); font-size:14px; font-weight:600; white-space:nowrap; }
 html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 .sa__chip i{ width:34px; height:34px; border-radius:50%; background:var(--invert); color:var(--on-invert); display:grid; place-items:center; }
@@ -415,22 +422,27 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 /* ===================== 3. DEPARTMENTS: a bento of photo tiles that pop in one by one ===================== */
 /* photo tiles for the departments, plus filler boxes: the green ket card, a white logo box, a grey pill and a green deals bar */
 .bento{ display:grid; gap:clamp(10px, 1.2vw, 16px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:repeat(8, 1fr); height:clamp(640px, 96svh, 920px);
-  grid-template-areas:"brand trees logo" "brand trees logo" "brand trees logo" "rugs trees home" "rugs tables home" "lamps tables home" "lamps pill home" "lamps cta home"; }
+  grid-template-areas:"brand trees logo" "brand trees logo" "brand trees logo" "rugs trees lamps" "rugs tables lamps" "home tables lamps" "home pill lamps" "home cta lamps"; }
 .dc{ position:relative; display:block; border-radius:clamp(22px, 2.4vw, 32px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
-.dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.03); transition:transform 1.4s var(--ease); }
-.dc:hover .dc__img{ transform:scale(1.08); }
+.dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.4s var(--ease); }
+.dc:hover .dc__img{ transform:scale(1.05); }
 .motion .bento:not(.is-in) .dc{ opacity:0; }   /* until they pop in (bentoIn) */
 /* the frosted bottom: a blurred copy of the same photo, faded in from below */
-.dc__blur{ position:absolute; inset:0; overflow:hidden; -webkit-mask-image:linear-gradient(to top, #000 22%, rgba(0,0,0,.8) 36%, transparent 62%); mask-image:linear-gradient(to top, #000 22%, rgba(0,0,0,.8) 36%, transparent 62%); }
+.dc__blur{ position:absolute; inset:0; overflow:hidden; -webkit-mask-image:linear-gradient(to top, #000 16%, rgba(0,0,0,.75) 28%, transparent 48%); mask-image:linear-gradient(to top, #000 16%, rgba(0,0,0,.75) 28%, transparent 48%); }
 .dc__blur img{ width:100%; height:100%; object-fit:cover; filter:blur(24px) saturate(1.25); transform:scale(1.2); }
 .dc__blur::after{ content:""; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,.1) 40%, transparent 62%); }
 .dc__n{ position:absolute; z-index:2; top:14px; inset-inline-end:14px; height:28px; padding-inline:11px; border-radius:var(--r-pill); background:rgba(255,255,255,.2); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); font-size:12px; font-weight:600; line-height:28px; }
 .dc__body{ position:absolute; z-index:2; inset-inline:clamp(14px, 1.8vw, 26px); bottom:clamp(14px, 1.8vw, 26px); display:grid; justify-items:start; gap:6px; }
 .dc__body h3{ font-size:clamp(22px, 2.4vw, 36px); font-weight:600; line-height:1.1; letter-spacing:-.03em; text-shadow:0 2px 20px rgba(0,0,0,.16); }
 html[lang="ar"] .dc__body h3{ font-weight:700; line-height:1.35; letter-spacing:0; }
-.dc--home .dc__body h3{ font-size:clamp(28px, 3.2vw, 48px); }
+.dc--lamps .dc__body h3{ font-size:clamp(28px, 3.2vw, 48px); }
 .dc__body p{ max-width:34ch; font-size:clamp(13px, 1.05vw, 15px); opacity:.9; }
 .dc--tables .dc__body p, .dc--rugs .dc__body p{ display:none; }   /* the short tiles: title and button only */
+/* lamps: the hand holding the lamp is at the bottom of the photo, so the words go on top */
+.dc--lamps .dc__body{ bottom:auto; top:clamp(14px, 1.8vw, 26px); }
+.dc--lamps .dc__n{ top:auto; bottom:14px; }
+.dc--lamps .dc__blur{ -webkit-mask-image:linear-gradient(to bottom, #000 16%, rgba(0,0,0,.75) 30%, transparent 50%); mask-image:linear-gradient(to bottom, #000 16%, rgba(0,0,0,.75) 30%, transparent 50%); }
+.dc--lamps .dc__blur::after{ background:linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.1) 40%, transparent 60%); }
 .dc__go{ display:inline-flex; align-items:center; gap:8px; height:clamp(42px, 3.6vw, 50px); margin-top:6px; padding-inline:18px 6px; border-radius:var(--r-pill); background:#fff; color:#0B0B0B; font-size:14px; font-weight:600; white-space:nowrap; transition:transform .4s var(--ease); }
 html[dir="rtl"] .dc__go{ padding-inline:18px 6px; }
 .dc__go i{ width:clamp(32px, 2.8vw, 38px); height:clamp(32px, 2.8vw, 38px); border-radius:50%; display:grid; place-items:center; background:#0B0B0B; color:#fff; transition:transform .5s var(--ease); }
@@ -457,12 +469,12 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
 .dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
 @media (max-width:767px){
   .bento{ grid-template-columns:1fr 1fr; grid-template-rows:none; grid-auto-rows:clamp(92px, 27vw, 124px); height:auto;
-    grid-template-areas:"brand brand" "brand brand" "trees logo" "trees tables" "trees tables" "rugs home" "rugs home" "lamps home" "lamps pill" "lamps cta"; }
+    grid-template-areas:"brand brand" "brand brand" "trees logo" "trees tables" "trees tables" "rugs lamps" "rugs lamps" "home lamps" "home pill" "home cta"; }
   .dc__body p, .dc__n{ display:none; }
   .dc__go{ height:36px; font-size:12.5px; padding-inline:12px 4px; gap:6px; }
   html[dir="rtl"] .dc__go{ padding-inline:12px 4px; }
   .dc__go i{ width:28px; height:28px; }
-  .dc__body h3, .dc--home .dc__body h3{ font-size:20px; }
+  .dc__body h3, .dc--lamps .dc__body h3{ font-size:20px; }
   .dc--brand h3{ font-size:24px; }
   .dc--pill, .dc--cta{ font-size:12.5px; padding-inline:14px; }
   .dc--cta i{ width:30px; height:30px; }
@@ -645,6 +657,7 @@ html[dir="rtl"] .vbox__bar::after{ transform-origin:right; }
     <div class="gw" id="gw">
       <div class="floats" id="floats" aria-hidden="true"></div>
       <div class="globe" id="globe" aria-hidden="true"><canvas id="globeCv"></canvas></div>
+      <button class="lchip" id="lchip" type="button" tabindex="-1" aria-hidden="true"></button>
       <form class="sbox" id="sbox" role="search" autocomplete="off">
         <span class="sbox__tip" id="sTip" data-t="idleTip" aria-hidden="true"></span>
         <div class="sbox__field" id="sField">
@@ -875,6 +888,7 @@ const rowHTML = (p, qRaw, i) => `<button class="srow" type="button" role="option
 
 const sbox = $('#sbox'), q = $('#q'), sres = $('#sres');
 let act = -1;
+let lensShow = () => {};   // the hero circle shows what is searched (set by the lens below)
 function renderRes() {
   const v = q.value; sbox.classList.toggle('has-text', !!v);
   let h = '';
@@ -888,6 +902,7 @@ function renderRes() {
     if (!h) h = `<p class="sres__none">${r.num ? t('sNoneNo') : t('sNone')}</p>`;
   }
   sres.innerHTML = h; act = -1;
+  lensShow(v);
 }
 const openRes = () => { renderRes(); sbox.classList.add('is-open'); q.setAttribute('aria-expanded', 'true'); };
 const closeRes = () => { sbox.classList.remove('is-open'); q.setAttribute('aria-expanded', 'false'); };
@@ -939,8 +954,9 @@ const stopIdle = () => { sbox.classList.remove('is-idle'); clearTimeout(idleT); 
 
 /* greeting chip: the Saudi welcome lines take turns */
 let gI = 0;
+const greetList = () => [t(isNight() ? 'gNight' : riyadhHour() < 12 ? 'gMorning' : 'gNoon'), ...t('greets')];
 function cycleGreet() {
-  const el = $('#greetTxt'), g = t('greets');
+  const el = $('#greetTxt'), g = greetList();
   const show = () => { el.textContent = g[gI % g.length]; };
   if (G) gsap.to(el, { y: -10, opacity: 0, duration: .3, ease: 'power2.in', onComplete: () => { gI++; show(); gsap.fromTo(el, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: 'back.out(2)' }); } });
   else { gI++; show(); }
@@ -971,9 +987,16 @@ const pad = n => String(n).padStart(2, '0');
 /* ======================================================================
    1. HERO: a round window of ket photos, a flat grid seen through a soft
    lens (bigger in the middle, gently curved toward the edge), with the
-   search bar across it. It drifts a little with the pointer. WebGL draws
-   the lens; without it the photos sit in a plain round grid.
+   search bar across it. WebGL draws the lens; without it the photos sit
+   in a plain round grid. What it does:
+   - it answers the search: the matching products flip into the tiles
+   - every few seconds one tile changes on its own
+   - point at (or tap) a tile: its name and price; click opens it
+   - the photos drift toward the pointer; on phones, with the tilt
+   - in the evening (Riyadh time) lamps take over a few tiles
    ====================================================================== */
+const riyadhHour = () => new Date(Date.now() + 3 * 3600e3).getUTCHours();
+const isNight = () => { const h = riyadhHour(); return h >= 18 || h < 5; };
 // the grid, row by row: [photo, width share]
 const LENS = [
   [['home/v1', 1], ['home/life/trees', 1.2], ['tables/t03', .9], ['home/v3', 1.1]],
@@ -981,17 +1004,27 @@ const LENS = [
   [['home/v5', .9], ['home/life/rugs', 1.1], ['tables/life2', 1.2], ['home/ac03', .8]],
   [['home/life/tables', 1.2], ['home/tr06', .8], ['home/life/home', 1.1], ['tables/hero-joy', 1]],
   [['home/v2', 1], ['home/rg04', .9], ['home/v4', 1.2], ['tables/t08', 1]]];
+const LENS_NIGHT = { 'tables/t03': 'home/lp08', 'home/ac03': 'home/lp12', 'home/rg04': 'home/lp11', 'home/tr06': 'home/lp05' };
 const isCut = s => /\/(t|lp|tr|ac|rg)\d\d$/.test(s);   // product photos on white (shown whole, not cropped)
+// what a room photo opens: its department
+const ROOM_CAT = { 'home/life/lamps': 'lamps', 'home/life/trees': 'trees', 'home/life/home': 'home', 'home/life/rugs': 'rugs', 'home/life/tables': 'tables', 'home/life/family': 'home', 'tables/life1': 'tables', 'tables/life2': 'tables', 'tables/hero-joy': 'tables' };
+const byImg = Object.fromEntries(P.map(p => [p.img, p]));
+STORE.videos.forEach(v => { if (!byImg[v.poster]) byImg[v.poster] = byId[v.product]; });
 // [side, photo, width, aspect, gap from the circle, top, tilt, seconds]
 const FLOATS = [['s', 'home/lp03', 112, .78, 70, '2%', -3, 7], ['s', 'home/life/family', 132, .76, 150, '33%', 2, 8.5], ['s', 'home/tr06', 104, .82, 64, '70%', -2, 6.5],
   ['e', 'tables/t12', 116, .9, 66, '4%', 3, 7.5], ['e', 'home/life/tables', 140, 1.06, 146, '37%', -2, 9], ['e', 'home/life/home', 120, .9, 58, '70%', 2, 6]];
 $('#floats').innerHTML = FLOATS.map(([sd, s, w, ar, x, y, r, d], i) => `<span class="fl fl--${sd}${isCut(s) ? ' fl--p' : ''}" style="--w:${w}px;--ar:${ar};--x:${x}px;--y:${y};--r:${r}deg;--d:${d}s;--dl:${-i * 1.3}s"><span class="fl__in"><img src="media/${s}.webp" alt="" loading="lazy"></span></span>`).join('');
 
-(() => {
-  const el = $('#globe'), cv = $('#globeCv'), PICS = LENS.flat().map(([s]) => s);
-  const flat = () => { el.classList.add('is-flat'); el.innerHTML = PICS.filter(s => !isCut(s)).slice(0, 9).map(s => `<img src="media/${s}.webp" alt="">`).join(''); };
+lensShow = (() => {
+  const el = $('#globe'), cv = $('#globeCv'), chip = $('#lchip');
+  const ROWS = LENS.map(row => row.map(([s, w]) => [(isNight() && LENS_NIGHT[s]) || s, w]));
+  const DEFAULT = ROWS.flat().map(([s]) => s);
+  const POOL = [...new Set([...DEFAULT, ...Object.keys(ROOM_CAT), ...P.filter(p => p.price && p.cat !== 'rugs').map(p => p.img)])];
+  const cache = {};
+  const load = s => cache[s] || (cache[s] = new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = `media/${s}.webp`; }));
+  const flat = () => { el.classList.add('is-flat'); el.innerHTML = DEFAULT.filter(s => !isCut(s)).slice(0, 9).map(s => `<img src="media/${s}.webp" alt="">`).join(''); };
   let gl = null; try { gl = cv.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true }); } catch (e) {}
-  if (!gl) { flat(); return; }
+  if (!gl) { flat(); return () => {}; }
   const shader = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
   const prog = gl.createProgram();
   gl.attachShader(prog, shader(gl.VERTEX_SHADER, 'attribute vec2 a; varying vec2 p; void main(){ p = a; gl_Position = vec4(a, 0., 1.); }'));
@@ -1002,11 +1035,10 @@ $('#floats').innerHTML = FLOATS.map(([sd, s, w, ar, x, y, r, d], i) => `<span cl
       if (edge <= 0.) { gl_FragColor = vec4(0.); return; }
       float k = r > 0. ? mix(r, asin(min(r, 1.)) / 1.5707963, .55) / r : .5;
       vec2 q = p * k * .92 + pan;
-      vec4 col = texture2D(tx, vec2(.5 + q.x * .5, .5 - q.y * .5));
-      gl_FragColor = col * edge;
+      gl_FragColor = texture2D(tx, vec2(.5 + q.x * .5, .5 - q.y * .5)) * edge;
     }`));
   gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { flat(); return; }
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { flat(); return () => {}; }
   gl.useProgram(prog);
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
@@ -1017,44 +1049,141 @@ $('#floats').innerHTML = FLOATS.map(([sd, s, w, ar, x, y, r, d], i) => `<span cl
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-  let pics = null, built = 0, ready = false;
+  // the flat sheet behind the lens: rows of tiles with see-through gaps
+  const shown = DEFAULT.slice(), pics = [];
+  let W = 0, x2 = null, tiles = [], ready = false, built = 0, order = [];
   const pan = [0, 0], panT = [0, 0];
-  const tile = (x, im, cut, X, Y, w, h) => {
-    x.save(); x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, Math.min(w, h) * .07); else x.rect(X, Y, w, h); x.clip();
-    x.fillStyle = cut ? '#E9E9EC' : '#D9D9DC'; x.fillRect(X, Y, w, h);
-    x.globalCompositeOperation = cut ? 'multiply' : 'source-over';   // product photos are on white: let the grey through
-    if (im) { const k = cut ? Math.min(w / im.width, h / im.height) * .8 : Math.max(w / im.width, h / im.height), iw = im.width * k, ih = im.height * k; x.drawImage(im, X + (w - iw) / 2, Y + (h - ih) / 2, iw, ih); }
-    x.restore();
-  };
-  // the flat grid: rows of photos with see-through gaps, a little wider than the circle so it can drift
-  function build(px) {
-    const W = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096, Math.max(1024, Math.round(px * 1.4))), c = document.createElement('canvas'); c.width = c.height = W;
-    const x = c.getContext('2d'), g = W * .016, rh = W / LENS.length; let n = 0;
-    LENS.forEach((row, r) => {
-      const sum = row.reduce((s, [, w]) => s + w, 0); let X = -(r % 2) * W * .06;
-      row.forEach(([s, w]) => { const tw = (W + W * .12) * w / sum; tile(x, pics[n++], isCut(s), X + g / 2, r * rh + g / 2, tw - g, rh - g); X += tw; });
-    });
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
-    built = px; ready = true;
+  function tileArt(i, sx = 1) {   // sx < 1 squeezes the tile sideways (the flip)
+    const t = tiles[i], im = pics[i], cut = isCut(shown[i]);
+    x2.clearRect(t.X - 2, t.Y - 2, t.w + 4, t.h + 4);
+    if (sx > .01) {
+      const w = t.w * sx, X = t.X + (t.w - w) / 2;
+      x2.save(); x2.beginPath(); if (x2.roundRect) x2.roundRect(X, t.Y, w, t.h, Math.min(w, t.h) * .07); else x2.rect(X, t.Y, w, t.h); x2.clip();
+      x2.fillStyle = cut ? '#E9E9EC' : '#D9D9DC'; x2.fillRect(X, t.Y, w, t.h);
+      x2.globalCompositeOperation = cut ? 'multiply' : 'source-over';   // product photos are on white: let the grey through
+      if (im) { const k = cut ? Math.min(t.w / im.width, t.h / im.height) * .8 : Math.max(t.w / im.width, t.h / im.height), iw = im.width * k * sx, ih = im.height * k; x2.drawImage(im, X + (w - iw) / 2, t.Y + (t.h - ih) / 2, iw, ih); }
+      x2.restore();
+    }
+    if (!ready) return;
+    const x0 = Math.max(0, Math.floor(t.X - 2)), y0 = Math.max(0, Math.floor(t.Y - 2)), x1 = Math.min(W, Math.ceil(t.X + t.w + 2)), y1 = Math.min(W, Math.ceil(t.Y + t.h + 2));
+    if (x1 > x0 && y1 > y0) gl.texSubImage2D(gl.TEXTURE_2D, 0, x0, y0, gl.RGBA, gl.UNSIGNED_BYTE, x2.getImageData(x0, y0, x1 - x0, y1 - y0));
   }
-  const draw = () => { if (!ready) return; gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform2f(uPan, pan[0], pan[1]); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+  function build(px) {
+    W = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096, Math.max(1024, Math.round(px * 1.4)));
+    const c = document.createElement('canvas'); c.width = c.height = W; x2 = c.getContext('2d', { willReadFrequently: true });
+    const g = W * .016, rh = W / ROWS.length; tiles = [];
+    ROWS.forEach((row, r) => {
+      const sum = row.reduce((s, [, w]) => s + w, 0); let X = -(r % 2) * W * .06;
+      row.forEach(([, w]) => { const tw = W * 1.12 * w / sum; tiles.push({ X: X + g / 2, Y: r * rh + g / 2, w: tw - g, h: rh - g, r }); X += tw; });
+    });
+    // the tiles people see best come first: the big rows above and below the search bar, then the rim, the middle row last
+    order = tiles.map((t, i) => { const qx = (t.X + t.w / 2) / W * 2 - 1, qy = (t.Y + t.h / 2) / W * 2 - 1; return [i, (t.r === 2 ? 2 : 0) + Math.hypot(qx, qy)]; }).sort((a, b) => a[1] - b[1]).map(a => a[0]);
+    ready = false; tiles.forEach((_, i) => tileArt(i)); ready = true;
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+    built = px;
+  }
+  const draw = () => { if (!W) return; gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform2f(uPan, pan[0], pan[1]); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
   function size() {
     const s = el.clientWidth, px = Math.round(s * Math.min(2, devicePixelRatio || 1)); if (!s) return;
     if (cv.width !== px) { cv.width = cv.height = px; gl.viewport(0, 0, px, px); gl.uniform1f(uPx, 2 / px); }
-    if (pics && Math.abs(px - built) > px * .2) build(px);
+    if (pics.length && Math.abs(px - built) > px * .2) build(px);
     draw();
   }
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(size, 120); });
-  Promise.all(PICS.map(s => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = `media/${s}.webp`; })))
-    .then(list => { pics = list; size(); });
-  // the photos drift a touch toward the pointer
-  if (fine && !reduce) {
-    let seen = true, raf = 0;
-    new IntersectionObserver(([en]) => { seen = en.isIntersecting; }).observe(el);
-    const step = () => { raf = 0; pan[0] += (panT[0] - pan[0]) * .08; pan[1] += (panT[1] - pan[1]) * .08; draw(); if (Math.abs(panT[0] - pan[0]) + Math.abs(panT[1] - pan[1]) > .0005) raf = requestAnimationFrame(step); };
-    addEventListener('pointermove', e => { if (!seen) return; panT[0] = (e.clientX / innerWidth - .5) * .07; panT[1] = -(e.clientY / innerHeight - .5) * .05; if (!raf) raf = requestAnimationFrame(step); }, { passive: true });
+  Promise.all(shown.map(load)).then(list => { list.forEach((im, i) => { pics[i] = im; }); size(); });
+
+  // one loop for the flips and the drift; it sleeps when nothing moves
+  const flips = new Map();
+  let raf = 0, seen = true;
+  const ease = x => 1 - Math.pow(1 - x, 3);
+  function tick(now) {
+    raf = 0; let busy = false;
+    flips.forEach((f, i) => {
+      const p = Math.min(1, (now - f.t0) / 560);
+      if (p < .5) tileArt(i, 1 - ease(p * 2));
+      else { if (!f.swapped) { f.swapped = true; pics[i] = f.im; shown[i] = f.s; } tileArt(i, ease((p - .5) * 2)); }
+      if (p >= 1) flips.delete(i); else busy = true;
+    });
+    pan[0] += (panT[0] - pan[0]) * .08; pan[1] += (panT[1] - pan[1]) * .08;
+    if (Math.abs(panT[0] - pan[0]) + Math.abs(panT[1] - pan[1]) > .0005) busy = true;
+    draw();
+    if (busy && seen) raf = requestAnimationFrame(tick);
   }
+  const kick = () => { if (!raf && seen) raf = requestAnimationFrame(tick); };
+  new IntersectionObserver(([en]) => { seen = en.isIntersecting; if (seen) kick(); }).observe(el);
+  function flip(i, s, delay = 0) {
+    return load(s).then(im => setTimeout(() => {
+      if (!ready || (shown[i] === s && !flips.has(i))) return;
+      if (reduce) { pics[i] = im; shown[i] = s; tileArt(i); draw(); return; }
+      flips.set(i, { s, im, t0: performance.now() }); kick();
+    }, delay));
+  }
+
+  // the search: matching products fill the best tiles, the rest go back to the usual photos
+  let sq = '', st;
+  function show(qRaw) {
+    clearTimeout(st);
+    st = setTimeout(() => {
+      const v = (qRaw || '').trim(); if (v === sq || !tiles.length) return; sq = v;
+      let list = [];
+      if (v) { const r = search(v); list = r.prods.map(p => p.img); if (!list.length && r.cats.length) list = P.filter(p => p.cat === r.cats[0].id).map(p => p.img); }
+      list = [...new Set(list)].slice(0, 12);
+      order.forEach((i, k) => flip(i, k < list.length ? list[k] : DEFAULT[i], k * 55));
+    }, 240);
+  }
+  // one tile changes on its own every few seconds (not while a search is showing)
+  if (!reduce) setInterval(() => {
+    if (!seen || sq || flips.size || document.hidden || !tiles.length) return;
+    const i = order[Math.floor(Math.random() * Math.min(12, order.length))];
+    const free = POOL.filter(s => !shown.includes(s)); if (!free.length) return;
+    flip(i, free[Math.floor(Math.random() * free.length)]);
+  }, 3200);
+
+  // which tile is under a point on the screen (the shader's lens, run backwards)
+  function tileAt(x, y) {
+    const r = cv.getBoundingClientRect(), px = (x - r.left) / r.width * 2 - 1, py = -((y - r.top) / r.height * 2 - 1), d = Math.hypot(px, py);
+    if (d >= .98 || !W) return -1;
+    const k = d > 0 ? (d * .45 + Math.asin(d) / (Math.PI / 2) * .55) / d : .5;
+    const ax = (.5 + (px * k * .92 + pan[0]) * .5) * W, ay = (.5 - (py * k * .92 + pan[1]) * .5) * W;
+    return tiles.findIndex(t => ax >= t.X && ax <= t.X + t.w && ay >= t.Y && ay <= t.Y + t.h);
+  }
+  const linkOf = s => { const p = byImg[s]; if (p) return { s, name: L(p), sub: p.price ? `${fmt(p.price)} ${cur()}` : L(catOf(p.cat)), go: () => openProduct(p) };
+    const c = catOf(ROOM_CAT[s]); return c ? { s, name: L(c), sub: t('pcs', { n: c.id === 'tables' ? 20 : c.n }), go: () => openCat(c) } : null; };
+  let hot = -1, link = null;
+  function showChip(i, x, y) {
+    link = i > -1 ? linkOf(shown[i]) : null; hot = link ? i : -1;
+    el.style.cursor = link ? 'pointer' : '';
+    if (!link) { chip.classList.remove('is-on'); return; }
+    const g = $('#gw').getBoundingClientRect();
+    chip.style.left = (x - g.left) + 'px'; chip.style.top = (y - g.top) + 'px';
+    chip.innerHTML = `<img src="media/${link.s}.webp" alt=""><span><b>${link.name}</b><small>${link.sub}</small></span>`;
+    chip.classList.add('is-on');
+  }
+  if (fine) {
+    el.addEventListener('pointermove', e => { const i = tileAt(e.clientX, e.clientY); if (i !== hot) showChip(i, e.clientX, e.clientY); else if (link) { const g = $('#gw').getBoundingClientRect(); chip.style.left = (e.clientX - g.left) + 'px'; chip.style.top = (e.clientY - g.top) + 'px'; } });
+    el.addEventListener('pointerleave', () => showChip(-1));
+    el.addEventListener('click', e => { const i = tileAt(e.clientX, e.clientY); const l = i > -1 && linkOf(shown[i]); if (l) l.go(); });
+  } else {
+    // phones: the first tap shows the name, tapping the name opens it
+    el.addEventListener('click', e => showChip(tileAt(e.clientX, e.clientY), e.clientX, e.clientY));
+    chip.addEventListener('click', () => { if (link) link.go(); });
+    document.addEventListener('pointerdown', e => { if (!el.contains(e.target) && !chip.contains(e.target)) showChip(-1); });
+  }
+  addEventListener('scroll', () => { if (hot > -1) showChip(-1); }, { passive: true });
+
+  // drift: toward the pointer, or with the phone's tilt
+  if (!reduce) {
+    if (fine) addEventListener('pointermove', e => { if (!seen) return; panT[0] = (e.clientX / innerWidth - .5) * .07; panT[1] = -(e.clientY / innerHeight - .5) * .05; kick(); }, { passive: true });
+    else if ('DeviceOrientationEvent' in window) {
+      const tilt = e => { if (e.gamma == null) return; panT[0] = Math.max(-1, Math.min(1, e.gamma / 35)) * .07; panT[1] = Math.max(-1, Math.min(1, (e.beta - 45) / 35)) * .05; kick(); };
+      // iPhones ask once (after a tap on the circle); other phones just send it
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') el.addEventListener('click', () => { DeviceOrientationEvent.requestPermission().then(s => { if (s === 'granted') addEventListener('deviceorientation', tilt); }).catch(() => {}); }, { once: true });
+      else addEventListener('deviceorientation', tilt);
+    }
+  }
+  return show;
 })();
+
 
 /* the round button in the search: dots in a ring that turn */
 const DOTS = `<svg viewBox="0 0 24 24" fill="currentColor">${[...Array(8)].map((_, i) => { const a = i / 8 * Math.PI * 2; return `<circle cx="${(12 + Math.cos(a) * 8).toFixed(2)}" cy="${(12 + Math.sin(a) * 8).toFixed(2)}" r="${i % 2 ? 1.55 : 2.05}"/>`; }).join('')}</svg>`;
@@ -1062,15 +1191,15 @@ $('#sGo').innerHTML = DOTS;
 
 /* ======================================================================
    2. ABOUT: three statements, one at a time; each has a highlighted word
-   and its own piece, shown on its own (a cut-out, no background)
+   and its own piece on a white shape
    ====================================================================== */
-const STORY_ART = ['t08', 'lp11', 'ac05'];
+const STORY_ART = [['t08', 'c'], ['lp11', 'p'], ['ac05', 'a']];   // [piece, white shape: circle / pill / arch]
 const HL = ['hl-m', 'hl-p', 'hl-m'];
 const words = s => s ? s.split(' ').map(w => `<span class="wm"><span class="wi">${w}</span></span>`).join(' ') : '';
 function renderStory() {
   $('#storySlides').innerHTML = t('st').map(([a, h, b], i) => `<p class="ss" data-s="${i}">${words(a)} <span class="${HL[i]}">${words(h)}</span> ${words(b)}</p>`).join('');
-  $('#storyArt').innerHTML = STORY_ART.map((id, i) => { const p = byId[id];
-    return `<div class="sa" data-s="${i}"><div class="sa__t"><img src="media/cut/${id}.webp" alt="${L(p)}" loading="lazy"></div>
+  $('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const p = byId[id];
+    return `<div class="sa" data-s="${i}"><div class="sa__t sh-${sh}"><img src="${img(p.img)}" alt="${L(p)}" loading="lazy"></div>
       <a class="sa__chip" href="#" data-pid="${id}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${L(p)}<small>${fmt(p.price)} ${cur()}</small></span></a></div>`; }).join('');
 }
 $('#storyArt').addEventListener('click', e => { const a = e.target.closest('[data-pid]'); if (a) { e.preventDefault(); openProduct(byId[a.dataset.pid]); } });
@@ -1079,7 +1208,7 @@ $('#storyArt').addEventListener('click', e => { const a = e.target.closest('[dat
    3. DEPARTMENTS: a bento of photo tiles round a ket tile; as the section
    comes up they pop in one by one, each from its own side
    ====================================================================== */
-const DEPT_IMG = { tables: ['tables', '30% 50%'], trees: ['trees', '50% 50%'], home: ['home', '40% 50%'], rugs: ['rugs', '50% 40%'], lamps: ['lamps', '50% 40%'] };
+const DEPT_IMG = { tables: ['tables', '30% 50%'], trees: ['trees', '50% 50%'], home: ['home', '40% 50%'], rugs: ['rugs', '50% 40%'], lamps: ['lamps', '70% 60%'] };
 const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);
 function renderCats() {
   const n = STORE.cats.length;
@@ -1270,7 +1399,7 @@ function applyLang() {
   $('#langBtn').textContent = lang === 'ar' ? 'EN' : 'ع';
   $('#langBtn').setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
   $('#vatNo').textContent = t('vatNo', { n: STORE.vat }); $('#crNo').textContent = t('crNo', { n: STORE.cr });
-  $('#greetTxt').textContent = t('greets')[gI % t('greets').length];
+  $('#greetTxt').textContent = greetList()[gI % greetList().length];
   $('#heroChips').innerHTML = STORE.cats.map(c => `<button class="chip" type="button" data-cat-chip="${c.id}">${L(c)}</button>`).join('');
   renderStory(); renderCats(); renderDeals(); renderVideos(); renderClock();
   if (sbox.classList.contains('is-open')) renderRes();
