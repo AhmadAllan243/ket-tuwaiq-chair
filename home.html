@@ -421,10 +421,15 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 
 /* ===================== 3. DEPARTMENTS: a bento of photo tiles that pop in one by one ===================== */
 /* photo tiles for the departments, plus filler boxes: the green ket card, a white logo box, a grey pill and a green deals bar */
-.bento{ display:grid; gap:clamp(10px, 1.2vw, 16px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:repeat(8, 1fr); height:clamp(640px, 96svh, 920px);
+/* heading + bento together fill one screen, on phones too (same three columns) */
+.dept{ display:flex; flex-direction:column; gap:clamp(10px, 1.6vh, 18px); height:calc(100svh - var(--header-h)); max-height:960px; margin-top:var(--section); padding-block:clamp(10px, 2vh, 22px); scroll-margin-top:var(--header-h); }
+.dept .head{ margin:0; gap:6px; }
+.dept .h2{ font-size:clamp(24px, 3vw, 44px); }
+.bento{ flex:1; min-height:0; display:grid; gap:clamp(6px, .7vw, 10px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:repeat(8, 1fr);
   grid-template-areas:"brand trees logo" "brand trees logo" "brand trees logo" "rugs trees lamps" "rugs tables lamps" "home tables lamps" "home pill lamps" "home cta lamps"; }
-.dc{ position:relative; display:block; border-radius:clamp(22px, 2.4vw, 32px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
-.dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.4s var(--ease); }
+.dc{ position:relative; display:block; border-radius:clamp(16px, 2.2vw, 30px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
+.dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:var(--fit, cover); object-position:var(--op); background:#fff; transition:transform 1.4s var(--ease); }
+.dc__blur img{ object-position:var(--op); }
 .dc:hover .dc__img{ transform:scale(1.05); }
 .motion .bento:not(.is-in) .dc{ opacity:0; }   /* until they pop in (bentoIn) */
 /* the frosted bottom: a blurred copy of the same photo, faded in from below */
@@ -461,23 +466,42 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
 .dc--brand h3 em{ font-style:normal; opacity:.72; }
 .dc--logo{ display:grid; place-items:center; background:#fff; color:#0B0B0B; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
 .dc--logo svg{ width:42%; height:auto; }
-.dc--pill{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); border-radius:var(--r-pill); background:var(--mark); color:var(--text); box-shadow:none; font-weight:600; font-size:clamp(13px, 1.1vw, 15px); }
+.dc--pill{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); border-radius:var(--r-pill); background:#D4C6FB; color:#0B0B0B; box-shadow:none; font-weight:600; font-size:clamp(13px, 1.1vw, 15px); }
 .dc--pill b{ font:700 clamp(18px, 1.8vw, 26px)/1 var(--f-latin); margin-inline-end:6px; }
 .dc--cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); background:var(--bar); font-weight:700; font-size:clamp(14px, 1.2vw, 17px); }
 .dc--cta small{ display:block; font:600 12.5px/1.3 var(--f-latin); opacity:.8; font-variant-numeric:tabular-nums; }
 .dc--cta i{ width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; transition:transform .5s var(--ease); }
 .dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
+/* phones: the same three columns, everything smaller; each photo uses its phone framing (--opm, --fitm) */
 @media (max-width:767px){
-  .bento{ grid-template-columns:1fr 1fr; grid-template-rows:none; grid-auto-rows:clamp(92px, 27vw, 124px); height:auto;
-    grid-template-areas:"brand brand" "brand brand" "trees logo" "trees tables" "trees tables" "rugs lamps" "rugs lamps" "home lamps" "home pill" "home cta"; }
+  .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:10px; }
+  .dept .eyebrow{ display:none; }
+  .dept .h2{ font-size:22px; line-height:1.35; }
+  .dc__img, .dc__blur img{ object-position:var(--opm, var(--op)); }
+  .dc__img{ object-fit:var(--fitm, var(--fit, cover)); }
+  .dc__body{ inset-inline:8px; bottom:8px; gap:4px; }
+  .dc--lamps .dc__body{ top:8px; }
   .dc__body p, .dc__n{ display:none; }
-  .dc__go{ height:36px; font-size:12.5px; padding-inline:12px 4px; gap:6px; }
-  html[dir="rtl"] .dc__go{ padding-inline:12px 4px; }
-  .dc__go i{ width:28px; height:28px; }
-  .dc__body h3, .dc--lamps .dc__body h3{ font-size:20px; }
-  .dc--brand h3{ font-size:24px; }
-  .dc--pill, .dc--cta{ font-size:12.5px; padding-inline:14px; }
-  .dc--cta i{ width:30px; height:30px; }
+  .dc__body h3, .dc--lamps .dc__body h3{ font-size:13.5px; line-height:1.3; }
+  .dc__go{ height:28px; margin-top:2px; padding:0; gap:0; background:none; }
+  html[dir="rtl"] .dc__go{ padding:0; }
+  .dc__go{ font-size:0; }
+  .dc__go i{ width:28px; height:28px; background:#fff; color:#0B0B0B; }
+  .dc__blur{ -webkit-mask-image:linear-gradient(to top, #000 20%, rgba(0,0,0,.7) 34%, transparent 52%); mask-image:linear-gradient(to top, #000 20%, rgba(0,0,0,.7) 34%, transparent 52%); }
+  .dc--brand{ padding:10px; gap:8px; }
+  .dc__pills{ gap:4px; }
+  .dc__pills span{ height:22px; padding-inline:4px 8px; font-size:10px; gap:4px; }
+  .dc__pills span:nth-child(2){ margin-inline-start:0; }
+  .dc__pills i{ width:14px; height:14px; font-size:8px; }
+  .dc--brand h3{ font-size:16px; line-height:1.35; }
+  .dc--logo svg{ width:58%; }
+  .dc--pill{ padding-inline:10px; font-size:0; }
+  .dc--pill b{ font-size:15px; margin:0; }
+  .dc--pill span::after{ content:attr(data-short); font-size:11px; font-weight:600; margin-inline-start:4px; }
+  .dc--pill svg{ width:14px; }
+  .dc--cta{ padding-inline:10px; font-size:11.5px; gap:4px; }
+  .dc--cta small{ font-size:10.5px; }
+  .dc--cta i{ display:none; }
 }
 
 /* ===================== 4. 24-HOUR CLEARANCE: a light studio; swipe the pieces and the card below changes with them ===================== */
@@ -687,7 +711,7 @@ html[dir="rtl"] .vbox__bar::after{ transform-origin:right; }
   </section>
 
   <!-- 3. DEPARTMENTS -->
-  <section class="section container" id="cats" aria-labelledby="catH">
+  <section class="container dept" id="cats" aria-labelledby="catH">
     <div class="head"><span class="eyebrow" data-t="catEy"></span><h2 class="h2" id="catH" data-t="catH"></h2></div>
     <div class="bento" id="catGrid"></div>
   </section>
@@ -1208,19 +1232,20 @@ $('#storyArt').addEventListener('click', e => { const a = e.target.closest('[dat
    3. DEPARTMENTS: a bento of photo tiles round a ket tile; as the section
    comes up they pop in one by one, each from its own side
    ====================================================================== */
-const DEPT_IMG = { tables: ['tables', '30% 50%'], trees: ['trees', '50% 50%'], home: ['home', '40% 50%'], rugs: ['rugs', '50% 40%'], lamps: ['lamps', '70% 60%'] };
+// [photo, laptop framing, phone framing, phone fit, phone photo]
+const DEPT_IMG = { tables: ['tables', '30% 50%', '38% 50%'], trees: ['trees', '50% 50%', '42% 50%'], home: ['home', '40% 50%', '30% 50%'], rugs: ['rugs', '50% 34%', '72% 42%'], lamps: ['lamps', '70% 60%', '50% 50%', '', 'home/lp10'] };   // the phone's lamp tile is tall and thin: a floor lamp fits it
 const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);
 function renderCats() {
   const n = STORE.cats.length;
   $('#catGrid').innerHTML = `<div class="dc dc--brand" style="grid-area:brand" data-pop="brand"><span class="mark" aria-hidden="true">${smileMark(300)}</span>
       <div class="dc__pills"><span><i>★</i>${t('pill1')}</span><span><i>✓</i>${t('pill2')}</span></div><h3>${t('brandT')}<br><em>${t('brandT2')}</em></h3></div>
     <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true">${logo(160)}</div>
-    <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
+    <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>` +
-    STORE.cats.map((c, i) => { const [im, op] = DEPT_IMG[c.id], src = `media/home/life/${im}.webp`;
-    return `<a class="dc dc--${c.id}" style="grid-area:${c.id}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
-      <img class="dc__img" src="${src}" alt="" loading="lazy" style="object-position:${op}">
-      <span class="dc__blur" aria-hidden="true"><img src="${src}" alt="" loading="lazy" style="object-position:${op}"></span>
+    STORE.cats.map((c, i) => { const [im, op, opm, fitm, ph] = DEPT_IMG[c.id], src = `media/home/life/${im}.webp?v=3`, phone = s => ph ? `<source media="(max-width:767px)" srcset="media/${ph}.webp">${s}` : s;
+    return `<a class="dc dc--${c.id}" style="grid-area:${c.id};--op:${op};--opm:${opm}${fitm ? ';--fitm:' + fitm : ''}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
+      <picture>${phone(`<img class="dc__img" src="${src}" alt="" loading="lazy">`)}</picture>
+      <span class="dc__blur" aria-hidden="true"><picture>${phone(`<img src="${src}" alt="" loading="lazy">`)}</picture></span>
       <span class="dc__n latin">${pad(i + 1)} / ${pad(n)}</span>
       <span class="dc__body"><h3>${t('deptT', { n: L(c) })}</h3><p>${L(c.tx)}</p>
         <span class="dc__go">${t('deptGo', { n: L(c.short || c) })}<i class="flip">${icon('arrow', 16, 2)}</i></span></span></a>`; }).join('');
