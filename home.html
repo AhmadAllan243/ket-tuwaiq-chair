@@ -524,12 +524,12 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .clock__u small{ font-size:12px; color:var(--ink-2); }
 .clock__sep{ font:700 30px/1 var(--f-latin); color:var(--ink-3); margin-bottom:22px; animation:caret 1s steps(1) infinite; }
 
-.sb{ --pc:clamp(210px, 24vw, 340px); position:relative; display:grid; justify-items:center; }
+.sb{ --pc:clamp(250px, 27vw, 380px); position:relative; display:grid; justify-items:center; }
 .sb__stage{ position:relative; width:100%; height:var(--pc); touch-action:pan-y; cursor:grab; -webkit-user-select:none; user-select:none; }
 .sb__stage.is-drag{ cursor:grabbing; }
-/* each piece blends into the studio grey (the photos are on white) */
-.sbi{ position:absolute; left:50%; top:0; width:var(--pc); height:var(--pc); margin-left:calc(var(--pc) / -2); transform-origin:50% 70%; mix-blend-mode:multiply; will-change:transform, filter; }
-.sbi img{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; padding:7%; pointer-events:none; }
+/* each piece is a cut-out (media/cut), so it stays solid over the grey and the white card */
+.sbi{ position:absolute; left:50%; top:0; width:var(--pc); height:var(--pc); margin-left:calc(var(--pc) / -2); transform-origin:50% 70%; will-change:transform, filter; }
+.sbi img{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; padding:4%; pointer-events:none; }
 .sbi__sh{ position:absolute; left:18%; right:18%; bottom:4%; height:8%; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), rgba(0,0,0,.12) 60%, transparent); filter:blur(4px); z-index:2; mix-blend-mode:multiply; }
 /* the card sits under the front piece, which overlaps its top edge */
 .sb__card{ position:relative; z-index:45; width:min(calc(100% - 32px), 460px); margin-top:calc(var(--pc) * -.34); padding:calc(var(--pc) * .26) 22px 18px; border-radius:32px; background:#fff; box-shadow:0 60px 80px -44px rgba(0,0,0,.4), 0 28px 60px -24px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.04); text-align:start; }
@@ -1106,7 +1106,7 @@ const dealInfo = d => { const p = d.p;
 const sbStep = () => { const w = $('#sbStage').offsetWidth; return innerWidth < 640 ? w * .5 : Math.min(w * .25, 330); };
 function renderDeals() {
   deals = live(); shown = -1;
-  $('#sbStage').innerHTML = deals.map((d, i) => `<div class="sbi" data-i="${i}" role="group" aria-label="${L(d.p)}"><img src="${img(d.p.img)}" alt="" draggable="false"><i class="sbi__sh"></i></div>`).join('');
+  $('#sbStage').innerHTML = deals.map((d, i) => `<div class="sbi" data-i="${i}" role="group" aria-label="${L(d.p)}"><img src="media/cut/${d.id}.webp" alt="" draggable="false"><i class="sbi__sh"></i></div>`).join('');
   $$('.sbi img').forEach(im => im.complete ? seatShadow(im) : im.addEventListener('load', () => seatShadow(im), { once: true }));
   $('#carDots').innerHTML = deals.map((_, i) => `<button type="button" aria-label="${i + 1}"></button>`).join('');
   $('#sbBuy').innerHTML = `${icon('cartplus', 20, 1.8)}<span>${t('buy')}</span>`;
@@ -1119,8 +1119,8 @@ function seatShadow(im) {
     const W = 60, H = Math.round(60 * im.naturalHeight / im.naturalWidth), c = document.createElement('canvas'); c.width = W; c.height = H;
     const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0, W, H); const px = x.getImageData(0, 0, W, H).data;
     let low = H - 1; find: for (; low > 0; low--) for (let i = 0; i < W; i++) { const k = (low * W + i) * 4; if (px[k + 3] > 40 && Math.min(px[k], px[k + 1], px[k + 2]) < 225) break find; }
-    // the photo is contained in a square box with 7% padding
-    const box = 86, sc = Math.min(box / W, box / H), bottom = 7 + (box - H * sc) / 2 + (H - 1 - low) * sc;
+    // the photo is contained in a square box with 4% padding
+    const box = 92, sc = Math.min(box / W, box / H), bottom = 4 + (box - H * sc) / 2 + (H - 1 - low) * sc;
     im.nextElementSibling.style.bottom = `${Math.max(3, bottom - 5).toFixed(1)}%`;
   } catch (e) {}
 }
@@ -1129,7 +1129,7 @@ function layoutDeals() {
   const sp = sbStep(), dirX = lang === 'ar' ? -1 : 1, mob = innerWidth < 640;
   items.forEach((el, i) => {
     const d = wrapD(i - sale.pos, n), a = Math.abs(d);
-    el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(-Math.min(a, 2) * (mob ? 12 : 22)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
+    el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(-Math.min(a, 2) * (mob ? 38 : 56)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
     el.style.filter = a < .02 ? 'none' : `blur(${(Math.min(a, 2) * 4.5).toFixed(2)}px)`;
     el.style.opacity = a > 2.6 ? 0 : (1 - Math.max(0, a - 1.2) * .5).toFixed(3);
     el.style.zIndex = 50 - Math.round(a * 10);
