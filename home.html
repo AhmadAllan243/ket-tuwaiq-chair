@@ -126,7 +126,7 @@ const STORE = {
       trend: ['طاولة قهوة', 'أبجورة', 'شجرة زيتون', 'سجاد', 'مرآة', 'فازة'],
       scroll: 'انزل تحت',
       stEy: 'ليش ket؟', st: [['وجهتك للأثاث والديكور', 'الترندي.', ''], ['قطع مميزة، تفاصيل مختلفة،', 'وأسعار تستاهل.', ''], ['كل زاوية في بيتك تستاهل', 'لمسة حلوة.', '']],
-      catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، ابحث عن قطعتك', featT: 'بيت يجمعنا 💚', pill1: 'جودة', pill2: 'موثوق', brandT: 'قطع تعيش معك،', brandT2: 'كل يوم.',
+      catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، ابحث عن قطعتك', featT: 'التخفيضات', featOff: 'حتى {n}٪', pill1: 'جودة', pill2: 'موثوق', brandT: 'قطع تعيش معك،', brandT2: 'كل يوم.',
       clrEy: 'عروض كل 24 ساعة', clrH: 'كل 24 ساعة… عروض جديدة تنزل!', clrTx: 'كل يوم تنزل هنا قطع جديدة بأسعار مخفّضة وكميات محدودة. ترقّبوا الدفعة الجاية، والعداد يقولكم متى.', nextDrop: 'الدفعة الجاية بعد',
       hrs: 'ساعة', min: 'دقيقة', sec: 'ثانية', clrTag: 'عرض اليوم', left: 'باقي {n} قطع فقط', left1: 'آخر قطعة!', buy: 'اشترِ الآن', endsIn: 'يتجدد بعد',  ended: 'انتهى العرض',
       prev: 'السابق', next: 'التالي', save: 'وفّر {n}',
@@ -149,7 +149,7 @@ const STORE = {
       trend: ['Coffee table', 'Lamp', 'Olive tree', 'Rugs', 'Mirror', 'Vase'],
       scroll: 'Scroll down',
       stEy: 'Why ket', st: [['Your place for', 'trendy', 'furniture and décor.'], ['Standout pieces, different details,', 'prices worth it.', ''], ['Every corner of your home deserves', 'a lovely touch.', '']],
-      catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces in {n} departments, find yours', featT: 'A home that gathers us 💚', pill1: 'Quality', pill2: 'Reliable', brandT: 'Pieces that live with you,', brandT2: 'every day.',
+      catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces in {n} departments, find yours', featT: 'Discounts', featOff: 'Up to {n}%', pill1: 'Quality', pill2: 'Reliable', brandT: 'Pieces that live with you,', brandT2: 'every day.',
       clrEy: 'Deals every 24 hours', clrH: 'Every 24 hours, new deals drop!', clrTx: 'Each day fresh pieces land here at lower prices, in limited numbers. Keep an eye out, the timer shows when the next drop arrives.', nextDrop: 'Next drop in',
       hrs: 'hours', min: 'min', sec: 'sec', clrTag: "Today's deal", left: 'Only {n} left', left1: 'Last one!', buy: 'Buy now', endsIn: 'Refreshes in', ended: 'Offer ended',
       prev: 'Previous', next: 'Next', save: 'Save {n}',
@@ -413,10 +413,10 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 /* photo tiles for the departments, plus filler boxes: the green ket card, a white logo box, a grey pill and a green deals bar */
 /* heading + bento together fill one screen, on phones too (same three columns) */
 .dept{ display:flex; flex-direction:column; gap:clamp(10px, 1.6vh, 18px); height:calc(100svh - var(--header-h)); max-height:960px; margin-top:var(--section); padding-block:clamp(10px, 2vh, 22px); scroll-margin-top:var(--header-h); }
-.dept .head{ margin:0; gap:6px; }
+.dept .head{ display:none; }   /* the green ket line across the top is the title now */
 .dept .h2{ font-size:clamp(24px, 3vw, 44px); }
-.bento{ flex:1; min-height:0; display:grid; gap:clamp(6px, .7vw, 10px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:repeat(8, 1fr);
-  grid-template-areas:"brand trees logo" "brand trees logo" "brand trees logo" "rugs trees lamps" "rugs tables lamps" "home tables lamps" "home pill lamps" "home cta lamps"; }
+.bento{ flex:1; min-height:0; display:grid; gap:clamp(6px, .7vw, 10px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto repeat(8, 1fr);
+  grid-template-areas:"brand brand brand" "rugs trees logo" "rugs trees logo" "rugs trees logo" "feat tables lamps" "feat tables lamps" "feat home lamps" "pill home lamps" "cta home lamps"; }
 .dc{ position:relative; display:block; border-radius:clamp(16px, 2.2vw, 30px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
 /* each photo fills its tile; --op frames it on laptops, --opm on phones */
 .dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:var(--op); transition:transform 1.4s var(--ease); }
@@ -445,12 +445,13 @@ html[dir="rtl"] .dc__go{ padding-inline:18px 6px; }
 .dc:hover .dc__go i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
 .dc:active .dc__go{ transform:scale(.97); }
 /* the brand tile: ket, the count, the line */
-.dc--brand{ display:flex; flex-direction:column; justify-content:flex-end; gap:14px; padding:clamp(18px, 2vw, 30px); background:var(--bar); overflow:hidden; }
-.dc--brand .mark{ position:absolute; z-index:-1; top:-14%; inset-inline-end:-30%; width:120%; color:#066B36; transform:rotate(calc(-18deg * var(--dir))); }
+.dc--brand{ display:flex; flex-direction:row; align-items:flex-end; justify-content:space-between; gap:14px; padding:clamp(18px, 2vw, 30px); background:var(--bar); overflow:hidden; }
+.dc--brand .dc__pills{ order:2; flex-direction:column; align-items:flex-start; flex:none; }
+.dc--brand .mark{ position:absolute; z-index:-1; top:-95%; inset-inline-end:14%; width:30%; color:#066B36; transform:rotate(calc(-18deg * var(--dir))); }
 .dc--brand .mark svg{ width:100%; height:auto; }
 .dc__pills{ display:flex; flex-wrap:wrap; gap:8px; }
 .dc__pills span{ display:inline-flex; align-items:center; gap:6px; height:30px; padding-inline:8px 12px; border-radius:var(--r-pill); background:rgba(255,255,255,.92); color:#0B0B0B; font-size:12.5px; font-weight:600; }
-.dc__pills span:nth-child(2){ margin-inline-start:22%; background:#fff; }
+.dc__pills span:nth-child(2){ background:#fff; }
 .dc__pills i{ width:18px; height:18px; border-radius:50%; display:grid; place-items:center; background:#0B0B0B; color:#fff; font-size:10px; font-style:normal; }
 .dc--brand h3{ font-size:clamp(26px, 2.8vw, 42px); font-weight:600; line-height:1.1; letter-spacing:-.03em; }
 html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:0; }
@@ -466,15 +467,26 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .dc--cta small{ display:block; font:600 12.5px/1.3 var(--f-latin); opacity:.8; font-variant-numeric:tabular-nums; }
 .dc--cta i{ width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; transition:transform .5s var(--ease); }
 .dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
-.dc--feat{ display:none; background:var(--lime); }   /* a plain light-green filler: phones only */
-.dc--feat .dc__body h3{ color:#0B3D22; }
+/* discounts: light green, three cut-out pieces fanned at the bottom, opens the discounts page */
+.dc--feat{ display:block; background:var(--lime); color:#0B3D22; }
+.dc--feat .dc__top{ position:absolute; z-index:2; inset-inline:clamp(12px, 1.6vw, 24px); top:clamp(12px, 1.6vw, 22px); display:grid; justify-items:start; gap:6px; }
+.dc--feat h3{ font-size:clamp(22px, 2.4vw, 36px); font-weight:700; line-height:1.1; letter-spacing:-.02em; }
+.dc--feat .dc__off{ height:26px; padding-inline:10px; border-radius:var(--r-pill); background:var(--bar); color:#fff; font:700 12.5px/26px var(--f-latin); }
+.dc--feat .dc__fan{ position:absolute; inset-inline:4%; bottom:4%; height:62%; }
+.dc--feat .dc__fan img{ position:absolute; bottom:0; height:100%; width:auto; max-width:none; filter:drop-shadow(0 10px 12px rgba(11,61,34,.2)); transition:transform .6s var(--ease); }
+.dc--feat .dc__fan img:nth-child(1){ height:72%; inset-inline-start:0; rotate:-8deg; }
+.dc--feat .dc__fan img:nth-child(2){ height:100%; inset-inline-start:50%; translate:calc(-50% * var(--dir)) 0; z-index:1; }
+.dc--feat .dc__fan img:nth-child(3){ height:78%; inset-inline-end:0; rotate:8deg; }
+.dc--feat:hover .dc__fan img:nth-child(1){ transform:translate(calc(-6px * var(--dir)), -4px) rotate(-4deg); }
+.dc--feat:hover .dc__fan img:nth-child(3){ transform:translate(calc(6px * var(--dir)), -4px) rotate(4deg); }
+.dc--feat .dc__go{ position:absolute; z-index:3; inset-inline-end:clamp(10px, 1.4vw, 20px); bottom:clamp(10px, 1.4vw, 20px); margin:0; padding:0; background:none; }
+.dc--feat .dc__go i{ background:#0B3D22; color:#fff; }
 /* phones: the ket line runs across the top, then three columns like the laptop's */
 @media (max-width:767px){
   .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:0; }
   .dept .head{ display:none; }
   .bento{ gap:6px; grid-template-rows:auto repeat(8, 1fr);
     grid-template-areas:"brand brand brand" "trees rugs logo" "trees rugs logo" "trees rugs logo" "tables rugs home" "tables feat home" "lamps feat home" "lamps pill home" "lamps cta home"; }
-  .dc--feat{ display:block; }
   .dc{ border-radius:16px; }
   .dc__img, .dc__blur img{ object-position:var(--opm, var(--op)); }
   .dc__body{ inset-inline:8px; bottom:8px; gap:4px; }
@@ -488,13 +500,15 @@ html[dir="rtl"] .lady{ scale:-1 1; }
   .lady{ height:auto; width:168%; justify-self:end; margin-inline-end:-6%; align-self:center; }   /* her legs run out over the photo beside her */
   .dc--brand{ flex-direction:row; align-items:stretch; justify-content:space-between; min-height:138px; padding:16px 16px 14px; gap:10px; }
   .dc--brand h3{ align-self:flex-start; }
-  .dc--brand br{ display:none; }
-  .dc--brand .mark{ top:-120%; width:70%; inset-inline-end:-10%; }
+  .dc--brand .mark{ top:-48%; width:58%; inset-inline-end:-14%; }
   .dc--brand .dc__pills{ order:2; flex-direction:column; flex:none; align-self:flex-end; }
   .dc__pills{ gap:4px; }
   .dc__pills span{ height:22px; padding-inline:4px 8px; font-size:10px; gap:4px; }
   .dc__pills span:nth-child(2){ margin-inline-start:0; }
-  .dc--feat .dc__body{ top:auto; }
+  .dc--feat h3{ font-size:16px; }
+  .dc--feat .dc__off{ height:20px; padding-inline:7px; font-size:10.5px; line-height:20px; }
+  .dc--feat .dc__fan{ height:56%; bottom:6%; }
+  .dc--feat .dc__go{ inset-inline-end:6px; bottom:6px; }
   .dc__pills i{ width:14px; height:14px; font-size:8px; }
   .dc--brand h3{ font-size:19px; line-height:1.4; }
   .dc--logo svg{ width:58%; }
@@ -819,6 +833,7 @@ const img = p => `media/${p}.webp`;
 const P = STORE.products, byId = Object.fromEntries(P.map(p => [p.id, p]));
 const catOf = id => STORE.cats.find(c => c.id === id);
 const off = (was, price) => Math.round((1 - price / was) * 100);
+const maxOff = () => Math.max(...STORE.products.filter(p => p.was).map(p => off(p.was, p.price)));
 ICON.arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 ICON.moon = '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/>';
 ICON.sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>';
@@ -1049,7 +1064,7 @@ $('#storyArt').addEventListener('click', e => { const a = e.target.closest('[dat
    ====================================================================== */
 // [photo, laptop framing, phone framing, phone fit, phone photo]
 // [photo, laptop framing, phone framing]
-const DEPT_IMG = { tables: ['tables', '30% 50%', '35% 50%'], trees: ['trees', '50% 50%', '45% 50%'], home: ['home', '50% 40%', '50% 50%'], rugs: ['rugs', '50% 34%', '50% 50%'], lamps: ['lamps', '70% 60%', '72% 50%'] };
+const DEPT_IMG = { tables: ['tables', '30% 50%', '35% 50%'], trees: ['trees', '50% 50%', '45% 50%'], home: ['home', '50% 40%', '50% 50%'], rugs: ['rugs', '50% 50%', '50% 50%'], lamps: ['lamps', '70% 60%', '72% 50%'] };
 const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);
 function renderCats() {
   const n = STORE.cats.length;
@@ -1059,7 +1074,9 @@ function renderCats() {
     <img class="lady" src="media/home/lady.webp?v=2" alt="" loading="lazy" data-pop="lady" aria-hidden="true">
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
-    <div class="dc dc--feat" style="grid-area:feat" data-pop="feat" aria-hidden="true"><span class="dc__body"><h3>${t('featT')}</h3></span></div>` +
+    <a class="dc dc--feat" style="grid-area:feat" href="sale.html" data-pop="feat"><span class="dc__top"><h3>${t('featT')}</h3><span class="dc__off">${t('featOff', { n: maxOff() })}</span></span>
+      <span class="dc__fan" aria-hidden="true"><img src="media/cut/ac03.webp" alt="" loading="lazy"><img src="media/cut/lp10.webp" alt="" loading="lazy"><img src="media/cut/t13.webp" alt="" loading="lazy"></span>
+      <span class="dc__go"><i class="flip">${icon('arrow', 16, 2)}</i></span></a>` +
     STORE.cats.map((c, i) => { const [im, op, opm] = DEPT_IMG[c.id], src = `media/home/life/${im}.webp?v=5`;
     return `<a class="dc dc--${c.id}" style="grid-area:${c.id};--op:${op};--opm:${opm}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
       <img class="dc__img" src="${src}" alt="" loading="lazy">
