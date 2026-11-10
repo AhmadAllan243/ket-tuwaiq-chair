@@ -115,7 +115,7 @@ const STORE = {
   ui: {
     ar: {
       skip: 'تخطَّ إلى البحث', search: 'بحث', account: 'حسابي', cart: 'السلة', theme: 'الوضع الليلي', wa: 'واتساب',
-      ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'تصفيات يومية لمدة 24 ساعة',
+      ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: 'عروض جديدة كل 24 ساعة',
       hello: 'Hello!', helloLine: 'أسفرت وأنورت، يا هلا والله!', skipIntro: 'تخطَّ',
       gMorning: 'صباح الخير ☀️ نورتونا', gNoon: 'مساء الخير، حيّاكم الله', gNight: 'مساء النور 🌙 نورتونا', greets: ['يا مرحبا، نورتونا!', 'Hello! 👋 نورت متجرنا', 'حيّاكم الله، خلّونا نوريكم الزين!', 'أسفرت وأنورت، يا هلا والله!'],
       heroH: 'وش تدوّر عليه اليوم؟', heroTx: 'اكتب اسم المنتج أو رقمه للاطلاع على التفاصيل والطلب',
@@ -127,8 +127,8 @@ const STORE = {
       scroll: 'انزل تحت',
       stEy: 'ليش ket؟', st: [['وجهتك للأثاث والديكور', 'الترندي.', ''], ['قطع مميزة، تفاصيل مختلفة،', 'وأسعار تستاهل.', ''], ['كل زاوية في بيتك تستاهل', 'لمسة حلوة.', '']],
       catEy: 'تسوّق حسب القسم', catH: 'خمسة أقسام، وبيت واحد يجمعها.', pcs: '{n} قطعة', deptT: 'قسم {n}', deptGo: 'تصفّح {n}', deptSum: 'قطعة في {n} أقسام، ابحث عن قطعتك', featT: 'بيت يجمعنا 🤍', pill1: 'جودة', pill2: 'موثوق', brandT: 'قطع تعيش معك،', brandT2: 'كل يوم.',
-      clrEy: 'تصفية 24 ساعة', clrH: 'أقوى عروضنا – تصفيات لمدة 24 ساعة فقط!', clrTx: 'كميات محدودة من المستودع، والأسعار تنتهي مع نهاية العداد.',
-      hrs: 'ساعة', min: 'دقيقة', sec: 'ثانية', clrTag: 'تصفية 24 ساعة', left: 'باقي {n} قطع فقط', left1: 'آخر قطعة!', buy: 'اشترِ الآن', endsIn: 'ينتهي بعد', ended: 'انتهى العرض',
+      clrEy: 'عروض كل 24 ساعة', clrH: 'كل 24 ساعة… عروض جديدة تنزل!', clrTx: 'كل يوم تنزل هنا قطع جديدة بأسعار مخفّضة وكميات محدودة. ترقّبوا الدفعة الجاية، والعداد يقولكم متى.', nextDrop: 'الدفعة الجاية بعد',
+      hrs: 'ساعة', min: 'دقيقة', sec: 'ثانية', clrTag: 'عرض اليوم', left: 'باقي {n} قطع فقط', left1: 'آخر قطعة!', buy: 'اشترِ الآن', endsIn: 'يتجدد بعد',  ended: 'انتهى العرض',
       prev: 'السابق', next: 'التالي', save: 'وفّر {n}',
       expH: 'شوفوا تجارب اللي سبقوكم 🤍', expTx: 'فيديوهات قصيرة من عملائنا مع قطعهم في بيوتهم.', expIg: 'هايلايت التجارب', expTt: 'تجارب العملاء', expTag: 'تجربة عميل', expPlay: 'شغّل الفيديو',
       expNote: 'هنا يشتغل فيديو العميل من حسابات ket', close: 'إغلاق',
@@ -138,7 +138,7 @@ const STORE = {
     },
     en: {
       skip: 'Skip to search', search: 'Search', account: 'Account', cart: 'Cart', theme: 'Dark mode', wa: 'WhatsApp',
-      ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'Daily 24-hour clearance',
+      ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: 'New deals every 24 hours',
       hello: 'Hello!', helloLine: 'Welcome in, we are so glad you are here!', skipIntro: 'Skip',
       gMorning: 'Good morning ☀️ welcome in', gNoon: 'Good afternoon, come on in', gNight: 'Good evening 🌙 welcome in', greets: ['Hey, welcome in!', 'Hello! 👋 Glad you dropped by', 'Make yourself at home', 'Come in, let us show you the good stuff'],
       heroH: 'What are you looking for today?', heroTx: 'Type a product name or number to see the details and order',
@@ -150,8 +150,8 @@ const STORE = {
       scroll: 'Scroll down',
       stEy: 'Why ket', st: [['Your place for', 'trendy', 'furniture and décor.'], ['Standout pieces, different details,', 'prices worth it.', ''], ['Every corner of your home deserves', 'a lovely touch.', '']],
       catEy: 'Shop by department', catH: 'Five departments, one home.', pcs: '{n} pieces', deptT: '{n}', deptGo: 'Explore {n}', deptSum: 'pieces in {n} departments, find yours', featT: 'A home that gathers us 🤍', pill1: 'Quality', pill2: 'Reliable', brandT: 'Pieces that live with you,', brandT2: 'every day.',
-      clrEy: '24-hour clearance', clrH: 'Our best deals, a 24-hour clearance only!', clrTx: 'Limited warehouse stock, and the prices end when the timer does.',
-      hrs: 'hours', min: 'min', sec: 'sec', clrTag: '24-hour clearance', left: 'Only {n} left', left1: 'Last one!', buy: 'Buy now', endsIn: 'Ends in', ended: 'Offer ended',
+      clrEy: 'Deals every 24 hours', clrH: 'Every 24 hours, new deals drop!', clrTx: 'Each day fresh pieces land here at lower prices, in limited numbers. Keep an eye out, the timer shows when the next drop arrives.', nextDrop: 'Next drop in',
+      hrs: 'hours', min: 'min', sec: 'sec', clrTag: "Today's deal", left: 'Only {n} left', left1: 'Last one!', buy: 'Buy now', endsIn: 'Refreshes in', ended: 'Offer ended',
       prev: 'Previous', next: 'Next', save: 'Save {n}',
       expH: 'See how it went for others 🤍', expTx: 'Short videos from our customers with their pieces at home.', expIg: 'Story highlights', expTt: 'Customer videos', expTag: 'Customer story', expPlay: 'Play video',
       expNote: 'The customer video plays here, from ket’s accounts', close: 'Close',
@@ -400,6 +400,7 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 @media (max-width:899px){
   .story{ height:300vh; }
   .story__art{ order:-1; width:min(64vw, 290px, calc(100svh - var(--header-h) - 330px)); }
+  .story__pin{ height:auto; align-content:start; padding-block:28px 20px; }   /* phones: no empty space under the statements */
   .story__copy{ text-align:center; } .story__meta{ justify-content:center; gap:14px; } .story__bars{ justify-content:center; }
   .ss{ font-size:clamp(28px, 8vw, 44px); }
   .sa__chip{ font-size:12.5px; bottom:0; }
@@ -455,8 +456,8 @@ html[dir="rtl"] .dc__go{ padding-inline:18px 6px; }
 .dc--brand h3{ font-size:clamp(26px, 2.8vw, 42px); font-weight:600; line-height:1.1; letter-spacing:-.03em; }
 html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:0; }
 .dc--brand h3 em{ font-style:normal; opacity:.72; }
-.dc--logo{ display:grid; place-items:center; background:#fff; color:#0B0B0B; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
-.dc--logo svg{ width:42%; height:auto; }
+.dc--logo{ display:grid; place-items:center; background:#C9EADB; }   /* the shopping lady on mint (her white background blends in) */
+.dc--logo img{ width:100%; height:100%; object-fit:contain; padding:6%; mix-blend-mode:multiply; }
 .dc--pill{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); border-radius:var(--r-pill); background:#D4C6FB; color:#0B0B0B; box-shadow:none; font-weight:600; font-size:clamp(13px, 1.1vw, 15px); }
 .dc--pill b{ font:700 clamp(18px, 1.8vw, 26px)/1 var(--f-latin); margin-inline-end:6px; }
 .dc--cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); background:var(--bar); font-weight:700; font-size:clamp(14px, 1.2vw, 17px); }
@@ -466,7 +467,7 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
 .dc--feat{ display:none; }   /* a filler photo: phones only */
 /* phones: the ket line runs across the top, then three columns like the laptop's */
 @media (max-width:767px){
-  .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:0; }
+  .dept{ height:calc(100svh - var(--header-h)); margin-top:12px; padding-block:6px 12px; gap:0; }
   .dept .head{ display:none; }
   .bento{ gap:6px; grid-template-rows:auto repeat(8, 1fr);
     grid-template-areas:"brand brand brand" "trees feat logo" "trees feat logo" "trees feat logo" "tables feat home" "tables rugs home" "lamps rugs home" "lamps pill home" "lamps cta home"; }
@@ -491,7 +492,6 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
   .dc--feat .dc__body{ top:auto; }
   .dc__pills i{ width:14px; height:14px; font-size:8px; }
   .dc--brand h3{ font-size:19px; line-height:1.4; }
-  .dc--logo svg{ width:58%; }
   .dc--pill{ padding-inline:10px; font-size:0; }
   .dc--pill b{ font-size:15px; margin:0; }
   .dc--pill span::after{ content:attr(data-short); font-size:11px; font-weight:600; margin-inline-start:4px; }
@@ -510,6 +510,9 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
 .clr__ey{ display:inline-flex; align-items:center; gap:8px; justify-self:start; height:32px; padding-inline:10px 14px; border-radius:var(--r-pill); background:#0B0B0B; color:#fff; font-size:13px; font-weight:700; }
 .clr__ey .fire{ animation:fire 1.2s ease-in-out infinite alternate; display:inline-block; }
 @keyframes fire{ to{ transform:scale(1.2) rotate(-6deg); } }
+.clock-w{ display:grid; gap:10px; justify-items:start; }
+@media (min-width:1024px){ .clock-w{ justify-items:center; } }
+.clock__lbl{ font-size:13px; font-weight:600; color:var(--ink-2); }
 .clock{ display:flex; align-items:center; gap:8px; direction:ltr; }
 .clock__u{ display:grid; justify-items:center; gap:4px; }
 .clock__u b{ display:grid; place-items:center; min-width:clamp(62px, 6vw, 84px); height:clamp(62px, 6vw, 84px); padding-inline:8px; border-radius:20px; background:#0B0B0B; color:#fff; font:700 clamp(30px, 3vw, 44px)/1 var(--f-latin); font-variant-numeric:tabular-nums; letter-spacing:-.03em; }
@@ -718,7 +721,7 @@ html[dir="rtl"] .vbox__bar::after{ transform-origin:right; }
           <h2 class="h2" id="clrH" data-t="clrH"></h2>
           <p class="sub" data-t="clrTx"></p>
         </div>
-        <div class="clock" id="clock" role="timer" aria-live="off"></div>
+        <div class="clock-w"><span class="clock__lbl" data-t="nextDrop"></span><div class="clock" id="clock" role="timer" aria-live="off"></div></div>
       </div>
       <div class="sb" id="sb">
         <div class="sb__stage" id="sbStage" tabindex="0" aria-roledescription="carousel"></div>
@@ -1046,7 +1049,7 @@ function renderCats() {
   const n = STORE.cats.length;
   $('#catGrid').innerHTML = `<div class="dc dc--brand" style="grid-area:brand" data-pop="brand"><span class="mark" aria-hidden="true">${smileMark(300)}</span>
       <div class="dc__pills"><span><i>★</i>${t('pill1')}</span><span><i>✓</i>${t('pill2')}</span></div><h3>${t('brandT')} <br><em>${t('brandT2')}</em></h3></div>
-    <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true">${logo(160)}</div>
+    <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true"><img src="media/home/lady.webp" alt="" loading="lazy"></div>
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
     <div class="dc dc--feat" style="grid-area:feat;--op:50% 50%" data-pop="feat" aria-hidden="true"><img class="dc__img" src="media/home/life/family.webp" alt="" loading="lazy">
@@ -1109,7 +1112,7 @@ function layoutDeals() {
   const sp = sbStep(), dirX = lang === 'ar' ? -1 : 1, mob = innerWidth < 640;
   items.forEach((el, i) => {
     const d = wrapD(i - sale.pos, n), a = Math.abs(d);
-    el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(Math.min(a, 2) * (mob ? 6 : 14)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
+    el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(-Math.min(a, 2) * (mob ? 12 : 22)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
     el.style.filter = a < .02 ? 'none' : `blur(${(Math.min(a, 2) * 4.5).toFixed(2)}px)`;
     el.style.opacity = a > 2.6 ? 0 : (1 - Math.max(0, a - 1.2) * .5).toFixed(3);
     el.style.zIndex = 50 - Math.round(a * 10);
