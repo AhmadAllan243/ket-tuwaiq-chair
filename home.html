@@ -400,7 +400,6 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 @media (max-width:899px){
   .story{ height:300vh; }
   .story__art{ order:-1; width:min(64vw, 290px, calc(100svh - var(--header-h) - 330px)); }
-  .story__pin{ height:auto; align-content:start; padding-block:28px 20px; }   /* phones: no empty space under the statements */
   .story__copy{ text-align:center; } .story__meta{ justify-content:center; gap:14px; } .story__bars{ justify-content:center; }
   .ss{ font-size:clamp(28px, 8vw, 44px); }
   .sa__chip{ font-size:12.5px; bottom:0; }
@@ -423,7 +422,7 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 .dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:var(--op); transition:transform 1.4s var(--ease); }
 .dc__blur img{ object-position:var(--op); }
 .dc:hover .dc__img{ transform:scale(1.05); }
-.motion .bento:not(.is-in) .dc{ opacity:0; }   /* until they pop in (bentoIn) */
+.motion .bento:not(.is-in) .dc, .motion .bento:not(.is-in) .lady{ opacity:0; }   /* until they pop in (bentoIn) */
 /* the frosted bottom: a blurred copy of the same photo, faded in from below */
 .dc__blur{ position:absolute; inset:0; overflow:hidden; -webkit-mask-image:linear-gradient(to top, #000 16%, rgba(0,0,0,.75) 28%, transparent 48%); mask-image:linear-gradient(to top, #000 16%, rgba(0,0,0,.75) 28%, transparent 48%); }
 .dc__blur img{ width:100%; height:100%; object-fit:cover; filter:blur(24px) saturate(1.25); transform:scale(1.2); }
@@ -457,9 +456,10 @@ html[dir="rtl"] .dc__go{ padding-inline:18px 6px; }
 html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:0; }
 .dc--brand h3 em{ font-style:normal; opacity:.72; }
 .dc--logo{ display:grid; place-items:center; background:#C9EADB; }   /* the shopping lady on mint (her white background blends in) */
-.dc--logo{ overflow:hidden; }
-.dc--logo img{ position:absolute; bottom:-4%; inset-inline-end:2%; height:116%; width:auto; max-width:none; mix-blend-mode:multiply; }
-html[dir="rtl"] .dc--logo img{ transform:scaleX(-1); }
+/* the lady sits on her own layer over the mint tile, so on phones her legs can run out over the next photo
+   (her white background disappears there too: multiply). She faces the way the page reads */
+.lady{ grid-area:logo; position:relative; z-index:6; align-self:center; justify-self:center; height:96%; width:auto; max-width:none; mix-blend-mode:multiply; pointer-events:none; }
+html[dir="rtl"] .lady{ scale:-1 1; }
 .dc--pill{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); border-radius:var(--r-pill); background:#D4C6FB; color:#0B0B0B; box-shadow:none; font-weight:600; font-size:clamp(13px, 1.1vw, 15px); }
 .dc--pill b{ font:700 clamp(18px, 1.8vw, 26px)/1 var(--f-latin); margin-inline-end:6px; }
 .dc--cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); background:var(--bar); font-weight:700; font-size:clamp(14px, 1.2vw, 17px); }
@@ -467,12 +467,13 @@ html[dir="rtl"] .dc--logo img{ transform:scaleX(-1); }
 .dc--cta i{ width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; transition:transform .5s var(--ease); }
 .dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
 .dc--feat{ display:none; }   /* a filler photo: phones only */
-/* phones: three columns like the laptop's; the green ket card back in the grid, home essentials in the tall tile */
+/* phones: the ket line runs across the top, then three columns like the laptop's */
 @media (max-width:767px){
-  .dept{ height:calc(100svh - var(--header-h)); margin-top:12px; padding-block:6px 12px; gap:0; }
+  .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:0; }
   .dept .head{ display:none; }
-  .bento{ gap:6px;
-    grid-template-areas:"brand trees logo" "brand trees logo" "brand trees logo" "tables trees home" "tables rugs home" "lamps rugs home" "lamps pill home" "lamps cta home"; }
+  .bento{ gap:6px; grid-template-rows:auto repeat(8, 1fr);
+    grid-template-areas:"brand brand brand" "trees feat logo" "trees feat logo" "trees feat logo" "tables feat home" "tables rugs home" "lamps rugs home" "lamps pill home" "lamps cta home"; }
+  .dc--feat{ display:block; }
   .dc{ border-radius:16px; }
   .dc__img, .dc__blur img{ object-position:var(--opm, var(--op)); }
   .dc__body{ inset-inline:8px; bottom:8px; gap:4px; }
@@ -483,14 +484,18 @@ html[dir="rtl"] .dc--logo img{ transform:scaleX(-1); }
   html[dir="rtl"] .dc__go{ padding:0; }
   .dc__go{ font-size:0; }
   .dc__go i{ width:28px; height:28px; background:#fff; color:#0B0B0B; }
-  .dc--brand{ padding:12px; gap:8px; }
-  .dc--logo img{ height:auto; width:150%; bottom:24%; inset-inline-end:-6%; }   /* only her feet run out of the tile */
-  .dc--brand .dc__pills{ flex-direction:column; align-items:flex-start; }
+  .lady{ height:auto; width:140%; justify-self:end; margin-inline-end:-4%; align-self:center; }   /* her legs run out over the photo beside her */
+  .dc--brand{ flex-direction:row; align-items:center; justify-content:space-between; padding:14px 16px; gap:10px; }
+  .dc--brand br{ display:none; }
+  .dc--brand .mark{ top:-120%; width:70%; inset-inline-end:-10%; }
+  .dc--brand .dc__pills{ order:2; flex-direction:column; flex:none; }
   .dc__pills{ gap:4px; }
   .dc__pills span{ height:22px; padding-inline:4px 8px; font-size:10px; gap:4px; }
   .dc__pills span:nth-child(2){ margin-inline-start:0; }
+  .dc--feat .dc__body{ top:auto; }
   .dc__pills i{ width:14px; height:14px; font-size:8px; }
-  .dc--brand h3{ font-size:16px; line-height:1.4; }
+  .dc--brand h3{ font-size:19px; line-height:1.4; }
+  .dc--logo svg{ width:58%; }
   .dc--pill{ padding-inline:10px; font-size:0; }
   .dc--pill b{ font-size:15px; margin:0; }
   .dc--pill span::after{ content:attr(data-short); font-size:11px; font-weight:600; margin-inline-start:4px; }
@@ -1048,7 +1053,8 @@ function renderCats() {
   const n = STORE.cats.length;
   $('#catGrid').innerHTML = `<div class="dc dc--brand" style="grid-area:brand" data-pop="brand"><span class="mark" aria-hidden="true">${smileMark(300)}</span>
       <div class="dc__pills"><span><i>★</i>${t('pill1')}</span><span><i>✓</i>${t('pill2')}</span></div><h3>${t('brandT')} <br><em>${t('brandT2')}</em></h3></div>
-    <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true"><img src="media/home/lady.webp" alt="" loading="lazy"></div>
+    <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true"></div>
+    <img class="lady" src="media/home/lady.webp" alt="" loading="lazy" data-pop="lady" aria-hidden="true">
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
     <div class="dc dc--feat" style="grid-area:feat;--op:50% 50%" data-pop="feat" aria-hidden="true"><img class="dc__img" src="media/home/life/family.webp" alt="" loading="lazy">
@@ -1069,7 +1075,7 @@ function bentoIn() {
   const g = $('#catGrid'), gr = g.getBoundingClientRect(), cx = gr.left + gr.width / 2, cy = gr.top + gr.height / 2;
   g.classList.add('is-in');
   const tl = gsap.timeline();
-  ['trees', 'brand', 'logo', 'home', 'tables', 'rugs', 'lamps', 'pill', 'cta', 'feat'].forEach((id, k) => {
+  ['trees', 'brand', 'logo', 'lady', 'home', 'tables', 'rugs', 'lamps', 'pill', 'cta', 'feat'].forEach((id, k) => {
     const el = $(`[data-pop="${id}"]`, g), r = el.getBoundingClientRect(), dx = (r.left + r.width / 2 - cx) * .28, dy = (r.top + r.height / 2 - cy) * .28;
     tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
     const b = $('.dc__body, h3', el);
