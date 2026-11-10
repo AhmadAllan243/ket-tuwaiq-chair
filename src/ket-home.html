@@ -458,7 +458,7 @@ html[lang="ar"] .dc--brand h3{ font-weight:700; line-height:1.4; letter-spacing:
 .dc--logo{ display:grid; place-items:center; background:#C9EADB; }   /* the shopping lady on mint (her white background blends in) */
 /* the lady sits on her own layer over the mint tile, so on phones her legs can run out over the next photo
    (her white background disappears there too: multiply). She faces the way the page reads */
-.lady{ grid-area:logo; position:relative; z-index:6; align-self:center; justify-self:center; height:96%; width:auto; max-width:none; mix-blend-mode:multiply; pointer-events:none; }
+.lady{ grid-area:logo; position:relative; z-index:6; align-self:center; justify-self:center; height:96%; width:auto; max-width:none; pointer-events:none; filter:drop-shadow(0 10px 14px rgba(0,0,0,.12)); }
 html[dir="rtl"] .lady{ scale:-1 1; }
 .dc--pill{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-inline:clamp(16px, 1.8vw, 26px); border-radius:var(--r-pill); background:#D4C6FB; color:#0B0B0B; box-shadow:none; font-weight:600; font-size:clamp(13px, 1.1vw, 15px); }
 .dc--pill b{ font:700 clamp(18px, 1.8vw, 26px)/1 var(--f-latin); margin-inline-end:6px; }
@@ -484,7 +484,7 @@ html[dir="rtl"] .lady{ scale:-1 1; }
   html[dir="rtl"] .dc__go{ padding:0; }
   .dc__go{ font-size:0; }
   .dc__go i{ width:28px; height:28px; background:#fff; color:#0B0B0B; }
-  .lady{ height:auto; width:140%; justify-self:end; margin-inline-end:-4%; align-self:center; }   /* her legs run out over the photo beside her */
+  .lady{ height:auto; width:168%; justify-self:end; margin-inline-end:-6%; align-self:center; }   /* her legs run out over the photo beside her */
   .dc--brand{ flex-direction:row; align-items:center; justify-content:space-between; padding:14px 16px; gap:10px; }
   .dc--brand br{ display:none; }
   .dc--brand .mark{ top:-120%; width:70%; inset-inline-end:-10%; }
@@ -530,17 +530,17 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 /* each piece blends into the studio grey (the photos are on white) */
 .sbi{ position:absolute; left:50%; top:0; width:var(--pc); height:var(--pc); margin-left:calc(var(--pc) / -2); transform-origin:50% 70%; mix-blend-mode:multiply; will-change:transform, filter; }
 .sbi img{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; padding:7%; pointer-events:none; }
-.sbi__sh{ position:absolute; left:20%; right:20%; bottom:3%; height:9%; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.2), transparent); }
+.sbi__sh{ position:absolute; left:18%; right:18%; bottom:4%; height:8%; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), rgba(0,0,0,.12) 60%, transparent); filter:blur(4px); z-index:2; mix-blend-mode:multiply; }
 /* the card sits under the front piece, which overlaps its top edge */
-.sb__card{ position:relative; z-index:0; width:min(calc(100% - 32px), 460px); margin-top:calc(var(--pc) * -.17); padding:22px 22px 18px; border-radius:30px; background:#fff; box-shadow:0 34px 60px -18px rgba(0,0,0,.28), 0 12px 24px rgba(0,0,0,.07); text-align:start; }
+.sb__card{ position:relative; z-index:45; width:min(calc(100% - 32px), 460px); margin-top:calc(var(--pc) * -.34); padding:calc(var(--pc) * .26) 22px 18px; border-radius:32px; background:#fff; box-shadow:0 60px 80px -44px rgba(0,0,0,.4), 0 28px 60px -24px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.04); text-align:start; }
 .sb__txt{ position:relative; min-height:156px; }
 .sbt{ display:grid; gap:9px; }
 .sbt.is-out{ position:absolute; inset:0 0 auto; pointer-events:none; }
 .sbt__row{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
-.sbt__price{ font:800 clamp(36px, 3.4vw, 46px)/1 var(--f-latin); letter-spacing:-.04em; }
+.sbt__price{ color:var(--bar); font:800 clamp(36px, 3.4vw, 46px)/1 var(--f-latin); letter-spacing:-.04em; }
 .sbt__price small{ font-size:.36em; font-weight:600; margin-inline-start:4px; letter-spacing:0; }
 .sbt__row s{ font:500 17px/1 var(--f-latin); color:var(--ink-3); }
-.sbt__off{ margin-inline-start:auto; align-self:center; height:30px; padding-inline:12px; border-radius:var(--r-pill); background:#0B0B0B; color:#fff; font:700 14px/30px var(--f-latin); }
+.sbt__off{ margin-inline-start:auto; align-self:center; height:30px; padding-inline:12px; border-radius:var(--r-pill); background:var(--bar); color:#fff; font:700 14px/30px var(--f-latin); }
 .sbt__name{ font-size:18px; font-weight:600; line-height:1.35; }
 .sbt__meta{ font-size:13px; font-weight:500; color:var(--ink-2); }
 .sbt__meta .num{ unicode-bidi:isolate; color:var(--text); font-weight:600; }
@@ -549,8 +549,8 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .stock span::before{ content:""; width:8px; height:8px; border-radius:50%; background:#0B0B0B; animation:ping 1.4s infinite; }
 @keyframes ping{ 0%{ box-shadow:0 0 0 0 rgba(0,0,0,.35); } 100%{ box-shadow:0 0 0 8px rgba(0,0,0,0); } }
 .stock i{ display:block; height:7px; border-radius:7px; background:#EDEDEF; overflow:hidden; }
-.stock i::after{ content:""; display:block; height:100%; width:var(--w); border-radius:inherit; background:#0B0B0B; }
-.sb__buy{ width:100%; height:54px; margin-top:16px; }
+.stock i::after{ content:""; display:block; height:100%; width:var(--w); border-radius:inherit; background:#6FD69A; }
+.sb__buy{ background:var(--bar); color:#fff; width:100%; height:54px; margin-top:16px; }
 .car__nav{ display:flex; justify-content:center; align-items:center; gap:14px; margin-top:22px; }
 .car__btn{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--surface); box-shadow:inset 0 0 0 1px var(--line); transition:background-color .25s, color .25s, transform .4s var(--ease); }
 .car__btn:hover{ background:var(--invert); color:var(--on-invert); }
@@ -1054,7 +1054,7 @@ function renderCats() {
   $('#catGrid').innerHTML = `<div class="dc dc--brand" style="grid-area:brand" data-pop="brand"><span class="mark" aria-hidden="true">${smileMark(300)}</span>
       <div class="dc__pills"><span><i>★</i>${t('pill1')}</span><span><i>✓</i>${t('pill2')}</span></div><h3>${t('brandT')} <br><em>${t('brandT2')}</em></h3></div>
     <div class="dc dc--logo" style="grid-area:logo" data-pop="logo" aria-hidden="true"></div>
-    <img class="lady" src="media/home/lady.webp" alt="" loading="lazy" data-pop="lady" aria-hidden="true">
+    <img class="lady" src="media/home/lady.webp?v=2" alt="" loading="lazy" data-pop="lady" aria-hidden="true">
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
     <div class="dc dc--feat" style="grid-area:feat;--op:50% 50%" data-pop="feat" aria-hidden="true"><img class="dc__img" src="media/home/life/family.webp" alt="" loading="lazy">
@@ -1107,10 +1107,22 @@ const sbStep = () => { const w = $('#sbStage').offsetWidth; return innerWidth < 
 function renderDeals() {
   deals = live(); shown = -1;
   $('#sbStage').innerHTML = deals.map((d, i) => `<div class="sbi" data-i="${i}" role="group" aria-label="${L(d.p)}"><img src="${img(d.p.img)}" alt="" draggable="false"><i class="sbi__sh"></i></div>`).join('');
+  $$('.sbi img').forEach(im => im.complete ? seatShadow(im) : im.addEventListener('load', () => seatShadow(im), { once: true }));
   $('#carDots').innerHTML = deals.map((_, i) => `<button type="button" aria-label="${i + 1}"></button>`).join('');
   $('#sbBuy').innerHTML = `${icon('cartplus', 20, 1.8)}<span>${t('buy')}</span>`;
   $('#sbTxt').innerHTML = deals.length ? '' : `<p class="sbt__name">${t('ended')}</p>`;
   layoutDeals();
+}
+// put each contact shadow right under its piece: find the lowest non-white row of the photo
+function seatShadow(im) {
+  try {
+    const W = 60, H = Math.round(60 * im.naturalHeight / im.naturalWidth), c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0, W, H); const px = x.getImageData(0, 0, W, H).data;
+    let low = H - 1; find: for (; low > 0; low--) for (let i = 0; i < W; i++) { const k = (low * W + i) * 4; if (px[k + 3] > 40 && Math.min(px[k], px[k + 1], px[k + 2]) < 225) break find; }
+    // the photo is contained in a square box with 7% padding
+    const box = 86, sc = Math.min(box / W, box / H), bottom = 7 + (box - H * sc) / 2 + (H - 1 - low) * sc;
+    im.nextElementSibling.style.bottom = `${Math.max(3, bottom - 5).toFixed(1)}%`;
+  } catch (e) {}
 }
 function layoutDeals() {
   const items = $$('.sbi'), n = items.length; if (!n) return;
