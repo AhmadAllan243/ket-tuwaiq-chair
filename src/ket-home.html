@@ -1375,9 +1375,8 @@ function runIntro() {
       .to('#introWrap', { y: -40, opacity: 0, duration: .55, ease: 'power2.in' }, '+=.75');
   } else {
     // seen this visit (e.g. a refresh): a short Hello, gone before the dots come in
-    tl.from('#introHello .ch', { y: 60, opacity: 0, duration: .6, stagger: .04, ease: 'expo.out' }, .05)
-      .from('#introHello .wave', { scale: 0, rotate: -40, duration: .5, ease: 'back.out(2.4)' }, .25)
-      .to('#introWrap', { y: -40, opacity: 0, duration: .4, ease: 'power2.in' }, '+=.35');
+    // (no letter-by-letter here: the page is still loading, so it would stutter)
+    tl.to('#introWrap', { y: -30, opacity: 0, duration: .35, ease: 'power2.in' }, .7);
   }
   tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, '>-.05')
     .to({}, { duration: seen ? .55 : .9 })

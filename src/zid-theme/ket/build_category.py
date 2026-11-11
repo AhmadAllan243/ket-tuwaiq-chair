@@ -55,15 +55,24 @@ UI = proto['ui']
 # general wording for every other category ({c} = the category's name); the tables page keeps the prototype's own
 GEN = {
     'ar': dict(tables='{c}', ann3='خصومات تصل إلى {n}٪', loadLine='{c}', hLine1='{c}،', hPink='بذوقك', hMark='أنت.', hSub='قطع مختارة تعيش معك، كل يوم.',
-               hStatL='تصميم', shapeAll='الكل', shapeTx='ابدأ بالنوع اللي يناسب مساحتك.', typesEy='تسوّق حسب النوع', typesH='اختر اللي يناسبك.',
-               shapeStat='تصميم في {k} أنواع، تبدأ من {p}', statTx='{n} تصميم في {k} أنواع', gridEy='كل المنتجات', gridH='{c}',
+               hStatL='تصميم', shapeAll='الكل',
+               gridEy='كل المنتجات', gridH='{c}',
                tileA='صُممت\nلتعيش معك.', tileAs='كل قطعة هنا مختارة بعناية لبيتك.', tileB='خامات\nتدوم.', tileBs='تفاصيل هادئة تناسب كل بيت.',
-               helpH='محتار بين تصميمين؟', helpTx='أرسل لنا صورة المكان، ونقترح عليك القطعة والمقاس المناسبين.'),
+               helpH='محتار بين تصميمين؟', helpTx='أرسل لنا صورة المكان، ونقترح عليك القطعة والمقاس المناسبين.',
+              
+               typesEy='تسوّق حسب ميزانيتك', typesH='اختر اللي يناسب ميزانيتك.', shapeTx='من القطع الصغيرة إلى القطع الفاخرة، ابدأ بالسعر اللي يناسبك.',
+               shapeStat='تصميم في {k} فئات سعرية، تبدأ من {p}', statTx='{n} تصميم في {k} فئات', colEy='التخفيضات', colH='وفّر أكثر مع ket.',
+               whyEy='ليش ket؟', whyB='قطعة لكل لحظة في البيت.', acc1b='خامات مختارة بعناية لتتحمل الاستخدام اليومي وتعيش معك سنوات.',
+               acc2b='توصيل مجاني لكل مدن المملكة، وتصلك القطعة جاهزة أو بتركيب بسيط.', acc3='قطع تكمل بعضها', acc3b='تصاميم بألوان وخامات متناسقة، تقدر تجمعها في نفس المكان.'),
     'en': dict(tables='{c}', ann3='Up to {n}% off', loadLine='{c}', hLine1='{c},', hPink='in your own', hMark='taste.', hSub='Picked pieces that live with you, every day.',
-               hStatL='designs', shapeAll='All', shapeTx='Start with the type that fits your space.', typesEy='Shop by type', typesH='Pick what suits you.',
-               shapeStat='designs in {k} types, from {p}', statTx='{n} designs in {k} types', gridEy='All products', gridH='{c}',
+               hStatL='designs', shapeAll='All',
+               gridEy='All products', gridH='{c}',
                tileA='Made to\nlive with you.', tileAs='Every piece here is picked with care for your home.', tileB='Materials\nthat last.', tileBs='Calm details that suit every home.',
-               helpH='Torn between two designs?', helpTx='Send us a photo of your space and we will suggest the right piece and size.'),
+               helpH='Torn between two designs?', helpTx='Send us a photo of your space and we will suggest the right piece and size.',
+               typesEy='Shop by budget', typesH='Pick what fits your budget.', shapeTx='From small touches to statement pieces, start with the price that suits you.',
+               shapeStat='designs in {k} price ranges, from {p}', statTx='{n} designs in {k} ranges', colEy='Discounts', colH='Save more with ket.',
+               whyEy='Why ket', whyB='a piece for every moment at home.', acc1b='Materials chosen with care for everyday use, made to last for years.',
+               acc2b='Free delivery across the Kingdom; pieces arrive ready or with simple assembly.', acc3='Pieces that go together', acc3b='Matching colours and materials you can bring together in one space.'),
 }
 # the tables page: KET's tables sorted into the prototype's types and collections by their names
 TABLE_RULES = {
@@ -75,19 +84,31 @@ js = re.findall(r'<script>\n(\(\(\) => \{.*?\}\)\(\);)\n</script>', html, re.S)[
 js = must(js, "'use strict';", """'use strict';
 const KC = document.querySelector('.kc'); if (!KC || !window.KET_CAT) return;
 const D = window.KET_CAT;
-if (!D.full) for (const L in GEN) Object.assign(UI[L], GEN[L]);
+if (!D.tables) for (const L in GEN) Object.assign(UI[L], GEN[L]);
 for (const L in UI) for (const k in UI[L]) if (typeof UI[L][k] === 'string') UI[L][k] = UI[L][k].replace(/\\{c\\}/g, D.name);
-if (D.sub && !D.full) UI.ar.hSub = UI.en.hSub = D.sub;
+if (D.sub && !D.tables) UI.ar.hSub = UI.en.hSub = D.sub;
 let TYPES = D.types, COLS = [];
 const COLIMG = {};
-if (D.full) {
+if (D.full && !D.tables) {
+  // the other departments: price ranges in place of types, discount levels in place of collections
+  const TB = [['p1', 0, 200, 'أقل من 200', 'Under 200'], ['p2', 200, 500, '200 – 500', '200 – 500'], ['p3', 500, 1000, '500 – 1,000', '500 – 1,000'], ['p4', 1000, 1e12, '1,000 وأكثر', '1,000 and up']];
+  D.products.forEach(p => { p.type = (TB.find(b => p.price >= b[1] && p.price < b[2]) || TB[0])[0];
+    const o = p.was ? Math.round((1 - p.price / p.was) * 100) : 0; p.col = o >= 50 ? 'd50' : o >= 30 ? 'd30' : o > 0 ? 'd1' : 'full'; });
+  TYPES = TB.map(b => ({ id: b[0], ar: b[3], en: b[4], hero: (D.products.find(p => p.type === b[0]) || {}).id || '' })).filter(x => x.hero);
+  COLS = [['d50', 'خصم 50٪ وأكثر', '50% off and more', 'أكبر التخفيضات', 'The biggest savings'], ['d30', 'خصم 30–49٪', '30–49% off', 'توفير واضح', 'Clear savings'],
+    ['d1', 'خصم حتى 29٪', 'Up to 29% off', 'لمسة توفير', 'A little saving'], ['full', 'بسعرها الأصلي', 'Full price', 'قطع مختارة', 'Picked pieces']]
+    .map(([id, ar, en, nar, nen]) => ({ id, ar, en, note: { ar: nar, en: nen }, img: (D.products.find(p => p.col === id) || {}).id || '' })).filter(c => c.img);
+  COLS.forEach(c => COLIMG[c.id] = c.img);
+  const sz = document.getElementById('sizeTitle'); if (sz) sz.closest('section').style.display = 'none';   // the size guide is about coffee tables
+}
+if (D.tables) {
   // the tables page: every table gets a type and (when its name says so) a collection
   const rx = (list, name) => (list.find(([, r]) => new RegExp(r, 'i').test(name)) || [])[0] || '';
   D.products.forEach(p => { p.type = rx(RULES.types, p.ar) || 'side'; p.col = rx(RULES.cols, p.ar); });
   TYPES = PTYPES.map(x => ({ ...x, hero: (D.products.find(p => p.type === x.id) || {}).id || '' }));
   COLS = PCOLS.map(c => ({ ...c, img: (D.products.find(p => p.col === c.id) || {}).id || '' })).filter(c => c.img);
   COLS.forEach(c => COLIMG[c.id] = c.img);
-} else ['cols', 'whyTitle', 'sizeTitle'].forEach(id => { const el = document.getElementById(id); if (el) el.closest('section').style.display = 'none'; });   // the tables-only parts
+}
 const STORE = { currency: CURRENCY, category: { ar: D.name, en: D.name }, types: TYPES, products: D.products, collections: COLS, ui: UI };
 if (TYPES.length < 2) document.getElementById('shape').style.display = 'none';   // nothing to pick from""")
 js = must(js, "root.classList.add(G ? 'motion' : 'no-motion');", "KC.classList.add(G ? 'motion' : 'no-motion');")
@@ -118,8 +139,11 @@ js = must(js, "  $('#shapeCols').innerHTML = `", """  if (!D.full) {
   $('#shapeCols').innerHTML = `""")
 js = must(js, "const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;",
           """const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;\n    // no table in this collection (yet): the tile keeps its place with another table and opens them all\n    if (!c) { const used = new Set(STORE.types.map(x => x.hero)), pool = P.filter(p => !used.has(p.id)), pi = pool[cls === 'st--full' ? 1 : 0] || P[0];\n      return pi ? `<button class="st ${cls}" type="button" data-type="all" aria-label="${t('shapeAll')}" style="--tint:var(--${tint})"><img src="${img(pi.id)}" alt="" loading="lazy">${label ? lbl(t('shapeAll'), P.length) : ''}</button>` : ''; }""")
-js = must(js, "col('tm', 'st--short', 'tm-side', 'white')", "col('tm', 'st--short', COLIMG.tm, 'white')")
-js = must(js, "col('laxi', 'st--full', 't16', 'white', true)", "col('laxi', 'st--full', COLIMG.laxi, 'white', true)")
+js = must(js, "col('tm', 'st--short', 'tm-side', 'white')", "col(CC[0], 'st--short', COLIMG[CC[0]], 'white')")
+for i, k in enumerate(('coffee', 'side', 'sets', 'console')):
+    js = must(js, f"tile('{k}', ", f"tile(TT[{i}], ")
+js = must(js, "const tile = (id, cls, tint) => `", "const TT = D.tables ? ['coffee', 'side', 'sets', 'console'] : STORE.types.map(x => x.id), CC = D.tables ? ['tm', 'laxi'] : [(STORE.collections[1] || {}).id, (STORE.collections[0] || {}).id];\n  const tile = (id, cls, tint) => !ty(id) ? '' : `")
+js = must(js, "col('laxi', 'st--full', 't16', 'white', true)", "col(CC[1], 'st--full', COLIMG[CC[1]], 'white', true)")
 # product cards: real links, the Zid cart
 js = must(js, '<h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3>', '<h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3>')
 js = must(js, '<p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p>', '<p class="card__price"><b>${money(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s>` : \'\'}</p>')
