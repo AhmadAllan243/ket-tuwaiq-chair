@@ -115,7 +115,10 @@ function renderShape() {
   const pieces = n => n === 1 ? t('piece1') : n === 2 ? t('pieces2') : t('pieces', { n });
   const lbl = (name, n) => `<span class="st__lbl"><span><b>${name}</b><small>${pieces(n)}</small></span><span class="st__go flip">${icon('arrow', 14, 2)}</span></span>`;
   const tile = (id, cls, tint) => `<button class="st ${cls}" type="button" data-type="${id}" style="--tint:var(--${tint})"><img src="${img(ty(id).hero)}" alt="" loading="lazy">${lbl(L(ty(id)), P.filter(p => p.type === id).length)}</button>`;
-  const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo; if (!c) return '';
+  const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;
+    // no table in this collection (yet): the tile keeps its place with another table and opens them all
+    if (!c) { const used = new Set(STORE.types.map(x => x.hero)), pool = P.filter(p => !used.has(p.id)), pi = pool[cls === 'st--full' ? 1 : 0] || P[0];
+      return pi ? `<button class="st ${cls}" type="button" data-type="all" aria-label="${t('shapeAll')}" style="--tint:var(--${tint})"><img src="${img(pi.id)}" alt="" loading="lazy">${label ? lbl(t('shapeAll'), P.length) : ''}</button>` : ''; }
     return `<button class="st ${cls}${ph ? ' is-photo' : ''}" type="button" data-col="${id}" aria-label="${L(c)}" style="--tint:var(--${tint})"><img src="${img(im)}" alt="" loading="lazy">${label ? lbl(L(c), P.filter(p => p.col === id).length) : ''}</button>`; };
   if (!D.full) {
     const T = STORE.types.slice(0, 4);

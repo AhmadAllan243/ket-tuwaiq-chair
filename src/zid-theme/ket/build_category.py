@@ -116,7 +116,7 @@ js = must(js, "  $('#shapeCols').innerHTML = `", """  if (!D.full) {
   }
   $('#shapeCols').innerHTML = `""")
 js = must(js, "const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;",
-          "const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo; if (!c) return '';")
+          """const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;\n    // no table in this collection (yet): the tile keeps its place with another table and opens them all\n    if (!c) { const used = new Set(STORE.types.map(x => x.hero)), pool = P.filter(p => !used.has(p.id)), pi = pool[cls === 'st--full' ? 1 : 0] || P[0];\n      return pi ? `<button class="st ${cls}" type="button" data-type="all" aria-label="${t('shapeAll')}" style="--tint:var(--${tint})"><img src="${img(pi.id)}" alt="" loading="lazy">${label ? lbl(t('shapeAll'), P.length) : ''}</button>` : ''; }""")
 js = must(js, "col('tm', 'st--short', 'tm-side', 'white')", "col('tm', 'st--short', COLIMG.tm, 'white')")
 js = must(js, "col('laxi', 'st--full', 't16', 'white', true)", "col('laxi', 'st--full', COLIMG.laxi, 'white', true)")
 # product cards: real links, the Zid cart
