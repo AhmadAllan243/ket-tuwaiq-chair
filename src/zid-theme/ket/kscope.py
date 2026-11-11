@@ -44,10 +44,13 @@ def make(sc):
             body = text[j + 1:k - 1]
             h = head.strip()
             lead = head[:len(head) - len(head.lstrip())]
-            if h.startswith(('@media', '@supports', '@layer')):
-                out.append(f'{lead}{h}{{{scope_block(body)}}}')
-            elif h.startswith(('@keyframes', '@font-face', '@property')):
-                out.append(f'{lead}{h}{{{body}}}')
+            # comments in front of an at-rule stay in front of it (they used to hide the at-rule from the checks below)
+            cm0 = re.match(r'^((?:\s*/\*.*?\*/)*)\s*(.*)$', h, re.S)
+            pre0, at = cm0.group(1), cm0.group(2)
+            if at.startswith(('@media', '@supports', '@layer')):
+                out.append(f'{lead}{pre0}{at}{{{scope_block(body)}}}')
+            elif at.startswith(('@keyframes', '@font-face', '@property')):
+                out.append(f'{lead}{pre0}{at}{{{body}}}')
             else:
                 cm = re.match(r'^((?:\s*/\*.*?\*/)*)(.*)$', h, re.S)
                 pre, sels = cm.group(1), cm.group(2)

@@ -7,7 +7,7 @@
 {% macro pic(v, w=900) %}{{ (image_url(v, w=w, q=85, f='auto') if v else '') | tojson }}{% endmacro %}
 {% macro href(v) %}{{ ((v._url if v and v._url else (v.url if v and v.url is string else (v or ''))) ~ '') | tojson }}{% endmacro %}
 {% macro txt(v) %}{{ (v or '') | tojson }}{% endmacro %}
-<link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=825ff42b">
+<link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=f121de9d">
 <script>
   document.documentElement.classList.add('is-intro');   // the welcome (short once seen this visit) ends by handing over to the search bar
   window.KET_HOME = {
@@ -205,4 +205,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}&k=e76b049a"></script>
-<script src="{{ 'ket-home.js' | asset_url }}&k=0ba2ea28"></script>
+<script src="{{ 'ket-home.js' | asset_url }}&k=685ef24c"></script>

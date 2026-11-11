@@ -172,7 +172,7 @@ from jinja2 import ChainableUndefined
 env = Environment(loader=Loader(), extensions=[VitrinTags, 'jinja2.ext.do'], autoescape=True, undefined=ChainableUndefined)
 env.globals.update(_=lambda s: CAT.get(s, s), url_for=lambda *a, **k: '#', image_url=lambda src, **k: src, safeget=safeget,
                    settings=obj(layout), store=store, session=session, request=obj({}), user_custom_css=None)
-env.filters['asset_url'] = lambda p: '../assets/' + p
+env.filters['asset_url'] = lambda p: '../assets/' + p + '?v=local'   # Zid's links carry ?v=, and the KET links add &k=
 env.filters['localized_url'] = lambda u: u
 
 html = env.get_template('templates/product.jinja').render(product=product)

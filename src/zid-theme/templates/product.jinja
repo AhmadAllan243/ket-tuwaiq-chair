@@ -67,10 +67,44 @@
   {% set n_img = images | length %}
   {% set sp = (mfv(['story_photo', 'صورة_الحكاية']) | trim | float) | int %}
   {% set story_detail = images[sp - 1] if 0 < sp <= n_img else (images[n_img - 1] if n_img else none) %}
-  {# no story fields: the product's own name and description #}
-  {% if not (story_title or story_text or story_lines) %}
-    {% set story_title = (product.name or '').split('|')[0] | trim %}
+  {# the product's kind (for the story wording and the size drawing): its name first, then its department #}
+  {% set pn = (product.name or '') | lower %}
+  {% set kinds = [('chair', ['كرسي', 'كراسي', 'بوف', 'مقعد', 'كنب', 'chair', 'stool', 'pouf', 'sofa']), ('table', ['طاولة', 'طاولات', 'table']),
+                  ('lamp', ['أبجورة', 'ابجورة', 'إضاءة', 'اضاءة', 'lamp', 'light']), ('rug', ['سجاد', 'rug', 'carpet']),
+                  ('plant', ['شجرة', 'شجر', 'نبتة', 'نبات', 'tree', 'plant']), ('mirror', ['مرآة', 'مراية', 'مرايا', 'mirror']),
+                  ('cabinet', ['دولاب', 'خزانة', 'كونسول', 'ستاند', 'رف', 'cabinet', 'console', 'stand', 'shelf']), ('vase', ['فازة', 'مزهرية', 'vase'])] %}
+  {% set dk = namespace(v='') %}
+  {% for kd, words in kinds %}{% if not dk.v %}{% for w in words %}{% if w in pn %}{% set dk.v = kd %}{% endif %}{% endfor %}{% endif %}{% endfor %}
+  {% if not dk.v %}
+    {% for c in (product.categories or []) %}{% if not dk.v %}
+      {% set cid = c.id | string %}{% set cn = (c.name or '') | lower %}
+      {% if 'كرس' in cn or 'chair' in cn %}{% set dk.v = 'chair' %}
+      {% elif cid == '444477' or 'طاول' in cn or 'table' in cn %}{% set dk.v = 'table' %}
+      {% elif cid == '444476' or 'نبات' in cn or 'شجر' in cn or 'plant' in cn %}{% set dk.v = 'plant' %}
+      {% elif cid == '444490' or 'سجاد' in cn or 'rug' in cn or 'carpet' in cn %}{% set dk.v = 'rug' %}
+      {% elif cid == '444478' or 'إضاء' in cn or 'ابجور' in cn or 'أبجور' in cn or 'light' in cn or 'lamp' in cn %}{% set dk.v = 'lamp' %}
+      {% elif cid == '444491' or 'مستلزم' in cn or 'decor' in cn %}{% set dk.v = 'vase' %}{% endif %}
+    {% endif %}{% endfor %}
+  {% endif %}
+  {% set dim_kind = dk.v or 'chair' %}
+  {# no story fields: words for the product's department, its description, and its second photo (the last one is usually the size sketch) #}
+  {% set auto_story = not (story_title or story_text or story_lines) %}
+  {% if auto_story %}
+    {% set ST = {
+      'chair': [['جلسة تريحك', 'راحة لكل يوم.', 'تفاصيل مدروسة.', 'تكمّل مجلسك.'], ['Made for sitting', 'Comfort, every day.', 'Considered details.', 'Completes the majlis.']],
+      'table': [['طاولة تجمعنا', 'للقهوة والضيوف.', 'خامات تدوم.', 'مقاس يناسب مساحتك.'], ['A table to gather', 'For coffee and guests.', 'Materials that last.', 'Sized for your space.']],
+      'lamp': [['ضوء دافي', 'إضاءة هادئة.', 'لمسة دفء.', 'لكل زاوية في البيت.'], ['A warm light', 'Calm light.', 'A touch of warmth.', 'For every corner.']],
+      'rug': [['دفء تحت خطاك', 'نقوش مختارة.', 'ملمس ناعم.', 'يجمع المكان.'], ['Warmth underfoot', 'Chosen patterns.', 'A soft touch.', 'It ties the room.']],
+      'plant': [['خضرة بلا عناء', 'بدون سقاية.', 'تبقى خضراء.', 'تحيي المكان.'], ['Green, no effort', 'No watering.', 'Always green.', 'Brings the room alive.']],
+      'mirror': [['انعكاس أنيق', 'يوسّع المكان.', 'إطار مختار.', 'لمسة ضوء.'], ['A graceful reflection', 'Opens up the room.', 'A chosen frame.', 'A touch of light.']],
+      'cabinet': [['مكان لكل شيء', 'ترتيب أنيق.', 'خامات متينة.', 'يكمّل ديكورك.'], ['A place for everything', 'Neatly kept.', 'Sturdy materials.', 'Completes your décor.']],
+      'vase': [['لمسة تكمّل بيتك', 'تفاصيل صغيرة.', 'فرق كبير.', 'بذوقك أنت.'], ['The finishing touch', 'Small details.', 'A big difference.', 'In your own taste.']]
+    } %}
+    {% set stw = ST[dim_kind][1 if lang == 'en' else 0] %}
+    {% set story_title = stw[0] %}
+    {% set story_lines = stw[1:] %}
     {% set story_text = ((product.short_description or product.description or '') | striptags | replace('&nbsp;', ' ') | trim | truncate(340)) %}
+    {% set story_detail = images[1] if n_img > 2 else (images[0] if n_img else none) %}
   {% endif %}
   {# no dimension fields: the sizes written in the description ("35cm × 35cm … 58cm" → width, depth, height) #}
   {% if not (dim_w or dim_h or dim_d or dim_sh) %}
@@ -81,18 +115,6 @@
     {% elif dn.v | length == 2 %}{% set dim_w = dn.v[0] | string %}{% set dim_h = dn.v[1] | string %}
     {% elif dn.v | length > 2 %}{% set dim_w = dn.v[0] | string %}{% set dim_d = dn.v[1] | string %}{% set dim_h = dn.v[2] | string %}{% endif %}
   {% endif %}
-  {# which drawing the dimensions get: from the product's department (chairs keep the chair) #}
-  {% set dk = namespace(v='', chair=false) %}
-  {% for c in (product.categories or []) %}
-    {% set cid = c.id | string %}{% set cn = (c.name or '') | lower %}
-    {% if 'كرس' in cn or 'chair' in cn %}{% set dk.chair = true %}
-    {% elif cid == '444477' or 'طاول' in cn or 'table' in cn %}{% set dk.v = 'table' %}
-    {% elif cid == '444476' or 'نبات' in cn or 'شجر' in cn or 'plant' in cn %}{% set dk.v = 'plant' %}
-    {% elif cid == '444490' or 'سجاد' in cn or 'rug' in cn or 'carpet' in cn %}{% set dk.v = 'rug' %}
-    {% elif cid == '444478' or 'إضاء' in cn or 'ابجور' in cn or 'أبجور' in cn or 'light' in cn or 'lamp' in cn %}{% set dk.v = 'lamp' %}
-    {% elif cid == '444491' or 'مستلزم' in cn or 'decor' in cn %}{% set dk.v = 'vase' %}{% endif %}
-  {% endfor %}
-  {% set dim_kind = 'chair' if dk.chair or not dk.v else dk.v %}
   {% set story_chips = [] %}
   {% for x in (mfv(['story_chips', 'وسوم_الحكاية']) | trim).split('|') %}{% if x | trim %}{% set _x = story_chips.append(x | trim) %}{% endif %}{% endfor %}
   {% if not story_chips and dim_h and dim_w %}{% set _x = story_chips.append(dim_h ~ ' × ' ~ dim_w ~ ' ' ~ _('cm')) %}{% endif %}
@@ -375,7 +397,9 @@
     {% endif %}
 
     {# ===================== DIMENSIONS (metafields width / height / depth / seat_height) ===================== #}
-    {% if dim_w or dim_h or dim_d or dim_sh %}
+    {# no sizes written anywhere: the product's last photo, which on KET's products is the size sketch #}
+    {% set dim_any = dim_w or dim_h or dim_d or dim_sh %}
+    {% if dim_any or n_img > 2 %}
       {% set sec.n = sec.n + 1 %}
       <section class="section" id="dimensions" aria-labelledby="dimTitle">
         <div class="container">
@@ -384,13 +408,19 @@
             <h2 class="h-xl" id="dimTitle">{{ _("Considered proportions") }}</h2>
           </div>
           <div class="dims">
+            {% if dim_any %}
             <div class="dims__drawings">{% include 'components/ket/dims.jinja' %}</div>
+            {% else %}
+            <div class="dims__sketch" data-reveal><img src="{{ img_src(images[n_img - 1], 1200) }}" alt="{{ product.name }} · {{ _('Dimensions') }}" loading="lazy" decoding="async"></div>
+            {% endif %}
             <div>
+              {% if dim_any %}
               <table class="spec">
                 {% for label, v in [(_("Height"), dim_h), (_("Width"), dim_w), (_("Depth"), dim_d), (_("Seat height"), dim_sh)] if v or label == _("Height") %}
                   <tr><th scope="row">{{ label }}</th><td class="num">{{ (v ~ ' ' ~ _("cm")) if v else '—' }}</td></tr>
                 {% endfor %}
               </table>
+              {% endif %}
               {% if (settings.ket_fit_text or KD.ket_fit_text) %}
                 <div class="fit" data-reveal>
                   <span>{{ k.icon('house', 30, 1.3) }}</span>

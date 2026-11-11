@@ -43,7 +43,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const G = !!(window.gsap && window.ScrollTrigger) && !reduce;
 KC.classList.add(G ? 'motion' : 'no-motion');
 const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
-if (G) gsap.registerPlugin(ScrollTrigger);
+if (G) { gsap.registerPlugin(ScrollTrigger); ScrollTrigger.config({ ignoreMobileResize: true }); }
 
 let lang = /^en/.test(root.lang) ? 'en' : 'ar';
 const t = (k, v) => { let s = STORE.ui[lang][k] ?? k; if (v) for (const x in v) s = s.replace(`{${x}}`, v[x]); return s; };
@@ -274,7 +274,7 @@ let lenis = null;
 applyLang();
 
 /* ---------------- smooth scroll ---------------- */
-if (G && window.Lenis) {
+if (G && window.Lenis && !matchMedia('(pointer:coarse)').matches) {
   lenis = new Lenis({ lerp: .11, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(time => lenis.raf(time * 1000)); gsap.ticker.lagSmoothing(0);

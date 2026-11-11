@@ -575,7 +575,7 @@ html[dir="rtl"] :where(.ket) .lightbox__nav svg{ transform:scaleX(-1); }
 :where(.ket) .insp__art img{ width:100%; height:auto; }
 :where(.ket) .insp__fx{ position:relative; }
 :where(.ket) .insp__fx .insp__steam, :where(.ket) .insp__fx .insp__gz{ position:absolute; inset:0; height:100%; pointer-events:none; }
-:where(.ket) .insp__steam{ transform-origin:30% 19%; animation:insp-steam 3.8s ease-in-out infinite; }   /* anchored on the mug: the top sways, rises and thins */:where(.ket) @keyframes insp-steam{ 0%, 100%{ opacity:.95; transform:none; } 25%{ opacity:1; transform:translateY(-1.5%) scaleY(1.06) skewX(-8deg); }
+:where(.ket) .insp__steam{ transform-origin:30% 19%; animation:insp-steam 3.8s ease-in-out infinite; }   /* anchored on the mug: the top sways, rises and thins */@keyframes insp-steam{ 0%, 100%{ opacity:.95; transform:none; } 25%{ opacity:1; transform:translateY(-1.5%) scaleY(1.06) skewX(-8deg); }
   50%{ opacity:.45; transform:translateY(-3%) scaleY(1.1) skewX(0); } 75%{ opacity:.85; transform:translateY(-1%) scaleY(1.04) skewX(7deg); } }
 :where(.ket) .insp__gz{ transform-origin:var(--gzx, 16%) var(--belly, 86%); animation:insp-breathe 3.6s ease-in-out infinite; }
 @keyframes insp-breathe{ 0%, 100%{ transform:scale(1, 1); } 45%{ transform:scale(1.012, 1.04); } }
@@ -786,3 +786,7 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 .ket-dlink::after{ content:"›"; font-size:22px; font-weight:400; opacity:.35; }
 html[dir="rtl"] .ket-dlink::after{ content:"‹"; }
 details > summary.ket-dlink::after{ content:none; }
+
+/* the size sketch photo, for products whose sizes are only drawn in their last photo */
+.ket .dims__sketch{ border-radius:24px; overflow:hidden; background:#fff; display:grid; place-items:center; }
+.ket .dims__sketch img{ width:100%; height:auto; max-height:560px; object-fit:contain; }

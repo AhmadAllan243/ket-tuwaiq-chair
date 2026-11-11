@@ -18,7 +18,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const G = !!(window.gsap && window.ScrollTrigger) && !reduce;
 KH.classList.add(G ? 'motion' : 'no-motion');
 const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
-if (G) gsap.registerPlugin(ScrollTrigger);
+if (G) { gsap.registerPlugin(ScrollTrigger); ScrollTrigger.config({ ignoreMobileResize: true }); }
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 let lang = /^en/.test(root.lang) ? 'en' : 'ar';
@@ -474,7 +474,7 @@ function storyMotion() {
   storyST.forEach(s => s.kill()); storyST = [];
   const S = $$('.ss'), A = $$('.sa'), bars = $$('#stBars i');
   const wi = i => $$('.wi', S[i]), hl = i => $('.hl-m', S[i]);
-  S.forEach((s, i) => { gsap.set(wi(i), { yPercent: i ? 110 : 0 }); if (hl(i)) gsap.set(hl(i), { '--hs': i ? '0%' : '100%' }); });
+  S.forEach((s, i) => { gsap.set(wi(i), { yPercent: i ? 110 : 0, opacity: i ? 0 : 1 }); if (hl(i)) gsap.set(hl(i), { '--hs': i ? '0%' : '100%' }); });
   A.forEach((a, i) => gsap.set(a, { opacity: i ? 0 : 1, scale: i ? .7 : 1, rotate: 0 }));
   bars.forEach(b => b.style.setProperty('--p', 0));
   // the first statement arrives as the section comes up
@@ -490,10 +490,10 @@ function storyMotion() {
   [0, 1, 2].forEach(i => tl.fromTo(bars[i], { '--p': 0 }, { '--p': 1, duration: 1, ease: 'none' }, i));
   [1, 2].forEach(i => {
     const at = i - .2;
-    tl.to(wi(i - 1), { yPercent: -110, duration: .25, stagger: .01, ease: 'power2.in' }, at)
+    tl.to(wi(i - 1), { yPercent: -110, opacity: 0, duration: .25, stagger: .01, ease: 'power2.in' }, at)
       .to(A[i - 1], { opacity: 0, scale: .7, rotate: 12, duration: .3, ease: 'power2.in' }, at);
     if (hl(i - 1)) tl.to(hl(i - 1), { '--hs': '0%', duration: .2, ease: 'power2.in' }, at);
-    tl.to(wi(i), { yPercent: 0, duration: .35, stagger: .015, ease: 'power3.out' }, at + .25)
+    tl.to(wi(i), { yPercent: 0, opacity: 1, duration: .35, stagger: .015, ease: 'power3.out' }, at + .25)
       .fromTo(A[i], { opacity: 0, scale: .7, rotate: -12 }, { opacity: 1, scale: 1, rotate: 0, duration: .4, ease: 'back.out(1.5)', immediateRender: false }, at + .22);
     if (hl(i)) tl.to(hl(i), { '--hs': '100%', duration: .3, ease: 'power2.inOut' }, at + .45);
   });
@@ -569,7 +569,7 @@ function runIntro() {
 /* ---------------- boot ---------------- */
 applyLang();
 setInterval(() => { renderClock(); tickDeals(); }, 1000);
-if (G && window.Lenis) {
+if (G && window.Lenis && !matchMedia('(pointer:coarse)').matches) {
   lenis = new Lenis({ lerp: .11, smoothWheel: true });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(time => lenis.raf(time * 1000)); gsap.ticker.lagSmoothing(0);
@@ -577,5 +577,6 @@ if (G && window.Lenis) {
 }
 startAuto();
 const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
-Promise.race([fontsReady, new Promise(r => setTimeout(r, 1200))]).then(runIntro);
+const pageLoaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => addEventListener('load', r, { once: true }));
+Promise.race([Promise.all([fontsReady, pageLoaded]), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(() => requestAnimationFrame(runIntro)));
 })();

@@ -134,3 +134,7 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 .ket-dlink::after{ content:"›"; font-size:22px; font-weight:400; opacity:.35; }
 html[dir="rtl"] .ket-dlink::after{ content:"‹"; }
 details > summary.ket-dlink::after{ content:none; }
+
+/* the size sketch photo, for products whose sizes are only drawn in their last photo */
+.ket .dims__sketch{ border-radius:24px; overflow:hidden; background:#fff; display:grid; place-items:center; }
+.ket .dims__sketch img{ width:100%; height:auto; max-height:560px; object-fit:contain; }

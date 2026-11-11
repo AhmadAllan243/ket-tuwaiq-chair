@@ -26,6 +26,14 @@
     <path class="dl" pathLength="1" d="M33 70 H197 V214 H33 Z M45 82 H185 V202 H45 Z"/>
     <path class="dl" pathLength="1" d="M115 100 L150 142 L115 184 L80 142 Z M115 122 L132 142 L115 162 L98 142 Z"/>
     <path class="dl" pathLength="1" d="M26 80 H33 M26 96 H33 M26 112 H33 M26 128 H33 M26 144 H33 M26 160 H33 M26 176 H33 M26 192 H33 M26 208 H33"/>
+  {% elif kind == 'cabinet' %}
+    <path class="dl" pathLength="1" d="M41 46 H189 A8 8 0 0 1 197 54 V216 A8 8 0 0 1 189 224 H41 A8 8 0 0 1 33 216 V54 A8 8 0 0 1 41 46 Z"/>
+    <path class="dl" pathLength="1" d="M115 46 V224 M33 135 H197 M104 120 V150 M126 120 V150"/>
+    <path class="dl" pathLength="1" d="M48 224 V236 M182 224 V236"/>
+  {% elif kind == 'mirror' %}
+    <path class="dl" pathLength="1" d="M45 236 V120 A70 70 0 0 1 185 120 V236 Z"/>
+    <path class="dl" pathLength="1" d="M58 228 V122 A57 57 0 0 1 172 122 V228 Z"/>
+    <path class="dl" pathLength="1" d="M92 96 L130 150 M110 90 L150 146"/>
   {% elif kind == 'lamp' %}
     <path class="dl" pathLength="1" d="M86 46 H144 L168 112 H62 Z"/>
     <path class="dl" pathLength="1" d="M115 112 V226 M86 226 H144 A6 6 0 0 1 144 236 H86 A6 6 0 0 1 86 226 Z"/>
@@ -43,6 +51,11 @@
   {% if kind == 'table' %}
     <path class="dl" pathLength="1" d="M50 46 H186 A8 8 0 0 1 194 54 V58 A8 8 0 0 1 186 66 H50 A8 8 0 0 1 42 58 V54 A8 8 0 0 1 50 46 Z"/>
     <path class="dl" pathLength="1" d="M58 66 L54 236 M178 66 L182 236 M60 168 H176"/>
+  {% elif kind == 'cabinet' %}
+    <path class="dl" pathLength="1" d="M50 46 H186 A8 8 0 0 1 194 54 V216 A8 8 0 0 1 186 224 H50 A8 8 0 0 1 42 216 V54 A8 8 0 0 1 50 46 Z"/>
+    <path class="dl" pathLength="1" d="M56 224 V236 M180 224 V236"/>
+  {% elif kind == 'mirror' %}
+    <path class="dl" pathLength="1" d="M108 236 V40 H122 V236 Z"/>
   {% elif kind == 'plant' or kind == 'vase' or kind == 'lamp' %}
     {{ front(kind) }}
   {% elif kind == 'rug' %}

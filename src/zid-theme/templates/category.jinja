@@ -36,7 +36,7 @@
 {% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
-<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=091200c1">
+<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=c3dff8e1">
 <script>
   document.documentElement.classList.add('is-loading');
   window.KET_CAT = {
@@ -193,5 +193,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}&k=e76b049a"></script>
-<script src="{{ 'ket-category.js' | asset_url }}&k=b6536274"></script>
+<script src="{{ 'ket-category.js' | asset_url }}&k=fc738f6b"></script>
 {% endblock %}
