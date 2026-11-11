@@ -36,6 +36,7 @@ css = '\n'.join(l for l in css.split('\n') if not l.startswith(('.skip', '.wa{',
 extra = """
 /* ---- theme-only ---- */
 .kc{ position:relative; }
+.kc > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kc) .pager{ display:flex; justify-content:center; gap:8px; margin-top:40px; }
 :where(.kc) .pager a{ min-width:44px; height:44px; padding-inline:14px; display:grid; place-items:center; border-radius:999px; background:var(--white); font-weight:600; text-decoration:none; }
 :where(.kc) .klogo .kl{ transform-box:fill-box; transform-origin:50% 100%; }

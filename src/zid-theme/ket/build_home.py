@@ -52,6 +52,7 @@ css = '\n'.join(l for l in css.split('\n') if not l.startswith(('.skip', '.wa{')
 extra = """
 /* ---- theme-only ---- */
 .kh{ position:relative; }
+.kh > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }   /* a deal photo that could not be cut out: its white blends into the grey */
 :where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }
 """
