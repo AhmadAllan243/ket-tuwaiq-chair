@@ -56,8 +56,8 @@ extra = """
 .kh > section.hero{ z-index:2; }   /* the search results drop over the next section (and stay clickable) */   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }
 :where(.kh) .vbox{ margin:auto; inset:0; }
-:where(.kh) .dc--brand .mark{ top:-28%; width:24%; inset-inline-end:16%; }   /* the smile on the green line: more of it shows */
-@media (max-width:767px){ :where(.kh) .dc--brand .mark{ top:-22%; width:52%; inset-inline-end:-6%; } }
+:where(.kh) .dc--brand .mark{ top:4%; width:clamp(120px, 13vw, 190px); inset-inline-end:22%; }   /* the whole smile shows on the green line */
+@media (max-width:767px){ :where(.kh) .dc--brand .mark{ top:10%; width:34%; inset-inline-end:30%; } }
 :where(.kh) .vbox__x{ outline:none; }   /* the dialog focuses its close button on open: no ring around the ×  */   /* the store's base styles zero dialog margins, which pushed the video to the side */   /* a deal photo that could not be cut out: its white blends into the grey */
 :where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }
 """
