@@ -416,7 +416,7 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 .dept .head{ display:none; }   /* the green ket line across the top is the title now */
 .dept .h2{ font-size:clamp(24px, 3vw, 44px); }
 .bento{ flex:1; min-height:0; display:grid; gap:clamp(6px, .7vw, 10px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto repeat(8, 1fr);
-  grid-template-areas:"brand brand brand" "rugs trees logo" "rugs trees logo" "rugs trees logo" "feat tables lamps" "feat tables lamps" "feat home lamps" "pill home lamps" "cta home lamps"; }
+  grid-template-areas:"brand brand brand" "rugs trees logo" "rugs trees logo" "rugs trees logo" "tables feat lamps" "tables feat lamps" "tables home lamps" "pill home lamps" "cta home lamps"; }
 .dc{ position:relative; display:block; border-radius:clamp(16px, 2.2vw, 30px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
 /* each photo fills its tile; --op frames it on laptops, --opm on phones */
 .dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:var(--op); transition:transform 1.4s var(--ease); }
@@ -481,6 +481,11 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .dc--feat:hover .dc__fan img:nth-child(3){ transform:translate(calc(6px * var(--dir)), -4px) rotate(4deg); }
 .dc--feat .dc__go{ position:absolute; z-index:3; inset-inline-end:clamp(10px, 1.4vw, 20px); bottom:clamp(10px, 1.4vw, 20px); margin:0; padding:0; background:none; }
 .dc--feat .dc__go i{ background:#0B3D22; color:#fff; }
+/* laptop: a wide, short tile, so the words sit at the start and the pieces fan out at the end */
+@media (min-width:768px){
+  .dc--feat .dc__fan{ inset-inline:44% 4%; bottom:8%; height:84%; }
+  .dc--feat .dc__go{ display:none; }   /* the whole tile is the link; no room for the arrow under the badge */
+}
 /* phones: the ket line runs across the top, then three columns like the laptop's */
 @media (max-width:767px){
   .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:0; }
