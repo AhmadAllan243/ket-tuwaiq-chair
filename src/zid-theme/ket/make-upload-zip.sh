@@ -5,6 +5,7 @@
 set -e
 cd ${0:A:h}/..
 OUT=${1:-${0:A:h}/../../../../ket-theme-home.zip}
+python3 ket/stamp_assets.py   # new file addresses for changed files, so no old copy is served
 npx -y @zidsa/vitrin-cli@1.4.0 --no-color build . < /dev/null > /dev/null
 Z=$(ls -t zid-theme-*.zip | head -1)
 mv "$Z" "$OUT"
