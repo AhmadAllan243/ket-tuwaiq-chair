@@ -10,6 +10,7 @@
 {% block content %}
 {% set R = products.results if products and products.results else [] %}
 {% set SUBS = category.sub_categories if category.sub_categories else [] %}
+{% macro href(v) %}{{ ((v._url if v and v._url else (v.url if v and v.url is string else (v or ''))) ~ '') | tojson }}{% endmacro %}
 {% macro pimg(p, w=600) -%}
   {%- set im = p.main_image.image.large if p.main_image and p.main_image.image else (p.images[0].image.full_size if p.images else '') -%}
   {{- image_url(im, w=w, q=85, f='auto') if im else '' -}}
@@ -40,7 +41,7 @@
       {% for p in R %}
         {% set ty = namespace(id='') %}{% for c in (p.categories or []) %}{% for s in SUBS %}{% if c.id == s.id and not ty.id %}{% set ty.id = s.id | string %}{% endif %}{% endfor %}{% endfor %}
         { id: {{ (p.id | string) | tojson }}, type: {{ ty.id | tojson }}, ar: {{ p.name | tojson }}, en: {{ p.name | tojson }},
-          url: {{ url_for('product_details', slug=p.slug) | tojson }}, img: {{ pimg(p) | tojson }},
+          url: {{ href(url_for('product_details', slug=p.slug)) }}, img: {{ pimg(p) | tojson }},
           price: {{ (p.sale_price if p.sale_price else p.price) | tojson }}, was: {{ (p.price if p.sale_price else 0) | tojson }},
           hasOptions: {{ (p.has_options or false) | tojson }} }{{ ',' if not loop.last }}
       {% endfor %}

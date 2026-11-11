@@ -74,7 +74,7 @@ const KH = document.querySelector('.kh'); if (!KH || !window.KET_HOME) return;
 // the section's data (Zid) over the prototype's defaults
 const STORE = window.KET_HOME; STORE.ui = UI; STORE.currency = CURRENCY;
 for (const k in STORE.text || {}) if (STORE.text[k]) UI.ar[k] = UI.en[k] = STORE.text[k];
-STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {};
+STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {}; if (z.name) z.name = z.name.replace(/^قسم +/, '');   // the tiles add «قسم» themselves
   return { ...c, ar: z.name || c.ar, en: z.name || c.en, short: z.name ? null : c.short, tx: z.text ? { ar: z.text, en: z.text } : c.tx,
     url: z.url || '', photo: z.photo || `home/life/${c.id}`, n: z.n || 0 }; });""")
 js = must(js, "root.classList.add(G ? 'motion' : 'no-motion');", "KH.classList.add(G ? 'motion' : 'no-motion');")

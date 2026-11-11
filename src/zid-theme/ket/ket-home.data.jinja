@@ -5,14 +5,15 @@
 #}
 {% set S = settings %}
 {% macro pic(v, w=900) %}{{ (image_url(v, w=w, q=85, f='auto') if v else '') | tojson }}{% endmacro %}
+{% macro href(v) %}{{ ((v._url if v and v._url else (v.url if v and v.url is string else (v or ''))) ~ '') | tojson }}{% endmacro %}
 {% macro txt(v) %}{{ (v or '') | tojson }}{% endmacro %}
 <link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}">
 <script>
   document.documentElement.classList.add('is-intro');   // the welcome (short once seen this visit) ends by handing over to the search bar
   window.KET_HOME = {
     base: {{ ('ket-home/home-lady.webp' | asset_url) | tojson }}.replace(/home-lady\.webp.*$/, ''),
-    links: { instagram: {{ txt(S.instagram) }}, tiktok: {{ txt(S.tiktok) }} },
-    saleUrl: {{ txt(S.sale_url) }},
+    links: { instagram: {{ href(S.instagram) }}, tiktok: {{ href(S.tiktok) }} },
+    saleUrl: {{ href(S.sale_url) }},
     lady: {{ pic(S.lady, 700) if S.lady else ('home/lady' | tojson) }},
     fan: [{{ pic(S.sale_image1, 400) if S.sale_image1 else ('cut/ac03' | tojson) }}, {{ pic(S.sale_image2, 400) if S.sale_image2 else ('cut/lp10' | tojson) }}, {{ pic(S.sale_image3, 400) if S.sale_image3 else ('cut/t13' | tojson) }}],
     text: {
@@ -36,7 +37,7 @@
     floats: [
       {% set fl = safeget(S, 'floats', []) %}
       {% if fl %}
-        {% for f in fl %}{ img: {{ pic(f.image, 400) }}, url: {{ txt(f.url) }}, cut: {{ (f.cutout or false) | tojson }} }{{ ',' if not loop.last }}{% endfor %}
+        {% for f in fl %}{ img: {{ pic(f.image, 400) }}, url: {{ href(f.url) }}, cut: {{ (f.cutout or false) | tojson }} }{{ ',' if not loop.last }}{% endfor %}
       {% else %}
         { img: 'home/lp03', cut: true }, { img: 'home/life/family' }, { img: 'home/tr06', cut: true },
         { img: 'tables/t12', cut: true }, { img: 'home/life/tables' }, { img: 'home/life/home' }
@@ -46,7 +47,7 @@
     st: [{% for s in st %}{% if s.text_a or s.text_h %}[{{ txt(s.text_a) }}, {{ txt(s.text_h) }}, {{ txt(s.text_b) }}]{{ ',' if not loop.last }}{% endif %}{% endfor %}],
     story: [
       {% if st %}
-        {% for s in st %}{ img: {{ pic(s.image, 800) }}, name: {{ txt(s.title) }}, price: {{ txt(s.price) }}, url: {{ txt(s.url) }} }{{ ',' if not loop.last }}{% endfor %}
+        {% for s in st %}{ img: {{ pic(s.image, 800) }}, name: {{ txt(s.title) }}, price: {{ txt(s.price) }}, url: {{ href(s.url) }} }{{ ',' if not loop.last }}{% endfor %}
       {% else %}
         { img: 'tables/t08' }, { img: 'home/lp11' }, { img: 'home/ac05' }
       {% endif %}
@@ -56,7 +57,7 @@
     products: [
       {% for p in deals %}
         {% set im = p.main_image.image.large if p.main_image and p.main_image.image else (p.images[0].image.full_size if p.images else '') %}
-        { id: {{ p.id | tojson }}, ar: {{ txt(p.name) }}, en: {{ txt(p.name) }}, url: {{ txt(url_for('product_details', slug=p.slug)) }},
+        { id: {{ p.id | tojson }}, ar: {{ txt(p.name) }}, en: {{ txt(p.name) }}, url: {{ href(url_for('product_details', slug=p.slug)) }},
           img: {{ pic(im, 800) if im else ('' | tojson) }}, price: {{ (p.sale_price if p.sale_price else p.price) | tojson }}, was: {{ (p.price if p.sale_price else 0) | tojson }},
           fprice: {{ txt(p.formatted_sale_price or p.formatted_price) }}, fwas: {{ txt(p.formatted_price if p.formatted_sale_price else '') }},
           hasOptions: {{ (p.has_options or false) | tojson }} }{{ ',' if not loop.last }}
@@ -70,7 +71,7 @@
     videos: [
       {% set vs = safeget(S, 'videos', []) %}
       {% if vs %}
-        {% for v in vs %}{ poster: {{ pic(v.poster, 700) }}, video: {{ txt(v.video) }}, title: {{ txt(v.title) }}, sub: {{ txt(v.subtitle) }} }{{ ',' if not loop.last }}{% endfor %}
+        {% for v in vs %}{ poster: {{ pic(v.poster, 700) }}, video: {{ href(v.video) }}, title: {{ txt(v.title) }}, sub: {{ txt(v.subtitle) }} }{{ ',' if not loop.last }}{% endfor %}
       {% else %}
         { poster: 'home/v1' }, { poster: 'home/v4' }, { poster: 'home/v2' }, { poster: 'home/v5' }, { poster: 'home/v3' }, { poster: 'home/v6' }
       {% endif %}
