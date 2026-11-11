@@ -20,6 +20,20 @@
 {% set KC_HERO = image_url(cover, w=1600, q=85, f='auto') if cover else first %}
 {% set KC_PILL = pimg(R[0], 500) if R else KC_HERO %}
 {% set KC_TYPES = SUBS | length > 1 %}
+{# the tables category gets the whole tables design (its photos, types, collections, the size guide) #}
+{% set nm = (category.name or '') | lower %}
+{% set KC_FULL = ('طاول' in nm) or ('table' in nm) %}
+{% if KC_FULL %}
+  {% set KC_HERO = 'ket-cat/hero-joy.webp' | asset_url %}
+  {% set KC_BIG = 'ket-cat/life2.webp' | asset_url %}
+  {% set KC_PILL = 'ket-cat/t03.webp' | asset_url %}
+  {% set KC_IPILL = 'ket-cat/t08.webp' | asset_url %}
+  {% set KC_HELP = 'ket-cat/t11.webp' | asset_url %}
+{% else %}
+  {% set KC_BIG = KC_HERO %}
+  {% set KC_IPILL = KC_PILL %}
+  {% set KC_HELP = KC_PILL %}
+{% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
 <link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}">
@@ -28,8 +42,10 @@
   window.KET_CAT = {
     name: {{ category.name | tojson }},
     sub: {{ ((category.description or '') | striptags | trim) | tojson }},
+    full: {{ KC_FULL | tojson }},
     heroImg: {{ KC_HERO | tojson }},
-    pills: [{{ (pimg(R[0], 300) if R else '') | tojson }}, {{ (pimg(R[1], 300) if R | length > 1 else '') | tojson }}],
+    tilePhoto: {{ (('ket-cat/life1.webp' | asset_url) if KC_FULL else '') | tojson }},
+    pills: {% if KC_FULL %}[{{ ('ket-cat/t03.webp' | asset_url) | tojson }}, {{ ('ket-cat/life1.webp' | asset_url) | tojson }}]{% else %}[{{ (pimg(R[0], 300) if R else '') | tojson }}, {{ (pimg(R[1], 300) if R | length > 1 else '') | tojson }}]{% endif %},
     types: [
       {% if KC_TYPES %}{% for s in SUBS %}
         {% set sp = namespace(img='') %}{% for p in R %}{% for c in (p.categories or []) %}{% if c.id == s.id and not sp.img %}{% set sp.img = pimg(p, 500) %}{% endif %}{% endfor %}{% endfor %}
@@ -48,5 +64,5 @@
     ]
   };
   KET_CAT.products.forEach(p => { p.price = +p.price || 0; p.was = +p.was || 0; if (p.was <= p.price) p.was = 0; });
-  KET_CAT.types = KET_CAT.types.filter(x => KET_CAT.products.some(p => p.type === x.id));
+  if (!KET_CAT.full) KET_CAT.types = KET_CAT.types.filter(x => KET_CAT.products.some(p => p.type === x.id));
 </script>

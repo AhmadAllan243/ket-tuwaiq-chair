@@ -10,9 +10,10 @@ exec(compile(src[:src.index("html = env.get_template('templates/product.jinja')"
 AR = LANG == 'ar'
 subs = [{'id': 11, 'name': 'طاولات قهوة' if AR else 'Coffee tables', 'slug': 'coffee'}, {'id': 12, 'name': 'طاولات جانبية' if AR else 'Side tables', 'slug': 'side'},
         {'id': 13, 'name': 'أطقم' if AR else 'Sets', 'slug': 'sets'}]
-prods = [{'id': f'p{i}', 'name': f'{"طاولة" if AR else "Table"} {i + 1}', 'slug': f'p{i}', 'price': 800 + i * 70, 'sale_price': (400 + i * 30) if i % 3 else None,
+NAMES = ['طاولة قهوة مدار', 'طاولة خدمة BELLO', 'طقم طاولات لينك', 'طاولة لاكسي A', 'طاولة TM الرئيسية', 'طاولة تراس - كونسول', 'طاولة قهوة كادن', 'طاولة غولدن ليفز', 'طاولة جانبية سولا']
+prods = [{'id': f'p{i}', 'name': NAMES[i], 'slug': f'p{i}', 'price': 800 + i * 70, 'sale_price': (400 + i * 30) if i % 3 else None,
           'has_options': i == 4, 'categories': [{'id': subs[i % 3]['id']}], 'main_image': {'image': {'large': IMG + IMAGES[i % len(IMAGES)] + '.png'}}} for i in range(9)]
-category = obj({'id': 444477, 'name': 'الطاولات' if AR else 'Tables', 'description': '', 'sub_categories': subs})
+category = obj({'id': 444477, 'name': 'قسم الطاولات' if AR else 'Tables', 'description': '', 'sub_categories': []})
 products = obj({'results': prods, 'count': 30, 'page': 1})
 env.globals['url_for'] = lambda name, **k: '/products/' + k.get('slug', '')
 env.globals['session'] = obj({**session, 'query_params': {}, 'url': {}})

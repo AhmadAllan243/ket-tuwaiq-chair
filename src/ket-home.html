@@ -314,7 +314,11 @@ html[lang="ar"] .hero__h{ font-weight:700; line-height:1.25; letter-spacing:0; }
 .fl:hover .fl__in{ animation-play-state:paused; box-shadow:0 24px 54px rgba(0,0,0,.14); }
 .fl:hover img{ transform:scale(1.06); }
 @keyframes float{ from{ transform:translateY(-9px) rotate(var(--r, 0deg)); } to{ transform:translateY(9px) rotate(calc(var(--r, 0deg) * -1)); } }
-@media (max-width:1199px){ .floaters{ display:none; } }
+@media (max-width:1023px){ .floaters{ display:none; } }
+@media (min-width:1024px) and (max-width:1199px){   /* laptops: smaller, nearer the search */
+  .fl{ width:calc(var(--w) * .62); }
+  .fl--s{ inset-inline-start:calc(50% - var(--cw) / 2 - var(--x) * .12 - var(--w) * .62); } .fl--e{ inset-inline-end:calc(50% - var(--cw) / 2 - var(--x) * .12 - var(--w) * .62); }
+}
 
 /* the search: a frosted grey pill, a magnifier, typed hints, and a round button with turning dots */
 .sbox{ position:relative; z-index:20; width:100%; margin-top:6px; isolation:isolate; }
@@ -1369,8 +1373,13 @@ function runIntro() {
       .from('#introHello .wave', { scale: 0, rotate: -40, duration: .8, ease: 'back.out(2.4)', onComplete: () => $('#introHello .wave').classList.add('is-on') }, .45)
       .to(typed, { n: line.length, duration: Math.min(1.6, line.length * .045), ease: 'none', onUpdate: () => { $('#introLine').innerHTML = esc(line.slice(0, Math.round(typed.n))) + '<span class="caret"></span>'; } }, 1.05)
       .to('#introWrap', { y: -40, opacity: 0, duration: .55, ease: 'power2.in' }, '+=.75');
+  } else {
+    // seen this visit (e.g. a refresh): a short Hello, gone before the dots come in
+    tl.from('#introHello .ch', { y: 60, opacity: 0, duration: .6, stagger: .04, ease: 'expo.out' }, .05)
+      .from('#introHello .wave', { scale: 0, rotate: -40, duration: .5, ease: 'back.out(2.4)' }, .25)
+      .to('#introWrap', { y: -40, opacity: 0, duration: .4, ease: 'power2.in' }, '+=.35');
   }
-  tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, seen ? .15 : '>-.05')
+  tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, '>-.05')
     .to({}, { duration: seen ? .55 : .9 })
     .add(() => $('#introDots').classList.remove('is-on'))
     .to('#introDots i:nth-child(1)', { x: () => -box().width * .18, duration: .45, ease: 'power3.inOut' })

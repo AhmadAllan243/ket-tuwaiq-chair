@@ -93,7 +93,10 @@ html[lang="ar"] :where(.kh) .hero__h{ font-weight:700; line-height:1.25; letter-
 :where(.kh) .fl:hover .fl__in{ animation-play-state:paused; box-shadow:0 24px 54px rgba(0,0,0,.14); }
 :where(.kh) .fl:hover img{ transform:scale(1.06); }
 @keyframes kh-float{ from{ transform:translateY(-9px) rotate(var(--r, 0deg)); } to{ transform:translateY(9px) rotate(calc(var(--r, 0deg) * -1)); } }
-@media (max-width:1199px){ :where(.kh) .floaters{ display:none; } }
+@media (max-width:1023px){ :where(.kh) .floaters{ display:none; } }
+@media (min-width:1024px) and (max-width:1199px){   /* laptops: smaller, nearer the search */:where(.kh) .fl{ width:calc(var(--w) * .62); }
+  :where(.kh) .fl--s{ inset-inline-start:calc(50% - var(--cw) / 2 - var(--x) * .12 - var(--w) * .62); } :where(.kh) .fl--e{ inset-inline-end:calc(50% - var(--cw) / 2 - var(--x) * .12 - var(--w) * .62); }
+}
 
 /* the search: a frosted grey pill, a magnifier, typed hints, and a round button with turning dots */:where(.kh) .sbox{ position:relative; z-index:20; width:100%; margin-top:6px; isolation:isolate; }
 :where(.kh) .sbox__input::-webkit-search-cancel-button, :where(.kh) .sbox__input::-webkit-search-decoration{ -webkit-appearance:none; appearance:none; }

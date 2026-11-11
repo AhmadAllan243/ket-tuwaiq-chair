@@ -545,8 +545,13 @@ function runIntro() {
       .from('#introHello .wave', { scale: 0, rotate: -40, duration: .8, ease: 'back.out(2.4)', onComplete: () => $('#introHello .wave').classList.add('is-on') }, .45)
       .to(typed, { n: line.length, duration: Math.min(1.6, line.length * .045), ease: 'none', onUpdate: () => { $('#introLine').innerHTML = esc(line.slice(0, Math.round(typed.n))) + '<span class="caret"></span>'; } }, 1.05)
       .to('#introWrap', { y: -40, opacity: 0, duration: .55, ease: 'power2.in' }, '+=.75');
+  } else {
+    // seen this visit (e.g. a refresh): a short Hello, gone before the dots come in
+    tl.from('#introHello .ch', { y: 60, opacity: 0, duration: .6, stagger: .04, ease: 'expo.out' }, .05)
+      .from('#introHello .wave', { scale: 0, rotate: -40, duration: .5, ease: 'back.out(2.4)' }, .25)
+      .to('#introWrap', { y: -40, opacity: 0, duration: .4, ease: 'power2.in' }, '+=.35');
   }
-  tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, seen ? .15 : '>-.05')
+  tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, '>-.05')
     .to({}, { duration: seen ? .55 : .9 })
     .add(() => $('#introDots').classList.remove('is-on'))
     .to('#introDots i:nth-child(1)', { x: () => -box().width * .18, duration: .45, ease: 'power3.inOut' })

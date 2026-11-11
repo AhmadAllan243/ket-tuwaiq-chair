@@ -118,3 +118,13 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
    --ket-header-h is measured by ket-product.js; the fallbacks are the bar + header heights. */
 .ket #ket-hero{ margin-top:calc(-1 * var(--ket-header-h, 97px)); }
 @media (min-width:1200px){ .ket #ket-hero{ margin-top:calc(-1 * var(--ket-header-h, 109px)); } }
+
+/* ===================== KET green for the announcement bar and footer (as the home page), every page ===================== */
+.ket-top .announce{ background:#088040; color:#fff; }
+.ket-top .announce .marquee__group span::after{ background:#fff; }
+.ket.footer{ background:#088040; color:#fff; }
+.ket.footer :is(p, span, a, h3, li, small, b, strong, svg, .footer__copy, .footer__about, .footer__group a){ color:#fff; }
+.ket.footer .footer__links{ border-bottom-color:rgba(255,255,255,.22); }
+.ket.footer .footer__group a, .ket.footer .footer__about{ opacity:.85; }
+.ket.footer .footer__group a:hover{ opacity:1; }
+.ket.footer .footer__mark svg, .ket.footer .footer__mark svg *{ color:#fff; fill:#fff; }   /* the smile, white on the green */

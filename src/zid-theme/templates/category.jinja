@@ -20,6 +20,20 @@
 {% set KC_HERO = image_url(cover, w=1600, q=85, f='auto') if cover else first %}
 {% set KC_PILL = pimg(R[0], 500) if R else KC_HERO %}
 {% set KC_TYPES = SUBS | length > 1 %}
+{# the tables category gets the whole tables design (its photos, types, collections, the size guide) #}
+{% set nm = (category.name or '') | lower %}
+{% set KC_FULL = ('طاول' in nm) or ('table' in nm) %}
+{% if KC_FULL %}
+  {% set KC_HERO = 'ket-cat/hero-joy.webp' | asset_url %}
+  {% set KC_BIG = 'ket-cat/life2.webp' | asset_url %}
+  {% set KC_PILL = 'ket-cat/t03.webp' | asset_url %}
+  {% set KC_IPILL = 'ket-cat/t08.webp' | asset_url %}
+  {% set KC_HELP = 'ket-cat/t11.webp' | asset_url %}
+{% else %}
+  {% set KC_BIG = KC_HERO %}
+  {% set KC_IPILL = KC_PILL %}
+  {% set KC_HELP = KC_PILL %}
+{% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
 <link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}">
@@ -28,8 +42,10 @@
   window.KET_CAT = {
     name: {{ category.name | tojson }},
     sub: {{ ((category.description or '') | striptags | trim) | tojson }},
+    full: {{ KC_FULL | tojson }},
     heroImg: {{ KC_HERO | tojson }},
-    pills: [{{ (pimg(R[0], 300) if R else '') | tojson }}, {{ (pimg(R[1], 300) if R | length > 1 else '') | tojson }}],
+    tilePhoto: {{ (('ket-cat/life1.webp' | asset_url) if KC_FULL else '') | tojson }},
+    pills: {% if KC_FULL %}[{{ ('ket-cat/t03.webp' | asset_url) | tojson }}, {{ ('ket-cat/life1.webp' | asset_url) | tojson }}]{% else %}[{{ (pimg(R[0], 300) if R else '') | tojson }}, {{ (pimg(R[1], 300) if R | length > 1 else '') | tojson }}]{% endif %},
     types: [
       {% if KC_TYPES %}{% for s in SUBS %}
         {% set sp = namespace(img='') %}{% for p in R %}{% for c in (p.categories or []) %}{% if c.id == s.id and not sp.img %}{% set sp.img = pimg(p, 500) %}{% endif %}{% endfor %}{% endfor %}
@@ -48,7 +64,7 @@
     ]
   };
   KET_CAT.products.forEach(p => { p.price = +p.price || 0; p.was = +p.was || 0; if (p.was <= p.price) p.was = 0; });
-  KET_CAT.types = KET_CAT.types.filter(x => KET_CAT.products.some(p => p.type === x.id));
+  if (!KET_CAT.full) KET_CAT.types = KET_CAT.types.filter(x => KET_CAT.products.some(p => p.type === x.id));
 </script>
 
 <div class="kc">
@@ -81,7 +97,7 @@
   <div class="shape">
     <div class="shape__cols" id="shapeCols"></div>
     <div class="shape__big" data-reveal>
-      <img src="{{ KC_HERO }}" alt="" loading="lazy" width="1100" height="730">
+      <img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730">
       <div><h2 id="shapeTitle" data-t="typesH"></h2><p data-t="shapeTx"></p></div>
       <div class="shape__bar">
         <a class="sbtn flip" href="#all" id="shapeGo" data-t-aria="cardBtn"></a>
@@ -106,14 +122,63 @@
   {% include "components/ket/category-pager.jinja" %}
 </section>
 
+<!-- 5 · COLLECTIONS -->
+<section class="section container" aria-labelledby="colTitle">
+  <div class="cols" id="cols">
+    <div class="cols__head"><p class="eyebrow" data-t="colEy"></p><h2 id="colTitle" data-t="colH"></h2></div>
+    <div class="cols__list" id="colList"></div>
+    <div class="cfloat" id="cfloat"><img alt=""></div>
+  </div>
+</section>
 
+<!-- 6 · INTRO BENTO   → Vitrin: category description + theme settings -->
+<section class="section container" aria-labelledby="whyTitle">
+  <div class="intro__grid">
+    <div class="intro__left">
+      <p class="eyebrow" data-t="whyEy"></p>
+      <h2 class="intro__h" id="whyTitle" data-reveal><span data-t="whyA"></span><span class="ipill ipill--cut"><img src="{{ KC_IPILL }}" alt="" loading="lazy"></span><span data-t="whyB"></span></h2>
+      <div class="chips" id="chips"></div>
+      <div class="acc" id="acc"></div>
+    </div>
+    <div class="intro__card" data-reveal>
+      <div class="intro__copy">
+        <p class="eyebrow" id="cardEy"></p>
+        <p data-t="cardTx"></p>
+        <h3 data-t="cardH"></h3>
+        <a class="btn btn-primary" href="#all"><span data-t="cardBtn"></span><span class="arr flip" id="cardArr"></span></a>
+      </div>
+      <div class="photo">
+        <img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730" data-par>
+        <span class="pill tag" id="saleChip"></span>
+        <div class="stat">
+          <div class="stat__row"><span class="stat__lbl" data-t="fromLbl"></span><span class="stat__big" id="statFrom"></span></div>
+          <div class="stat__foot"><span class="stack" id="statStack"></span><span class="stat__lbl" id="statTx"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- 7 · SIZE GUIDE -->
+<section class="section container" aria-labelledby="sizeTitle">
+  <div class="size">
+    <div class="size__copy">
+      <p class="eyebrow eyebrow--o" data-t="sizeEy"></p>
+      <h2 id="sizeTitle" data-t="sizeH"></h2>
+      <p data-t="sizeTx"></p>
+      <div class="range"><label for="sofa"><span data-t="sofa"></span><output id="sofaOut" for="sofa"></output></label><input type="range" id="sofa" min="160" max="320" step="10" value="240"></div>
+      <div class="size__res"><div><span data-t="rec"></span><b id="recOut"></b></div><div><span data-t="gap"></span><b class="num"><span dir="ltr">40–45</span><small data-t="cm"></small></b></div></div>
+      <button class="btn btn-primary" id="sizeBtn" type="button" style="justify-self:start;margin-top:6px"><span data-t="sizeBtn"></span><span class="arr flip" id="sizeArr"></span></button>
+    </div>
+    <div class="size__plan"><svg id="plan" viewBox="0 0 400 300" role="img" aria-label="Sofa and coffee table, top view"></svg></div>
+  </div>
+</section>
 
 <!-- 8 · HELP -->
 <section class="help" aria-labelledby="helpTitle">
   <div class="container">
     <div class="help__card" data-reveal>
-      <div class="help__img"><img src="{{ KC_PILL }}" alt="" loading="lazy"></div>
+      <div class="help__img"><img src="{{ KC_HELP }}" alt="" loading="lazy"></div>
       <div class="help__copy"><h2 id="helpTitle" data-t="helpH"></h2><p data-t="helpTx"></p><a class="btn btn-wa" href="{{ KC_WA }}" target="_blank" rel="noopener"><span data-t="helpBtn"></span><span class="arr" id="helpArr"></span></a></div>
     </div>
   </div>

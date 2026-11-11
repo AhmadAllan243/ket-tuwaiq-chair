@@ -38,6 +38,8 @@ extra = """
 .kc{ position:relative; }
 :where(.kc) .pager{ display:flex; justify-content:center; gap:8px; margin-top:40px; }
 :where(.kc) .pager a{ min-width:44px; height:44px; padding-inline:14px; display:grid; place-items:center; border-radius:999px; background:var(--white); font-weight:600; text-decoration:none; }
+:where(.kc) .klogo .kl{ transform-box:fill-box; transform-origin:50% 100%; }
+:where(.kc) .klogo__smile{ opacity:0; }   /* the smile only shows in the scrolled header */
 :where(.kc) .pager a.is-on{ background:var(--black); color:var(--white); }
 """
 open(os.path.join(THEME, 'assets', 'ket-category.css'), 'w').write(
@@ -46,10 +48,10 @@ open(os.path.join(THEME, 'assets', 'ket-category.css'), 'w').write(
 
 # ---------------------------------------------------------------- JS
 store_js = re.search(r'<script>\nconst M = .*?\nconst STORE = (\{.*?\n\});\n</script>', html, re.S).group(1)
-proto = json.loads(subprocess.run(['node', '-e', f'const S = {store_js}; process.stdout.write(JSON.stringify({{ ui: S.ui, currency: S.currency }}))'],
+proto = json.loads(subprocess.run(['node', '-e', f'const S = {store_js}; process.stdout.write(JSON.stringify({{ ui: S.ui, currency: S.currency, types: S.types, collections: S.collections }}))'],
                                   capture_output=True, text=True, check=True).stdout)
 UI = proto['ui']
-# general wording for every category ({c} = the category's name)
+# general wording for every other category ({c} = the category's name); the tables page keeps the prototype's own
 GEN = {
     'ar': dict(tables='{c}', ann3='خصومات تصل إلى {n}٪', loadLine='{c}', hLine1='{c}،', hPink='بذوقك', hMark='أنت.', hSub='قطع مختارة تعيش معك، كل يوم.',
                hStatL='تصميم', shapeAll='الكل', shapeTx='ابدأ بالنوع اللي يناسب مساحتك.', typesEy='تسوّق حسب النوع', typesH='اختر اللي يناسبك.',
@@ -62,47 +64,61 @@ GEN = {
                tileA='Made to\nlive with you.', tileAs='Every piece here is picked with care for your home.', tileB='Materials\nthat last.', tileBs='Calm details that suit every home.',
                helpH='Torn between two designs?', helpTx='Send us a photo of your space and we will suggest the right piece and size.'),
 }
-for L in GEN: UI[L].update(GEN[L])
+# the tables page: KET's tables sorted into the prototype's types and collections by their names
+TABLE_RULES = {
+    'types': [['console', 'كونسول|بلازما|تلفاز|تلفزيون|console|tv'], ['sets', 'طقم|أطقم|اطقم|\\bset|nesting|لينك'], ['coffee', 'قهوة|قهوه|coffee'], ['side', 'جانبي|خدمة|خدمه|side|bello']],
+    'cols': [['laxi', 'لاكسي|laxi'], ['tm', '\\btm\\b'], ['teras', 'تراس|تِراس|teras'], ['golden', 'غولدن|golden'], ['wood', 'خشب|والنت|walnut|wood|مدار|كادن|لورين|فينزا']],
+}
 
 js = re.findall(r'<script>\n(\(\(\) => \{.*?\}\)\(\);)\n</script>', html, re.S)[0]
 js = must(js, "'use strict';", """'use strict';
 const KC = document.querySelector('.kc'); if (!KC || !window.KET_CAT) return;
 const D = window.KET_CAT;
+if (!D.full) for (const L in GEN) Object.assign(UI[L], GEN[L]);
 for (const L in UI) for (const k in UI[L]) if (typeof UI[L][k] === 'string') UI[L][k] = UI[L][k].replace(/\\{c\\}/g, D.name);
-if (D.sub) UI.ar.hSub = UI.en.hSub = D.sub;
-const STORE = { currency: CURRENCY, category: { ar: D.name, en: D.name }, types: D.types, products: D.products, collections: [], ui: UI };
-if (D.types.length < 2) document.getElementById('shape').style.display = 'none';   // no sub-categories to pick from""")
+if (D.sub && !D.full) UI.ar.hSub = UI.en.hSub = D.sub;
+let TYPES = D.types, COLS = [];
+const COLIMG = {};
+if (D.full) {
+  // the tables page: every table gets a type and (when its name says so) a collection
+  const rx = (list, name) => (list.find(([, r]) => new RegExp(r, 'i').test(name)) || [])[0] || '';
+  D.products.forEach(p => { p.type = rx(RULES.types, p.ar) || 'side'; p.col = rx(RULES.cols, p.ar); });
+  TYPES = PTYPES.map(x => ({ ...x, hero: (D.products.find(p => p.type === x.id) || {}).id || '' }));
+  COLS = PCOLS.map(c => ({ ...c, img: (D.products.find(p => p.col === c.id) || {}).id || '' })).filter(c => c.img);
+  COLS.forEach(c => COLIMG[c.id] = c.img);
+} else ['cols', 'whyTitle', 'sizeTitle'].forEach(id => { const el = document.getElementById(id); if (el) el.closest('section').style.display = 'none'; });   // the tables-only parts
+const STORE = { currency: CURRENCY, category: { ar: D.name, en: D.name }, types: TYPES, products: D.products, collections: COLS, ui: UI };
+if (TYPES.length < 2) document.getElementById('shape').style.display = 'none';   // nothing to pick from""")
 js = must(js, "root.classList.add(G ? 'motion' : 'no-motion');", "KC.classList.add(G ? 'motion' : 'no-motion');")
 js = must(js, "let lang = 'ar';", "let lang = /^en/.test(root.lang) ? 'en' : 'ar';")
 js = must(js, "const img = id => `${M}${id}.webp`;\nconst P = STORE.products, byId = Object.fromEntries(P.map(p => [p.id, p]));",
-          "const P = STORE.products, byId = Object.fromEntries(P.map(p => [p.id, p]));\nconst img = k => (byId[k] && byId[k].img) || STORE.types.find(x => x.hero === k)?.hero || k || '';")
+          "const P = STORE.products, byId = Object.fromEntries(P.map(p => [p.id, p]));\nconst img = k => (byId[k] && byId[k].img) || k || '';")
 js = must(js, "const minPrice = Math.min(...P.map(p => p.price)), maxOff = Math.max(...P.map(off));",
           "const minPrice = P.length ? Math.min(...P.map(p => p.price)) : 0, maxOff = Math.max(0, ...P.filter(p => p.was).map(off));")
 js = '\n'.join(l for l in js.split('\n') if not l.startswith((
     "$('#searchBtn').innerHTML", "$('#accountBtn')", "$('#cartBtn')", "$('#logo').innerHTML", "$('#footerSmile')", "$('#wa')", "$('#social')",
     "const grp = ", "$('#marquee')", "  document.title = ", "  $('#langBtn')", "  $('#vatNo')", "$('#langBtn').onclick",
-    "const header = $('#header');", "addEventListener('scroll', () => header", "    .from('#logo .klogo__word'",
-    "  gsap.from('.crow'", "  gsap.from('.cols'")))
-js = must(js, "['#cardArr', '#sizeArr', '#helpArr', '#shapeGo']", "['#helpArr', '#shapeGo']")
-js = cut(js, "function renderIntro() {", "\n});\n", "")
-js = cut(js, "function renderCols() {", "\n}\n", "")
-js = cut(js, "$('#colList').addEventListener('click'", "goGrid(); });\n", "")
-js = cut(js, "/* size guide: ", "$('#sizeBtn').onclick = () => { setFilter({ type: 'coffee', col: null }); goGrid(); };\n", "")
-js = cut(js, "/* ---------------- collections: image follows the pointer", "\n}\n", "")
-js = must(js, "renderBanner(); renderShape(); renderIntro(); renderCols(); renderControls(); renderGrid(false); renderSize();",
-          "renderBanner(); renderShape(); renderControls(); renderGrid(false);")
-# headline pills: the first two product photos
+    "const header = $('#header');", "addEventListener('scroll', () => header", "    .from('#logo .klogo__word'")))
+# headline pills and the photo tile in the grid
 js = must(js, "<img src=\"${img('t03')}\" alt=\"\">", "<img src=\"${D.pills[0] || ''}\" alt=\"\">")
-js = must(js, "<img src=\"${img('life1')}\" alt=\"\" style=\"object-position:28% 62%\">", "<img src=\"${D.pills[1] || D.heroImg}\" alt=\"\">")
-js = must(js, "<img src=\"${img('life1')}\" alt=\"\" loading=\"lazy\"><h3>${t('tileB')}</h3>", "<img src=\"${D.heroImg}\" alt=\"\" loading=\"lazy\"><h3>${t('tileB')}</h3>")
-# "shop by type": the sub-categories (up to four tiles, the same columns as the prototype)
-js = cut(js, "  $('#shapeCols').innerHTML = `", "</div>`;\n", """  const T = STORE.types.slice(0, 4), cls = ['st--a', 'st--tall', 'st--short', 'st--sq'];
-  $('#shapeCols').innerHTML = `
-    <div class="sc">${T[0] ? tile(T[0].id, cls[0], 'white') : ''}
+js = must(js, "<img src=\"${img('life1')}\" alt=\"\" style=\"object-position:28% 62%\">", "<img src=\"${D.pills[1] || D.heroImg}\" alt=\"\"${D.full ? ' style=\"object-position:28% 62%\"' : ''}>")
+js = must(js, "<img src=\"${img('life1')}\" alt=\"\" loading=\"lazy\"><h3>${t('tileB')}</h3>", "<img src=\"${D.tilePhoto || D.heroImg}\" alt=\"\" loading=\"lazy\"><h3>${t('tileB')}</h3>")
+# "shop by type": the prototype's layout on the tables page; elsewhere the sub-categories
+js = must(js, "  $('#shapeCols').innerHTML = `", """  if (!D.full) {
+    const T = STORE.types.slice(0, 4);
+    $('#shapeCols').innerHTML = `
+    <div class="sc">${T[0] ? tile(T[0].id, 'st--a', 'white') : ''}
       <div class="srow"><button class="stack" type="button" data-type="all" aria-label="${t('shapeAll')}">${STORE.types.map(x => `<span><img src="${img(x.hero)}" alt=""></span>`).join('')}</button><span class="srow__plus">${icon('spark', 20, 1.4)}</span></div>
-      ${T[1] ? tile(T[1].id, cls[1], 'white') : ''}</div>
+      ${T[1] ? tile(T[1].id, 'st--tall', 'white') : ''}</div>
     <div class="sc">${T[2] ? tile(T[2].id, 'st--a', 'white') : ''}${T[3] ? tile(T[3].id, 'st--tall', 'white') : ''}</div>`;
-""")
+    $('#shapeSeg').innerHTML = `<a href="#all" data-seg="feat" class="${state.sort === 'disc' ? '' : 'is-on'}">${t('shapeAll')}</a><a href="#all" data-seg="disc" class="${state.sort === 'disc' ? 'is-on' : ''}">${t('shapeSale')}</a>`;
+    return;
+  }
+  $('#shapeCols').innerHTML = `""")
+js = must(js, "const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;",
+          "const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo; if (!c) return '';")
+js = must(js, "col('tm', 'st--short', 'tm-side', 'white')", "col('tm', 'st--short', COLIMG.tm, 'white')")
+js = must(js, "col('laxi', 'st--full', 't16', 'white', true)", "col('laxi', 'st--full', COLIMG.laxi, 'white', true)")
 # product cards: real links, the Zid cart
 js = must(js, '<h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3>', '<h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3>')
 js = must(js, '<p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p>', '<p class="card__price"><b>${money(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s>` : \'\'}</p>')
@@ -121,18 +137,25 @@ js = cut(js, "$('#pgrid').addEventListener('click', e => {", "\n});\n", """$('#p
 js = re.sub(r"const pick = \[\[.*?\]\];", "const pick = P.slice(0, 8).map((p, i) => [p.id, ['circle', 'arch', 'sq', 'pill'][i % 4], ['#C6F7A6', '#F4F4F4', '#e9e7e4', '#F4A7FC'][i % 4]]);", js, count=1, flags=re.S)
 open(os.path.join(THEME, 'assets', 'ket-category.js'), 'w').write(
     '/* KET category page — generated by ket/build_category.py from ket-tables.html. Edit the prototype, not this file. */\n'
-    f'const UI = {json.dumps(UI, ensure_ascii=False)};\nconst CURRENCY = {json.dumps(proto["currency"], ensure_ascii=False)};\n' + js + '\n')
+    f'const UI = {json.dumps(UI, ensure_ascii=False)};\nconst GEN = {json.dumps(GEN, ensure_ascii=False)};\nconst CURRENCY = {json.dumps(proto["currency"], ensure_ascii=False)};\n'
+    f'const PTYPES = {json.dumps(proto["types"], ensure_ascii=False)};\nconst PCOLS = {json.dumps(proto["collections"], ensure_ascii=False)};\nconst RULES = {json.dumps(TABLE_RULES, ensure_ascii=False)};\n' + js + '\n')
+
+# ---------------------------------------------------------------- pictures (the tables page's own photos)
+import shutil
+os.makedirs(os.path.join(THEME, 'assets', 'ket-cat'), exist_ok=True)
+for n in ('hero-joy', 'life1', 'life2', 't03', 't08', 't11'):
+    shutil.copyfile(os.path.join(THEME, '..', 'media', 'tables', n + '.webp'), os.path.join(THEME, 'assets', 'ket-cat', n + '.webp'))
 
 # ---------------------------------------------------------------- markup
 loader = html[html.index('<!-- LOADER'):html.index('<div class="announce"')]
 main = html[html.index('<main id="main">') + len('<main id="main">'):html.index('</main>')]
-for sec in ('<!-- 5 · COLLECTIONS -->', '<!-- 6 · INTRO BENTO', '<!-- 7 · SIZE GUIDE -->'):
-    main = cut(main, sec, '</section>\n')
 main = must(main, '<div class="pgrid" id="pgrid"></div>', '<div class="pgrid" id="pgrid"></div>\n  {% include "components/ket/category-pager.jinja" %}')
 main = must(main, '<img src="media/tables/hero-joy.webp" alt="" width="838" height="474" fetchpriority="high" id="heroImg">', '<img src="{{ KC_HERO }}" alt="" width="838" height="474" fetchpriority="high" id="heroImg">')
-main = must(main, '<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730">', '<img src="{{ KC_HERO }}" alt="" loading="lazy" width="1100" height="730">')
+main = must(main, '<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730">', '<img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730">', 1)
+main = must(main, '<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730" data-par>', '<img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730" data-par>')
 main = must(main, '<span class="sav"><img src="media/tables/t03.webp" alt="" loading="lazy"></span>', '<span class="sav"><img src="{{ KC_PILL }}" alt="" loading="lazy"></span>')
-main = must(main, '<div class="help__img"><img src="media/tables/t11.webp" alt="" loading="lazy"></div>', '<div class="help__img"><img src="{{ KC_PILL }}" alt="" loading="lazy"></div>')
+main = must(main, '<img src="media/tables/t08.webp" alt="" loading="lazy">', '<img src="{{ KC_IPILL }}" alt="" loading="lazy">')
+main = must(main, '<div class="help__img"><img src="media/tables/t11.webp" alt="" loading="lazy"></div>', '<div class="help__img"><img src="{{ KC_HELP }}" alt="" loading="lazy"></div>')
 main = must(main, '<a class="btn btn-wa" href="#" data-toast="soon">', '<a class="btn btn-wa" href="{{ KC_WA }}" target="_blank" rel="noopener">')
 assert 'media/' not in main, re.findall(r'media/[^"]*', main)
 tail = '<div class="toast" id="toast" role="status" aria-live="polite"></div>\n'
