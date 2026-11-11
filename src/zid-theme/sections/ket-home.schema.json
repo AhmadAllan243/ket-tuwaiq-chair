@@ -1,0 +1,516 @@
+{
+  "template": "sections/ket-home.jinja",
+  "name": {
+    "ar": "الصفحة الرئيسية (ket)",
+    "en": "Home page (ket)"
+  },
+  "icon": "home-line",
+  "settings": [
+    {
+      "id": "hero_title",
+      "type": "text",
+      "label": {
+        "ar": "عنوان البحث",
+        "en": "Search title"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "hero_text",
+      "type": "text",
+      "label": {
+        "ar": "النص تحت العنوان",
+        "en": "Text under the title"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "floats",
+      "type": "list",
+      "label": {
+        "ar": "الصور العائمة حول البحث (6)",
+        "en": "Floating photos around the search (6)"
+      },
+      "max_items": 6,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Photo"
+          }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "Link"
+          }
+        },
+        {
+          "id": "cutout",
+          "type": "checkbox",
+          "label": {
+            "ar": "صورة منتج على خلفية بيضاء",
+            "en": "Product photo on white"
+          },
+          "default": false
+        }
+      ]
+    },
+    {
+      "id": "story",
+      "type": "list",
+      "label": {
+        "ar": "ليش ket؟ (3 جمل)",
+        "en": "Why ket? (3 statements)"
+      },
+      "max_items": 3,
+      "settings": [
+        {
+          "id": "text_a",
+          "type": "text",
+          "label": {
+            "ar": "بداية الجملة",
+            "en": "Start of the line"
+          }
+        },
+        {
+          "id": "text_h",
+          "type": "text",
+          "label": {
+            "ar": "الكلمات المميزة",
+            "en": "Highlighted words"
+          }
+        },
+        {
+          "id": "text_b",
+          "type": "text",
+          "label": {
+            "ar": "نهاية الجملة",
+            "en": "End of the line"
+          }
+        },
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صورة القطعة (خلفية بيضاء)",
+            "en": "Piece photo (on white)"
+          }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "اسم القطعة",
+            "en": "Piece name"
+          }
+        },
+        {
+          "id": "price",
+          "type": "text",
+          "label": {
+            "ar": "السعر",
+            "en": "Price"
+          }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "رابط القطعة",
+            "en": "Piece link"
+          }
+        }
+      ]
+    },
+    {
+      "id": "brand_title",
+      "type": "text",
+      "label": {
+        "ar": "الشريط الأخضر: السطر الأول",
+        "en": "Green banner: first line"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "brand_title2",
+      "type": "text",
+      "label": {
+        "ar": "الشريط الأخضر: السطر الثاني",
+        "en": "Green banner: second line"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "pill1",
+      "type": "text",
+      "label": {
+        "ar": "الشارة الأولى",
+        "en": "First badge"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "pill2",
+      "type": "text",
+      "label": {
+        "ar": "الشارة الثانية",
+        "en": "Second badge"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "dept_tables",
+      "type": "category",
+      "label": {
+        "ar": "مربع الطاولات: التصنيف",
+        "en": "Tables tile: category"
+      }
+    },
+    {
+      "id": "dept_tables_image",
+      "type": "image",
+      "label": {
+        "ar": "مربع الطاولات: الصورة",
+        "en": "Tables tile: photo"
+      }
+    },
+    {
+      "id": "dept_tables_text",
+      "type": "text",
+      "label": {
+        "ar": "مربع الطاولات: الوصف",
+        "en": "Tables tile: description"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "dept_trees",
+      "type": "category",
+      "label": {
+        "ar": "مربع الأشجار: التصنيف",
+        "en": "Trees tile: category"
+      }
+    },
+    {
+      "id": "dept_trees_image",
+      "type": "image",
+      "label": {
+        "ar": "مربع الأشجار: الصورة",
+        "en": "Trees tile: photo"
+      }
+    },
+    {
+      "id": "dept_trees_text",
+      "type": "text",
+      "label": {
+        "ar": "مربع الأشجار: الوصف",
+        "en": "Trees tile: description"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "dept_home",
+      "type": "category",
+      "label": {
+        "ar": "مربع المستلزمات المنزلية: التصنيف",
+        "en": "Home essentials tile: category"
+      }
+    },
+    {
+      "id": "dept_home_image",
+      "type": "image",
+      "label": {
+        "ar": "مربع المستلزمات المنزلية: الصورة",
+        "en": "Home essentials tile: photo"
+      }
+    },
+    {
+      "id": "dept_home_text",
+      "type": "text",
+      "label": {
+        "ar": "مربع المستلزمات المنزلية: الوصف",
+        "en": "Home essentials tile: description"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "dept_rugs",
+      "type": "category",
+      "label": {
+        "ar": "مربع السجاد: التصنيف",
+        "en": "Rugs tile: category"
+      }
+    },
+    {
+      "id": "dept_rugs_image",
+      "type": "image",
+      "label": {
+        "ar": "مربع السجاد: الصورة",
+        "en": "Rugs tile: photo"
+      }
+    },
+    {
+      "id": "dept_rugs_text",
+      "type": "text",
+      "label": {
+        "ar": "مربع السجاد: الوصف",
+        "en": "Rugs tile: description"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "dept_lamps",
+      "type": "category",
+      "label": {
+        "ar": "مربع الأبجورات: التصنيف",
+        "en": "Lamps tile: category"
+      }
+    },
+    {
+      "id": "dept_lamps_image",
+      "type": "image",
+      "label": {
+        "ar": "مربع الأبجورات: الصورة",
+        "en": "Lamps tile: photo"
+      }
+    },
+    {
+      "id": "dept_lamps_text",
+      "type": "text",
+      "label": {
+        "ar": "مربع الأبجورات: الوصف",
+        "en": "Lamps tile: description"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "lady",
+      "type": "image",
+      "label": {
+        "ar": "الرسمة (مربع النعناعي)",
+        "en": "Illustration (mint tile)"
+      }
+    },
+    {
+      "id": "sale_title",
+      "type": "text",
+      "label": {
+        "ar": "مربع التخفيضات: العنوان",
+        "en": "Discounts tile: title"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "sale_url",
+      "type": "url",
+      "label": {
+        "ar": "مربع التخفيضات: الرابط",
+        "en": "Discounts tile: link"
+      }
+    },
+    {
+      "id": "sale_image1",
+      "type": "image",
+      "label": {
+        "ar": "مربع التخفيضات: القطعة 1",
+        "en": "Discounts tile: piece 1"
+      }
+    },
+    {
+      "id": "sale_image2",
+      "type": "image",
+      "label": {
+        "ar": "مربع التخفيضات: القطعة 2",
+        "en": "Discounts tile: piece 2"
+      }
+    },
+    {
+      "id": "sale_image3",
+      "type": "image",
+      "label": {
+        "ar": "مربع التخفيضات: القطعة 3",
+        "en": "Discounts tile: piece 3"
+      }
+    },
+    {
+      "id": "deals",
+      "type": "products",
+      "label": {
+        "ar": "عروض 24 ساعة: المنتجات",
+        "en": "24-hour deals: products"
+      }
+    },
+    {
+      "id": "deals_stock_scale",
+      "type": "range",
+      "label": {
+        "ar": "عروض 24 ساعة: الكمية الكاملة لشريط المخزون",
+        "en": "24-hour deals: full stock bar"
+      },
+      "min": 5,
+      "max": 200,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "id": "deals_eyebrow",
+      "type": "text",
+      "label": {
+        "ar": "عروض 24 ساعة: العنوان الصغير",
+        "en": "24-hour deals: small title"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "deals_title",
+      "type": "text",
+      "label": {
+        "ar": "عروض 24 ساعة: العنوان",
+        "en": "24-hour deals: title"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "deals_text",
+      "type": "text",
+      "label": {
+        "ar": "عروض 24 ساعة: النص",
+        "en": "24-hour deals: text"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "videos_title",
+      "type": "text",
+      "label": {
+        "ar": "الفيديوهات: العنوان",
+        "en": "Videos: title"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "videos_text",
+      "type": "text",
+      "label": {
+        "ar": "الفيديوهات: النص",
+        "en": "Videos: text"
+      },
+      "info": {
+        "ar": "اتركه فارغًا لاستخدام النص الافتراضي",
+        "en": "Leave empty to use the default wording"
+      }
+    },
+    {
+      "id": "videos",
+      "type": "list",
+      "label": {
+        "ar": "فيديوهات العملاء",
+        "en": "Customer videos"
+      },
+      "max_items": 8,
+      "settings": [
+        {
+          "id": "video",
+          "type": "video",
+          "label": {
+            "ar": "الفيديو",
+            "en": "Video"
+          }
+        },
+        {
+          "id": "poster",
+          "type": "image",
+          "label": {
+            "ar": "صورة الغلاف",
+            "en": "Cover photo"
+          }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان",
+            "en": "Title"
+          }
+        },
+        {
+          "id": "subtitle",
+          "type": "text",
+          "label": {
+            "ar": "سطر تحت العنوان",
+            "en": "Line under the title"
+          }
+        }
+      ]
+    },
+    {
+      "id": "instagram",
+      "type": "url",
+      "label": {
+        "ar": "رابط إنستقرام",
+        "en": "Instagram link"
+      }
+    },
+    {
+      "id": "tiktok",
+      "type": "url",
+      "label": {
+        "ar": "رابط تيك توك",
+        "en": "TikTok link"
+      }
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+"""
+Builds the KET home page section from the prototype (../ket-home.html, the design source of truth):
+
+  assets/ket-home.css      the prototype's CSS scoped under .kh (same rules as extract_css.py)
+  assets/ket-home.js       the prototype's script, wired to Zid (data from the section, Zid search, Zid cart)
+  assets/ket-brand.js      the prototype's icons / logo / smile helpers
+  assets/ket-home/*.webp   the prototype's pictures, used when a picture is not chosen in the theme editor
+  sections/ket-home.jinja  the markup + the data the script reads (window.KET_HOME), from the section settings
+
+usage: python3 ket/build_home.py      (run from src/zid-theme)
+"""
+import os, re, json, shutil, subprocess
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+THEME = os.path.join(HERE, '..')
+SRC = os.path.join(THEME, '..', 'ket-home.html')
+MEDIA = os.path.join(THEME, '..', 'media')
+html = open(SRC).read()
+
+def must(s, a, b, n=1):
+    c = s.count(a)
+    assert c == n, f'expected {n}x, found {c}: {a[:90]}'
+    return s.replace(a, b)
+
+def cut(s, start, end, repl='', include_end=True):
+    i = s.index(start); j = s.index(end, i)
+    if include_end: j += len(end)
+    return s[:i] + repl + s[j:]
+
+# ---------------------------------------------------------------- pictures
+# every bundled picture: prototype path -> assets/ket-home/<path with / as ->.webp
+PICS = ['home/lp03', 'home/life/family', 'home/tr06', 'tables/t12', 'home/life/tables', 'home/life/home',
+        'tables/t08', 'home/lp11', 'home/ac05',
+        'home/life/tables', 'home/life/trees', 'home/life/home', 'home/life/rugs', 'home/life/lamps',
+        'home/lady', 'home/reading', 'cut/ac03', 'cut/lp10', 'cut/t13',
+        'home/v1', 'home/v2', 'home/v3', 'home/v4', 'home/v5', 'home/v6']
+PICS = list(dict.fromkeys(PICS))
+os.makedirs(os.path.join(THEME, 'assets', 'ket-home'), exist_ok=True)
+for p in PICS:
+    shutil.copyfile(os.path.join(MEDIA, p + '.webp'), os.path.join(THEME, 'assets', 'ket-home', p.replace('/', '-') + '.webp'))
+shutil.copyfile(os.path.join(THEME, '..', 'ket-brand.js'), os.path.join(THEME, 'assets', 'ket-brand.js'))
+
+# ---------------------------------------------------------------- CSS
+css = re.findall(r'<style>(.*?)</style>', html, re.S)[0]
+css = re.sub(r'/\* dark: the phone.*?\n:root\[data-theme="dark"\]\{.*?\n\}\n', '', css, flags=re.S)       # light only, like the rest of the store
+css = cut(css, '/* ===================== ANNOUNCEMENT + HEADER', '/* ===================== 1. HERO', '/* ===================== 1. HERO', True)
+css = cut(css, '/* ===================== FOOTER', '.toast{', '.toast{', True)
+css = '\n'.join(l for l in css.split('\n') if not l.startswith(('.skip', '.wa{')))
+
+def scope_sel(sel):
+    sel = sel.strip()
+    if not sel or sel.startswith(('from', 'to')) or re.fullmatch(r'[\d.]+%(\s*,\s*[\d.]+%)*', sel):
+        return sel
+    if re.match(r'^html[^ ]* body$', sel):                       # html.is-intro body: the page itself
+        return sel
+    m = re.match(r'^\.(motion|no-motion) (.*)$', sel)             # the motion class sits on the .kh wrapper
+    if m:
+        return f'.kh.{m.group(1)} {m.group(2)}'
+    m = re.match(r'^(html(?:\[[^\]]*\]|\.[\w-]+|:not\([^)]*\))*|:root)(.*)$', sel)
+    if m:
+        root, rest = m.group(1), m.group(2).strip()
+        if root == ':root':
+            return '.kh' + (' ' + rest if rest else '')
+        return f'{root} :where(.kh)' + (' ' + rest if rest else '') if rest else f'{root} .kh'
+    if sel.startswith('body'):
+        return '.kh' + sel[4:]
+    if sel == '*':
+        return ':where(.kh) *'
+    return ':where(.kh) ' + sel
+
+def scope_block(text):
+    out, i, n = [], 0, len(text)
+    while i < n:
+        j = text.find('{', i)
+        if j < 0:
+            out.append(text[i:]); break
+        head = text[i:j]
+        depth, k = 1, j + 1
+        while k < n and depth:
+            if text[k] == '{': depth += 1
+            elif text[k] == '}': depth -= 1
+            k += 1
+        body = text[j + 1:k - 1]
+        h = head.strip()
+        lead = head[:len(head) - len(head.lstrip())]
+        if h.startswith(('@media', '@supports', '@layer')):
+            out.append(f'{lead}{h}{{{scope_block(body)}}}')
+        elif h.startswith(('@keyframes', '@font-face', '@property')):
+            out.append(f'{lead}{h}{{{body}}}')
+        else:
+            cm = re.match(r'^((?:\s*/\*.*?\*/)*)(.*)$', h, re.S)
+            pre, sels = cm.group(1), cm.group(2)
+            parts = [scope_sel(s) for s in re.split(r',(?![^(]*\))', sels)]
+            out.append(f'{lead}{pre}{", ".join(parts)}{{{body}}}')
+        i = k
+    return ''.join(out)
+
+extra = """
+/* ---- theme-only ---- */
+.kh{ position:relative; }
+:where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }   /* a deal photo that could not be cut out: its white blends into the grey */
+:where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }
+"""
+# keyframe names are global: give the home page its own so the product page's never clash
+names = re.findall(r'@keyframes ([\w-]+)', css)
+scoped = scope_block(css)
+for nm in names:
+    scoped = re.sub(rf'(@keyframes |animation:[^;{{}}]*?\b){nm}\b', rf'\1kh-{nm}', scoped)
+open(os.path.join(THEME, 'assets', 'ket-home.css'), 'w').write(
+    '/* KET home page — generated by ket/build_home.py from ket-home.html. Edit the prototype, not this file. */\n' + scoped + extra)
+
+# ---------------------------------------------------------------- JS
+store_js = re.search(r'<script>\nconst STORE = (\{.*?\n\});\n</script>', html, re.S).group(1)
+proto = json.loads(subprocess.run(['node', '-e', f'const S = {store_js}; process.stdout.write(JSON.stringify({{ ui: S.ui, cats: S.cats, currency: S.currency }}))'],
+                                  capture_output=True, text=True, check=True).stdout)
+UI = proto['ui']
+for L in ('ar', 'en'):
+    UI[L]['sAll'] = 'عرض كل النتائج' if L == 'ar' else 'See all results'
+CATS = [{k: c[k] for k in ('id', 'ar', 'en', 'tx', 'kw', 'short') if k in c} for c in proto['cats']]
+
+js = re.findall(r'<script>\n(\(\(\) => \{.*?\}\)\(\);)\n</script>', html, re.S)[0]
+js = must(js, "'use strict';", """'use strict';
+const KH = document.querySelector('.kh'); if (!KH || !window.KET_HOME) return;
+// the section's data (Zid) over the prototype's defaults
+const STORE = window.KET_HOME; STORE.ui = UI; STORE.currency = CURRENCY;
+for (const k in STORE.text || {}) if (STORE.text[k]) UI.ar[k] = UI.en[k] = STORE.text[k];
+STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {};
+  return { ...c, ar: z.name || c.ar, en: z.name || c.en, short: z.name ? null : c.short, tx: z.text ? { ar: z.text, en: z.text } : c.tx,
+    url: z.url || '', photo: z.photo || `home/life/${c.id}`, n: z.n || 0 }; });""")
+js = must(js, "root.classList.add(G ? 'motion' : 'no-motion');", "KH.classList.add(G ? 'motion' : 'no-motion');")
+js = must(js, "let lang = 'ar';", "let lang = /^en/.test(root.lang) ? 'en' : 'ar';")
+js = must(js, "const img = p => `media/${p}.webp`;", "const img = p => !p ? '' : /^(https?:)?\\/\\//.test(p) ? p : `${STORE.base}${p.replace(/\\//g, '-')}.webp`;")
+js = must(js, "const maxOff = () => Math.max(...", "const maxOff = () => Math.max(0, ...")
+# the store's own header / footer / WhatsApp button do these jobs
+js = '\n'.join(l for l in js.split('\n') if not l.startswith((
+    "$('#searchBtn').innerHTML", "$('#accountBtn')", "$('#cartBtn')", "$('#logo')", "$('#footerSmile')", "$('#wa')", "$('#social')",
+    "const grp = ", "$('#marquee')", "const isDark", "const paintTheme", "$('#themeBtn')", "matchMedia('(prefers-color-scheme: dark)')",
+    "paintTheme();", "  $('#nav').innerHTML", "$('#langBtn').onclick", "  root.lang = lang;", "  document.title = ", "  $('#langBtn')",
+    "  $('#vatNo')", "const header = $('#header');", "addEventListener('scroll', () => header", "$('#storyArt').addEventListener",
+    "    .from('#logo .klogo__word'")))
+js = must(js, "$('#lnkIg').href = STORE.links.instagram; $('#lnkTt').href = STORE.links.tiktok;",
+          "$('#lnkIg').href = STORE.links.instagram; $('#lnkTt').href = STORE.links.tiktok;\nif (!STORE.links.instagram) $('#lnkIg').remove(); if (!STORE.links.tiktok) $('#lnkTt').remove();")
+# cart: Zid's (a product with options opens its page to choose)
+js = re.sub(r"const addToCart = \(\) => \{.*?\};\n", """const addToCart = async p => {
+  if (!p) return; if (p.hasOptions || !window.zid) { location.href = p.url; return; }
+  try { await zid.cart.addProduct({ product_id: p.id, quantity: 1 }, { showErrorNotification: true }); window.dispatchEvent(new CustomEvent('cart:updated', { detail: { productId: p.id, action: 'add' } })); toast(t('added')); }
+  catch (e) { location.href = p.url; }
+};
+""", js, count=1, flags=re.S)
+js = re.sub(r"const openProduct = p => \{.*?\};\n", "const openProduct = p => { if (p && p.url) location.href = p.url; };\n", js, count=1, flags=re.S)
+# search: departments from the section, products from Zid's search
+js = cut(js, 'const IDX = P.map(', "STORE.cats.forEach(c => { c.n = P.filter(p => p.cat === c.id).length; c.kwN = [...c.kw.map(norm), norm(c.ar), norm(c.en)]; });",
+         "STORE.cats.forEach(c => { c.kwN = [...(c.kw || []).map(norm), norm(c.ar), norm(c.en)]; });")
+js = cut(js, 'function search(qRaw) {', "return { cats, prods: scored.map(x => x[1]), num };\n}", """const num = v => (v == null || v === '' || isNaN(+v)) ? 0 : +v;
+const zp = x => { const s = num(x.sale_price), pr = num(x.price);
+  return { id: x.id, ar: x.name, en: x.name, url: x.html_url, img: x.main_image?.image?.small || x.images?.[0]?.image?.small || '', hasOptions: !!x.has_options,
+    price: s || pr, was: s ? pr : 0, fprice: x.formatted_sale_price || x.formatted_price || '', fwas: x.formatted_sale_price ? x.formatted_price : '' }; };
+let sSeq = 0;
+async function search(qRaw) {
+  const q = String(qRaw).trim(); if (!q) return { cats: [], prods: [], num: false };
+  const words = norm(q).split(' ').filter(w => w.length > 0);
+  const cats = STORE.cats.filter(c => c.url && words.some(w => c.kwN.some(k => k.startsWith(w) || (w.length > 2 && k.includes(w)) || (w.length > 3 && w.includes(k)))));
+  let prods = [];
+  try { const r = await zid.products.list({ page_size: 7, q }, { showErrorNotification: false }); prods = ((r && r.results) || []).map(zp); } catch (e) {}
+  return { cats, prods, num: /\\d/.test(q) };
+}""")
+js = must(js, "const priceHTML = p => p.price ?", "const priceHTML = p => p.fprice ? `<span class=\"srow__p\">${p.fprice}${p.fwas ? `<s>${p.fwas}</s>` : ''}</span>` : p.price ?")
+js = must(js, '<button class="srow" type="button" role="option" data-pid="${p.id}" data-i="${i}">', '<button class="srow" type="button" role="option" data-url="${p.url}" data-i="${i}">')
+js = must(js, "<small>${L(catOf(p.cat))}${p.sku ? ` · <span class=\"latin\">${p.sku}</span>` : ''}</small>", "<small>${p.sub || ''}</small>")
+js = must(js, "function renderRes() {\n  const v = q.value;", "async function renderRes() {\n  const seq = ++sSeq, v = q.value;")
+js = must(js, "${['tc', 't03', 'lp03', 'tr06'].map((id, i) => rowHTML(byId[id], '', i)).join('')}", "${STORE.products.slice(0, 4).map((p, i) => rowHTML(p, '', i)).join('')}")
+js = must(js, "    const r = search(v);\n", "    const r = await search(v); if (seq !== sSeq) return;\n")
+js = must(js, "t('sAll', { n: r.prods.length })", "t('sAll')")
+js = cut(js, "sbox.addEventListener('submit', e => {", "\n});\n", """sbox.addEventListener('submit', e => {
+  e.preventDefault();
+  const rows = $$('.srow, .chip, .sres__all', sres);
+  if (act > -1 && rows[act]) { rows[act].click(); return; }
+  const v = q.value.trim(); if (v) location.href = '/products?q=' + encodeURIComponent(v); else q.focus();
+});
+""")
+js = must(js, "  else if (p) openProduct(byId[p.dataset.pid]);\n  else if (a) { const r = search(q.value); openCat(r.cats[0] || catOf(r.prods[0].cat)); }",
+          "  else if (p) location.href = p.dataset.url;\n  else if (a) location.href = '/products?q=' + encodeURIComponent(q.value.trim());")
+js = must(js, "p = e.target.closest('[data-pid]'), a = e.target.closest('[data-all]')", "p = e.target.closest('[data-url]'), a = e.target.closest('[data-all]')")
+js = must(js, "$('#searchBtn').onclick = () => {", "const goSearch = () => {")
+js = must(js, "$('#searchBtn').click();", "goSearch();")
+# hero photos: chosen in the theme editor (link + picture), the prototype's layout
+js = cut(js, '// [side, photo, width, aspect', "openCat(catOf(id)); });\n", """// [side, width, aspect, gap from the search, top, tilt, seconds]
+const GEO = [['s', 112, .78, 70, '8%', -3, 7], ['s', 132, .76, 150, '36%', 2, 8.5], ['s', 104, .82, 64, '68%', -2, 6.5],
+  ['e', 116, .9, 66, '10%', 3, 7.5], ['e', 140, 1.06, 146, '38%', -2, 9], ['e', 120, .9, 58, '68%', 2, 6]];
+function renderFloaters() {
+  $('#floaters').innerHTML = STORE.floats.slice(0, 6).map((f, i) => { const [sd, w, ar, x, y, r, d] = GEO[i];
+    return `<a class="fl fl--${sd}${f.cut ? ' fl--p' : ''}" href="${f.url || '#cats'}" style="--w:${w}px;--ar:${ar};--x:${x}px;--y:${y};--r:${r}deg;--d:${d}s;--dl:${-i * 1.3}s" aria-hidden="true" tabindex="-1"><span class="fl__in"><img src="${img(f.img)}" alt="" loading="lazy"></span></a>`; }).join('');
+}
+""")
+# story: three statements + three pieces (link + price from the section)
+js = must(js, "$('#storySlides').innerHTML = t('st').map(", "$('#storySlides').innerHTML = (STORE.st && STORE.st.length === 3 ? STORE.st : t('st')).map(")
+js = cut(js, "$('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const p = byId[id];", "}).join('');", """$('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img src="${img(p.img)}" alt="${esc(p.name || '')}" loading="lazy"></div>
+      ${p.url && p.name ? `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${p.price}</small>` : ''}</span></a>` : ''}</div>`).join('');""")
+# departments
+js = must(js, "const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);", "const total = () => STORE.cats.reduce((s, c) => s + (c.n || 0), 0);")
+js = must(js, 'src="media/home/lady.webp?v=2"', 'src="${img(STORE.lady)}"')
+js = must(js, 'href="ket-sale.html" data-pop="feat"', 'href="${STORE.saleUrl || \'#deals\'}" data-pop="feat"')
+js = must(js, '<img src="media/cut/ac03.webp" alt="" loading="lazy"><img src="media/cut/lp10.webp" alt="" loading="lazy"><img src="media/cut/t13.webp" alt="" loading="lazy">',
+          "${STORE.fan.map(f => `<img src=\"${img(f)}\" alt=\"\" loading=\"lazy\">`).join('')}")
+js = must(js, "src = `media/home/life/${im}.webp?v=5`;", "src = img(c.photo);")
+js = must(js, "<b class=\"latin\">${total()}</b>", "${total() ? `<b class=\"latin\">${total()}</b>` : ''}")
+# deals: Zid products (sale price, stock); the photo is cut out of its white background when the image host allows it
+js = must(js, '<img src="media/cut/${d.id}.webp" alt="" draggable="false">', '<img src="${img(d.p.img)}" alt="" draggable="false">')
+js = must(js, "$$('.sbi img').forEach(im => im.complete ? seatShadow(im) : im.addEventListener('load', () => seatShadow(im), { once: true }));",
+          "$$('.sbi img').forEach(im => im.complete ? cutOut(im) : im.addEventListener('load', () => cutOut(im), { once: true }));")
+js = must(js, "// put each contact shadow right under its piece", """// a store photo is on white: cut the white away (flood fill from the edges) so the piece sits solid over the grey;
+// if the image host does not allow reading the picture, its white blends into the grey instead (multiply)
+function cutOut(im) {
+  if (im.dataset.cut) return; im.dataset.cut = '1';
+  const src = im.currentSrc || im.src; if (src.startsWith('data:') || /\\.webp(\\?|$)/.test(src) && src.includes(STORE.base)) { seatShadow(im); return; }
+  const tmp = new Image(); tmp.crossOrigin = 'anonymous';
+  tmp.onload = () => {
+    try {
+      const W = Math.min(700, tmp.naturalWidth), H = Math.round(W * tmp.naturalHeight / tmp.naturalWidth), c = document.createElement('canvas'); c.width = W; c.height = H;
+      const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(tmp, 0, 0, W, H);
+      const d = x.getImageData(0, 0, W, H), px = d.data, seen = new Uint8Array(W * H), st = [];
+      const white = k => px[k * 4 + 3] > 0 && Math.min(px[k * 4], px[k * 4 + 1], px[k * 4 + 2]) > 242 && Math.max(px[k * 4], px[k * 4 + 1], px[k * 4 + 2]) - Math.min(px[k * 4], px[k * 4 + 1], px[k * 4 + 2]) < 9;
+      for (let i = 0; i < W; i++) st.push(i, (H - 1) * W + i); for (let j = 0; j < H; j++) st.push(j * W, j * W + W - 1);
+      while (st.length) { const k = st.pop(); if (seen[k] || !white(k)) continue; seen[k] = 1; px[k * 4 + 3] = 0; const i = k % W;
+        if (i > 0) st.push(k - 1); if (i < W - 1) st.push(k + 1); if (k >= W) st.push(k - W); if (k < W * (H - 1)) st.push(k + W); }
+      x.putImageData(d, 0, 0); im.src = c.toDataURL('image/png'); im.addEventListener('load', () => seatShadow(im), { once: true });
+    } catch (e) { im.closest('.sbi').classList.add('is-mult'); }
+  };
+  tmp.onerror = () => im.closest('.sbi').classList.add('is-mult');
+  tmp.src = src;
+}
+// put each contact shadow right under its piece""")
+js = must(js, "<s>${fmt(p.was)}</s><span class=\"sbt__off\"><span dir=\"ltr\">-${off(p.was, d.price)}%</span></span>",
+          "${p.was ? `<s>${fmt(p.was)}</s><span class=\"sbt__off\"><span dir=\"ltr\">-${off(p.was, d.price)}%</span></span>` : ''}")
+js = must(js, "<div class=\"stock\"><span>${d.left === 1 ? t('left1') : t('left', { n: d.left })}</span><i style=\"--w:${Math.max(6, d.left / d.total * 100)}%\"></i></div>`;",
+          "${d.left > 0 ? `<div class=\"stock\"><span>${d.left === 1 ? t('left1') : t('left', { n: d.left })}</span><i style=\"--w:${Math.max(6, Math.min(100, d.left / d.total * 100))}%\"></i></div>` : ''}`;")
+js = must(js, "$('#sbBuy').onclick = () => { if (deals[shown]) addToCart(); };", "$('#sbBuy').onclick = () => { if (deals[shown]) addToCart(deals[shown].p); };")
+# videos: caption from the section
+js = re.sub(r"fanShown = on; const p = byId\[STORE\.videos\[on\]\.product\], cap = \$\('#fanCap'\);\n\s*cap\.innerHTML = `.*?`;",
+            "fanShown = on; const v = STORE.videos[on], cap = $('#fanCap');\n    cap.innerHTML = v.title ? `<b>${esc(v.title)}</b><span>${v.sub ? esc(v.sub) + ' · ' : ''}${t('expTag')}</span>` : '';", js, count=1, flags=re.S)
+assert "byId[STORE.videos" not in js
+js = must(js, "document.body.appendChild(h);", "KH.appendChild(h);")
+open(os.path.join(THEME, 'assets', 'ket-home.js'), 'w').write(
+    '/* KET home page — generated by ket/build_home.py from ket-home.html. Edit the prototype, not this file. */\n'
+    f'const UI = {json.dumps(UI, ensure_ascii=False)};\nconst CATS = {json.dumps(CATS, ensure_ascii=False)};\nconst CURRENCY = {json.dumps(proto["currency"], ensure_ascii=False)};\n' + js + '\n')
+
+# ---------------------------------------------------------------- markup
+body = html[html.index('<!-- INTRO:'):html.index('<div class="announce"')]
+main = html[html.index('<main id="main">') + len('<main id="main">'):html.index('</main>')]
+tail = '<div class="toast" id="toast" role="status" aria-live="polite"></div>\n\n' + html[html.index('<dialog class="vbox"'):html.index('</dialog>') + 9]
+markup = body + main + tail
+markup = re.sub(r'src="media/([\w/]+)\.webp(\?v=\d+)?"', lambda m: 'src="{{ \'ket-home/' + m.group(1).replace('/', '-') + ".webp' | asset_url }}\"", markup)
+assert 'media/' not in markup
+
+open(os.path.join(THEME, 'sections', 'ket-home.jinja'), 'w').write(
+    open(os.path.join(HERE, 'ket-home.data.jinja')).read() + '\n<div class="kh">\n' + markup + '\n</div>\n' + """
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="{{ 'ket-brand.js' | asset_url }}"></script>
+<script src="{{ 'ket-home.js' | asset_url }}"></script>
+""")
+print('built ket-home: css', len(scoped), 'js', len(js), 'pictures', len(PICS))
