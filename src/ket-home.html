@@ -1103,7 +1103,8 @@ function bentoIn() {
   const tl = gsap.timeline();
   ['trees', 'brand', 'logo', 'lady', 'home', 'tables', 'rugs', 'lamps', 'pill', 'cta', 'feat'].forEach((id, k) => {
     const el = $(`[data-pop="${id}"]`, g), r = el.getBoundingClientRect(), dx = (r.left + r.width / 2 - cx) * .28, dy = (r.top + r.height / 2 - cy) * .28;
-    tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
+    if (id === 'lady') tl.fromTo(el, { y: 40, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
+    else tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
     const b = $('.dc__body, h3', el);
     if (b) tl.from(b, { y: 18, opacity: 0, duration: .7, ease: 'power3.out', clearProps: 'transform,opacity' }, k * .11 + .35);
   });
@@ -1363,6 +1364,7 @@ function runIntro() {
   scrollTo(0, 0);
   let seen = false; try { seen = !!sessionStorage.getItem('ketHello'); } catch (e) {}
   if (!G) { done(); return; }
+  if (seen) { $('#intro').remove(); heroIn(0); done(); return; }
   const hello = t('hello'), line = t('helloLine');
   $('#introHello').innerHTML = [...hello].map(c => `<span class="ch">${c}</span>`).join('') + '<span class="wave">👋🏼</span>';
   const typed = { n: 0 };
@@ -1407,7 +1409,9 @@ if (G && window.Lenis && !matchMedia('(pointer:coarse)').matches) {
 startAuto();
 const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
 const pageLoaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => addEventListener('load', r, { once: true }));
-Promise.race([Promise.all([fontsReady, pageLoaded]), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(() => requestAnimationFrame(runIntro)));
+let seenHello = false; try { seenHello = !!sessionStorage.getItem('ketHello'); } catch (e) {}
+if (seenHello) runIntro();   // a return visit: no welcome, nothing to wait for
+else Promise.race([Promise.all([fontsReady, pageLoaded]), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(() => requestAnimationFrame(runIntro)));
 })();
 </script>
 </body>

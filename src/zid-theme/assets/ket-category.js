@@ -335,6 +335,12 @@ function done() {
 function runLoader() {
   const ldr = $('#loader');
   if (!G) { done(); return; }
+  let seen = false; try { seen = !!sessionStorage.getItem('ketCatSeen'); sessionStorage.setItem('ketCatSeen', '1'); } catch (e) {}
+  if (seen || /[?&]page=/.test(location.search)) {
+    ldr.remove(); done();
+    if (/[?&]page=/.test(location.search)) requestAnimationFrame(() => { const y = $('#all').getBoundingClientRect().top + scrollY - 90; scrollTo(0, y); });
+    return;
+  }
   // ring of 8 tables in mixed shapes on pink and grey
   const pick = P.slice(0, 8).map((p, i) => [p.id, ['circle', 'arch', 'sq', 'pill'][i % 4], ['#C6F7A6', '#F4F4F4', '#e9e7e4', '#F4A7FC'][i % 4]]);
   const ring = $('#ring');

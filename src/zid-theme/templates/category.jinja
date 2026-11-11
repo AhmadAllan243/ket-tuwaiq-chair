@@ -36,9 +36,9 @@
 {% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
-<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=c3dff8e1">
+<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=1ace4db1">
 <script>
-  document.documentElement.classList.add('is-loading');
+  try { if (!sessionStorage.getItem('ketCatSeen') && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
   window.KET_CAT = {
     {# KET's English name for this department is «Decorating supplies»; the site calls it Home essentials #}
     name: {{ ('Home essentials' if (category.id | string) == '444491' and session.lang == 'en' else category.name) | tojson }},
@@ -194,5 +194,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}&k=e76b049a"></script>
-<script src="{{ 'ket-category.js' | asset_url }}&k=b37876fd"></script>
+<script src="{{ 'ket-category.js' | asset_url }}&k=f8d71af8"></script>
 {% endblock %}

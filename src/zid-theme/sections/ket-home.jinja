@@ -9,7 +9,7 @@
 {% macro txt(v) %}{{ (v or '') | tojson }}{% endmacro %}
 <link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=16c559fe">
 <script>
-  document.documentElement.classList.add('is-intro');   // the welcome (short once seen this visit) ends by handing over to the search bar
+  try { if (!sessionStorage.getItem('ketHello')) document.documentElement.classList.add('is-intro'); } catch (e) { document.documentElement.classList.add('is-intro'); }   // the welcome: first visit of a session only
   window.KET_HOME = {
     base: {{ ('ket-home/home-lady.webp' | asset_url) | tojson }}.replace(/home-lady\.webp.*$/, ''),
     {# the section's links, else the store's own accounts (Settings → contact) #}
@@ -52,7 +52,8 @@
       {% if st %}
         {% for s in st %}{ img: {{ pic(s.image, 800) }}, name: {{ txt(s.title) }}, price: {{ txt(s.price) }}, url: {{ href(s.url) }} }{{ ',' if not loop.last }}{% endfor %}
       {% else %}
-        { img: 'tables/t08' }, { img: 'home/lp11' }, { img: 'home/ac05' }
+        {# KET's picks, looked up live (photo, name, price, link): the ARKAN lamp, the Tuwaiq chair Second Edition, the ficus tree #}
+        { q: 'ARKAN', slug: 'أبجورة-arkan' }, { q: 'Second Edition', slug: 'كرسي-طويق-second-edition' }, { q: 'فيكس', slug: 'شجرة-فيكس' }
       {% endif %}
     ],
     {% set deals = S.deals.results if S.deals and S.deals.results else [] %}
@@ -205,4 +206,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}&k=e76b049a"></script>
-<script src="{{ 'ket-home.js' | asset_url }}&k=90ad6028"></script>
+<script src="{{ 'ket-home.js' | asset_url }}&k=6d123055"></script>

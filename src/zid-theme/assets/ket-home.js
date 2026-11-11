@@ -224,10 +224,25 @@ const HL = ['hl-m', 'hl-p', 'hl-m'];
 const words = s => s ? s.split(' ').map(w => `<span class="wm"><span class="wi">${w}</span></span>`).join(' ') : '';
 function renderStory() {
   $('#storySlides').innerHTML = (STORE.st && STORE.st.length === 3 ? STORE.st : t('st')).map(([a, h, b], i) => `<p class="ss" data-s="${i}">${words(a)} <span class="${HL[i]}">${words(h)}</span> ${words(b)}</p>`).join('');
-  $('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img src="${img(p.img)}" alt="${esc(p.name || '')}" loading="lazy"></div>
+  $('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img ${p.img ? `src="${img(p.img)}"` : ''} alt="${esc(p.name || '')}" loading="lazy"></div>
       ${p.url && p.name ? `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${p.price}</small>` : ''}</span></a>` : ''}</div>`).join('');
 }
 
+// "Why ket?" pieces given by name: the store's own photo, name, price and link, filled in place once found
+async function fillStory() {
+  if (!window.zid) return;
+  await Promise.all(STORE.story.slice(0, 3).map(async (p, i) => {
+    if (!p.q || p.url) return;
+    try {
+      const r = await zid.products.list({ page_size: 6, q: p.q }, { showErrorNotification: false });
+      const x = ((r && r.results) || []).find(z => decodeURIComponent(z.html_url || '').endsWith('/' + p.slug)) || ((r && r.results) || [])[0]; if (!x) return;
+      Object.assign(p, { img: x.main_image?.image?.large || x.images?.[0]?.image?.large || '', name: (x.name || '').split('|')[0].trim(), price: x.formatted_sale_price || x.formatted_price || '', url: x.html_url });
+      const sa = $(`#storyArt .sa[data-s="${i}"]`); if (!sa) return;
+      const im = $('img', sa); im.src = p.img; im.alt = p.name;
+      if (!$('.sa__chip', sa)) sa.insertAdjacentHTML('beforeend', `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${esc(p.price)}</small>` : ''}</span></a>`);
+    } catch (e) {}
+  }));
+}
 /* ======================================================================
    3. DEPARTMENTS: a bento of photo tiles round a ket tile; as the section
    comes up they pop in one by one, each from its own side
@@ -263,7 +278,8 @@ function bentoIn() {
   const tl = gsap.timeline();
   ['trees', 'brand', 'logo', 'lady', 'home', 'tables', 'rugs', 'lamps', 'pill', 'cta', 'feat'].forEach((id, k) => {
     const el = $(`[data-pop="${id}"]`, g), r = el.getBoundingClientRect(), dx = (r.left + r.width / 2 - cx) * .28, dy = (r.top + r.height / 2 - cy) * .28;
-    tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
+    if (id === 'lady') tl.fromTo(el, { y: 40, opacity: 0, filter: 'blur(10px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
+    else tl.fromTo(el, { x: dx, y: dy + 30, scale: .86, opacity: 0, filter: 'blur(10px)' }, { x: 0, y: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out', clearProps: 'transform,filter' }, k * .11);
     const b = $('.dc__body, h3', el);
     if (b) tl.from(b, { y: 18, opacity: 0, duration: .7, ease: 'power3.out', clearProps: 'transform,opacity' }, k * .11 + .35);
   });
@@ -458,7 +474,7 @@ function applyLang() {
   $$('[data-t-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.tAria)));
   $('#greetTxt').textContent = greetList()[gI % greetList().length];
   $('#heroChips').innerHTML = STORE.cats.map(c => `<button class="chip" type="button" data-cat-chip="${c.id}">${L(c)}</button>`).join('');
-  renderStory(); renderFloaters(); renderCats(); renderDeals(); renderVideos(); renderClock();
+  renderStory(); fillStory(); renderFloaters(); renderCats(); renderDeals(); renderVideos(); renderClock();
   if (sbox.classList.contains('is-open')) renderRes();
   phI = 0; typeHints();
   if (G) { storyMotion(); requestAnimationFrame(() => ScrollTrigger.refresh()); }
@@ -535,6 +551,7 @@ function runIntro() {
   scrollTo(0, 0);
   let seen = false; try { seen = !!sessionStorage.getItem('ketHello'); } catch (e) {}
   if (!G) { done(); return; }
+  if (seen) { $('#intro').remove(); heroIn(0); done(); return; }
   const hello = t('hello'), line = t('helloLine');
   $('#introHello').innerHTML = [...hello].map(c => `<span class="ch">${c}</span>`).join('') + '<span class="wave">👋🏼</span>';
   const typed = { n: 0 };
@@ -579,5 +596,7 @@ if (G && window.Lenis && !matchMedia('(pointer:coarse)').matches) {
 startAuto();
 const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
 const pageLoaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => addEventListener('load', r, { once: true }));
-Promise.race([Promise.all([fontsReady, pageLoaded]), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(() => requestAnimationFrame(runIntro)));
+let seenHello = false; try { seenHello = !!sessionStorage.getItem('ketHello'); } catch (e) {}
+if (seenHello) runIntro();   // a return visit: no welcome, nothing to wait for
+else Promise.race([Promise.all([fontsReady, pageLoaded]), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(() => requestAnimationFrame(runIntro)));
 })();

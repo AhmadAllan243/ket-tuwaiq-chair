@@ -151,9 +151,27 @@ function renderFloaters() {
 """)
 # story: three statements + three pieces (link + price from the section)
 js = must(js, "$('#storySlides').innerHTML = t('st').map(", "$('#storySlides').innerHTML = (STORE.st && STORE.st.length === 3 ? STORE.st : t('st')).map(")
-js = cut(js, "$('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const p = byId[id];", "}).join('');", """$('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img src="${img(p.img)}" alt="${esc(p.name || '')}" loading="lazy"></div>
+js = cut(js, "$('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const p = byId[id];", "}).join('');", """$('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img ${p.img ? `src="${img(p.img)}"` : ''} alt="${esc(p.name || '')}" loading="lazy"></div>
       ${p.url && p.name ? `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${p.price}</small>` : ''}</span></a>` : ''}</div>`).join('');""")
 # departments
+js = must(js, "/* ======================================================================\n   3. DEPARTMENTS", """// "Why ket?" pieces given by name: the store's own photo, name, price and link, filled in place once found
+async function fillStory() {
+  if (!window.zid) return;
+  await Promise.all(STORE.story.slice(0, 3).map(async (p, i) => {
+    if (!p.q || p.url) return;
+    try {
+      const r = await zid.products.list({ page_size: 6, q: p.q }, { showErrorNotification: false });
+      const x = ((r && r.results) || []).find(z => decodeURIComponent(z.html_url || '').endsWith('/' + p.slug)) || ((r && r.results) || [])[0]; if (!x) return;
+      Object.assign(p, { img: x.main_image?.image?.large || x.images?.[0]?.image?.large || '', name: (x.name || '').split('|')[0].trim(), price: x.formatted_sale_price || x.formatted_price || '', url: x.html_url });
+      const sa = $(`#storyArt .sa[data-s="${i}"]`); if (!sa) return;
+      const im = $('img', sa); im.src = p.img; im.alt = p.name;
+      if (!$('.sa__chip', sa)) sa.insertAdjacentHTML('beforeend', `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${esc(p.price)}</small>` : ''}</span></a>`);
+    } catch (e) {}
+  }));
+}
+/* ======================================================================
+   3. DEPARTMENTS""")
+js = must(js, "  renderStory(); renderFloaters();", "  renderStory(); fillStory(); renderFloaters();")
 js = must(js, "const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);", "const total = () => STORE.cats.reduce((s, c) => s + (c.n || 0), 0);")
 js = must(js, 'src="media/home/lady.webp?v=2"', 'src="${img(STORE.lady)}"')
 js = must(js, 'href="ket-sale.html" data-pop="feat"', 'href="${STORE.saleUrl || \'#deals\'}" data-pop="feat"')

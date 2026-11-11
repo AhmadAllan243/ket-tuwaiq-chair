@@ -39,6 +39,7 @@ extra = """
 .kc > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kc) .pager{ display:flex; justify-content:center; gap:8px; margin-top:40px; }
 :where(.kc) .pager a{ min-width:44px; height:44px; padding-inline:14px; display:grid; place-items:center; border-radius:999px; background:var(--white); font-weight:600; text-decoration:none; }
+html:not(.is-loading) :where(.kc) .loader{ display:none; }   /* return visits: no loader */
 :where(.kc) .klogo .kl{ transform-box:fill-box; transform-origin:50% 100%; }
 :where(.kc) .klogo__smile{ opacity:0; }   /* the smile only shows in the scrolled header */
 :where(.kc) .pager a.is-on{ background:var(--black); color:var(--white); }

@@ -152,3 +152,11 @@ html[dir="rtl"] #sticky-cta{ padding:8px 14px 8px 8px!important; }
 #sticky-cta .btn{ height:44px; min-height:0; padding-inline:18px; border-radius:999px; font-size:14px; }
 #sticky-cta .gap-4{ gap:10px; }
 body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 76px); }
+
+/* ===================== Search (header): one clean rounded field, no double outline ===================== */
+#search-dialog .form-input-wrapper{ border:1.5px solid rgba(0,0,0,.14)!important; border-radius:999px; background:#F4F4F5; padding-inline:16px; height:52px; display:flex; align-items:center; gap:10px; box-shadow:none!important; }
+#search-dialog .form-input-wrapper:focus-within{ border-color:#088040!important; background:#fff; }
+#search-dialog input, #search-dialog input:focus, #search-dialog input:focus-visible{ outline:none!important; box-shadow:none!important; border:0!important; background:transparent!important; height:100%; font-size:16px; }
+
+/* ===================== Product figures: as many columns as figures, centred (no empty box) ===================== */
+.ket .proof{ grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(0, 220px); justify-content:center; }
