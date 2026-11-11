@@ -1,0 +1,10 @@
+{# KET category page: Zid's pages of products (24 a page), as simple round links #}
+{% set per = (session.query_params.get('page_size') or 24) | int %}
+{% set pages = ((products.count / per) | round(0, 'ceil')) | int if products and products.count else 1 %}
+{% if pages > 1 %}
+  <nav class="pager" aria-label="{{ _('Pages') }}">
+    {% for n in range(1, pages + 1) %}
+      <a href="{{ session.url.include_query_params(page=n) }}" class="{{ 'is-on' if n == products.page }}" {% if n == products.page %}aria-current="page"{% endif %}>{{ n }}</a>
+    {% endfor %}
+  </nav>
+{% endif %}
