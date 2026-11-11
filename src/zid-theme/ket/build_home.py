@@ -66,6 +66,7 @@ proto = json.loads(subprocess.run(['node', '-e', f'const S = {store_js}; process
 UI = proto['ui']
 for L in ('ar', 'en'):
     UI[L]['sAll'] = 'عرض كل النتائج' if L == 'ar' else 'See all results'
+    UI[L]['deptFind'] = 'ابحث بين {n} أقسام' if L == 'ar' else 'Search across {n} departments'
 CATS = [{k: c[k] for k in ('id', 'ar', 'en', 'tx', 'kw', 'short') if k in c} for c in proto['cats']]
 
 js = re.findall(r'<script>\n(\(\(\) => \{.*?\}\)\(\);)\n</script>', html, re.S)[0]
@@ -153,7 +154,8 @@ js = must(js, 'href="ket-sale.html" data-pop="feat"', 'href="${STORE.saleUrl || 
 js = must(js, '<img src="media/cut/ac03.webp" alt="" loading="lazy"><img src="media/cut/lp10.webp" alt="" loading="lazy"><img src="media/cut/t13.webp" alt="" loading="lazy">',
           "${STORE.fan.map(f => `<img src=\"${img(f)}\" alt=\"\" loading=\"lazy\">`).join('')}")
 js = must(js, "src = `media/home/life/${im}.webp?v=5`;", "src = img(c.photo);")
-js = must(js, "<b class=\"latin\">${total()}</b>", "${total() ? `<b class=\"latin\">${total()}</b>` : ''}")
+js = must(js, '<span data-short="${t(\'pcs\', { n: \'\' }).trim()}"><b class="latin">${total()}</b>${t(\'deptSum\', { n })}</span>',
+          '<span data-short="${total() ? t(\'pcs\', { n: \'\' }).trim() : t(\'deptFind\', { n })}">${total() ? `<b class="latin">${total()}</b>${t(\'deptSum\', { n })}` : t(\'deptFind\', { n })}</span>')   # Zid gives no product count: «ابحث بين 5 أقسام»
 # deals: Zid products (sale price, stock); the photo is cut out of its white background when the image host allows it
 js = must(js, '<img src="media/cut/${d.id}.webp" alt="" draggable="false">', '<img src="${img(d.p.img)}" alt="" draggable="false">')
 js = must(js, "$$('.sbi img').forEach(im => im.complete ? seatShadow(im) : im.addEventListener('load', () => seatShadow(im), { once: true }));",
