@@ -61,6 +61,7 @@
         { id: {{ (p.id | string) | tojson }}, type: {{ ty.id | tojson }}, ar: {{ p.name | tojson }}, en: {{ p.name | tojson }},
           url: {{ href(url_for('product_details', slug=p.slug)) }}, img: {{ pimg(p) | tojson }},
           price: {{ (p.sale_price if p.sale_price else p.price) | tojson }}, was: {{ (p.price if p.sale_price else 0) | tojson }},
+          fprice: {{ (p.formatted_sale_price or p.formatted_price or '') | tojson }}, fwas: {{ (p.formatted_price if p.formatted_sale_price else '') | tojson }},
           hasOptions: {{ (p.has_options or false) | tojson }} }{{ ',' if not loop.last }}
       {% endfor %}
     ]

@@ -103,7 +103,7 @@
     {% set stw = ST[dim_kind][1 if lang == 'en' else 0] %}
     {% set story_title = stw[0] %}
     {% set story_lines = stw[1:] %}
-    {% set story_text = ((product.short_description or product.description or '') | striptags | replace('&nbsp;', ' ') | trim | truncate(340)) %}
+    {% set story_text = '' %}
     {% set story_detail = images[1] if n_img > 2 else (images[0] if n_img else none) %}
   {% endif %}
   {# no dimension fields: the sizes written in the description ("35cm × 35cm … 58cm" → width, depth, height) #}
@@ -343,7 +343,7 @@
     {# ===================== STORY (metafields story_title, story_lines, story_text, story_chips) ===================== #}
     {% if story_title or story_text or story_lines %}
       {% set sec.n = sec.n + 1 %}
-      <section class="story" id="story" aria-labelledby="storyWord">
+      <section class="story{{ ' story--auto' if auto_story }}" id="story" aria-labelledby="storyWord">
         <div class="container story__stage" id="storyStage">
           <div class="story__head">
             <p class="eyebrow"><span class="idx">{{ '%02d' | format(sec.n) }}</span><span>{{ _("The story") }}</span></p>
@@ -399,7 +399,7 @@
     {# ===================== DIMENSIONS (metafields width / height / depth / seat_height) ===================== #}
     {# no sizes written anywhere: the product's last photo, which on KET's products is the size sketch #}
     {% set dim_any = dim_w or dim_h or dim_d or dim_sh %}
-    {% if dim_any or n_img > 2 %}
+    {% if dim_any %}
       {% set sec.n = sec.n + 1 %}
       <section class="section" id="dimensions" aria-labelledby="dimTitle">
         <div class="container">
@@ -408,11 +408,7 @@
             <h2 class="h-xl" id="dimTitle">{{ _("Considered proportions") }}</h2>
           </div>
           <div class="dims">
-            {% if dim_any %}
             <div class="dims__drawings">{% include 'components/ket/dims.jinja' %}</div>
-            {% else %}
-            <div class="dims__sketch" data-reveal><img src="{{ img_src(images[n_img - 1], 1200) }}" alt="{{ product.name }} · {{ _('Dimensions') }}" loading="lazy" decoding="async"></div>
-            {% endif %}
             <div>
               {% if dim_any %}
               <table class="spec">

@@ -558,7 +558,7 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .sbi__sh{ position:absolute; left:18%; right:18%; bottom:4%; height:8%; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), rgba(0,0,0,.12) 60%, transparent); filter:blur(4px); z-index:2; mix-blend-mode:multiply; }
 /* the card sits under the front piece, which overlaps its top edge */
 .sb__card{ position:relative; z-index:45; width:min(calc(100% - 32px), 460px); margin-top:calc(var(--pc) * -.34); padding:calc(var(--pc) * .26) 22px 18px; border-radius:32px; background:#fff; box-shadow:0 60px 80px -44px rgba(0,0,0,.4), 0 28px 60px -24px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.04); text-align:start; }
-.sb__txt{ position:relative; min-height:156px; }
+.sb__txt{ position:relative; min-height:176px; }
 .sbt{ display:grid; gap:9px; }
 .sbt.is-out{ position:absolute; inset:0 0 auto; pointer-events:none; }
 .sbt__row{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
@@ -566,7 +566,7 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .sbt__price small{ font-size:.36em; font-weight:600; margin-inline-start:4px; letter-spacing:0; }
 .sbt__row s{ font:500 17px/1 var(--f-latin); color:var(--ink-3); }
 .sbt__off{ margin-inline-start:auto; align-self:center; height:30px; padding-inline:12px; border-radius:var(--r-pill); background:var(--bar); color:#fff; font:700 14px/30px var(--f-latin); }
-.sbt__name{ font-size:18px; font-weight:600; line-height:1.35; }
+.sbt__name{ font-size:18px; font-weight:600; line-height:1.35; min-height:2.7em; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .sbt__meta{ font-size:13px; font-weight:500; color:var(--ink-2); }
 .sbt__meta .num{ unicode-bidi:isolate; color:var(--text); font-weight:600; }
 .stock{ display:grid; gap:6px; }
@@ -1125,7 +1125,7 @@ function renderClock() {
   $('#clock').innerHTML = [[h, 'hrs'], [m, 'min'], [s, 'sec']].map(([v, k], i) => `${i ? '<span class="clock__sep">:</span>' : ''}<span class="clock__u"><b>${pad(v)}</b><small>${t(k)}</small></span>`).join('');
 }
 const dealInfo = d => { const p = d.p;
-  return `<div class="sbt__row"><b class="sbt__price">${fmt(d.price)}<small>${cur()}</small></b><s>${fmt(p.was)}</s><span class="sbt__off"><span dir="ltr">-${off(p.was, d.price)}%</span></span></div>
+  return `<div class="sbt__row"><b class="sbt__price">${p.fprice ? esc(p.fprice) : `${fmt(d.price)}<small>${cur()}</small>`}</b><s>${p.fwas ? esc(p.fwas) : fmt(p.was)}</s><span class="sbt__off"><span dir="ltr">-${off(p.was, d.price)}%</span></span></div>
     <h3 class="sbt__name">${L(p)}</h3>
     <p class="sbt__meta">⏱ ${t('clrTag')} · ${t('endsIn')} <span class="num" dir="ltr" data-ends="${d.ends}"></span></p>
     <div class="stock"><span>${d.left === 1 ? t('left1') : t('left', { n: d.left })}</span><i style="--w:${Math.max(6, d.left / d.total * 100)}%"></i></div>`; };
@@ -1235,7 +1235,7 @@ function hearts(x, y) {
 }
 function openVideo(i) {
   const v = STORE.videos[i];
-  $('#vboxIn').innerHTML = `${v.video ? `<video src="${v.video}" poster="${img(v.poster)}" autoplay playsinline controls></video>` : `<img src="${img(v.poster)}" alt=""><span class="vbox__bar"></span><p class="vbox__note">${t('expNote')}</p>`}<button class="vbox__x" type="button" aria-label="${t('close')}">${icon('close', 20, 1.8)}</button>`;
+  $('#vboxIn').innerHTML = `${v.video ? `<video src="${v.video}" poster="${img(v.poster)}" autoplay playsinline controls></video>` : `<img src="${img(v.poster)}" alt=""><span class="vbox__bar"></span>`}<button class="vbox__x" type="button" aria-label="${t('close')}">${icon('close', 20, 1.8)}</button>`;
   $('#vbox').showModal(); if (lenis) lenis.stop();
 }
 let fanHold = 0, fanSeen = false;
@@ -1374,9 +1374,10 @@ function runIntro() {
       .to(typed, { n: line.length, duration: Math.min(1.6, line.length * .045), ease: 'none', onUpdate: () => { $('#introLine').innerHTML = esc(line.slice(0, Math.round(typed.n))) + '<span class="caret"></span>'; } }, 1.05)
       .to('#introWrap', { y: -40, opacity: 0, duration: .55, ease: 'power2.in' }, '+=.75');
   } else {
-    // seen this visit (e.g. a refresh): a short Hello, gone before the dots come in
-    // (no letter-by-letter here: the page is still loading, so it would stutter)
-    tl.to('#introWrap', { y: -30, opacity: 0, duration: .35, ease: 'power2.in' }, .7);
+    // seen this visit (e.g. a refresh): a shorter Hello (letters, the waving hand), gone before the dots come in
+    tl.from('#introHello .ch', { y: 70, opacity: 0, duration: .75, stagger: .05, ease: 'expo.out' }, .05)
+      .from('#introHello .wave', { scale: 0, rotate: -40, duration: .7, ease: 'back.out(2.4)', onComplete: () => $('#introHello .wave').classList.add('is-on') }, .3)
+      .to('#introWrap', { y: -40, opacity: 0, duration: .45, ease: 'power2.in' }, '+=.7');
   }
   tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, '>-.05')
     .to({}, { duration: seen ? .55 : .9 })

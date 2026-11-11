@@ -318,7 +318,7 @@ html[dir="rtl"] :where(.kh) .lady{ scale:-1 1; }
 :where(.kh) .sbi img{ position:relative; z-index:1; width:100%; height:100%; object-fit:contain; padding:4%; pointer-events:none; }
 :where(.kh) .sbi__sh{ position:absolute; left:18%; right:18%; bottom:4%; height:8%; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.34), rgba(0,0,0,.12) 60%, transparent); filter:blur(4px); z-index:2; mix-blend-mode:multiply; }
 /* the card sits under the front piece, which overlaps its top edge */:where(.kh) .sb__card{ position:relative; z-index:45; width:min(calc(100% - 32px), 460px); margin-top:calc(var(--pc) * -.34); padding:calc(var(--pc) * .26) 22px 18px; border-radius:32px; background:#fff; box-shadow:0 60px 80px -44px rgba(0,0,0,.4), 0 28px 60px -24px rgba(0,0,0,.14), 0 2px 6px rgba(0,0,0,.04); text-align:start; }
-:where(.kh) .sb__txt{ position:relative; min-height:156px; }
+:where(.kh) .sb__txt{ position:relative; min-height:176px; }
 :where(.kh) .sbt{ display:grid; gap:9px; }
 :where(.kh) .sbt.is-out{ position:absolute; inset:0 0 auto; pointer-events:none; }
 :where(.kh) .sbt__row{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
@@ -326,7 +326,7 @@ html[dir="rtl"] :where(.kh) .lady{ scale:-1 1; }
 :where(.kh) .sbt__price small{ font-size:.36em; font-weight:600; margin-inline-start:4px; letter-spacing:0; }
 :where(.kh) .sbt__row s{ font:500 17px/1 var(--f-latin); color:var(--ink-3); }
 :where(.kh) .sbt__off{ margin-inline-start:auto; align-self:center; height:30px; padding-inline:12px; border-radius:var(--r-pill); background:var(--bar); color:#fff; font:700 14px/30px var(--f-latin); }
-:where(.kh) .sbt__name{ font-size:18px; font-weight:600; line-height:1.35; }
+:where(.kh) .sbt__name{ font-size:18px; font-weight:600; line-height:1.35; min-height:2.7em; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 :where(.kh) .sbt__meta{ font-size:13px; font-weight:500; color:var(--ink-2); }
 :where(.kh) .sbt__meta .num{ unicode-bidi:isolate; color:var(--text); font-weight:600; }
 :where(.kh) .stock{ display:grid; gap:6px; }
@@ -396,8 +396,11 @@ html[dir="rtl"] :where(.kh) .vbox__bar::after{ transform-origin:right; }
 
 /* ---- theme-only ---- */
 .kh{ position:relative; }
-.kh > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
+.kh > section{ isolation:isolate; position:relative; z-index:0; }
+.kh > section.hero{ z-index:2; }   /* the search results drop over the next section (and stay clickable) */   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }
 :where(.kh) .vbox{ margin:auto; inset:0; }
+:where(.kh) .dc--brand .mark{ top:-28%; width:24%; inset-inline-end:16%; }   /* the smile on the green line: more of it shows */
+@media (max-width:767px){ :where(.kh) .dc--brand .mark{ top:-22%; width:52%; inset-inline-end:-6%; } }
 :where(.kh) .vbox__x{ outline:none; }   /* the dialog focuses its close button on open: no ring around the ×  */   /* the store's base styles zero dialog margins, which pushed the video to the side */   /* a deal photo that could not be cut out: its white blends into the grey */
 :where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }

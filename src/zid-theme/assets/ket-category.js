@@ -197,7 +197,7 @@ const cardHTML = (p, i) => {
     <a class="card__media${p.photo ? ' is-photo' : ''}" href="${p.url}"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600">
       ${p.was ? `<span class="card__off" dir="ltr">−${off(p)}%</span>` : ''}
       <button class="card__add" type="button" data-add="${p.id}" aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></a>
-    <div class="card__body"><h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s>` : ''}</p></div>
+    <div class="card__body"><h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3><p class="card__price"><b>${p.fprice || money(p.price)}</b>${p.was ? `<s>${p.fwas || fmt(p.was)}</s>` : ''}</p></div>
   </article>`;
 };
 const tiles = () => [

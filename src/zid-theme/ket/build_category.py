@@ -146,7 +146,7 @@ js = must(js, "const tile = (id, cls, tint) => `", "const TT = D.tables ? ['coff
 js = must(js, "col('laxi', 'st--full', 't16', 'white', true)", "col(CC[1], 'st--full', COLIMG[CC[1]], 'white', true)")
 # product cards: real links, the Zid cart
 js = must(js, '<h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3>', '<h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3>')
-js = must(js, '<p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p>', '<p class="card__price"><b>${money(p.price)}</b>${p.was ? `<s>${fmt(p.was)}</s>` : \'\'}</p>')
+js = must(js, '<p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p>', '<p class="card__price"><b>${p.fprice || money(p.price)}</b>${p.was ? `<s>${p.fwas || fmt(p.was)}</s>` : \'\'}</p>')   # the store's prices carry the visitor's currency
 js = must(js, '<span class="card__off" dir="ltr">−${off(p)}%</span>', '${p.was ? `<span class="card__off" dir="ltr">−${off(p)}%</span>` : \'\'}')
 js = must(js, '<div class="card__media${p.photo ? \' is-photo\' : \'\'}" >', '<a class="card__media${p.photo ? \' is-photo\' : \'\'}" href="${p.url}">')
 js = must(js, """aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></div>""", """aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></a>""")

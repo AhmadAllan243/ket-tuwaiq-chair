@@ -52,9 +52,12 @@ css = '\n'.join(l for l in css.split('\n') if not l.startswith(('.skip', '.wa{')
 extra = """
 /* ---- theme-only ---- */
 .kh{ position:relative; }
-.kh > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
+.kh > section{ isolation:isolate; position:relative; z-index:0; }
+.kh > section.hero{ z-index:2; }   /* the search results drop over the next section (and stay clickable) */   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }
 :where(.kh) .vbox{ margin:auto; inset:0; }
+:where(.kh) .dc--brand .mark{ top:-28%; width:24%; inset-inline-end:16%; }   /* the smile on the green line: more of it shows */
+@media (max-width:767px){ :where(.kh) .dc--brand .mark{ top:-22%; width:52%; inset-inline-end:-6%; } }
 :where(.kh) .vbox__x{ outline:none; }   /* the dialog focuses its close button on open: no ring around the ×  */   /* the store's base styles zero dialog margins, which pushed the video to the side */   /* a deal photo that could not be cut out: its white blends into the grey */
 :where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }
 """
@@ -185,8 +188,8 @@ function cutOut(im) {
   tmp.src = src;
 }
 // put each contact shadow right under its piece""")
-js = must(js, "<s>${fmt(p.was)}</s><span class=\"sbt__off\"><span dir=\"ltr\">-${off(p.was, d.price)}%</span></span>",
-          "${p.was ? `<s>${fmt(p.was)}</s><span class=\"sbt__off\"><span dir=\"ltr\">-${off(p.was, d.price)}%</span></span>` : ''}")
+js = must(js, "<s>${p.fwas ? esc(p.fwas) : fmt(p.was)}</s><span class=\"sbt__off\"><span dir=\"ltr\">-${off(p.was, d.price)}%</span></span>",
+          "${p.was ? `<s>${p.fwas ? esc(p.fwas) : fmt(p.was)}</s><span class=\"sbt__off\"><span dir=\"ltr\">-${off(p.was, d.price)}%</span></span>` : ''}")
 js = must(js, "<div class=\"stock\"><span>${d.left === 1 ? t('left1') : t('left', { n: d.left })}</span><i style=\"--w:${Math.max(6, d.left / d.total * 100)}%\"></i></div>`;",
           "${d.left > 0 ? `<div class=\"stock\"><span>${d.left === 1 ? t('left1') : t('left', { n: d.left })}</span><i style=\"--w:${Math.max(6, Math.min(100, d.left / d.total * 100))}%\"></i></div>` : ''}`;")
 js = must(js, "$('#sbBuy').onclick = () => { if (deals[shown]) addToCart(); };", "$('#sbBuy').onclick = () => { if (deals[shown]) addToCart(deals[shown].p); };")

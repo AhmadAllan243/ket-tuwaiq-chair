@@ -285,7 +285,7 @@ function renderClock() {
   $('#clock').innerHTML = [[h, 'hrs'], [m, 'min'], [s, 'sec']].map(([v, k], i) => `${i ? '<span class="clock__sep">:</span>' : ''}<span class="clock__u"><b>${pad(v)}</b><small>${t(k)}</small></span>`).join('');
 }
 const dealInfo = d => { const p = d.p;
-  return `<div class="sbt__row"><b class="sbt__price">${fmt(d.price)}<small>${cur()}</small></b>${p.was ? `<s>${fmt(p.was)}</s><span class="sbt__off"><span dir="ltr">-${off(p.was, d.price)}%</span></span>` : ''}</div>
+  return `<div class="sbt__row"><b class="sbt__price">${p.fprice ? esc(p.fprice) : `${fmt(d.price)}<small>${cur()}</small>`}</b>${p.was ? `<s>${p.fwas ? esc(p.fwas) : fmt(p.was)}</s><span class="sbt__off"><span dir="ltr">-${off(p.was, d.price)}%</span></span>` : ''}</div>
     <h3 class="sbt__name">${L(p)}</h3>
     <p class="sbt__meta">⏱ ${t('clrTag')} · ${t('endsIn')} <span class="num" dir="ltr" data-ends="${d.ends}"></span></p>
     ${d.left > 0 ? `<div class="stock"><span>${d.left === 1 ? t('left1') : t('left', { n: d.left })}</span><i style="--w:${Math.max(6, Math.min(100, d.left / d.total * 100))}%"></i></div>` : ''}`; };
@@ -416,7 +416,7 @@ function hearts(x, y) {
 }
 function openVideo(i) {
   const v = STORE.videos[i];
-  $('#vboxIn').innerHTML = `${v.video ? `<video src="${v.video}" poster="${img(v.poster)}" autoplay playsinline controls></video>` : `<img src="${img(v.poster)}" alt=""><span class="vbox__bar"></span><p class="vbox__note">${t('expNote')}</p>`}<button class="vbox__x" type="button" aria-label="${t('close')}">${icon('close', 20, 1.8)}</button>`;
+  $('#vboxIn').innerHTML = `${v.video ? `<video src="${v.video}" poster="${img(v.poster)}" autoplay playsinline controls></video>` : `<img src="${img(v.poster)}" alt=""><span class="vbox__bar"></span>`}<button class="vbox__x" type="button" aria-label="${t('close')}">${icon('close', 20, 1.8)}</button>`;
   $('#vbox').showModal(); if (lenis) lenis.stop();
 }
 let fanHold = 0, fanSeen = false;
@@ -546,9 +546,10 @@ function runIntro() {
       .to(typed, { n: line.length, duration: Math.min(1.6, line.length * .045), ease: 'none', onUpdate: () => { $('#introLine').innerHTML = esc(line.slice(0, Math.round(typed.n))) + '<span class="caret"></span>'; } }, 1.05)
       .to('#introWrap', { y: -40, opacity: 0, duration: .55, ease: 'power2.in' }, '+=.75');
   } else {
-    // seen this visit (e.g. a refresh): a short Hello, gone before the dots come in
-    // (no letter-by-letter here: the page is still loading, so it would stutter)
-    tl.to('#introWrap', { y: -30, opacity: 0, duration: .35, ease: 'power2.in' }, .7);
+    // seen this visit (e.g. a refresh): a shorter Hello (letters, the waving hand), gone before the dots come in
+    tl.from('#introHello .ch', { y: 70, opacity: 0, duration: .75, stagger: .05, ease: 'expo.out' }, .05)
+      .from('#introHello .wave', { scale: 0, rotate: -40, duration: .7, ease: 'back.out(2.4)', onComplete: () => $('#introHello .wave').classList.add('is-on') }, .3)
+      .to('#introWrap', { y: -40, opacity: 0, duration: .45, ease: 'power2.in' }, '+=.7');
   }
   tl.to('#introDots', { opacity: 1, duration: .3, onStart: () => $('#introDots').classList.add('is-on') }, '>-.05')
     .to({}, { duration: seen ? .55 : .9 })

@@ -135,6 +135,20 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 html[dir="rtl"] .ket-dlink::after{ content:"‹"; }
 details > summary.ket-dlink::after{ content:none; }
 
-/* the size sketch photo, for products whose sizes are only drawn in their last photo */
-.ket .dims__sketch{ border-radius:24px; overflow:hidden; background:#fff; display:grid; place-items:center; }
-.ket .dims__sketch img{ width:100%; height:auto; max-height:560px; object-fit:contain; }
+/* the automatic story (department wording): a two-word title, so a smaller size, and room for the dots of the lines below */
+.ket .story--auto .story__word{ font-size:clamp(44px, 6.4vw, 104px); line-height:1.15; }
+.ket .story--auto .story__lines{ margin-top:clamp(10px, 1.6vw, 22px); }
+
+/* ===================== Header: same height before and after scrolling (only the logo folds), so the page never jumps ===================== */
+.ket-top .header.is-scrolled .header__inner{ height:var(--header-h); }
+
+/* ===================== Product page: the add-to-cart bar is a small floating pill in the middle ===================== */
+#sticky-cta{ left:50%!important; right:auto!important; bottom:calc(14px + env(safe-area-inset-bottom))!important; width:min(560px, calc(100% - 24px));
+  transform:translateX(-50%); border:0!important; border-radius:999px; padding:8px 8px 8px 14px!important; background:rgba(255,255,255,.96)!important;
+  box-shadow:0 18px 44px -12px rgba(0,0,0,.28), 0 0 0 1px rgba(0,0,0,.05); }
+html[dir="rtl"] #sticky-cta{ padding:8px 14px 8px 8px!important; }
+#sticky-cta .theme-container{ max-width:none; padding:0; }
+#sticky-cta .size-16{ width:42px; height:42px; border-radius:50%; }
+#sticky-cta .btn{ height:44px; min-height:0; padding-inline:18px; border-radius:999px; font-size:14px; }
+#sticky-cta .gap-4{ gap:10px; }
+body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 76px); }
