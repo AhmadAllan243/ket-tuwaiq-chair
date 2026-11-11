@@ -1,0 +1,16 @@
+{#
+  KET menu wording: the store's menu items (Zid → main menu) with clearer names and proper capitals.
+  Unknown items keep their own name, with each English word capitalised.
+#}
+{% macro label(t) -%}
+  {%- set k = (t or '') | trim | lower -%}
+  {%- set names = {
+    'homepage': 'Home', 'home page': 'Home', 'home': 'Home',
+    'all products': 'Shop all', 'products': 'Shop all',
+    'all categories': 'Departments', 'categories': 'Departments',
+    'الصفحة الرئيسية': 'الرئيسية', 'الرئيسية': 'الرئيسية',
+    'جميع المنتجات': 'كل المنتجات', 'كل المنتجات': 'كل المنتجات', 'المنتجات': 'كل المنتجات',
+    'جميع التصنيفات': 'الأقسام', 'كل التصنيفات': 'الأقسام', 'التصنيفات': 'الأقسام'
+  } -%}
+  {{- names[k] if k in names else ((t | title) if (t and t[0] in 'abcdefghijklmnopqrstuvwxyz') else t) -}}
+{%- endmacro %}

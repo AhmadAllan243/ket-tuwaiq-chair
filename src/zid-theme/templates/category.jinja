@@ -40,7 +40,8 @@
 <script>
   document.documentElement.classList.add('is-loading');
   window.KET_CAT = {
-    name: {{ category.name | tojson }},
+    {# KET's English name for this department is «Decorating supplies»; the site calls it Home essentials #}
+    name: {{ ('Home essentials' if (category.id | string) == '444491' and session.lang == 'en' else category.name) | tojson }},
     sub: {{ ((category.description or '') | striptags | trim) | tojson }},
     full: {{ KC_FULL | tojson }},
     tables: {{ KC_TABLES | tojson }},

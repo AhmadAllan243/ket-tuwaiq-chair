@@ -29,34 +29,29 @@
     "ket_insp_body": "اختر الغرفة، ونوريك قطعًا تناسبها.",
     "ket_insp_rooms": [
       {
-        "name": "غرفة المعيشة",
-        "url": "/categories",
+        "name": "الطاولات",
+        "url": "/categories/444477/tables",
         "color": "#D4C4FF"
       },
       {
-        "name": "الحمّام",
-        "url": "/categories",
-        "color": "#F4F4F4"
-      },
-      {
-        "name": "الحديقة",
-        "url": "/categories",
+        "name": "النباتات",
+        "url": "/categories/444476/plants",
         "color": "#C6F7A6"
       },
       {
-        "name": "غرفة النوم",
-        "url": "/categories",
+        "name": "المستلزمات المنزلية",
+        "url": "/categories/444491/home",
+        "color": "#F4F4F4"
+      },
+      {
+        "name": "السجاد",
+        "url": "/categories/444490/rugs",
         "color": "#7F94FF"
       },
       {
-        "name": "المطبخ",
-        "url": "/categories",
-        "color": "#F4F4F4"
-      },
-      {
-        "name": "المكتب",
-        "url": "/categories",
-        "color": "#F4F4F4"
+        "name": "الإضاءة",
+        "url": "/categories/444478/lamps",
+        "color": "#F7F976"
       }
     ],
     "ket_moments_items": []
@@ -91,34 +86,29 @@
     "ket_insp_body": "Pick a room and we will show you pieces made for it.",
     "ket_insp_rooms": [
       {
-        "name": "Living room",
-        "url": "/categories",
+        "name": "Tables",
+        "url": "/categories/444477/tables",
         "color": "#D4C4FF"
       },
       {
-        "name": "Bath",
-        "url": "/categories",
-        "color": "#F4F4F4"
-      },
-      {
-        "name": "Garden",
-        "url": "/categories",
+        "name": "Plants",
+        "url": "/categories/444476/plants",
         "color": "#C6F7A6"
       },
       {
-        "name": "Bedroom",
-        "url": "/categories",
+        "name": "Home essentials",
+        "url": "/categories/444491/home",
+        "color": "#F4F4F4"
+      },
+      {
+        "name": "Rugs",
+        "url": "/categories/444490/rugs",
         "color": "#7F94FF"
       },
       {
-        "name": "Kitchen",
-        "url": "/categories",
-        "color": "#F4F4F4"
-      },
-      {
-        "name": "Office",
-        "url": "/categories",
-        "color": "#F4F4F4"
+        "name": "Lighting",
+        "url": "/categories/444478/lamps",
+        "color": "#F7F976"
       }
     ],
     "ket_moments_items": []

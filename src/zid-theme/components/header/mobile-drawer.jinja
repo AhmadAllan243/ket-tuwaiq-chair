@@ -1,3 +1,4 @@
+{% import 'components/ket/menu.jinja' as km %}
 {# Mobile Navigation Drawer #}
 <el-dialog
         id="mobile-drawer-dialog"
@@ -44,10 +45,10 @@
                 {% if menu.items | length > 0 %}
                   <details class="group w-full">
                     <summary
-                      class="text-foreground text-sm flex w-full cursor-pointer items-center justify-between gap-1 px-6 py-3 select-none"
+                      class="ket-dlink text-foreground text-sm flex w-full cursor-pointer items-center justify-between gap-1 px-6 py-3 select-none"
                     >
                       <span class="text-foreground text-sm min-h-px min-w-px flex-1 text-start">
-                        {{ menu.label }}
+                        {{ km.label(menu.label) }}
                       </span>
                       <svg
                         class="text-foreground size-4 transition-transform group-open:rotate-90 rtl:rotate-180 rtl:group-open:-rotate-90"
@@ -71,7 +72,7 @@
                             <summary
                               class="text-foreground text-sm flex w-full cursor-pointer items-center justify-between gap-1 px-6 py-3 select-none"
                             >
-                              <span class="min-h-px min-w-px flex-1 text-start"> {{ submenu.label }} </span>
+                              <span class="min-h-px min-w-px flex-1 text-start"> {{ km.label(submenu.label) }} </span>
                               <svg
                                 class="text-foreground size-4 transition-transform group-open/sub:rotate-90 rtl:rotate-180 rtl:group-open/sub:-rotate-90"
                                 viewBox="0 0 16 16"
@@ -92,7 +93,7 @@
                                 href="{{ submenu.url | localized_url if submenu.resource_type != 'url' else submenu.url }}"
                                 class="text-foreground text-sm block px-6 py-3"
                               >
-                                {{ _("All") }} {{ submenu.label }}
+                                {{ _("All") }} {{ km.label(submenu.label) }}
                               </a>
                               {# Level 3 items #}
                               {% for subsubmenu in submenu.items %}
@@ -111,7 +112,7 @@
                             href="{{ submenu.url | localized_url if submenu.resource_type != 'url' else submenu.url }}"
                             class="text-foreground text-sm block px-6 py-3"
                           >
-                            {{ submenu.label }}
+                            {{ km.label(submenu.label) }}
                           </a>
                         {% endif %}
                       {% endfor %}
@@ -120,9 +121,9 @@
                 {% else %}
                   <a
                     href="{{ menu.url | localized_url if menu.resource_type != 'url' else menu.url }}"
-                    class="text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
+                    class="ket-dlink text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
                   >
-                    {{ menu.label }}
+                    {{ km.label(menu.label) }}
                   </a>
                 {% endif %}
               {% endfor %}
@@ -134,7 +135,7 @@
                 id="mobile-login-btn"
                 type="button"
                 onclick="handleLoginAction(); document.getElementById('mobile-drawer-dialog')?.hide();"
-                class="text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
+                class="ket-dlink text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
               >
                 {{ _("Login") }}
               </button>
@@ -145,14 +146,14 @@
               >
                 <a
                   href="{{ url_for('profile') }}"
-                  class="text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
+                  class="ket-dlink text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
                 >
                   {{ _("Account") }}
                 </a>
                 <button
                   type="button"
                   onclick="zid.customer.logout()"
-                  class="text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
+                  class="ket-dlink text-foreground text-sm min-h-px w-full min-w-px px-6 py-3 text-start"
                 >
                   {{ _("Log out") }}
                 </button>

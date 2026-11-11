@@ -128,3 +128,9 @@ body:has(#sticky-cta) .ket.footer{ padding-bottom:calc(var(--s7) + 96px); }   /*
 .ket.footer .footer__group a, .ket.footer .footer__about{ opacity:.85; }
 .ket.footer .footer__group a:hover{ opacity:1; }
 .ket.footer .footer__mark svg, .ket.footer .footer__mark svg *{ color:#fff; fill:#fff; }   /* the smile, white on the green */
+
+/* ===================== Phone menu: bigger rows with a line between them ===================== */
+.ket-dlink{ display:flex; align-items:center; justify-content:space-between; font-size:19px!important; font-weight:600; letter-spacing:-.01em; padding-block:18px!important; border-bottom:1px solid rgba(0,0,0,.07); }
+.ket-dlink::after{ content:"›"; font-size:22px; font-weight:400; opacity:.35; }
+html[dir="rtl"] .ket-dlink::after{ content:"‹"; }
+details > summary.ket-dlink::after{ content:none; }

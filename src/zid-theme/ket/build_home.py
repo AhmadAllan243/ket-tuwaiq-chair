@@ -53,7 +53,9 @@ extra = """
 /* ---- theme-only ---- */
 .kh{ position:relative; }
 .kh > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
-:where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }   /* a deal photo that could not be cut out: its white blends into the grey */
+:where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }
+:where(.kh) .vbox{ margin:auto; inset:0; }
+:where(.kh) .vbox__x{ outline:none; }   /* the dialog focuses its close button on open: no ring around the ×  */   /* the store's base styles zero dialog margins, which pushed the video to the side */   /* a deal photo that could not be cut out: its white blends into the grey */
 :where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }
 """
 scoped = kscope.make('.kh')(css, 'kh')
@@ -76,7 +78,7 @@ const KH = document.querySelector('.kh'); if (!KH || !window.KET_HOME) return;
 // the section's data (Zid) over the prototype's defaults
 const STORE = window.KET_HOME; STORE.ui = UI; STORE.currency = CURRENCY;
 for (const k in STORE.text || {}) if (STORE.text[k]) UI.ar[k] = UI.en[k] = STORE.text[k];
-STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {}; if (z.name) z.name = z.name.replace(/^قسم +/, '');   // the tiles add «قسم» themselves
+STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {}; if (z.name) z.name = z.name.replace(/^قسم +/, ''); if (/^en/.test(document.documentElement.lang)) { if (c.id === 'home') z.name = 'Home essentials'; else if (z.name) z.name = z.name.replace(/ +section$/i, ''); }   // the tiles add «قسم» themselves
   return { ...c, ar: z.name || c.ar, en: z.name || c.en, short: z.name ? null : c.short, tx: z.text ? { ar: z.text, en: z.text } : c.tx,
     url: z.url || '', photo: z.photo || `home/life/${c.id}`, n: z.n || 0 }; });""")
 js = must(js, "root.classList.add(G ? 'motion' : 'no-motion');", "KH.classList.add(G ? 'motion' : 'no-motion');")
@@ -190,7 +192,7 @@ js = must(js, "<div class=\"stock\"><span>${d.left === 1 ? t('left1') : t('left'
 js = must(js, "$('#sbBuy').onclick = () => { if (deals[shown]) addToCart(); };", "$('#sbBuy').onclick = () => { if (deals[shown]) addToCart(deals[shown].p); };")
 # videos: caption from the section
 js = re.sub(r"fanShown = on; const p = byId\[STORE\.videos\[on\]\.product\], cap = \$\('#fanCap'\);\n\s*cap\.innerHTML = `.*?`;",
-            "fanShown = on; const v = STORE.videos[on], cap = $('#fanCap');\n    cap.innerHTML = v.title ? `<b>${esc(v.title)}</b><span>${v.sub ? esc(v.sub) + ' · ' : ''}${t('expTag')}</span>` : '';", js, count=1, flags=re.S)
+            "fanShown = on; const v = STORE.videos[on], cap = $('#fanCap');\n    cap.innerHTML = v.title ? `<b>${esc(v.title)}</b>${v.sub ? `<span>${esc(v.sub)}</span>` : ''}` : '';", js, count=1, flags=re.S)
 assert "byId[STORE.videos" not in js
 js = must(js, "document.body.appendChild(h);", "KH.appendChild(h);")
 open(os.path.join(THEME, 'assets', 'ket-home.js'), 'w').write(

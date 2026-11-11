@@ -398,5 +398,7 @@ html[dir="rtl"] :where(.kh) .vbox__bar::after{ transform-origin:right; }
 /* ---- theme-only ---- */
 .kh{ position:relative; }
 .kh > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
-:where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }   /* a deal photo that could not be cut out: its white blends into the grey */
+:where(.kh) .sbi.is-mult{ mix-blend-mode:multiply; }
+:where(.kh) .vbox{ margin:auto; inset:0; }
+:where(.kh) .vbox__x{ outline:none; }   /* the dialog focuses its close button on open: no ring around the ×  */   /* the store's base styles zero dialog margins, which pushed the video to the side */   /* a deal photo that could not be cut out: its white blends into the grey */
 :where(.kh) .hero{ min-height:calc(100svh - 36px - var(--header-h)); }

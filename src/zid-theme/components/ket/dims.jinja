@@ -1,42 +1,90 @@
 {#
-  KET dimension drawings (front + side), the same line drawings as the prototype.
-  Params: dim_w, dim_h, dim_d, dim_sh (numbers in cm, or empty for "—")
+  KET dimension drawings (front + side), line drawings in the prototype's style, one per department.
+  Params: dim_w, dim_h, dim_d, dim_sh (numbers in cm, or empty for "—"),
+          dim_kind: chair (default) | table | plant | vase | rug | lamp
 #}
 {% set cm = _("cm") %}
+{% set kind = dim_kind or 'chair' %}
 {% macro val(v) %}{{ (v ~ ' ' ~ cm) if v else '— ' ~ cm }}{% endmacro %}
+{% macro ground() %}<path class="dl" pathLength="1" d="M10 236 H220" stroke="#A8A8A8"/>{% endmacro %}
+
+{# ---- front ---- #}
+{% macro front(kind) %}
+  {% if kind == 'table' %}
+    <path class="dl" pathLength="1" d="M41 46 H189 A8 8 0 0 1 197 54 V58 A8 8 0 0 1 189 66 H41 A8 8 0 0 1 33 58 V54 A8 8 0 0 1 41 46 Z"/>
+    <path class="dl" pathLength="1" d="M50 66 L46 236 M180 66 L184 236 M52 168 H178"/>
+  {% elif kind == 'plant' %}
+    <path class="dl" pathLength="1" d="M78 176 H152 L144 236 H86 Z M72 166 H158 V176 H72 Z"/>
+    <path class="dl" pathLength="1" d="M115 166 C114 130 116 96 115 60"/>
+    <path class="dl" pathLength="1" d="M115 120 C92 116 70 98 66 74 C92 76 110 96 115 120 Z M115 98 C138 92 160 72 164 48 C138 52 120 72 115 98 Z"/>
+    <path class="dl" pathLength="1" d="M115 146 C98 144 80 132 76 114 C96 114 110 128 115 146 Z M115 136 C132 132 150 118 154 100 C134 102 120 116 115 136 Z"/>
+  {% elif kind == 'vase' %}
+    <path class="dl" pathLength="1" d="M98 46 H132 V58 C132 76 150 96 156 128 C164 172 152 214 136 236 H94 C78 214 66 172 74 128 C80 96 98 76 98 58 Z"/>
+    <path class="dl" pathLength="1" d="M92 46 H138"/>
+    <path class="dl" pathLength="1" d="M80 150 C100 160 130 160 150 150"/>
+  {% elif kind == 'rug' %}
+    <path class="dl" pathLength="1" d="M33 70 H197 V214 H33 Z M45 82 H185 V202 H45 Z"/>
+    <path class="dl" pathLength="1" d="M115 100 L150 142 L115 184 L80 142 Z M115 122 L132 142 L115 162 L98 142 Z"/>
+    <path class="dl" pathLength="1" d="M26 80 H33 M26 96 H33 M26 112 H33 M26 128 H33 M26 144 H33 M26 160 H33 M26 176 H33 M26 192 H33 M26 208 H33"/>
+  {% elif kind == 'lamp' %}
+    <path class="dl" pathLength="1" d="M86 46 H144 L168 112 H62 Z"/>
+    <path class="dl" pathLength="1" d="M115 112 V226 M86 226 H144 A6 6 0 0 1 144 236 H86 A6 6 0 0 1 86 226 Z"/>
+  {% else %}
+    <path class="dl" pathLength="1" d="M60 46 H150 A28 28 0 0 1 178 74 V92 A28 28 0 0 1 150 120 H60 A28 28 0 0 1 32 92 V74 A28 28 0 0 1 60 46 Z" transform="translate(10 0)"/>
+    <path class="dl" pathLength="1" d="M58 130 H172 A16 16 0 0 1 188 146 V160 A16 16 0 0 1 172 176 H58 A16 16 0 0 1 42 160 V146 A16 16 0 0 1 58 130 Z"/>
+    <path class="dl" pathLength="1" d="M36 124 L33 236 M194 124 L197 236 M44 184 H186"/>
+    <circle class="dl" pathLength="1" cx="36" cy="120" r="8"/><circle class="dl" pathLength="1" cx="194" cy="120" r="8"/>
+  {% endif %}
+  {{ ground() if kind != 'rug' }}
+{% endmacro %}
+
+{# ---- side ---- #}
+{% macro side(kind) %}
+  {% if kind == 'table' %}
+    <path class="dl" pathLength="1" d="M50 46 H186 A8 8 0 0 1 194 54 V58 A8 8 0 0 1 186 66 H50 A8 8 0 0 1 42 58 V54 A8 8 0 0 1 50 46 Z"/>
+    <path class="dl" pathLength="1" d="M58 66 L54 236 M178 66 L182 236 M60 168 H176"/>
+  {% elif kind == 'plant' or kind == 'vase' or kind == 'lamp' %}
+    {{ front(kind) }}
+  {% elif kind == 'rug' %}
+    <path class="dl" pathLength="1" d="M42 222 H194 A7 7 0 0 1 194 236 H42 A7 7 0 0 1 42 222 Z"/>
+    <path class="dl" pathLength="1" d="M10 236 H220" stroke="#A8A8A8"/>
+  {% else %}
+    <path class="dl" pathLength="1" d="M52 52 C44 54 40 62 42 72 L54 124 C56 133 64 137 72 134 L76 132 C84 129 87 121 85 113 L74 64 C72 55 62 49 52 52 Z"/>
+    <path class="dl" pathLength="1" d="M76 132 H178 A16 16 0 0 1 194 148 V160 A16 16 0 0 1 178 176 H82 A16 16 0 0 1 66 160 Z"/>
+    <path class="dl" pathLength="1" d="M58 236 L80 120 M188 236 L184 126 M80 184 H186"/>
+    <path class="dl" pathLength="1" d="M70 112 H192 A8 8 0 0 1 192 128 H70 A8 8 0 0 1 70 112 Z"/>
+    {{ ground() }}
+  {% endif %}
+{% endmacro %}
+
 <figure class="dims__fig" data-reveal>
-  <figcaption>{{ _("Front") }}</figcaption>
+  <figcaption>{{ _("Front") if kind != 'rug' else ('من الأعلى' if lang == 'ar' else 'From above') }}</figcaption>
   <svg viewBox="0 0 230 270" aria-hidden="true">
-    <g class="chair">
-      <path class="dl" pathLength="1" d="M60 46 H150 A28 28 0 0 1 178 74 V92 A28 28 0 0 1 150 120 H60 A28 28 0 0 1 32 92 V74 A28 28 0 0 1 60 46 Z" transform="translate(10 0)"/>
-      <path class="dl" pathLength="1" d="M58 130 H172 A16 16 0 0 1 188 146 V160 A16 16 0 0 1 172 176 H58 A16 16 0 0 1 42 160 V146 A16 16 0 0 1 58 130 Z"/>
-      <path class="dl" pathLength="1" d="M36 124 L33 236 M194 124 L197 236 M44 184 H186"/>
-      <circle class="dl" pathLength="1" cx="36" cy="120" r="8"/><circle class="dl" pathLength="1" cx="194" cy="120" r="8"/>
-      <path class="dl" pathLength="1" d="M10 236 H220" stroke="#A8A8A8"/>
-    </g>
+    <g class="chair">{{ front(kind) }}</g>
     <g class="dims">
       <path class="dm" pathLength="1" d="M33 24 H197 M33 18 V30 M197 18 V30"/>
       <text class="dm-t" x="115" y="14" text-anchor="middle">{{ val(dim_w) }}</text>
-      <path class="dm" pathLength="1" d="M214 46 V236 M208 46 H220 M208 236 H220"/>
-      <text class="dm-t" x="214" y="140" text-anchor="middle" transform="rotate(-90 214 140)" dy="-6">{{ val(dim_h) }}</text>
+      {% if kind == 'rug' %}
+        <path class="dm" pathLength="1" d="M214 70 V214 M208 70 H220 M208 214 H220"/>
+        <text class="dm-t" x="214" y="142" text-anchor="middle" transform="rotate(-90 214 142)" dy="-6">{{ val(dim_d or dim_h) }}</text>
+      {% else %}
+        <path class="dm" pathLength="1" d="M214 46 V236 M208 46 H220 M208 236 H220"/>
+        <text class="dm-t" x="214" y="140" text-anchor="middle" transform="rotate(-90 214 140)" dy="-6">{{ val(dim_h) }}</text>
+      {% endif %}
     </g>
   </svg>
 </figure>
 <figure class="dims__fig" data-reveal>
   <figcaption>{{ _("Side") }}</figcaption>
   <svg viewBox="0 0 230 270" aria-hidden="true">
-    <g class="chair">
-      <path class="dl" pathLength="1" d="M52 52 C44 54 40 62 42 72 L54 124 C56 133 64 137 72 134 L76 132 C84 129 87 121 85 113 L74 64 C72 55 62 49 52 52 Z"/>
-      <path class="dl" pathLength="1" d="M76 132 H178 A16 16 0 0 1 194 148 V160 A16 16 0 0 1 178 176 H82 A16 16 0 0 1 66 160 Z"/>
-      <path class="dl" pathLength="1" d="M58 236 L80 120 M188 236 L184 126 M80 184 H186"/>
-      <path class="dl" pathLength="1" d="M70 112 H192 A8 8 0 0 1 192 128 H70 A8 8 0 0 1 70 112 Z"/>
-      <path class="dl" pathLength="1" d="M10 236 H220" stroke="#A8A8A8"/>
-    </g>
+    <g class="chair">{{ side(kind) }}</g>
     <g class="dims">
       <path class="dm" pathLength="1" d="M42 252 H194 M42 246 V258 M194 246 V258"/>
-      <text class="dm-t" x="118" y="268" text-anchor="middle">{{ val(dim_d) }}</text>
-      <path class="dm" pathLength="1" d="M214 132 V236 M208 132 H220 M208 236 H220"/>
-      <text class="dm-t" x="214" y="184" text-anchor="middle" transform="rotate(-90 214 184)" dy="-6">{{ val(dim_sh) }}</text>
+      <text class="dm-t" x="118" y="268" text-anchor="middle">{{ val(dim_d if kind != 'rug' else dim_w) }}</text>
+      {% if kind == 'chair' %}
+        <path class="dm" pathLength="1" d="M214 132 V236 M208 132 H220 M208 236 H220"/>
+        <text class="dm-t" x="214" y="184" text-anchor="middle" transform="rotate(-90 214 184)" dy="-6">{{ val(dim_sh) }}</text>
+      {% endif %}
     </g>
   </svg>
 </figure>

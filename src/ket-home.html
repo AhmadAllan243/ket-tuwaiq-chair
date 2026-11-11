@@ -1195,7 +1195,7 @@ new IntersectionObserver(([en]) => { carSeen = en.isIntersecting; }, { threshold
    ====================================================================== */
 let fanShown = -1;
 function renderVideos() {
-  $('#fan').innerHTML = STORE.videos.map((v, i) => `<div class="fc" data-i="${i}"><img src="${img(v.poster)}" alt="" draggable="false"><span class="fc__tag">${t('expTag')}</span><button class="fc__play" type="button" data-play="${i}" aria-label="${t('expPlay')}">${icon('play', 18, 0)}</button></div>`).join('');
+  $('#fan').innerHTML = STORE.videos.map((v, i) => `<div class="fc" data-i="${i}"><img src="${img(v.poster)}" alt="" draggable="false"><button class="fc__play" type="button" data-play="${i}" aria-label="${t('expPlay')}">${icon('play', 18, 0)}</button></div>`).join('');
   $('#fanDots').innerHTML = STORE.videos.map((_, i) => `<button type="button" aria-label="${i + 1}"></button>`).join('');
   fanShown = -1; layoutFan();
 }
@@ -1216,7 +1216,7 @@ function layoutFan() {
   $$('#fanDots button').forEach((b, i) => b.classList.toggle('is-on', i === on));
   if (on !== fanShown) {
     fanShown = on; const p = byId[STORE.videos[on].product], cap = $('#fanCap');
-    cap.innerHTML = `<b>${L(p)}</b><span>${fmt(p.price)} ${cur()} · ${t('expTag')}</span>`;
+    cap.innerHTML = `<b>${L(p)}</b><span>${fmt(p.price)} ${cur()}</span>`;
     if (G) gsap.fromTo(cap, { opacity: 0, y: 8, filter: 'blur(4px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .45, ease: 'power3.out', clearProps: 'transform,filter,opacity' });
   }
 }

@@ -1,3 +1,4 @@
+{% import 'components/ket/menu.jinja' as km %}
 {# Icons #}
 {% set chevron_down %}
   <svg
@@ -62,7 +63,7 @@
           <button
             class="text-foreground text-sm hover:bg-secondary data-[state=open]:bg-secondary flex w-full cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-start outline-none"
           >
-            {{ menu.label }}
+            {{ km.label(menu.label) }}
             {{ chevron_right }}
           </button>
           <el-menu
@@ -73,7 +74,7 @@
             {% for submenu in menu.items %}
               {% if submenu.items | length > 0 %}
                 {# Level 2 with Level 3 #}
-                <div class="text-sm font-medium px-2 py-1">{{ submenu.label }}</div>
+                <div class="text-sm font-medium px-2 py-1">{{ km.label(submenu.label) }}</div>
                 {% for subsubmenu in submenu.items %}
                   <a
                     href="{{ subsubmenu.url | localized_url if subsubmenu.resource_type != 'url' else subsubmenu.url }}"
@@ -87,7 +88,7 @@
                   href="{{ submenu.url | localized_url if submenu.resource_type != 'url' else submenu.url }}"
                   class="text-foreground text-sm hover:bg-secondary flex w-full items-center rounded-sm px-2 py-1.5"
                 >
-                  {{ submenu.label }}
+                  {{ km.label(submenu.label) }}
                 </a>
               {% endif %}
             {% endfor %}
@@ -101,7 +102,7 @@
             popovertarget="{{ menu_popover_id }}"
             class="text-foreground text-sm flex items-center gap-1 py-2 hover:underline"
           >
-            {{ menu.label }}
+            {{ km.label(menu.label) }}
             {{ chevron_down }}
           </button>
           <el-popover
@@ -117,7 +118,7 @@
                   <button
                     class="text-foreground text-sm hover:bg-secondary data-[state=open]:bg-secondary flex w-full cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-start outline-none"
                   >
-                    {{ submenu.label }}
+                    {{ km.label(submenu.label) }}
                     {{ chevron_right }}
                   </button>
                   <el-menu
@@ -141,7 +142,7 @@
                   href="{{ submenu.url | localized_url if submenu.resource_type != 'url' else submenu.url }}"
                   class="text-foreground text-sm hover:bg-secondary flex w-full items-center rounded-sm px-2 py-1.5"
                 >
-                  {{ submenu.label }}
+                  {{ km.label(submenu.label) }}
                 </a>
               {% endif %}
             {% endfor %}
@@ -156,7 +157,7 @@
           <button
             class="text-foreground text-sm hover:bg-secondary data-[state=open]:bg-secondary flex w-full cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-start outline-none"
           >
-            {{ menu.label }}
+            {{ km.label(menu.label) }}
             {{ chevron_right }}
           </button>
           <el-menu
@@ -169,7 +170,7 @@
                 href="{{ submenu.url | localized_url if submenu.resource_type != 'url' else submenu.url }}"
                 class="text-foreground text-sm hover:bg-secondary flex w-full items-center rounded-sm px-2 py-1.5"
               >
-                {{ submenu.label }}
+                {{ km.label(submenu.label) }}
               </a>
             {% endfor %}
           </el-menu>
@@ -178,7 +179,7 @@
         {# Top level: regular dropdown #}
         <el-dropdown class="inline-block">
           <button class="text-foreground text-sm flex items-center gap-1 py-2 hover:underline">
-            {{ menu.label }}
+            {{ km.label(menu.label) }}
             {{ chevron_down }}
           </button>
           <el-menu
@@ -191,7 +192,7 @@
                 href="{{ submenu.url | localized_url if submenu.resource_type != 'url' else submenu.url }}"
                 class="text-foreground text-sm hover:bg-secondary flex w-full items-center rounded-sm px-2 py-1.5"
               >
-                {{ submenu.label }}
+                {{ km.label(submenu.label) }}
               </a>
             {% endfor %}
           </el-menu>
@@ -205,14 +206,14 @@
         href="{{ menu.url | localized_url if menu.resource_type != 'url' else menu.url }}"
         class="text-foreground text-sm hover:bg-secondary flex w-full items-center rounded-sm px-2 py-1.5"
       >
-        {{ menu.label }}
+        {{ km.label(menu.label) }}
       </a>
     {% else %}
       <a
         href="{{ menu.url | localized_url if menu.resource_type != 'url' else menu.url }}"
         class="text-foreground text-sm py-2 hover:underline"
       >
-        {{ menu.label }}
+        {{ km.label(menu.label) }}
       </a>
     {% endif %}
   {% endif %}

@@ -8,7 +8,7 @@ const KH = document.querySelector('.kh'); if (!KH || !window.KET_HOME) return;
 // the section's data (Zid) over the prototype's defaults
 const STORE = window.KET_HOME; STORE.ui = UI; STORE.currency = CURRENCY;
 for (const k in STORE.text || {}) if (STORE.text[k]) UI.ar[k] = UI.en[k] = STORE.text[k];
-STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {}; if (z.name) z.name = z.name.replace(/^قسم +/, '');   // the tiles add «قسم» themselves
+STORE.cats = CATS.map(c => { const z = (STORE.depts || {})[c.id] || {}; if (z.name) z.name = z.name.replace(/^قسم +/, ''); if (/^en/.test(document.documentElement.lang)) { if (c.id === 'home') z.name = 'Home essentials'; else if (z.name) z.name = z.name.replace(/ +section$/i, ''); }   // the tiles add «قسم» themselves
   return { ...c, ar: z.name || c.ar, en: z.name || c.en, short: z.name ? null : c.short, tx: z.text ? { ar: z.text, en: z.text } : c.tx,
     url: z.url || '', photo: z.photo || `home/life/${c.id}`, n: z.n || 0 }; });
 const $ = (s, c = document) => c.querySelector(s);
@@ -376,7 +376,7 @@ new IntersectionObserver(([en]) => { carSeen = en.isIntersecting; }, { threshold
    ====================================================================== */
 let fanShown = -1;
 function renderVideos() {
-  $('#fan').innerHTML = STORE.videos.map((v, i) => `<div class="fc" data-i="${i}"><img src="${img(v.poster)}" alt="" draggable="false"><span class="fc__tag">${t('expTag')}</span><button class="fc__play" type="button" data-play="${i}" aria-label="${t('expPlay')}">${icon('play', 18, 0)}</button></div>`).join('');
+  $('#fan').innerHTML = STORE.videos.map((v, i) => `<div class="fc" data-i="${i}"><img src="${img(v.poster)}" alt="" draggable="false"><button class="fc__play" type="button" data-play="${i}" aria-label="${t('expPlay')}">${icon('play', 18, 0)}</button></div>`).join('');
   $('#fanDots').innerHTML = STORE.videos.map((_, i) => `<button type="button" aria-label="${i + 1}"></button>`).join('');
   fanShown = -1; layoutFan();
 }
@@ -397,7 +397,7 @@ function layoutFan() {
   $$('#fanDots button').forEach((b, i) => b.classList.toggle('is-on', i === on));
   if (on !== fanShown) {
     fanShown = on; const v = STORE.videos[on], cap = $('#fanCap');
-    cap.innerHTML = v.title ? `<b>${esc(v.title)}</b><span>${v.sub ? esc(v.sub) + ' · ' : ''}${t('expTag')}</span>` : '';
+    cap.innerHTML = v.title ? `<b>${esc(v.title)}</b>${v.sub ? `<span>${esc(v.sub)}</span>` : ''}` : '';
     if (G) gsap.fromTo(cap, { opacity: 0, y: 8, filter: 'blur(4px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .45, ease: 'power3.out', clearProps: 'transform,filter,opacity' });
   }
 }

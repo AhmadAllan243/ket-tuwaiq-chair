@@ -12,7 +12,10 @@
   document.documentElement.classList.add('is-intro');   // the welcome (short once seen this visit) ends by handing over to the search bar
   window.KET_HOME = {
     base: {{ ('ket-home/home-lady.webp' | asset_url) | tojson }}.replace(/home-lady\.webp.*$/, ''),
-    links: { instagram: {{ href(S.instagram) }}, tiktok: {{ href(S.tiktok) }} },
+    {# the section's links, else the store's own accounts (Settings → contact) #}
+    {% set C = store.settings.contact %}
+    links: { instagram: {{ href(S.instagram) if S.instagram else ((('https://www.instagram.com/' ~ C.instagram) if C and C.instagram else '') | tojson) }},
+             tiktok: {{ href(S.tiktok) if S.tiktok else ((('https://www.tiktok.com/@' ~ C.tiktok) if C and C.tiktok else '') | tojson) }} },
     saleUrl: {{ href(S.sale_url) }},
     lady: {{ pic(S.lady, 700) if S.lady else ('home/lady' | tojson) }},
     fan: [{{ pic(S.sale_image1, 400) if S.sale_image1 else ('cut/ac03' | tojson) }}, {{ pic(S.sale_image2, 400) if S.sale_image2 else ('cut/lp10' | tojson) }}, {{ pic(S.sale_image3, 400) if S.sale_image3 else ('cut/t13' | tojson) }}],
