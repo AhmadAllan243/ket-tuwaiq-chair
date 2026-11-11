@@ -156,7 +156,8 @@ js = cut(js, "$('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const 
 # departments
 js = must(js, "/* ======================================================================\n   3. DEPARTMENTS", """// "Why ket?" pieces given by name: the store's own photo, name, price and link, filled in place once found
 async function fillStory() {
-  if (!window.zid) return;
+  for (let i = 0; i < 60 && !(window.zid && zid.products); i++) await new Promise(r => setTimeout(r, 250));   // Zid's script loads after ours
+  if (!(window.zid && zid.products)) return;
   await Promise.all(STORE.story.slice(0, 3).map(async (p, i) => {
     if (!p.q || p.url) return;
     try {
