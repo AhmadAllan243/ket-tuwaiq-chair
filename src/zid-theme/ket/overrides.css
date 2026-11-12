@@ -295,9 +295,11 @@ html[lang="ar"] .ket .kcart__head h1{ font-weight:700; line-height:1.3; letter-s
 /* the lines: picture on white, name, price, the KET pill stepper */
 .ket.kcart .kcart__items{ margin:0!important; display:grid; gap:0!important; }
 .ket.kcart .kcart__items > * + *{ margin-top:0!important; }
-.ket.kcart .cart-product-item{ padding-block:16px; border-bottom:1px solid var(--g200); gap:14px!important; align-items:flex-start; }
+.ket.kcart .cart-product-item{ padding-block:16px; gap:14px!important; align-items:flex-start; }
+.ket.kcart .cart-product-item + .cart-product-item{ border-top:1px solid var(--g200); }
 .ket.kcart .cart-product-item:first-child{ padding-top:4px; }
-.ket.kcart .cart-product-item:last-child{ border-bottom:0; padding-bottom:4px; }
+.ket.kcart .cart-product-item:last-child{ padding-bottom:4px; }
+.ket.kcart .kcart__items > :not(.cart-product-item){ border:0!important; }
 .ket.kcart .cart-product-item > a:first-child{ width:96px; height:96px; border-radius:16px; background:#fff; box-shadow:inset 0 0 0 1px var(--g200); }
 .ket.kcart .cart-product-item > a:first-child img{ object-fit:contain; padding:6%; }
 .ket.kcart .cart-product-item a.text-foreground{ font-size:15px; font-weight:600; line-height:1.4; text-decoration:none; }
@@ -337,3 +339,13 @@ html[data-theme="dark"] .ket .kcart__card, html[data-theme="dark"] .ket .kcart__
 html[data-theme="dark"] .ket.kcart .bg-secondary.rounded.p-4{ background:#1F201F!important; }
 /* Zid's hidden spinners and pictures stay hidden (the KET base makes every svg / img a block) */
 .ket.kcart :is(svg, img).hidden{ display:none; }
+/* phones: every column may shrink to the screen (Zid's long names and prices no longer push the cards wider) */
+.ket .kcart__grid > *, .ket .kcart__main > *{ min-width:0; }
+.ket.kcart .cart-product-item, .ket.kcart .cart-product-item *{ min-width:0; }
+@media (max-width:767px){
+  .ket.kcart .cart-product-item > a:first-child{ width:84px; height:84px; }
+  .ket.kcart .cart-product-item .qty-input{ max-width:128px; }
+  .ket.kcart .cart-product-item .qty-input-btn{ width:32px; height:32px; }
+  .ket.kcart .cart-product-item button:not(.qty-input-btn){ width:36px; height:36px; }
+  .ket.kcart .kcart__card{ border-radius:20px; }
+}
