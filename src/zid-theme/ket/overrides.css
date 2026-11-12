@@ -335,3 +335,5 @@ html[lang="ar"] .ket .kcart__head h1{ font-weight:700; line-height:1.3; letter-s
 html[data-theme="dark"] .ket.kcart{ background:#0D0E0D; }
 html[data-theme="dark"] .ket .kcart__card, html[data-theme="dark"] .ket .kcart__back, html[data-theme="dark"] .ket .kcart__empty{ background:#171817; }
 html[data-theme="dark"] .ket.kcart .bg-secondary.rounded.p-4{ background:#1F201F!important; }
+/* Zid's hidden spinners and pictures stay hidden (the KET base makes every svg / img a block) */
+.ket.kcart :is(svg, img).hidden{ display:none; }
