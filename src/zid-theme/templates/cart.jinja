@@ -3,95 +3,59 @@
 {% block title %}{{ store.name }} – {{ _('Cart') }}{% endblock %}
 
 {% block content %}
-  <section class="px-4 py-6 md:px-16">
-    <div class="theme-container">
-      {%
-        with
-        items=[
-          {'href': url_for('home'), 'label': _("Home")},
-          {'label': _("Cart")}
-        ]
-      %}
-        {% include 'components/ui/breadcrumb.jinja' %}
-      {% endwith %}
-    </div>
-  </section>
-
-  <section class="px-4 pb-6 md:px-16 md:pb-16">
-    <div class="theme-container">
+  {#
+    KET cart page (same look as the cart drawer, components/ket/cart-drawer.jinja): Zid's own parts (lines,
+    quantities, coupon, gift, loyalty, totals, payment widgets) inside KET cards; styles in ket/overrides.css, "Cart page".
+  #}
+  {% set ar = session.lang == 'ar' %}
+  <div class="ket kcart">
+    <div class="container">
+      <header class="kcart__head">
+        <p class="eyebrow"><span>{{ 'سلة المشتريات' if ar else 'Shopping cart' }}</span></p>
+        <h1>{{ 'سلتك' if ar else 'Your cart' }}{% if cart.products_count > 0 %} <span class="num">({{ cart.products_count }})</span>{% endif %}</h1>
+      </header>
       {% if cart.products_count > 0 %}
-        <div class="cart-with-products">
-          <div class="grid grid-cols-1 md:gap-8 lg:grid-cols-12 lg:gap-12">
-            <div class="lg:col-span-8">
-              <h1 class="text-foreground text-xl md:text-2xl font-semibold tracking-tight">{{ _("Cart") }}</h1>
-
-              {% include 'vitrin:cart/progressive_discount.jinja' %}
-
-              {% include 'components/cart/shipping-progress.jinja' %}
-
-              <div class="border-border-light text-foreground text-xs uppercase tracking-wide mt-6 hidden border-b pb-4 lg:flex">
-                <div class="flex-1">{{ _("Product") }}</div>
-                <div class="w-48">{{ _("Amount") }}</div>
-                <div class="w-48 text-end">{{ _("Total") }}</div>
-              </div>
-
-              <div
-                class="mt-4 space-y-4"
-                data-cart-products-list
-              >
-                {% include 'vitrin:v2/cart/products_list.jinja' %}
-
-                {% if store.settings.checkout.gift_order_settings.is_gift_order_enabled == '1' and not cart.gift_card_details.card_product_id and not cart.gift_card_details.card_design %}
-                  <div class="mt-4">{% include 'components/cart/gift-card-display.jinja' %}</div>
-                {% endif %}
-              </div>
-
-              <a
-                href="{{ url_for('home') }}"
-                class="text-foreground text-sm mt-6 inline-flex items-center gap-2 rounded py-2.5 transition-opacity hover:opacity-70"
-              >
-                <svg
-                  class="size-4 rtl:rotate-180"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 12L6 8L10 4"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-                {{ _("Continue shopping") }}
-              </a>
+        <div class="cart-with-products kcart__grid">
+          <div class="kcart__main">
+            {% include 'vitrin:cart/progressive_discount.jinja' %}
+            {% include 'components/cart/shipping-progress.jinja' %}
+            <div class="kcart__card kcart__items" data-cart-products-list>
+              {% include 'vitrin:v2/cart/products_list.jinja' %}
+              {% if store.settings.checkout.gift_order_settings.is_gift_order_enabled == '1' and not cart.gift_card_details.card_product_id and not cart.gift_card_details.card_design %}
+                <div class="mt-4">{% include 'components/cart/gift-card-display.jinja' %}</div>
+              {% endif %}
             </div>
-            <div class="lg:col-span-4">
-              <div class="mb-3">
-                {% include 'vitrin:cart/customer_wallet_progress.jinja' %}
-              </div>
-
-              <div class="divide-border-light sticky top-4 flex flex-col divide-y">
-                {% include 'components/cart/loyalty-program.jinja' %}
-                {% include 'components/cart/coupon-code.jinja' %}
-                {% include 'components/cart/gift-order.jinja' %}
-                <div class="flex flex-col gap-4 pt-4">
-                  {% include 'components/cart/order-summary.jinja' %}
-                  {% include 'components/cart/checkout-buttons.jinja' %}
-                  {% include 'vitrin:shared/bank_discounts.jinja' %}
-                  <div data-payment-widgets>{% include 'vitrin:cart/payment_widgets.jinja' %}</div>
-                  {% include 'vitrin:checkout/apple-pay-quick-checkout.jinja' %}
-                </div>
-              </div>
-            </div>
+            <a href="{{ url_for('home') }}" class="kcart__back">
+              <svg class="rtl:rotate-180" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              {{ 'كمّل التسوق' if ar else 'Continue shopping' }}
+            </a>
           </div>
+          <aside class="kcart__side">
+            <div class="mb-3">{% include 'vitrin:cart/customer_wallet_progress.jinja' %}</div>
+            <div class="kcart__card kcart__sum">
+              {% include 'components/cart/loyalty-program.jinja' %}
+              {% include 'components/cart/coupon-code.jinja' %}
+              {% include 'components/cart/gift-order.jinja' %}
+              <div class="kcart__pay">
+                {% include 'components/cart/order-summary.jinja' %}
+                {% include 'components/cart/checkout-buttons.jinja' %}
+                {% include 'vitrin:shared/bank_discounts.jinja' %}
+                <div data-payment-widgets>{% include 'vitrin:cart/payment_widgets.jinja' %}</div>
+                {% include 'vitrin:checkout/apple-pay-quick-checkout.jinja' %}
+              </div>
+            </div>
+          </aside>
         </div>
       {% else %}
-        {% include 'components/cart/empty-state.jinja' %}
+        <div class="cart-empty kcart__empty">
+          <img src="{{ 'images/gazelle-box.webp' | asset_url }}" alt="" width="170" height="170">
+          <h2>{{ 'سلتك فاضية' if ar else 'Your cart is empty' }}</h2>
+          <p>{{ 'غزالنا ينتظر أول قطعة تختارها.' if ar else 'Our gazelle is waiting for your first piece.' }}</p>
+          <a class="kcart__btn" href="{{ url_for('home') }}">{{ 'كمّل التسوق' if ar else 'Continue shopping' }}</a>
+        </div>
       {% endif %}
     </div>
-  </section>
+  </div>
 {% endblock %}
 
 {% block footer_scripts %}
