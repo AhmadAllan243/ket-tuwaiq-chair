@@ -1,0 +1,34 @@
+{#
+  KET cart drawer (design: ket-product.html), every page: the bag in the header opens it, and it slides in
+  by itself after something is added. Lines, quantities, removal and the total come from Zid's cart
+  (assets/ket-cart.js); checkout is Zid's own. The full cart page stays one tap away (coupons, gifts).
+#}
+{% import 'components/ket/icons.jinja' as k %}
+{% set ar = session.lang == 'ar' %}
+<div class="ket ket-cart" id="ket-cart"
+  data-cart-url="{{ url_for('cart_page') }}"
+  data-t-added="{{ 'تمت الإضافة. غزالنا جهّز الصندوق!' if ar else 'Added. Our gazelle has packed the box!' }}"
+  data-t-empty-title="{{ 'سلتك فاضية' if ar else 'Your cart is empty' }}"
+  data-t-empty-body="{{ 'غزالنا ينتظر أول قطعة تختارها.' if ar else 'Our gazelle is waiting for your first piece.' }}"
+  data-t-continue="{{ 'كمّل التسوق' if ar else 'Continue shopping' }}"
+  data-t-total="{{ 'المجموع' if ar else 'Total' }}"
+  data-t-tax="{{ 'شامل الضريبة · تُحسب أي خصومات عند الدفع' if ar else 'VAT included · any discount is applied at checkout' }}"
+  data-t-checkout="{{ 'إتمام الطلب' if ar else 'Checkout' }}"
+  data-t-view="{{ 'عرض السلة كاملة' if ar else 'View full cart' }}"
+  data-t-remove="{{ 'حذف' if ar else 'Remove' }}"
+  data-t-qty="{{ 'الكمية' if ar else 'Quantity' }}"
+  data-t-dec="{{ 'إنقاص الكمية' if ar else 'Decrease quantity' }}"
+  data-t-inc="{{ 'زيادة الكمية' if ar else 'Increase quantity' }}"
+  data-t-closed="{{ _('Store is closed') if store.settings.general.availability.closed_now else '' }}"
+  data-gz="{{ 'images/gazelle-box.webp' | asset_url }}">
+  <template data-icon="minus">{{ k.icon('minus', 16) }}</template><template data-icon="plus">{{ k.icon('plus', 16) }}</template>
+  <div class="scrim" data-cart-close></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="ket-cart-title" aria-hidden="true" tabindex="-1">
+    <div class="drawer__head">
+      <h2 id="ket-cart-title"><span>{{ 'سلتك' if ar else 'Your cart' }}</span><span class="num" data-cart-count></span></h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label="{{ _('Close') }}">{{ k.icon('close', 22) }}</button>
+    </div>
+    <div class="drawer__body" data-cart-body data-lenis-prevent></div>
+    <div class="drawer__foot" data-cart-foot></div>
+  </aside>
+</div>

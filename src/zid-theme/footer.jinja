@@ -68,6 +68,12 @@
         </div>
       {% endif %}
 
+      {# the store's policies (Zid → pages) #}
+      <nav class="footer__policies" aria-label="{{ 'سياسات المتجر' if session.lang == 'ar' else 'Store policies' }}">
+        <a href="/pages/privacy-policy">{{ 'سياسة الخصوصية' if session.lang == 'ar' else 'Privacy policy' }}</a>
+        <a href="/pages/terms-and-conditions">{{ 'الشروط والأحكام' if session.lang == 'ar' else 'Terms and conditions' }}</a>
+      </nav>
+
       <div class="footer__legal">
         {% if c.business_center %}
           <a class="sbc" href="https://eauthenticate.saudibusiness.gov.sa/certificate-details/{{ c.business_center }}" target="_blank" rel="noopener">{{ _("Verified by the Saudi Business Center") }}</a>

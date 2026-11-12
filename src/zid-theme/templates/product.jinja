@@ -67,24 +67,26 @@
   {% set n_img = images | length %}
   {% set sp = (mfv(['story_photo', 'صورة_الحكاية']) | trim | float) | int %}
   {% set story_detail = images[sp - 1] if 0 < sp <= n_img else (images[n_img - 1] if n_img else none) %}
-  {# the product's kind (for the story wording and the size drawing): its name first, then its department #}
+  {# the product's kind (for the story wording and the size drawing): its department first, so every piece in a
+     department gets the same drawing; the home essentials (and a piece with no department) go by their name #}
   {% set pn = (product.name or '') | lower %}
   {% set kinds = [('chair', ['كرسي', 'كراسي', 'بوف', 'مقعد', 'كنب', 'chair', 'stool', 'pouf', 'sofa']), ('table', ['طاولة', 'طاولات', 'table']),
                   ('lamp', ['أبجورة', 'ابجورة', 'إضاءة', 'اضاءة', 'lamp', 'light']), ('rug', ['سجاد', 'rug', 'carpet']),
                   ('plant', ['شجرة', 'شجر', 'نبتة', 'نبات', 'tree', 'plant']), ('mirror', ['مرآة', 'مراية', 'مرايا', 'mirror']),
                   ('cabinet', ['دولاب', 'خزانة', 'كونسول', 'ستاند', 'رف', 'cabinet', 'console', 'stand', 'shelf']), ('vase', ['فازة', 'مزهرية', 'vase'])] %}
-  {% set dk = namespace(v='') %}
-  {% for kd, words in kinds %}{% if not dk.v %}{% for w in words %}{% if w in pn %}{% set dk.v = kd %}{% endif %}{% endfor %}{% endif %}{% endfor %}
+  {% set dk = namespace(v='', home=false) %}
+  {% for c in (product.categories or []) %}{% if not dk.v %}
+    {% set cid = c.id | string %}{% set cn = (c.name or '') | lower %}
+    {% if cid == '444477' or 'طاول' in cn or 'table' in cn %}{% set dk.v = 'table' %}
+    {% elif cid == '444476' or 'نبات' in cn or 'شجر' in cn or 'plant' in cn %}{% set dk.v = 'plant' %}
+    {% elif cid == '444490' or 'سجاد' in cn or 'rug' in cn or 'carpet' in cn %}{% set dk.v = 'rug' %}
+    {% elif cid == '444478' or 'إضاء' in cn or 'ابجور' in cn or 'أبجور' in cn or 'light' in cn or 'lamp' in cn %}{% set dk.v = 'lamp' %}
+    {% elif 'كرس' in cn or 'chair' in cn %}{% set dk.v = 'chair' %}
+    {% elif cid == '444491' or 'مستلزم' in cn or 'اكسسوار' in cn or 'إكسسوار' in cn or 'decor' in cn %}{% set dk.home = true %}{% endif %}
+  {% endif %}{% endfor %}
   {% if not dk.v %}
-    {% for c in (product.categories or []) %}{% if not dk.v %}
-      {% set cid = c.id | string %}{% set cn = (c.name or '') | lower %}
-      {% if 'كرس' in cn or 'chair' in cn %}{% set dk.v = 'chair' %}
-      {% elif cid == '444477' or 'طاول' in cn or 'table' in cn %}{% set dk.v = 'table' %}
-      {% elif cid == '444476' or 'نبات' in cn or 'شجر' in cn or 'plant' in cn %}{% set dk.v = 'plant' %}
-      {% elif cid == '444490' or 'سجاد' in cn or 'rug' in cn or 'carpet' in cn %}{% set dk.v = 'rug' %}
-      {% elif cid == '444478' or 'إضاء' in cn or 'ابجور' in cn or 'أبجور' in cn or 'light' in cn or 'lamp' in cn %}{% set dk.v = 'lamp' %}
-      {% elif cid == '444491' or 'مستلزم' in cn or 'decor' in cn %}{% set dk.v = 'vase' %}{% endif %}
-    {% endif %}{% endfor %}
+    {% for kd, words in kinds %}{% if not dk.v %}{% for w in words %}{% if w in pn %}{% set dk.v = kd %}{% endif %}{% endfor %}{% endif %}{% endfor %}
+    {% if dk.home and dk.v not in ['chair', 'mirror', 'cabinet', 'vase'] %}{% set dk.v = 'vase' %}{% endif %}
   {% endif %}
   {% set dim_kind = dk.v or 'chair' %}
   {# no story fields: words for the product's department, its description, and its second photo (the last one is usually the size sketch) #}
@@ -137,7 +139,8 @@
   {% if not features and images | length > 1 %}
     {% set FT = [['Chosen materials', 'Materials picked with care for everyday use.'], ['A careful finish', 'Clean details and a finish that lasts.'], ['Fits your home', 'A piece that sits easily with your décor.'], ['Made to stay', 'Made to live with you for years.']]
          if lang == 'en' else [['خامات مختارة', 'خامات مختارة بعناية لتتحمل الاستخدام اليومي.'], ['تشطيب متقن', 'تفاصيل نظيفة ولمسة نهائية تدوم.'], ['تصميم يكمّل بيتك', 'قطعة تنسجم مع ديكورك وتضيف له لمسة.'], ['جودة تعيش معك', 'صُنعت لتبقى معك سنوات.']] %}
-    {% for f in FT %}{% set _x = features.append({'title': f[0], 'body': f[1], 'img': images[loop.index % (images | length)], 'pos': ['50% 40%', '40% 70%', '70% 30%', '50% 85%'][loop.index0], 'z': '1.35'}) %}{% endfor %}
+    {% set fpics = images[:-1] if images | length > 2 else images %}
+    {% for f in FT %}{% set _x = features.append({'title': f[0], 'body': f[1], 'img': fpics[loop.index % (fpics | length)], 'pos': '50% 50%', 'z': '1', 'fit': true}) %}{% endfor %}
   {% endif %}
 
   {# animated number: shows the value, and ket-product.js counts it up (or down from `frm`) when it scrolls into view #}
@@ -385,7 +388,7 @@
             {% for f in features[:4] %}
               <article class="feature" data-reveal-item>
                 <div class="feature__media"><span class="feature__idx">{{ '%02d' | format(loop.index) }}</span>
-                  <div class="feature__media-inner">{% if f.img %}<img src="{{ img_src(f.img, 900) }}" alt="" loading="lazy" decoding="async" style="--pos:{{ f.pos }}; --z:{{ f.z }}" data-z="{{ f.z }}">{% endif %}</div>
+                  <div class="feature__media-inner{{ ' is-fit' if f.fit }}">{% if f.img %}<img src="{{ img_src(f.img, 900) }}" alt="" loading="lazy" decoding="async" style="--pos:{{ f.pos }}; --z:{{ f.z }}" data-z="{{ f.z }}">{% endif %}</div>
                 </div>
                 <h3>{{ f.title }}</h3>
                 {% if f.body %}<p>{{ f.body }}</p>{% endif %}
@@ -461,8 +464,8 @@
           <div class="acc">
             {% set titles = {'details': _("Details"), 'shipping': _("Shipping & delivery"), 'returns': _("Returns"), 'care': _("Product care")} %}
             {% for key in acc %}
-              <div class="acc__item{{ ' is-open' if loop.first }}">
-                <h3><button class="acc__btn" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="accp{{ loop.index }}" id="accb{{ loop.index }}"><span>{{ titles[key] }}</span><span class="acc__icon" aria-hidden="true"></span></button></h3>
+              <div class="acc__item">
+                <h3><button class="acc__btn" type="button" aria-expanded="false" aria-controls="accp{{ loop.index }}" id="accb{{ loop.index }}"><span>{{ titles[key] }}</span><span class="acc__icon" aria-hidden="true"></span></button></h3>
                 <div class="acc__panel" id="accp{{ loop.index }}" role="region" aria-labelledby="accb{{ loop.index }}"><div><div class="acc__content">
                   {% if key == 'details' %}
                     {% if product.description %}<div class="ket-prose">{{ product.description | safe }}</div>{% endif %}

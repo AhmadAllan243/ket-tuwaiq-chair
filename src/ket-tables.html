@@ -367,8 +367,8 @@ html[lang="ar"] .intro__copy h3{ font-weight:600; line-height:1.4; letter-spacin
 .sstat span{ display:block; margin-top:4px; font-size:12px; line-height:1.4; color:var(--ink-2); }
 .shape__big{ position:relative; min-height:clamp(320px, 88vw, 420px); border-radius:26px; overflow:hidden; color:var(--white); display:flex; flex-direction:column; justify-content:space-between; padding:clamp(18px, 2.4vw, 32px); isolation:isolate; background:#8c8178; }
 .shape__big > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; transform:scale(1.06); }
-.shape__big::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.08) 55%, rgba(0,0,0,.3)); }
-.shape__big h2{ font-size:clamp(36px, 4.6vw, 68px); font-weight:500; line-height:1; letter-spacing:-.04em; max-width:10ch; }
+.shape__big::after{ content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(0,0,0,.68), rgba(0,0,0,.34) 48%, rgba(0,0,0,.12) 68%, rgba(0,0,0,.36)); }   /* deep enough that the white words read over any photo */
+.shape__big h2{ font-size:clamp(36px, 4.6vw, 68px); font-weight:500; line-height:1; letter-spacing:-.04em; max-width:10ch; text-shadow:0 2px 24px rgba(0,0,0,.35); }
 html[lang="ar"] .shape__big h2{ font-weight:600; line-height:1.3; letter-spacing:0; }
 .shape__big p{ margin-top:12px; font-size:14px; max-width:30ch; color:rgba(255,255,255,.88); }
 .shape__bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
@@ -461,7 +461,7 @@ html[lang="ar"] .ttile h3{ font-weight:600; line-height:1.4; letter-spacing:0; }
 .ttile--dark p{ color:rgba(0,0,0,.65); }
 .ttile--photo{ position:relative; overflow:hidden; color:var(--white); background:#7b7368; }
 .ttile--photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
-.ttile--photo::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.45), transparent 45%); }
+.ttile--photo::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.6), rgba(0,0,0,.2) 50%, transparent 70%); }
 .ttile--photo > *{ position:relative; z-index:1; }
 .ttile--photo p{ color:rgba(255,255,255,.85); }
 @media (max-width:767px){ .ttile{ grid-column:1 / -1; min-height:260px; } }

@@ -1,175 +1,70 @@
 {% extends "layout.jinja" %}
 
-{% block title %}{{ store.name }} – {{ _('All Products') }}{% endblock %}
+{#
+  KET products / search results (?q=…): the search field again, then the products as the KET category
+  page's cards (ket-category.css, under .kc), Zid's pages of 24 as round links. The + adds a product without
+  options straight to the cart (the cart drawer shows it); a product with options opens its page.
+#}
+{% import 'components/ket/icons.jinja' as k %}
+{% set ar = session.lang == 'ar' %}
+{% set q = (session.query_params.get('q') or '') | trim %}
+{% block title %}{{ store.name }} – {{ (('نتائج البحث: ' if ar else 'Search: ') ~ q) if q else _('All Products') }}{% endblock %}
 
 {% block content %}
-  {# Breadcrumb Section #}
-  <section class="px-4 py-6 md:px-16">
-    <div class="theme-container">
-      {%
-        with
-        items=[
-          {'href': url_for('home'), 'label': _("Home")},
-          {'label': _("All Products")}
-        ]
-      %}
-        {% include 'components/ui/breadcrumb.jinja' %}
-      {% endwith %}
-    </div>
+{% set R = products.results if products and products.results else [] %}
+{% macro pimg(p, w=600) -%}
+  {%- set im = p.main_image.image.large if p.main_image and p.main_image.image else (p.images[0].image.full_size if p.images else '') -%}
+  {{- image_url(im, w=w, q=85, f='auto') if im else '' -}}
+{%- endmacro %}
+<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=e506035c">
+<div class="kc ksearch">
+  <section class="container ksearch__head">
+    <p class="eyebrow">{{ ('نتائج البحث' if ar else 'Search results') if q else ('المتجر' if ar else 'The shop') }}</p>
+    <h1>{% if q %}<span class="ksearch__q">«{{ q }}»</span>{% else %}{{ 'كل المنتجات' if ar else 'All products' }}{% endif %}</h1>
+    <form class="ksearch__form" action="/products" method="get" role="search">
+      <span class="ksearch__ico" aria-hidden="true">{{ k.icon('search', 22, 1.8) }}</span>
+      <input type="search" name="q" value="{{ q }}" enterkeyhint="search" autocomplete="off" placeholder="{{ 'وش تدوّر عليه اليوم؟' if ar else 'What are you looking for today?' }}" aria-label="{{ 'بحث' if ar else 'Search' }}">
+      <button type="submit">{{ 'ابحث' if ar else 'Search' }}</button>
+    </form>
+    {% if R %}<p class="ksearch__count">{{ (products.count ~ (' قطعة' if ar else (' piece' if products.count == 1 else ' pieces'))) }}</p>{% endif %}
   </section>
 
-  <section class="px-4 pb-6 md:px-16 md:pb-16">
-    <div class="theme-container">
-      {# Products Content - This entire container is swapped during AJAX filtering #}
-      <div
-        id="products-content"
-        class="flex flex-col gap-6 transition-opacity duration-200"
-      >
-        {% include 'components/products/products-header.jinja' %}
-        {% if products.results %}
-          <div
-            data-grid-root="true"
-            data-grid="four"
-            class="group/grid grid gap-x-4 gap-y-10"
-          >
-            {% for product in products.results %}
-              {% include 'components/products/product-card.jinja' %}
-            {% endfor %}
-          </div>
-        {% else %}
-          {# No results state #}
-          <div class="flex flex-col items-center justify-center py-16 text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="64"
-              viewBox="0 0 24 24"
-              fill="none"
-              class="text-muted-foreground mb-6"
-            >
-              <path
-                d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"
-                fill="currentColor"
-              />
-              <path
-                d="M7 9H12V10H7V9Z"
-                fill="currentColor"
-              />
-            </svg>
-            <h3 class="text-foreground text-h6 mb-2">{{ _("No results found") }}</h3>
-            <p class="text-muted-foreground text-body2 mb-6">
-              {{ _("We couldn't find any products matching your search. Try adjusting your filters or search terms.") }}
-            </p>
-            <a
-              href="/products"
-              class="bg-primary text-primary-foreground rounded-lg px-6 py-3 text-sm font-medium"
-            >
-              {{ _("View all products") }}
-            </a>
-          </div>
-        {% endif %}
-        {% set totalPages = ((products.count / (session.query_params.get('page_size') or 24)|int) | round(0, 'ceil')) | int %}
-        {% set currentPage = products.page %}
-        {% include 'components/products/pagination.jinja' %}
+  <section class="container ksearch__grid">
+    {% if R %}
+      <div class="pgrid">
+        {% for p in R %}
+          {% set url = url_for('product_details', slug=p.slug) %}
+          {% set pr = (p.price or 0) | float %}{% set sp = (p.sale_price or 0) | float %}{% set was = pr if sp and sp < pr else 0 %}
+          <article class="card">
+            <a class="card__media" href="{{ url }}"><img src="{{ pimg(p) }}" alt="{{ p.name }}" loading="{{ 'eager' if loop.index < 5 else 'lazy' }}" width="600" height="600">
+              {% if was %}<span class="card__off" dir="ltr">−{{ ((1 - sp / pr) * 100) | round | int }}%</span>{% endif %}
+              <button class="card__add" type="button" data-ket-add="{{ p.id }}" data-url="{{ url }}" data-options="{{ 'true' if p.has_options else 'false' }}" aria-label="{{ ('أضف للسلة: ' if ar else 'Add to cart: ') ~ p.name }}">{{ k.icon('plus', 20, 1.8) }}</button></a>
+            <div class="card__body"><h3 class="card__name"><a href="{{ url }}">{{ p.name }}</a></h3>
+              <p class="card__price"><b>{{ p.formatted_sale_price or p.formatted_price }}</b>{% if was %}<s>{{ p.formatted_price }}</s>{% endif %}</p></div>
+          </article>
+        {% endfor %}
       </div>
-    </div>
+      {% include "components/ket/category-pager.jinja" %}
+    {% else %}
+      <div class="ksearch__none">
+        <img src="{{ 'images/gazelle-box.webp' | asset_url }}" alt="" width="150" height="150">
+        <h2>{{ 'ما لقينا شي بهالاسم' if ar else 'Nothing found by that name' }}</h2>
+        <p>{{ 'جرّب كلمة ثانية، أو تصفّح الأقسام.' if ar else 'Try another word, or browse the departments.' }}</p>
+        <a class="ksearch__btn" href="/categories">{{ 'تصفّح الأقسام' if ar else 'Browse departments' }}</a>
+      </div>
+    {% endif %}
   </section>
-
-  {# Quick View Modal #}
-  {% include 'components/products/quick-view-modal.jinja' %}
-
-  <script>
-    (function () {
-      // Track grid mode separately for desktop and mobile
-      let desktopGridMode = "four";
-      let mobileGridMode = "one";
-
-      function isMobile() {
-        return window.matchMedia("(max-width: 767px)").matches;
-      }
-
-      function getCurrentMode() {
-        return isMobile() ? mobileGridMode : desktopGridMode;
-      }
-
-      function initGridControls() {
-        const gridRoot = document.querySelector("[data-grid-root]");
-
-        if (!gridRoot) return;
-
-        // Apply current mode to grid root
-        gridRoot.setAttribute("data-grid", getCurrentMode());
-
-        // Update button checked states
-        const allButtons = document.querySelectorAll("[data-grid-btn]");
-        allButtons.forEach((btn) => {
-          const mode = btn.dataset.gridBtn;
-          const isDesktopBtn = mode === "four";
-          const isMobileBtn = mode === "one";
-          const isListBtn = mode === "list";
-
-          let shouldCheck = false;
-          if (isDesktopBtn) {
-            shouldCheck = mode === desktopGridMode;
-          } else if (isMobileBtn) {
-            shouldCheck = mobileGridMode === "one";
-          } else if (isListBtn) {
-            // List button appears on both - check based on current context
-            shouldCheck = (isMobile() && mobileGridMode === "list") || (!isMobile() && desktopGridMode === "list");
-          }
-
-          btn.checked = shouldCheck;
-        });
-      }
-
-      function setGrid(mode) {
-        const gridRoot = document.querySelector("[data-grid-root]");
-
-        // Update the appropriate mode based on button type
-        if (mode === "one") {
-          mobileGridMode = mode;
-        } else if (mode === "four") {
-          desktopGridMode = mode;
-        } else if (mode === "list") {
-          // List mode updates based on current viewport
-          if (isMobile()) {
-            mobileGridMode = mode;
-          } else {
-            desktopGridMode = mode;
-          }
-        }
-
-        if (gridRoot) {
-          gridRoot.setAttribute("data-grid", mode);
-        }
-
-        // Update all button states
-        initGridControls();
-      }
-
-      // Event delegation for grid buttons (works after AJAX swap)
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-grid-btn]");
-        if (btn) {
-          setGrid(btn.dataset.gridBtn);
-        }
-      });
-
-      // Handle viewport changes
-      const mediaQuery = window.matchMedia("(max-width: 767px)");
-      mediaQuery.addEventListener("change", () => {
-        const gridRoot = document.querySelector("[data-grid-root]");
-        if (gridRoot) {
-          gridRoot.setAttribute("data-grid", getCurrentMode());
-        }
-        initGridControls();
-      });
-
-      // Re-initialize after AJAX swap
-      window.addEventListener("products-updated", initGridControls);
-
-      // Initial setup
-      initGridControls();
-    })();
-  </script>
+</div>
+<script>
+  // the + on a card: straight into Zid's cart (the cart drawer opens); a product with options opens its page
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-ket-add]'); if (!b) return; e.preventDefault();
+    if (b.dataset.options === 'true' || !window.zid) { location.href = b.dataset.url; return; }
+    b.disabled = true;
+    try { await zid.cart.addProduct({ product_id: b.dataset.ketAdd, quantity: 1 }, { showErrorNotification: true });
+      window.dispatchEvent(new CustomEvent('cart:updated', { detail: { productId: b.dataset.ketAdd, action: 'add' } })); }
+    catch (err) { location.href = b.dataset.url; }
+    b.disabled = false;
+  });
+</script>
 {% endblock %}

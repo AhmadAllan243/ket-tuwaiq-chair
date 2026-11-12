@@ -11,6 +11,15 @@ window.ketSwitchLang = (lang) => {
   location.href = '/locales/' + locale + '?redirect_to=' + encodeURIComponent(parts.join('/') + location.search);
 };
 
+/* night mode: the moon in the header; the choice is kept for the next visit (layout.jinja applies it before paint) */
+window.ketToggleTheme = () => {
+  const dark = document.documentElement.dataset.theme !== 'dark';
+  if (dark) document.documentElement.dataset.theme = 'dark'; else delete document.documentElement.dataset.theme;
+  try { localStorage.setItem('ketTheme', dark ? 'dark' : 'light'); } catch (e) {}
+  document.querySelectorAll('.ket-theme-btn').forEach(b => b.setAttribute('aria-pressed', dark));
+};
+document.querySelectorAll('.ket-theme-btn').forEach(b => b.setAttribute('aria-pressed', document.documentElement.dataset.theme === 'dark'));
+
 (() => {
   const top = document.getElementById('ket-top'), header = document.getElementById('header');
   if (!top || !header) return;

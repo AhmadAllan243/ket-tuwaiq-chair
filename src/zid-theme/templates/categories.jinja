@@ -1,73 +1,65 @@
 {% extends "layout.jinja" %}
 
-{% block title %}{{ store.name }} – {{ _('All Categories') }}{% endblock %}
+{#
+  KET departments page: the same photos, names and wording as the home page's departments, as tiles
+  (styles in ket/overrides.css, "Departments page"). The discounts department is the light green tile.
+  A department without a home photo shows its own Zid picture.
+#}
+{% import 'components/ket/icons.jinja' as k %}
+{% block title %}{{ store.name }} – {{ 'الأقسام' if session.lang == 'ar' else 'Departments' }}{% endblock %}
 
 {% block content %}
-  {# Hero Section #}
-  {%
-    with
-    title=_("Explore Our Categories"),
-    description=_("Browse our complete collection of products organized by category")
-  %}
-    {% include 'components/categories/category-hero.jinja' %}
-  {% endwith %}
+  {% set ar = session.lang == 'ar' %}
+  {# the home page's departments: photo and wording by Zid category #}
+  {% set HOME = {
+    '444477': ['tables', 'قهوة، جانبية، أطقم وكونسول', 'Coffee, side, sets and consoles'],
+    '444476': ['trees', 'أشجار صناعية تعيش معك بدون سقاية', 'Faux trees that never need watering'],
+    '444491': ['home', 'فازات، مرايا، ستاندات وقطع تكمّل البيت', 'Vases, mirrors, stands and finishing pieces'],
+    '444490': ['rugs', 'سجاد بتصاميم فنية يدفّي المكان', 'Art-led rugs that warm the room'],
+    '444478': ['lamps', 'إضاءة دافية للنوم والقراءة والجلسة', 'Warm light for bedside, reading and lounge']
+  } %}
+  <div class="ket kdepts">
+    <div class="container">
+      <header class="kdepts__head">
+        <p class="eyebrow"><span>{{ 'تسوّق حسب القسم' if ar else 'Shop by department' }}</span></p>
+        <h1>{{ 'كل أقسامنا، وبيت واحد يجمعها.' if ar else 'All our departments, one home.' }}</h1>
+      </header>
 
-  {# Breadcrumb Section #}
-  <section class="px-4 py-6 md:px-16">
-    <div class="theme-container">
-      {%
-        with
-        items=[
-          {'href': url_for('home'), 'label': _("Home")},
-          {'label': _("All Categories")}
-        ]
-      %}
-        {% include 'components/ui/breadcrumb.jinja' %}
-      {% endwith %}
-    </div>
-  </section>
-
-  {# Main Categories Grid #}
-  <section class="px-4 pb-16 md:px-16">
-    <div class="theme-container">
-      <div class="flex flex-col gap-6">
-        {# Section Title #}
-        <h2 class="text-foreground text-xl md:text-2xl font-semibold tracking-tight">{{ _("Shop by Categories") }}</h2>
-
-        {# Categories Grid - 3 columns #}
-        {% if categories and categories|length > 0 %}
-          <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-            {% for category in categories %}
-              {% with category=category, index=loop.index0 %}
-                {% include 'components/categories/category-card.jinja' %}
-              {% endwith %}
-            {% endfor %}
-          </div>
-        {% else %}
-          <div class="bg-secondary flex flex-col items-center justify-center rounded-lg py-16">
-            <p class="text-muted text-sm">{{ _("No categories found") }}</p>
-          </div>
-        {% endif %}
-      </div>
-    </div>
-  </section>
-
-  {# Subcategories Carousels - Show for each parent category that has children #}
-  {% for parent_category in categories %}
-    {% if parent_category.sub_categories and parent_category.sub_categories|length > 0 %}
-      <section class="px-4 pb-16 md:px-16">
-        <div class="theme-container">
-          {%
-            with
-            subcategories=parent_category.sub_categories,
-            title=parent_category.name,
-            more_url=url_for('category_details', category_id=parent_category.id, slug=parent_category.slug),
-            carousel_id='subcategories-' ~ parent_category.id
-          %}
-            {% include 'components/categories/subcategories-carousel.jinja' %}
-          {% endwith %}
+      {% if categories and categories | length > 0 %}
+        <div class="kdepts__grid">
+          {% for c in categories %}
+            {% set cid = c.id | string %}
+            {% set raw = (c.name or '') | trim %}
+            {% set nm = raw[4:] if raw.startswith('قسم ') else raw %}
+            {% set nm = nm[:-8] if (nm | lower).endswith(' section') else nm %}
+            {% set is_sale = cid == '445400' or 'تخفيض' in raw or 'discount' in (raw | lower) or 'sale' in (raw | lower) %}
+            {% if not ar and cid == '444491' %}{% set nm = 'Home essentials' %}{% endif %}
+            {% if is_sale %}{% set nm = 'التخفيضات' if ar else 'Discounts' %}{% endif %}
+            {% set h = HOME[cid] if cid in HOME else none %}
+            {% set url = url_for('category_details', category_id=c.id, slug=c.slug) %}
+            {% if is_sale %}
+              <a class="kdept kdept--sale" href="{{ url }}">
+                <span class="kdept__top"><h2>{{ nm }}</h2><span class="kdept__off">{{ 'أفضل أسعارنا' if ar else 'Our best prices' }}</span></span>
+                <p>{{ 'قطع مختارة بأسعار مخفّضة، تتجدد باستمرار.' if ar else 'Selected pieces at lower prices, refreshed often.' }}</p>
+                <span class="kdept__go"><i class="flip">{{ k.icon('chev', 18, 2) }}</i></span>
+              </a>
+            {% else %}
+              {% set photo = ('ket-home/home-life-' ~ h[0] ~ '.webp') | asset_url if h else (image_url(c.image, w=900, q=85, f='auto') if c.image else '') %}
+              <a class="kdept" href="{{ url }}">
+                {% if photo %}<img class="kdept__img" src="{{ photo }}" alt="" loading="{{ 'eager' if loop.index < 4 else 'lazy' }}">{% endif %}
+                <span class="kdept__shade" aria-hidden="true"></span>
+                <span class="kdept__body">
+                  <h2>{{ nm }}</h2>
+                  {% if h %}<p>{{ h[1] if ar else h[2] }}</p>{% endif %}
+                  <span class="kdept__btn">{{ ('تصفّح ' ~ nm) if ar else ('Explore ' ~ nm) }}<i class="flip">{{ k.icon('chev', 16, 2) }}</i></span>
+                </span>
+              </a>
+            {% endif %}
+          {% endfor %}
         </div>
-      </section>
-    {% endif %}
-  {% endfor %}
+      {% else %}
+        <p class="kdepts__none">{{ _("No categories found") }}</p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

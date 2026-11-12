@@ -7,18 +7,17 @@
 {% macro pic(v, w=900) %}{{ (image_url(v, w=w, q=85, f='auto') if v else '') | tojson }}{% endmacro %}
 {% macro href(v) %}{{ ((v._url if v and v._url else (v.url if v and v.url is string else (v or ''))) ~ '') | tojson }}{% endmacro %}
 {% macro txt(v) %}{{ (v or '') | tojson }}{% endmacro %}
-<link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=16c559fe">
+<link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=5105dea8">
 <script>
   try { if (!sessionStorage.getItem('ketHello')) document.documentElement.classList.add('is-intro'); } catch (e) { document.documentElement.classList.add('is-intro'); }   // the welcome: first visit of a session only
   window.KET_HOME = {
     base: {{ ('ket-home/home-lady.webp' | asset_url) | tojson }}.replace(/home-lady\.webp.*$/, ''),
-    {# the section's links, else the store's own accounts (Settings → contact) #}
     {% set C = store.settings.contact %}
-    links: { instagram: {{ href(S.instagram) if S.instagram else ((('https://www.instagram.com/' ~ C.instagram) if C and C.instagram else '') | tojson) }},
-             tiktok: {{ href(S.tiktok) if S.tiktok else ((('https://www.tiktok.com/@' ~ C.tiktok) if C and C.tiktok else '') | tojson) }} },
+    {# Instagram opens KET's highlight, TikTok KET's account, unless other links are set in the theme editor #}
+    links: { instagram: {{ href(S.instagram) if S.instagram else ('https://www.instagram.com/stories/highlights/17979206290875053/' | tojson) }},
+             tiktok: {{ href(S.tiktok) if S.tiktok else ((('https://www.tiktok.com/@' ~ C.tiktok) if C and C.tiktok else 'https://www.tiktok.com/@ket.ksa') | tojson) }} },
     saleUrl: {{ href(S.sale_url) }},
     lady: {{ pic(S.lady, 700) if S.lady else ('home/lady' | tojson) }},
-    fan: [{{ pic(S.sale_image1, 400) if S.sale_image1 else ('cut/ac03' | tojson) }}, {{ pic(S.sale_image2, 400) if S.sale_image2 else ('cut/lp10' | tojson) }}, {{ pic(S.sale_image3, 400) if S.sale_image3 else ('cut/t13' | tojson) }}],
     text: {
       heroH: {{ txt(S.hero_title) }}, heroTx: {{ txt(S.hero_text) }},
       brandT: {{ txt(S.brand_title) }}, brandT2: {{ txt(S.brand_title2) }}, pill1: {{ txt(S.pill1) }}, pill2: {{ txt(S.pill2) }},
@@ -53,7 +52,10 @@
         {% for s in st %}{ img: {{ pic(s.image, 800) }}, name: {{ txt(s.title) }}, price: {{ txt(s.price) }}, url: {{ href(s.url) }} }{{ ',' if not loop.last }}{% endfor %}
       {% else %}
         {# KET's picks, looked up live (photo, name, price, link): the ARKAN lamp, the Tuwaiq chair Second Edition, the ficus tree #}
-        { q: 'ARKAN', slug: 'أبجورة-arkan' }, { q: 'Second Edition', slug: 'كرسي-طويق-second-edition' }, { q: 'فيكس', slug: 'شجرة-فيكس' }
+        {# their photos are written in, so they show at once; Zid's search then adds the name, price and link #}
+        { q: 'ARKAN', slug: 'أبجورة-arkan', img: 'https://img.zid.store/img/fit=scale-down,width=800,height=800/https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/62027a6e-7243-4d85-8c28-686329897aef.PNG' },
+        { q: 'Second Edition', slug: 'كرسي-طويق-second-edition', img: 'https://img.zid.store/img/fit=scale-down,width=800,height=800/https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/27c12e11-5da9-471d-8c7c-62d20c9e026c.PNG' },
+        { q: 'فيكس', slug: 'شجرة-فيكس', img: 'https://img.zid.store/img/fit=scale-down,width=800,height=800/https://media.zid.store/3d020177-292e-4bbd-8716-c86b494643f5/8c2b7bbc-310a-429a-a701-cd5f90ca2f79.PNG' }
       {% endif %}
     ],
     {% set deals = S.deals.results if S.deals and S.deals.results else [] %}
@@ -206,4 +208,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}&k=e76b049a"></script>
-<script src="{{ 'ket-home.js' | asset_url }}&k=a704bad0"></script>
+<script src="{{ 'ket-home.js' | asset_url }}&k=8c21d2f7"></script>

@@ -421,19 +421,19 @@ html[dir="rtl"] .sa__chip{ padding:8px 8px 8px 16px; }
 .dept .h2{ font-size:clamp(24px, 3vw, 44px); }
 .bento{ flex:1; min-height:0; display:grid; gap:clamp(6px, .7vw, 10px); grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto repeat(8, 1fr);
   grid-template-areas:"brand brand brand" "rugs trees logo" "rugs trees logo" "rugs trees logo" "tables feat lamps" "tables feat lamps" "tables home lamps" "pill home lamps" "cta home lamps"; }
-.dc{ position:relative; display:block; border-radius:clamp(16px, 2.2vw, 30px); overflow:hidden; background:#2B2B2B; color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
+.dc{ position:relative; display:block; border-radius:clamp(16px, 2.2vw, 30px); overflow:hidden; background:#D9D4CC; -webkit-mask-image:-webkit-radial-gradient(white, black); transform:translateZ(0); color:#fff; text-decoration:none; isolation:isolate; box-shadow:0 18px 44px rgba(0,0,0,.1); }
 /* each photo fills its tile; --op frames it on laptops, --opm on phones */
-.dc__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:var(--op); transition:transform 1.4s var(--ease); }
+.dc__img{ position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); max-width:none; object-fit:cover; object-position:var(--op); transition:transform 1.4s var(--ease); }
 .dc__blur img{ object-position:var(--op); }
 .dc:hover .dc__img{ transform:scale(1.05); }
 .motion .bento:not(.is-in) .dc, .motion .bento:not(.is-in) .lady{ opacity:0; }   /* until they pop in (bentoIn) */
 /* the frosted bottom: a blurred copy of the same photo, faded in from below */
 .dc__blur{ position:absolute; inset:0; overflow:hidden; -webkit-mask-image:linear-gradient(to top, #000 16%, rgba(0,0,0,.75) 28%, transparent 48%); mask-image:linear-gradient(to top, #000 16%, rgba(0,0,0,.75) 28%, transparent 48%); }
 .dc__blur img{ width:100%; height:100%; object-fit:cover; filter:blur(24px) saturate(1.25); transform:scale(1.2); }
-.dc__blur::after{ content:""; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,.1) 40%, transparent 62%); }
+.dc__blur::after{ content:""; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,.24) 38%, transparent 64%); }
 .dc__n{ position:absolute; z-index:2; top:14px; inset-inline-end:14px; height:28px; padding-inline:11px; border-radius:var(--r-pill); background:rgba(255,255,255,.2); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); font-size:12px; font-weight:600; line-height:28px; }
 .dc__body{ position:absolute; z-index:2; inset-inline:clamp(14px, 1.8vw, 26px); bottom:clamp(14px, 1.8vw, 26px); display:grid; justify-items:start; gap:6px; }
-.dc__body h3{ font-size:clamp(22px, 2.4vw, 36px); font-weight:600; line-height:1.1; letter-spacing:-.03em; text-shadow:0 2px 20px rgba(0,0,0,.16); }
+.dc__body h3{ font-size:clamp(22px, 2.4vw, 36px); font-weight:600; line-height:1.1; letter-spacing:-.03em; text-shadow:0 1px 3px rgba(0,0,0,.35), 0 2px 18px rgba(0,0,0,.3); }
 html[lang="ar"] .dc__body h3{ font-weight:700; line-height:1.35; letter-spacing:0; }
 .dc--lamps .dc__body h3{ font-size:clamp(28px, 3.2vw, 48px); }
 .dc__body p{ max-width:34ch; font-size:clamp(13px, 1.05vw, 15px); opacity:.9; }
@@ -442,7 +442,7 @@ html[lang="ar"] .dc__body h3{ font-weight:700; line-height:1.35; letter-spacing:
 .dc--lamps .dc__body{ bottom:auto; top:clamp(14px, 1.8vw, 26px); }
 .dc--lamps .dc__n{ top:auto; bottom:14px; }
 .dc--lamps .dc__blur{ -webkit-mask-image:linear-gradient(to bottom, #000 16%, rgba(0,0,0,.75) 30%, transparent 50%); mask-image:linear-gradient(to bottom, #000 16%, rgba(0,0,0,.75) 30%, transparent 50%); }
-.dc--lamps .dc__blur::after{ background:linear-gradient(to bottom, rgba(0,0,0,.3), rgba(0,0,0,.1) 40%, transparent 60%); }
+.dc--lamps .dc__blur::after{ background:linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.24) 38%, transparent 62%); }
 .dc__go{ display:inline-flex; align-items:center; gap:8px; height:clamp(42px, 3.6vw, 50px); margin-top:6px; padding-inline:18px 6px; border-radius:var(--r-pill); background:#fff; color:#0B0B0B; font-size:14px; font-weight:600; white-space:nowrap; transition:transform .4s var(--ease); }
 html[dir="rtl"] .dc__go{ padding-inline:18px 6px; }
 .dc__go i{ width:clamp(32px, 2.8vw, 38px); height:clamp(32px, 2.8vw, 38px); border-radius:50%; display:grid; place-items:center; background:#0B0B0B; color:#fff; transition:transform .5s var(--ease); }
@@ -471,7 +471,7 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .dc--cta small{ display:block; font:600 12.5px/1.3 var(--f-latin); opacity:.8; font-variant-numeric:tabular-nums; }
 .dc--cta i{ width:38px; height:38px; flex:none; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; transition:transform .5s var(--ease); }
 .dc--cta:hover i{ transform:rotate(calc(-45deg * var(--dir) * -1)); }
-/* discounts: light green, three cut-out pieces fanned at the bottom, opens the discounts page */
+/* discounts: the light green tile, its title and the best saving; opens the discounts page */
 .dc--feat{ display:block; background:var(--lime); color:#0B3D22; }
 .dc--feat .dc__top{ position:absolute; z-index:2; inset-inline:clamp(12px, 1.6vw, 24px); top:clamp(12px, 1.6vw, 22px); display:grid; justify-items:start; gap:6px; }
 .dc--feat h3{ font-size:clamp(22px, 2.4vw, 36px); font-weight:700; line-height:1.1; letter-spacing:-.02em; }
@@ -488,14 +488,13 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 /* laptop: a wide, short tile, so the words sit at the start and the pieces fan out at the end */
 @media (min-width:768px){
   .dc--feat .dc__fan{ inset-inline:44% 4%; bottom:8%; height:84%; }
-  .dc--feat .dc__go{ display:none; }   /* the whole tile is the link; no room for the arrow under the badge */
 }
 /* phones: the ket line runs across the top, then three columns like the laptop's */
 @media (max-width:767px){
   .dept{ height:calc(100svh - var(--header-h)); padding-block:10px 12px; gap:0; }
   .dept .head{ display:none; }
   .bento{ gap:6px; grid-template-rows:auto repeat(8, 1fr);
-    grid-template-areas:"brand brand brand" "trees rugs logo" "trees rugs logo" "trees rugs logo" "tables rugs home" "tables feat home" "lamps feat home" "lamps pill home" "lamps cta home"; }
+    grid-template-areas:"brand brand brand" "trees home logo" "trees home logo" "trees home logo" "tables home rugs" "tables feat rugs" "lamps feat rugs" "lamps pill rugs" "lamps cta rugs"; }
   .dc{ border-radius:16px; }
   .dc__img, .dc__blur img{ object-position:var(--opm, var(--op)); }
   .dc__body{ inset-inline:8px; bottom:8px; gap:4px; }
@@ -592,6 +591,7 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .soc{ display:inline-flex; align-items:center; gap:10px; height:54px; padding-inline:7px 18px; border-radius:var(--r-pill); background:#fff; color:#0B0B0B; box-shadow:0 8px 24px rgba(0,0,0,.06), inset 0 0 0 1px rgba(0,0,0,.06); text-decoration:none; font-weight:600; font-size:14px; transition:transform .4s var(--ease), box-shadow .4s; }
 .soc:hover{ transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.06); }
 .soc i{ width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:#fff; color:#0B0B0B; box-shadow:inset 0 0 0 1px rgba(0,0,0,.1); }
+.soc i svg{ width:24px; height:24px; }
 .fan{ --fw:clamp(210px, 21vw, 280px); position:relative; height:calc(var(--fw) * 16 / 11); touch-action:pan-y; cursor:grab; -webkit-user-select:none; user-select:none; }
 .fan.is-drag{ cursor:grabbing; }
 .fc{ position:absolute; left:50%; top:0; width:var(--fw); margin-left:calc(var(--fw) / -2); aspect-ratio:11 / 16; border-radius:26px; overflow:hidden; background:#2B2B2B; box-shadow:0 22px 50px rgba(0,0,0,.18); transform-origin:50% 50%; will-change:transform; }
@@ -862,8 +862,11 @@ $('#sLead').innerHTML = icon('search', 26, 1.8);
 $('#carPrev').innerHTML = `<span style="display:block;transform:scaleX(-1)">${icon('arrow', 20, 1.8)}</span>`;
 $('#carNext').innerHTML = icon('arrow', 20, 1.8);
 $('#fanPrev').innerHTML = $('#carPrev').innerHTML; $('#fanNext').innerHTML = $('#carNext').innerHTML;
-$('#icoIg').innerHTML = icon('ig', 20, 1.8);
-$('#icoTt').innerHTML = icon('tiktok', 20, 1.8);
+// Instagram and TikTok marks in their own colours
+const TT = 'M16.6 5.82a4.28 4.28 0 0 1-1.04-2.82h-3.1v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.25-1.48Z';
+$('#icoIg').innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="igGrad" cx="28%" cy="105%" r="125%"><stop offset="0" stop-color="#FED373"/><stop offset=".25" stop-color="#F7943A"/><stop offset=".45" stop-color="#F15245"/><stop offset=".62" stop-color="#D92E7F"/><stop offset=".8" stop-color="#9B36B7"/><stop offset="1" stop-color="#515ECF"/></radialGradient></defs>
+  <path fill="url(#igGrad)" fill-rule="evenodd" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6a3 3 0 0 0 0-6Zm5.3-3.6a1.3 1.3 0 1 1 0 2.6a1.3 1.3 0 0 1 0-2.6Z"/></svg>`;
+$('#icoTt').innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#25F4EE" d="${TT}" transform="translate(-.7 -.6)"/><path fill="#FE2C55" d="${TT}" transform="translate(.7 .6)"/><path fill="#000" d="${TT}"/></svg>`;
 $('#lnkIg').href = STORE.links.instagram; $('#lnkTt').href = STORE.links.tiktok;
 $('#social').innerHTML = [['snap', 'Snapchat'], ['ig', 'Instagram'], ['tiktok', 'TikTok'], ['wa', 'WhatsApp'], ['mail', 'Email'], ['globe', 'Website']].map(([i, n]) => `<a href="#" data-toast="soon" aria-label="${n}">${icon(i, 20)}</a>`).join('');
 const grp = () => `<div class="marquee__group">${[1, 2, 3, 1, 2, 3].map(i => `<span data-t="ann${i}"></span>`).join('')}</div>`;
@@ -1013,7 +1016,7 @@ function cycleGreet() {
 /* a looping row you can drag, swipe, flick, scroll sideways or move with the arrow keys (pos is a float index) */
 function looper(o) {
   const s = { pos: 0, tw: null }, dirX = () => (lang === 'ar' ? -1 : 1);
-  s.go = (to, dur = o.dur || .8) => { if (s.tw) s.tw.kill(); if (G) s.tw = gsap.to(s, { pos: to, duration: dur, ease: 'expo.out', onUpdate: o.render }); else { s.pos = to; o.render(); } };
+  s.go = (to, dur = o.dur || .8, ease = 'expo.out') => { if (s.tw) s.tw.kill(); if (G) s.tw = gsap.to(s, { pos: to, duration: dur, ease, onUpdate: o.render }); else { s.pos = to; o.render(); } };
   let x0 = 0, p0 = 0, drag = false, moved = 0, lx = 0, lt = 0, vel = 0;
   o.el.addEventListener('pointerdown', e => { if (e.button) return; drag = true; moved = 0; x0 = lx = e.clientX; lt = performance.now(); p0 = s.pos; vel = 0; if (s.tw) s.tw.kill(); o.el.classList.add('is-drag'); if (o.hold) o.hold(); });
   addEventListener('pointermove', e => {
@@ -1024,9 +1027,9 @@ function looper(o) {
   const up = () => { if (!drag) return; drag = false; o.el.classList.remove('is-drag'); s.go(Math.round(s.pos - vel * 2.2 * dirX())); if (o.release) o.release(); };
   addEventListener('pointerup', up); addEventListener('pointercancel', up);
   o.el.addEventListener('click', e => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); return; } if (o.tap) o.tap(e); }, true);
-  o.el.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); s.go(Math.round(s.pos) + (e.key === 'ArrowRight' ? 1 : -1) * dirX()); } });
+  o.el.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); s.go(Math.round(s.pos) + (e.key === 'ArrowRight' ? 1 : -1) * dirX()); if (o.release) o.release(); } });
   let wl = 0;
-  o.el.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 8) { e.preventDefault(); if (!wl) { s.go(Math.round(s.pos) + Math.sign(e.deltaX) * dirX(), (o.dur || .8) * .9); wl = setTimeout(() => { wl = 0; }, 380); } } }, { passive: false });
+  o.el.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 8) { e.preventDefault(); if (!wl) { s.go(Math.round(s.pos) + Math.sign(e.deltaX) * dirX(), (o.dur || .8) * .9); if (o.release) o.release(); wl = setTimeout(() => { wl = 0; }, 380); } } }, { passive: false });
   return s;
 }
 const wrapD = (i, n) => { let d = ((i % n) + n) % n; if (d > n / 2) d -= n; return d; };
@@ -1084,7 +1087,6 @@ function renderCats() {
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${t('pcs', { n: '' }).trim()}"><b class="latin">${total()}</b>${t('deptSum', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
     <a class="dc dc--feat" style="grid-area:feat" href="ket-sale.html" data-pop="feat"><span class="dc__top"><h3>${t('featT')}</h3><span class="dc__off">${t('featOff', { n: maxOff() })}</span></span>
-      <span class="dc__fan" aria-hidden="true"><img src="media/cut/ac03.webp" alt="" loading="lazy"><img src="media/cut/lp10.webp" alt="" loading="lazy"><img src="media/cut/t13.webp" alt="" loading="lazy"></span>
       <span class="dc__go"><i class="flip">${icon('arrow', 16, 2)}</i></span></a>` +
     STORE.cats.map((c, i) => { const [im, op, opm] = DEPT_IMG[c.id], src = `media/home/life/${im}.webp?v=5`;
     return `<a class="dc dc--${c.id}" style="grid-area:${c.id};--op:${op};--opm:${opm}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
@@ -1159,7 +1161,7 @@ function layoutDeals() {
     el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(-Math.min(a, 2) * (mob ? 38 : 56)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
     el.style.filter = a < .02 ? 'none' : `blur(${(Math.min(a, 2) * 4.5).toFixed(2)}px)`;
     el.style.opacity = a > 2.6 ? 0 : (1 - Math.max(0, a - 1.2) * .5).toFixed(3);
-    el.style.zIndex = 50 - Math.round(a * 10);
+    el.style.zIndex = 60 - Math.round(a * 4);   // every piece stays in front of the card (the front one highest), so none slips behind it on the way in
   });
   const on = ((Math.round(sale.pos) % n) + n) % n;
   $$('#carDots button').forEach((b, i) => b.classList.toggle('is-on', i === on));
@@ -1179,15 +1181,17 @@ function tickDeals() {
   tickTimes();
   if (live().length !== deals.length) renderDeals();   // an offer ran out: it leaves by itself
 }
-let autoT, carSeen = false;
-const stopAuto = () => clearInterval(autoT);
-const startAuto = () => { stopAuto(); if (!reduce) autoT = setInterval(() => { if (carSeen) sale.go(Math.round(sale.pos) + 1, 1.6); }, 4600); };
-const sale = looper({ el: $('#sbStage'), step: sbStep, render: layoutDeals, dur: 1.3,   // the pieces glide a little slower hold: stopAuto, release: startAuto,
+// auto: a slow, eased glide every 7 s; once the customer moves the pieces it waits 30 s before carrying on
+let autoT, waitT, carSeen = false;
+const stopAuto = () => { clearInterval(autoT); clearTimeout(waitT); };
+const startAuto = () => { stopAuto(); if (!reduce) autoT = setInterval(() => { if (carSeen) sale.go(Math.round(sale.pos) + 1, 2.4, 'power2.inOut'); }, 7000); };
+const userMove = () => { stopAuto(); waitT = setTimeout(startAuto, 30000); };
+const sale = looper({ el: $('#sbStage'), step: sbStep, render: layoutDeals, dur: 1.5, hold: stopAuto, release: userMove,
   tap: e => { const c = e.target.closest('.sbi'); if (!c) return; const d = wrapD(+c.dataset.i - sale.pos, deals.length); if (Math.abs(d) > .5) sale.go(sale.pos + d); else openProduct(deals[+c.dataset.i].p); } });
 $('#sbBuy').onclick = () => { if (deals[shown]) addToCart(); };
-$('#carPrev').onclick = () => { sale.go(Math.round(sale.pos) - 1); startAuto(); };
-$('#carNext').onclick = () => { sale.go(Math.round(sale.pos) + 1); startAuto(); };
-$('#carDots').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sale.go(sale.pos + wrapD($$('#carDots button').indexOf(b) - sale.pos, deals.length)); startAuto(); });
+$('#carPrev').onclick = () => { sale.go(Math.round(sale.pos) - 1); userMove(); };
+$('#carNext').onclick = () => { sale.go(Math.round(sale.pos) + 1); userMove(); };
+$('#carDots').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sale.go(sale.pos + wrapD($$('#carDots button').indexOf(b) - sale.pos, deals.length)); userMove(); });
 new IntersectionObserver(([en]) => { carSeen = en.isIntersecting; }, { threshold: .4 }).observe($('#sbStage'));
 
 /* ======================================================================

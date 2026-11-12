@@ -44,8 +44,11 @@ $('#sLead').innerHTML = icon('search', 26, 1.8);
 $('#carPrev').innerHTML = `<span style="display:block;transform:scaleX(-1)">${icon('arrow', 20, 1.8)}</span>`;
 $('#carNext').innerHTML = icon('arrow', 20, 1.8);
 $('#fanPrev').innerHTML = $('#carPrev').innerHTML; $('#fanNext').innerHTML = $('#carNext').innerHTML;
-$('#icoIg').innerHTML = icon('ig', 20, 1.8);
-$('#icoTt').innerHTML = icon('tiktok', 20, 1.8);
+// Instagram and TikTok marks in their own colours
+const TT = 'M16.6 5.82a4.28 4.28 0 0 1-1.04-2.82h-3.1v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.25-1.48Z';
+$('#icoIg').innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="igGrad" cx="28%" cy="105%" r="125%"><stop offset="0" stop-color="#FED373"/><stop offset=".25" stop-color="#F7943A"/><stop offset=".45" stop-color="#F15245"/><stop offset=".62" stop-color="#D92E7F"/><stop offset=".8" stop-color="#9B36B7"/><stop offset="1" stop-color="#515ECF"/></radialGradient></defs>
+  <path fill="url(#igGrad)" fill-rule="evenodd" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6a3 3 0 0 0 0-6Zm5.3-3.6a1.3 1.3 0 1 1 0 2.6a1.3 1.3 0 0 1 0-2.6Z"/></svg>`;
+$('#icoTt').innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#25F4EE" d="${TT}" transform="translate(-.7 -.6)"/><path fill="#FE2C55" d="${TT}" transform="translate(.7 .6)"/><path fill="#000" d="${TT}"/></svg>`;
 $('#lnkIg').href = STORE.links.instagram; $('#lnkTt').href = STORE.links.tiktok;
 if (!STORE.links.instagram) $('#lnkIg').remove(); if (!STORE.links.tiktok) $('#lnkTt').remove();
 
@@ -178,7 +181,7 @@ function cycleGreet() {
 /* a looping row you can drag, swipe, flick, scroll sideways or move with the arrow keys (pos is a float index) */
 function looper(o) {
   const s = { pos: 0, tw: null }, dirX = () => (lang === 'ar' ? -1 : 1);
-  s.go = (to, dur = o.dur || .8) => { if (s.tw) s.tw.kill(); if (G) s.tw = gsap.to(s, { pos: to, duration: dur, ease: 'expo.out', onUpdate: o.render }); else { s.pos = to; o.render(); } };
+  s.go = (to, dur = o.dur || .8, ease = 'expo.out') => { if (s.tw) s.tw.kill(); if (G) s.tw = gsap.to(s, { pos: to, duration: dur, ease, onUpdate: o.render }); else { s.pos = to; o.render(); } };
   let x0 = 0, p0 = 0, drag = false, moved = 0, lx = 0, lt = 0, vel = 0;
   o.el.addEventListener('pointerdown', e => { if (e.button) return; drag = true; moved = 0; x0 = lx = e.clientX; lt = performance.now(); p0 = s.pos; vel = 0; if (s.tw) s.tw.kill(); o.el.classList.add('is-drag'); if (o.hold) o.hold(); });
   addEventListener('pointermove', e => {
@@ -189,9 +192,9 @@ function looper(o) {
   const up = () => { if (!drag) return; drag = false; o.el.classList.remove('is-drag'); s.go(Math.round(s.pos - vel * 2.2 * dirX())); if (o.release) o.release(); };
   addEventListener('pointerup', up); addEventListener('pointercancel', up);
   o.el.addEventListener('click', e => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); return; } if (o.tap) o.tap(e); }, true);
-  o.el.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); s.go(Math.round(s.pos) + (e.key === 'ArrowRight' ? 1 : -1) * dirX()); } });
+  o.el.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); s.go(Math.round(s.pos) + (e.key === 'ArrowRight' ? 1 : -1) * dirX()); if (o.release) o.release(); } });
   let wl = 0;
-  o.el.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 8) { e.preventDefault(); if (!wl) { s.go(Math.round(s.pos) + Math.sign(e.deltaX) * dirX(), (o.dur || .8) * .9); wl = setTimeout(() => { wl = 0; }, 380); } } }, { passive: false });
+  o.el.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 8) { e.preventDefault(); if (!wl) { s.go(Math.round(s.pos) + Math.sign(e.deltaX) * dirX(), (o.dur || .8) * .9); if (o.release) o.release(); wl = setTimeout(() => { wl = 0; }, 380); } } }, { passive: false });
   return s;
 }
 const wrapD = (i, n) => { let d = ((i % n) + n) % n; if (d > n / 2) d -= n; return d; };
@@ -224,7 +227,7 @@ const HL = ['hl-m', 'hl-p', 'hl-m'];
 const words = s => s ? s.split(' ').map(w => `<span class="wm"><span class="wi">${w}</span></span>`).join(' ') : '';
 function renderStory() {
   $('#storySlides').innerHTML = (STORE.st && STORE.st.length === 3 ? STORE.st : t('st')).map(([a, h, b], i) => `<p class="ss" data-s="${i}">${words(a)} <span class="${HL[i]}">${words(h)}</span> ${words(b)}</p>`).join('');
-  $('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img ${p.img ? `src="${img(p.img)}"` : ''} alt="${esc(p.name || '')}" loading="lazy"></div>
+  $('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img ${p.img ? `src="${img(p.img)}"` : ''} alt="${esc(p.name || '')}" ${i ? 'decoding="async"' : 'fetchpriority="high"'}></div>
       ${p.url && p.name ? `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${p.price}</small>` : ''}</span></a>` : ''}</div>`).join('');
 }
 
@@ -237,9 +240,9 @@ async function fillStory() {
     try {
       const r = await zid.products.list({ page_size: 6, q: p.q }, { showErrorNotification: false });
       const x = ((r && r.results) || []).find(z => decodeURIComponent(z.html_url || '').endsWith('/' + p.slug)) || ((r && r.results) || [])[0]; if (!x) return;
-      Object.assign(p, { img: x.main_image?.image?.large || x.images?.[0]?.image?.large || '', name: (x.name || '').split('|')[0].trim(), price: x.formatted_sale_price || x.formatted_price || '', url: x.html_url });
+      Object.assign(p, { img: p.img || x.main_image?.image?.large || x.images?.[0]?.image?.large || '', name: (x.name || '').split('|')[0].trim(), price: x.formatted_sale_price || x.formatted_price || '', url: x.html_url });
       const sa = $(`#storyArt .sa[data-s="${i}"]`); if (!sa) return;
-      const im = $('img', sa); im.src = p.img; im.alt = p.name;
+      const im = $('img', sa); if (im.getAttribute('src') !== p.img) im.src = p.img; im.alt = p.name;
       if (!$('.sa__chip', sa)) sa.insertAdjacentHTML('beforeend', `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${esc(p.price)}</small>` : ''}</span></a>`);
     } catch (e) {}
   }));
@@ -261,7 +264,6 @@ function renderCats() {
     <a class="dc dc--pill" style="grid-area:pill" href="#q" data-pop="pill" data-focus-search><span data-short="${total() ? t('pcs', { n: '' }).trim() : t('deptFind', { n })}">${total() ? `<b class="latin">${total()}</b>${t('deptSum', { n })}` : t('deptFind', { n })}</span>${icon('search', 18, 2)}</a>
     <a class="dc dc--cta" style="grid-area:cta" href="#deals" data-pop="cta"><span>🔥 ${t('clrEy')}<small>${t('endsIn')} <span dir="ltr" data-ends="${riyadhMidnight()}"></span></small></span><i class="flip">${icon('arrow', 16, 2)}</i></a>
     <a class="dc dc--feat" style="grid-area:feat" href="${STORE.saleUrl || '#deals'}" data-pop="feat"><span class="dc__top"><h3>${t('featT')}</h3><span class="dc__off">${t('featOff', { n: maxOff() })}</span></span>
-      <span class="dc__fan" aria-hidden="true">${STORE.fan.map(f => `<img src="${img(f)}" alt="" loading="lazy">`).join('')}</span>
       <span class="dc__go"><i class="flip">${icon('arrow', 16, 2)}</i></span></a>` +
     STORE.cats.map((c, i) => { const [im, op, opm] = DEPT_IMG[c.id], src = img(c.photo);
     return `<a class="dc dc--${c.id}" style="grid-area:${c.id};--op:${op};--opm:${opm}" href="${c.url || '#'}" data-cat="${c.id}" data-pop="${c.id}">
@@ -356,7 +358,7 @@ function layoutDeals() {
     el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(-Math.min(a, 2) * (mob ? 38 : 56)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
     el.style.filter = a < .02 ? 'none' : `blur(${(Math.min(a, 2) * 4.5).toFixed(2)}px)`;
     el.style.opacity = a > 2.6 ? 0 : (1 - Math.max(0, a - 1.2) * .5).toFixed(3);
-    el.style.zIndex = 50 - Math.round(a * 10);
+    el.style.zIndex = 60 - Math.round(a * 4);   // every piece stays in front of the card (the front one highest), so none slips behind it on the way in
   });
   const on = ((Math.round(sale.pos) % n) + n) % n;
   $$('#carDots button').forEach((b, i) => b.classList.toggle('is-on', i === on));
@@ -376,15 +378,17 @@ function tickDeals() {
   tickTimes();
   if (live().length !== deals.length) renderDeals();   // an offer ran out: it leaves by itself
 }
-let autoT, carSeen = false;
-const stopAuto = () => clearInterval(autoT);
-const startAuto = () => { stopAuto(); if (!reduce) autoT = setInterval(() => { if (carSeen) sale.go(Math.round(sale.pos) + 1, 1.6); }, 4600); };
-const sale = looper({ el: $('#sbStage'), step: sbStep, render: layoutDeals, dur: 1.3,   // the pieces glide a little slower hold: stopAuto, release: startAuto,
+// auto: a slow, eased glide every 7 s; once the customer moves the pieces it waits 30 s before carrying on
+let autoT, waitT, carSeen = false;
+const stopAuto = () => { clearInterval(autoT); clearTimeout(waitT); };
+const startAuto = () => { stopAuto(); if (!reduce) autoT = setInterval(() => { if (carSeen) sale.go(Math.round(sale.pos) + 1, 2.4, 'power2.inOut'); }, 7000); };
+const userMove = () => { stopAuto(); waitT = setTimeout(startAuto, 30000); };
+const sale = looper({ el: $('#sbStage'), step: sbStep, render: layoutDeals, dur: 1.5, hold: stopAuto, release: userMove,
   tap: e => { const c = e.target.closest('.sbi'); if (!c) return; const d = wrapD(+c.dataset.i - sale.pos, deals.length); if (Math.abs(d) > .5) sale.go(sale.pos + d); else openProduct(deals[+c.dataset.i].p); } });
 $('#sbBuy').onclick = () => { if (deals[shown]) addToCart(deals[shown].p); };
-$('#carPrev').onclick = () => { sale.go(Math.round(sale.pos) - 1); startAuto(); };
-$('#carNext').onclick = () => { sale.go(Math.round(sale.pos) + 1); startAuto(); };
-$('#carDots').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sale.go(sale.pos + wrapD($$('#carDots button').indexOf(b) - sale.pos, deals.length)); startAuto(); });
+$('#carPrev').onclick = () => { sale.go(Math.round(sale.pos) - 1); userMove(); };
+$('#carNext').onclick = () => { sale.go(Math.round(sale.pos) + 1); userMove(); };
+$('#carDots').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sale.go(sale.pos + wrapD($$('#carDots button').indexOf(b) - sale.pos, deals.length)); userMove(); });
 new IntersectionObserver(([en]) => { carSeen = en.isIntersecting; }, { threshold: .4 }).observe($('#sbStage'));
 
 /* ======================================================================

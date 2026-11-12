@@ -44,7 +44,9 @@ shutil.copyfile(os.path.join(THEME, '..', 'ket-brand.js'), os.path.join(THEME, '
 
 # ---------------------------------------------------------------- CSS
 css = re.findall(r'<style>(.*?)</style>', html, re.S)[0]
-css = re.sub(r'/\* dark: the phone.*?\n:root\[data-theme="dark"\]\{.*?\n\}\n', '', css, flags=re.S)       # light only, like the rest of the store
+# dark: only by the moon in the store's header (html[data-theme="dark"]), not by the phone's setting, like the rest of the store
+css, nd = re.subn(r'/\* dark: the phone.*?\n  \}\n\}\n', '', css, count=1, flags=re.S); assert nd == 1
+css = must(css, ':root[data-theme="dark"]{', 'html[data-theme="dark"]{')
 css = cut(css, '/* ===================== ANNOUNCEMENT + HEADER', '/* ===================== 1. HERO', '/* ===================== 1. HERO', True)
 css = cut(css, '/* ===================== FOOTER', '.toast{', '.toast{', True)
 css = '\n'.join(l for l in css.split('\n') if not l.startswith(('.skip', '.wa{')))
@@ -151,7 +153,7 @@ function renderFloaters() {
 """)
 # story: three statements + three pieces (link + price from the section)
 js = must(js, "$('#storySlides').innerHTML = t('st').map(", "$('#storySlides').innerHTML = (STORE.st && STORE.st.length === 3 ? STORE.st : t('st')).map(")
-js = cut(js, "$('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const p = byId[id];", "}).join('');", """$('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img ${p.img ? `src="${img(p.img)}"` : ''} alt="${esc(p.name || '')}" loading="lazy"></div>
+js = cut(js, "$('#storyArt').innerHTML = STORY_ART.map(([id, sh], i) => { const p = byId[id];", "}).join('');", """$('#storyArt').innerHTML = STORE.story.slice(0, 3).map((p, i) => `<div class="sa" data-s="${i}"><div class="sa__t sh-${'cpa'[i]}"><img ${p.img ? `src="${img(p.img)}"` : ''} alt="${esc(p.name || '')}" ${i ? 'decoding="async"' : 'fetchpriority="high"'}></div>
       ${p.url && p.name ? `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${p.price}</small>` : ''}</span></a>` : ''}</div>`).join('');""")
 # departments
 js = must(js, "/* ======================================================================\n   3. DEPARTMENTS", """// "Why ket?" pieces given by name: the store's own photo, name, price and link, filled in place once found
@@ -163,9 +165,9 @@ async function fillStory() {
     try {
       const r = await zid.products.list({ page_size: 6, q: p.q }, { showErrorNotification: false });
       const x = ((r && r.results) || []).find(z => decodeURIComponent(z.html_url || '').endsWith('/' + p.slug)) || ((r && r.results) || [])[0]; if (!x) return;
-      Object.assign(p, { img: x.main_image?.image?.large || x.images?.[0]?.image?.large || '', name: (x.name || '').split('|')[0].trim(), price: x.formatted_sale_price || x.formatted_price || '', url: x.html_url });
+      Object.assign(p, { img: p.img || x.main_image?.image?.large || x.images?.[0]?.image?.large || '', name: (x.name || '').split('|')[0].trim(), price: x.formatted_sale_price || x.formatted_price || '', url: x.html_url });
       const sa = $(`#storyArt .sa[data-s="${i}"]`); if (!sa) return;
-      const im = $('img', sa); im.src = p.img; im.alt = p.name;
+      const im = $('img', sa); if (im.getAttribute('src') !== p.img) im.src = p.img; im.alt = p.name;
       if (!$('.sa__chip', sa)) sa.insertAdjacentHTML('beforeend', `<a class="sa__chip" href="${p.url}"><i class="flip">${icon('arrow', 16, 2)}</i><span>${esc(p.name)}${p.price ? `<small>${esc(p.price)}</small>` : ''}</span></a>`);
     } catch (e) {}
   }));
@@ -176,8 +178,6 @@ js = must(js, "  renderStory(); renderFloaters();", "  renderStory(); fillStory(
 js = must(js, "const total = () => STORE.cats.reduce((s, c) => s + (c.id === 'tables' ? 20 : c.n), 0);", "const total = () => STORE.cats.reduce((s, c) => s + (c.n || 0), 0);")
 js = must(js, 'src="media/home/lady.webp?v=2"', 'src="${img(STORE.lady)}"')
 js = must(js, 'href="ket-sale.html" data-pop="feat"', 'href="${STORE.saleUrl || \'#deals\'}" data-pop="feat"')
-js = must(js, '<img src="media/cut/ac03.webp" alt="" loading="lazy"><img src="media/cut/lp10.webp" alt="" loading="lazy"><img src="media/cut/t13.webp" alt="" loading="lazy">',
-          "${STORE.fan.map(f => `<img src=\"${img(f)}\" alt=\"\" loading=\"lazy\">`).join('')}")
 js = must(js, "src = `media/home/life/${im}.webp?v=5`;", "src = img(c.photo);")
 js = must(js, '<span data-short="${t(\'pcs\', { n: \'\' }).trim()}"><b class="latin">${total()}</b>${t(\'deptSum\', { n })}</span>',
           '<span data-short="${total() ? t(\'pcs\', { n: \'\' }).trim() : t(\'deptFind\', { n })}">${total() ? `<b class="latin">${total()}</b>${t(\'deptSum\', { n })}` : t(\'deptFind\', { n })}</span>')   # Zid gives no product count: «ابحث بين 5 أقسام»

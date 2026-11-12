@@ -20,6 +20,8 @@
       content="width=device-width, initial-scale=1"
     />
     {% vitrin_head %}
+    {# KET night mode: set before anything paints, so a dark page never flashes white #}
+    <script>try { if (localStorage.getItem('ketTheme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}</script>
     <link
       rel="preconnect"
       href="https://fonts.googleapis.com"
@@ -63,6 +65,12 @@
         --cols-mobile: {{ card_columns_mobile }};
         --cols-desktop: {{ card_columns_desktop }};
       }
+      /* KET night mode: Zid's own pages (cart, account, search…) in the same dark */
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --background: #0D0E0D; --foreground: #F2F2EF; --primary: #F2F2EF; --primary-foreground: #0B0A09;
+        --secondary: #1A1B1A; --muted: #ABABA6; --accent: #8C8C86; --border: #3A3B3A; --input: #ABABA6; --ring: #F2F2EF;
+      }
     </style>
     <!-- prettier-ignore-end -->
 
@@ -79,7 +87,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ 'ket.css' | asset_url }}&k=c116aff2"
+      href="{{ 'ket.css' | asset_url }}&k=caae0280"
     />
 
     {# TailwindPlus Elements - pinned version for better caching #}
@@ -103,6 +111,7 @@
     <main id="main">{% block content %}{% endblock %}</main>
 
     {% include 'footer.jinja' %}
+    {% include 'components/ket/cart-drawer.jinja' %}
     {% include "vitrin:shared/region_settings_dialog.jinja" %}
     {# Global Notify Me Dialog - for product cards on any page #}
     {% include 'components/products/notify-me-dialog.jinja' %}
@@ -169,7 +178,9 @@
     <!-- prettier-ignore-end -->
 
     {# KET header behaviour (logo → smile on scroll) #}
-    <script defer src="{{ 'ket-site.js' | asset_url }}&k=dc4ea05e"></script>
+    <script defer src="{{ 'ket-site.js' | asset_url }}&k=5eda285e"></script>
+    {# KET cart drawer (every page) #}
+    <script defer src="{{ 'ket-cart.js' | asset_url }}&k=b72b5920"></script>
     {# Bundled theme JS (Vite output) - includes all feature modules #}
     <script
       defer
