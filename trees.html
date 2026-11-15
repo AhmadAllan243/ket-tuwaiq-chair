@@ -231,9 +231,9 @@ html.is-loading body{ overflow:hidden; }
 
 /* ===================== TREES: watering loader ===================== */
 .loader{ background:var(--white); }
-.wcard{ position:fixed; inset:0; overflow:hidden; background:#FDFCA6; opacity:0; }   /* the watering picture fills the screen */
-.wcard > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:42% 100%; transform-origin:50% 100%; }
-@media (min-aspect-ratio:3/4){ .wcard > img{ object-fit:contain; object-position:50% 100%; -webkit-mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); } .wcard__drops, .wcard__spark{ display:none; } }
+.wcard{ position:fixed; inset:max(10px, env(safe-area-inset-top, 0px)) 10px max(10px, env(safe-area-inset-bottom, 0px)); overflow:hidden; border-radius:28px; background:#FDFCA6; opacity:0; }   /* the watering picture, full screen inside a thin white border */
+.wcard > img{ position:absolute; bottom:0; left:-2%; width:110%; height:auto; max-width:none; transform-origin:50% 100%; }   /* zoomed out a touch: the yellow above her holds the words */
+@media (min-aspect-ratio:3/4){ .wcard > img{ left:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; -webkit-mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); } .wcard__drops, .wcard__spark{ display:none; } }
 .wcard__copy{ position:absolute; z-index:2; inset-inline:max(24px, env(safe-area-inset-left, 0px)); top:calc(9% + env(safe-area-inset-top, 0px)); display:grid; gap:10px; text-align:start; }
 .wcard__copy h2{ font-size:clamp(34px, 9vw, 64px); font-weight:700; line-height:1.2; letter-spacing:-.02em; }
 .wcard__copy p{ font-size:clamp(15px, 4vw, 20px); font-weight:600; line-height:1.5; max-width:30ch; }
@@ -292,6 +292,7 @@ html[dir="rtl"] .plant__soil{ inset-inline-end:auto; inset-inline-start:6%; }
 .wp__p--ph b{ position:relative; color:var(--white); text-shadow:0 2px 16px rgba(0,0,0,.35); }
 @media (max-width:640px){ .wp{ grid-template-columns:1fr 1fr; } .wp__p{ height:86px; font-size:24px; } }
 
+.help .help__img img{ object-fit:cover; mix-blend-mode:normal; padding:0; }   /* a room photo, not a cut-out: it fills the square */
 /* the hero photo: the sofa (portrait): her face stays in view on wide screens */
 #heroCard > #heroImg{ object-position:68% 16%; }
 @media (min-width:768px){ .hero #heroCard{ aspect-ratio:838 / 520; } }
