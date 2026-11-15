@@ -549,7 +549,7 @@ html[dir="rtl"] .lady{ scale:-1 1; }
 .clock__sep{ font:700 30px/1 var(--f-latin); color:var(--ink-3); margin-bottom:22px; animation:caret 1s steps(1) infinite; }
 
 .sb{ --pc:clamp(250px, 27vw, 380px); position:relative; display:grid; justify-items:center; }
-.sb__stage{ position:relative; width:100%; height:var(--pc); touch-action:pan-y; cursor:grab; -webkit-user-select:none; user-select:none; }
+.sb__stage{ position:relative; z-index:50; width:100%;   /* its own layer over the card (z 45): Safari does not reliably order the moving pieces against the card otherwise */ height:var(--pc); touch-action:pan-y; cursor:grab; -webkit-user-select:none; user-select:none; }
 .sb__stage.is-drag{ cursor:grabbing; }
 /* each piece is a cut-out (media/cut), so it stays solid over the grey and the white card */
 .sbi{ position:absolute; left:50%; top:0; width:var(--pc); height:var(--pc); margin-left:calc(var(--pc) / -2); transform-origin:50% 70%; will-change:transform, filter; }
