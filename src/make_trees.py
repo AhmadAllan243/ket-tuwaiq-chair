@@ -155,7 +155,11 @@ rep('<!-- 7 · SIZE GUIDE -->\n<section class="section container" aria-labelledb
 # ---------------------------------------------------------------- 1 · the initiative banner (replaces the headline above the photo)
 rep("""<section class="hero container" aria-labelledby="hTitle">
   <h1 class="hero__h" id="hTitle"></h1>
-  <div class="hero__media">""", """<section class="plant container" aria-labelledby="hTitle">
+  <div class="hero__media">""", """<section class="hero container" aria-label="ket">
+  <div class="hero__media">""")
+
+# the planting banner and the strip, after shop by budget
+rep("""<!-- 4 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->""", """<section class="plant container" aria-labelledby="hTitle">
   <div class="plant__card">
     <div class="plant__copy">
       <p class="plant__ey"><span data-t="pEy"></span></p>
@@ -185,8 +189,7 @@ rep("""<section class="hero container" aria-labelledby="hTitle">
   </div>
 </section>
 
-<section class="hero container" aria-label="ket">
-  <div class="hero__media">""")
+<!-- 4 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->""")
 
 # the headline: words rise and the pills pop, as on the live store
 s = re.sub(r"  \$\('#hTitle'\)\.innerHTML = `.*?`;\n",
@@ -263,8 +266,11 @@ green.addEventListener('cancel', () => { if (lenis) lenis.start(); });
 $('#gGo').onclick = () => { closeGreen(); setFilter({ type: 'all', col: null }); setTimeout(goGrid, 60); };
 function plantIn() {
   if (!G) return;
-  gsap.timeline()
+  gsap.timeline({ scrollTrigger: { trigger: '.plant', start: 'top 78%' } })
     .from('.plant__card', { clipPath: 'inset(10% 6% 0% 6% round 60px)', duration: 1.4, ease: 'expo.out' }, 0)
+    .from('#hTitle .w:not(.hero__pill)', { y: 26, opacity: 0, duration: .9, stagger: .05, ease: 'expo.out' }, .45)
+    .from('#hTitle .hero__pill', { scale: 0, duration: .9, stagger: .15, ease: 'back.out(1.8)' }, .8)
+    .from('#hTitle .hero__mark', { '--ms': 0, duration: .8, ease: 'expo.out' }, 1)
     .from('.plant__ey, .plant__sub, .plant__btns', { y: 24, opacity: 0, duration: .9, stagger: .08, ease: 'expo.out' }, .55)
     .from('.plant__woman', { y: 60, opacity: 0, duration: 1.1, ease: 'expo.out' }, .3)
     .from('.plant__soil', { scaleX: .2, opacity: 0, duration: .7, ease: 'back.out(2)' }, .7)
@@ -275,10 +281,8 @@ function plantIn() {
 
 /* ---------------- loader ---------------- */""")
 rep("  scrollMotion(); bannerIn();", "  scrollMotion(); bannerIn(); plantIn();")
-rep(".from('#hTitle .w:not(.hero__pill)', { y: 26, opacity: 0, duration: .9, stagger: .035, ease: 'expo.out' }, 0)",
-    ".from('#hTitle .w:not(.hero__pill)', { y: 26, opacity: 0, duration: .9, stagger: .05, ease: 'expo.out' }, .45)")
-rep(".from('#hTitle .hero__pill', { scale: 0, duration: .9, stagger: .15, ease: 'back.out(1.8)' }, .3)",
-    ".from('#hTitle .hero__pill', { scale: 0, duration: .9, stagger: .15, ease: 'back.out(1.8)' }, .8)\n    .from('#hTitle .hero__mark', { '--ms': 0, duration: .8, ease: 'expo.out' }, 1)")
+rep("  tl.from('#hTitle .w:not(.hero__pill)', { y: 26, opacity: 0, duration: .9, stagger: .035, ease: 'expo.out' }, 0)\n    .from('#hTitle .hero__pill', { scale: 0, duration: .9, stagger: .15, ease: 'back.out(1.8)' }, .3)\n    .from('#heroCard'",
+    "  tl.from('#heroCard'")
 
 # ---------------------------------------------------------------- styles for the new parts
 rep("/* ===================== ANNOUNCEMENT + HEADER ===================== */", """/* ===================== TREES: watering loader ===================== */
@@ -298,7 +302,7 @@ html[dir="rtl"] .wcard__copy{ text-align:right; }
 @keyframes spark{ 0%,100%{ opacity:0; transform:scale(.4); } 50%{ opacity:1; transform:scale(1); } }
 
 /* ===================== TREES: the initiative banner ===================== */
-.plant{ padding-top:clamp(16px, 2.4vw, 32px); }
+.plant{ padding-top:var(--section); }
 .plant__card{ position:relative; display:grid; overflow:hidden; isolation:isolate; border-radius:clamp(30px, 4vw, 60px); background:var(--yellow); min-height:min(78svh, 720px); }
 @media (min-width:900px){ .plant__card{ grid-template-columns:1.1fr .9fr; align-items:center; } }
 .plant__copy{ position:relative; z-index:2; display:grid; justify-items:start; gap:clamp(14px, 1.8vw, 22px); padding:clamp(26px, 5vw, 72px); }
@@ -344,8 +348,9 @@ html[dir="rtl"] .plant__soil{ inset-inline-end:auto; inset-inline-start:6%; }
 @media (max-width:640px){ .wp{ grid-template-columns:1fr 1fr; } .wp__p{ height:86px; font-size:24px; } }
 
 /* the hero photo: the sofa (portrait): her face stays in view on wide screens */
-.hero__card > img{ object-position:60% 22%; }
-@media (max-width:767px){ .hero__card > img{ object-position:50% 40%; } }
+#heroCard > #heroImg{ object-position:68% 16%; }
+@media (min-width:768px){ .hero #heroCard{ aspect-ratio:838 / 520; } }
+@media (max-width:767px){ #heroCard > #heroImg{ object-position:62% 24%; } }
 
 /* ===================== TREES: the initiative page ===================== */
 .green{ width:min(100%, 980px); max-width:none; max-height:none; height:auto; margin:auto; padding:0; border:0; background:none; overflow:visible; }
