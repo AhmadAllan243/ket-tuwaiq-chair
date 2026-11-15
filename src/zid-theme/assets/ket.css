@@ -1009,3 +1009,6 @@ html[data-theme="dark"] .ket.kcart .bg-secondary.rounded.p-4{ background:#1F201F
 .kc .pager__step span{ display:inline-block; font-size:22px; line-height:1; }
 html[dir="rtl"] .kc .pager__step span{ transform:scaleX(-1); }
 @media (max-width:420px){ .kc .pager{ gap:4px; } .kc .pager a{ min-width:38px; height:38px; padding-inline:6px; } }
+
+/* ===================== Product: colour swatches show each option's own photo (assets/ket-product.js) ===================== */
+.product-options__swatch.has-photo{ background-color:#fff!important; background-size:150%; background-position:50% 55%; background-repeat:no-repeat; box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); }

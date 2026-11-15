@@ -78,6 +78,23 @@
     });
   }
 
+  /* ---------- Colour swatches: each shows its own photo (the colour codes set in Zid are often all black) ---------- */
+  (async () => {
+    const items = $$('.product-options__item--color'); if (!items.length) return;
+    for (let i = 0; i < 60 && !(window.zid && window.zid.products); i++) await new Promise(r => setTimeout(r, 200));
+    const id = document.getElementById('product-parent-id')?.value; if (!id || !window.zid?.products) return;
+    try {
+      const p = await window.zid.products.get(id), pic = {};
+      (p.variants || []).forEach(v => {
+        const im = (v.images || [])[0]?.image, src = im && (im.small || im.thumbnail || im.medium); if (!src) return;
+        (v.attributes || []).forEach(a => { if (a.type === 'color' && !pic[a.value]) pic[a.value] = src; });
+      });
+      const srcs = items.map(li => pic[li.getAttribute('value')]);
+      if (srcs.some(s => !s) || new Set(srcs).size < srcs.length) return;   // only when every colour has a photo of its own
+      items.forEach((li, k) => { const sw = li.querySelector('.product-options__swatch'); if (sw) { sw.style.backgroundImage = `url("${srcs[k]}")`; sw.classList.add('has-photo'); } });
+    } catch (e) {}
+  })();
+
   /* ---------- Delivery estimate (today + N days, from theme settings) ---------- */
   const del = $('[data-ket-delivery]');
   if (del) {
