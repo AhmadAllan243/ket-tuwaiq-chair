@@ -231,11 +231,12 @@ html.is-loading body{ overflow:hidden; }
 
 /* ===================== TREES: watering loader ===================== */
 .loader{ background:var(--white); }
-.wcard{ position:relative; width:min(78vw, 400px); aspect-ratio:820 / 1278; border-radius:34px; overflow:hidden; background:#FDFBA4; box-shadow:0 40px 80px -30px rgba(80,80,0,.35); opacity:0; }
-.wcard > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.wcard__copy{ position:absolute; inset-inline:8%; top:7%; display:grid; gap:8px; text-align:start; }
-.wcard__copy h2{ font-size:clamp(26px, 7vw, 38px); font-weight:700; line-height:1.2; letter-spacing:-.02em; }
-.wcard__copy p{ font-size:clamp(12.5px, 3.3vw, 15px); font-weight:600; line-height:1.5; max-width:30ch; }
+.wcard{ position:fixed; inset:0; overflow:hidden; background:#FDFCA6; opacity:0; }   /* the watering picture fills the screen */
+.wcard > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:42% 100%; transform-origin:50% 100%; }
+@media (min-aspect-ratio:3/4){ .wcard > img{ object-fit:contain; object-position:50% 100%; -webkit-mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); } .wcard__drops, .wcard__spark{ display:none; } }
+.wcard__copy{ position:absolute; z-index:2; inset-inline:max(24px, env(safe-area-inset-left, 0px)); top:calc(9% + env(safe-area-inset-top, 0px)); display:grid; gap:10px; text-align:start; }
+.wcard__copy h2{ font-size:clamp(34px, 9vw, 64px); font-weight:700; line-height:1.2; letter-spacing:-.02em; }
+.wcard__copy p{ font-size:clamp(15px, 4vw, 20px); font-weight:600; line-height:1.5; max-width:30ch; }
 html[dir="rtl"] .wcard__copy{ text-align:right; }
 .wcard__drops i{ position:absolute; left:var(--x); top:var(--y); width:6px; height:9px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; background:#2F6BFF; opacity:0; }
 .wcard.is-on .wcard__drops i{ animation:drop 1.1s var(--d) ease-in infinite; }
@@ -701,7 +702,7 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
   <div class="shape">
     <div class="shape__cols" id="shapeCols"></div>
     <div class="shape__big" data-reveal>
-      <img src="media/trees/life-lily.webp" alt="" loading="lazy" width="736" height="1104">
+      <img src="media/trees/life-planter.webp" alt="" loading="lazy" width="960" height="1280">
       <div><h2 id="shapeTitle" data-t="typesH"></h2><p data-t="shapeTx"></p></div>
       <div class="shape__bar">
         <a class="sbtn flip" href="#all" id="shapeGo" data-t-aria="cardBtn"></a>
@@ -811,7 +812,7 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
 <section class="help" aria-labelledby="helpTitle">
   <div class="container">
     <div class="help__card" data-reveal>
-      <div class="help__img"><img src="media/trees/leaf-lily.webp" alt="" loading="lazy"></div>
+      <div class="help__img"><img src="media/trees/life-room.webp" alt="" loading="lazy"></div>
       <div class="help__copy"><h2 id="helpTitle" data-t="helpH"></h2><p data-t="helpTx"></p><a class="btn btn-wa" href="#" data-toast="soon"><span data-t="helpBtn"></span><span class="arr" id="helpArr"></span></a></div>
     </div>
   </div>
@@ -1188,11 +1189,11 @@ function runLoader() {
   let skipped = false;
   const tl = gsap.timeline({ onComplete: finish });
   tl.to('#ldDots', { opacity: 0, scale: .6, duration: .35, delay: .6 })
-    .fromTo('#wcard', { opacity: 0, y: 60, scale: .86, rotate: -3 }, { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 1, ease: 'expo.out' }, '-=.05')
+    .fromTo('#wcard', { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1, ease: 'expo.out' }, '-=.05')
     .from('#ldH', { y: 30, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.55')
     .from('#ldTx', { y: 20, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.5')
     .add(() => $('#wcard').classList.add('is-on'), '-=.6')
-    .to('#wcard', { y: -6, duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: 1 })
+    .to('#wcard > img', { scale: 1.03, duration: 2.2, ease: 'sine.inOut' })
     .addLabel('out')
     .to('#wcard', { scale: 1.12, opacity: 0, y: -40, duration: .7, ease: 'power3.in' }, 'out')
     .to(ldr, { opacity: 0, duration: .45 }, 'out+=.45')

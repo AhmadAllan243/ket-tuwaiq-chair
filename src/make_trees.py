@@ -139,11 +139,11 @@ s = re.sub(r'<title>.*?</title>', '<title>ket · الأشجار</title>', s, cou
 rep('<img src="media/tables/hero-joy.webp" alt="" width="838" height="474" fetchpriority="high" id="heroImg">',
     '<img src="media/trees/life-sofa.webp" alt="" width="1145" height="1374" fetchpriority="high" id="heroImg">')
 rep('<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730">\n      <div><h2 id="shapeTitle"',
-    '<img src="media/trees/life-lily.webp" alt="" loading="lazy" width="736" height="1104">\n      <div><h2 id="shapeTitle"')
+    '<img src="media/trees/life-planter.webp" alt="" loading="lazy" width="960" height="1280">\n      <div><h2 id="shapeTitle"')
 rep('<span class="sav"><img src="media/tables/t03.webp" alt="" loading="lazy"></span>', '<span class="sav"><img src="media/trees/tr03.webp" alt="" loading="lazy"></span>')
 rep('<span class="ipill ipill--cut"><img src="media/tables/t08.webp" alt="" loading="lazy"></span>', '<span class="ipill ipill--cut"><img src="media/trees/tr05.webp" alt="" loading="lazy"></span>')
 rep('<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730" data-par>', '<img src="media/trees/life-walk.webp" alt="" loading="lazy" width="1024" height="1280" data-par>')
-rep('<div class="help__img"><img src="media/tables/t11.webp" alt="" loading="lazy"></div>', '<div class="help__img"><img src="media/trees/leaf-lily.webp" alt="" loading="lazy"></div>')
+rep('<div class="help__img"><img src="media/tables/t11.webp" alt="" loading="lazy"></div>', '<div class="help__img"><img src="media/trees/life-room.webp" alt="" loading="lazy"></div>')
 rep("`<div class=\"ttile ttile--photo\"><img src=\"${img('life1')}\" alt=\"\" loading=\"lazy\">", "`<div class=\"ttile ttile--photo\"><img src=\"${img('leaf-fig')}\" alt=\"\" loading=\"lazy\">")
 rep("${col('tm', 'st--short', 'tm-side', 'white')}", "${col('tm', 'st--short', 'tr09', 'yellow-l')}")
 rep("${col('laxi', 'st--full', 't16', 'white', true)}", "${col('laxi', 'st--full', 'tr29', 'yellow-l', true)}")
@@ -232,11 +232,11 @@ s = s[:i] + """  // the watering card: it rises in, the words come up, the water
   let skipped = false;
   const tl = gsap.timeline({ onComplete: finish });
   tl.to('#ldDots', { opacity: 0, scale: .6, duration: .35, delay: .6 })
-    .fromTo('#wcard', { opacity: 0, y: 60, scale: .86, rotate: -3 }, { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 1, ease: 'expo.out' }, '-=.05')
+    .fromTo('#wcard', { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1, ease: 'expo.out' }, '-=.05')
     .from('#ldH', { y: 30, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.55')
     .from('#ldTx', { y: 20, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.5')
     .add(() => $('#wcard').classList.add('is-on'), '-=.6')
-    .to('#wcard', { y: -6, duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: 1 })
+    .to('#wcard > img', { scale: 1.03, duration: 2.2, ease: 'sine.inOut' })
     .addLabel('out')
     .to('#wcard', { scale: 1.12, opacity: 0, y: -40, duration: .7, ease: 'power3.in' }, 'out')
     .to(ldr, { opacity: 0, duration: .45 }, 'out+=.45')
@@ -287,11 +287,12 @@ rep("  tl.from('#hTitle .w:not(.hero__pill)', { y: 26, opacity: 0, duration: .9,
 # ---------------------------------------------------------------- styles for the new parts
 rep("/* ===================== ANNOUNCEMENT + HEADER ===================== */", """/* ===================== TREES: watering loader ===================== */
 .loader{ background:var(--white); }
-.wcard{ position:relative; width:min(78vw, 400px); aspect-ratio:820 / 1278; border-radius:34px; overflow:hidden; background:#FDFBA4; box-shadow:0 40px 80px -30px rgba(80,80,0,.35); opacity:0; }
-.wcard > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.wcard__copy{ position:absolute; inset-inline:8%; top:7%; display:grid; gap:8px; text-align:start; }
-.wcard__copy h2{ font-size:clamp(26px, 7vw, 38px); font-weight:700; line-height:1.2; letter-spacing:-.02em; }
-.wcard__copy p{ font-size:clamp(12.5px, 3.3vw, 15px); font-weight:600; line-height:1.5; max-width:30ch; }
+.wcard{ position:fixed; inset:0; overflow:hidden; background:#FDFCA6; opacity:0; }   /* the watering picture fills the screen */
+.wcard > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:42% 100%; transform-origin:50% 100%; }
+@media (min-aspect-ratio:3/4){ .wcard > img{ object-fit:contain; object-position:50% 100%; -webkit-mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); mask-image:linear-gradient(90deg, transparent calc(50% - 32vh), #000 calc(50% - 26vh), #000 calc(50% + 26vh), transparent calc(50% + 32vh)); } .wcard__drops, .wcard__spark{ display:none; } }
+.wcard__copy{ position:absolute; z-index:2; inset-inline:max(24px, env(safe-area-inset-left, 0px)); top:calc(9% + env(safe-area-inset-top, 0px)); display:grid; gap:10px; text-align:start; }
+.wcard__copy h2{ font-size:clamp(34px, 9vw, 64px); font-weight:700; line-height:1.2; letter-spacing:-.02em; }
+.wcard__copy p{ font-size:clamp(15px, 4vw, 20px); font-weight:600; line-height:1.5; max-width:30ch; }
 html[dir="rtl"] .wcard__copy{ text-align:right; }
 .wcard__drops i{ position:absolute; left:var(--x); top:var(--y); width:6px; height:9px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; background:#2F6BFF; opacity:0; }
 .wcard.is-on .wcard__drops i{ animation:drop 1.1s var(--d) ease-in infinite; }
