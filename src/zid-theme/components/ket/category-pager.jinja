@@ -1,10 +1,24 @@
-{# KET category page: Zid's pages of products (24 a page), as simple round links #}
+{# KET category page: Zid's pages of products (24 a page) as round links, kept short on any number of pages:
+   ‹ 1 2 3 … 9 ›  /  ‹ 1 … 4 5 6 … 9 ›  /  ‹ 1 … 7 8 9 ›. assets/ket-category.js swaps a page in place. #}
 {% set per = (session.query_params.get('page_size') or 24) | int %}
 {% set pages = ((products.count / per) | round(0, 'ceil')) | int if products and products.count else 1 %}
+{% set cur = (products.page or 1) | int if products else 1 %}
 {% if pages > 1 %}
+  {% if pages <= 5 %}
+    {% set shown = range(1, pages + 1) | list %}
+  {% elif cur <= 3 %}
+    {% set shown = [1, 2, 3, 4, pages] if cur == 3 else [1, 2, 3, pages] %}
+  {% elif cur >= pages - 2 %}
+    {% set shown = [1, pages - 3, pages - 2, pages - 1, pages] if cur == pages - 2 else [1, pages - 2, pages - 1, pages] %}
+  {% else %}
+    {% set shown = [1, cur - 1, cur, cur + 1, pages] %}
+  {% endif %}
   <nav class="pager" aria-label="{{ _('Pages') }}">
-    {% for n in range(1, pages + 1) %}
-      <a href="{{ session.url.include_query_params(page=n) }}" class="{{ 'is-on' if n == products.page }}" {% if n == products.page %}aria-current="page"{% endif %}>{{ n }}</a>
+    {% if cur > 1 %}<a class="pager__step" href="{{ session.url.include_query_params(page=cur - 1) }}" aria-label="{{ _('Previous') }}"><span aria-hidden="true">‹</span></a>{% endif %}
+    {% for n in shown %}
+      {% if not loop.first and n - loop.previtem > 1 %}<span class="pager__gap" aria-hidden="true">…</span>{% endif %}
+      <a href="{{ session.url.include_query_params(page=n) }}" class="{{ 'is-on' if n == cur }}" {% if n == cur %}aria-current="page"{% endif %}>{{ n }}</a>
     {% endfor %}
+    {% if cur < pages %}<a class="pager__step" href="{{ session.url.include_query_params(page=cur + 1) }}" aria-label="{{ _('Next') }}"><span aria-hidden="true">›</span></a>{% endif %}
   </nav>
 {% endif %}

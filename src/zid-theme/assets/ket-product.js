@@ -38,8 +38,7 @@
   /* ---------- Gallery: count, progress bar, thumbs, arrows ---------- */
   const track = $('#gTrack');
   if (track) {
-    const n = $$('.g-slide', track).length;
-    let gi = 0;
+    let n = $$('.g-slide', track).length, gi = 0;
     const onScroll = () => {
       const max = track.scrollWidth - track.clientWidth;
       const p = max > 0 ? Math.min(1, Math.abs(track.scrollLeft) / max) : 0;
@@ -59,6 +58,24 @@
     });
     // the zoom button opens the lightbox at the current slide
     const zoom = $('.g-zoom'); if (zoom) track.addEventListener('scroll', () => { zoom.dataset.lightboxTrigger = gi; }, { passive: true });
+
+    // a colour / option with its own photos (Zid's "product:variant-changed"): the gallery, thumbs and zoom show that option's photos
+    const sized = (u, w) => u ? u.replace(/(width=)\d+/, '$1' + w).replace(/(height=)\d+/, '$1' + w) : '';
+    let shownMedia = '';
+    addEventListener('product:variant-changed', e => {
+      const p = e.detail && e.detail.selectedProduct;
+      const pics = ((p && p.media) || []).filter(m => m.image && !(m.provider && m.link)).map(m => m.image.large || m.image.full_size || m.image.medium).filter(Boolean);
+      const key = pics.join('|'); if (!pics.length || key === shownMedia) return; shownMedia = key;
+      const alt = (p.name || '').replace(/"/g, '&quot;');
+      track.innerHTML = pics.map((u, i) => `<div class="g-slide" role="group" aria-roledescription="slide" data-i="${i}"><img src="${sized(u, 1200)}" alt="${alt}" width="1254" height="1254" data-lightbox-trigger="${i}" draggable="false" decoding="async"${i ? ' loading="lazy"' : ' fetchpriority="high"'}></div>`).join('');
+      const th = $('#gThumbs'); if (th) th.innerHTML = pics.map((u, i) => `<button class="g-thumb${i ? '' : ' is-active'}" type="button" data-i="${i}" aria-label="${i + 1}"><img src="${sized(u, 160)}" alt="" loading="lazy" width="64" height="64"></button>`).join('');
+      const lb = $('#product-gallery-lightbox'); if (lb) lb.innerHTML = pics.map(u => `<a href="${sized(u, 1600)}" data-pswp-width="1600" data-pswp-height="1600"><img src="${sized(u, 1600)}" alt="${alt}" data-lightbox-item data-lightbox-src="${sized(u, 1600)}" data-lightbox-width="1600" data-lightbox-height="1600"></a>`).join('');
+      const many = pics.length > 1;
+      ['#gThumbs', '#gProg', '#gCount', '#gPrev', '#gNext'].forEach(sel => { const el = $(sel); if (el) el.hidden = !many; });
+      $('#gProg')?.style.setProperty('--n', pics.length);
+      n = pics.length; gi = 0; track.scrollTo({ left: 0, behavior: 'auto' }); onScroll();
+      if (zoom) zoom.dataset.lightboxTrigger = 0;
+    });
   }
 
   /* ---------- Delivery estimate (today + N days, from theme settings) ---------- */

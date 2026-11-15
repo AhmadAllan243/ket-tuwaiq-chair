@@ -1001,3 +1001,11 @@ html[data-theme="dark"] .ket.kcart .bg-secondary.rounded.p-4{ background:#1F201F
   .ket.kcart .cart-product-item button:not(.qty-input-btn){ width:36px; height:36px; }
   .ket.kcart .kcart__card{ border-radius:20px; }
 }
+
+/* ===================== Category pages: the short page row (1 2 3 … 9) ===================== */
+.kc .pager{ flex-wrap:nowrap; align-items:center; gap:6px; }
+.kc .pager a{ min-width:42px; height:42px; padding-inline:10px; font-family:var(--f-latin); }
+.kc .pager__gap{ min-width:18px; text-align:center; color:var(--g400); font-weight:700; }
+.kc .pager__step span{ display:inline-block; font-size:22px; line-height:1; }
+html[dir="rtl"] .kc .pager__step span{ transform:scaleX(-1); }
+@media (max-width:420px){ .kc .pager{ gap:4px; } .kc .pager a{ min-width:38px; height:38px; padding-inline:6px; } }

@@ -159,6 +159,37 @@ js = cut(js, "$('#pgrid').addEventListener('click', e => {", "\n});\n", """$('#p
   catch (err) { location.href = p.url; }
 });
 """)
+# pages of products: the next page swaps in place (no reload), the view stays on the products
+js = must(js, "if (document.fonts && document.fonts.ready) document.fonts.ready.then(runLoader); else runLoader();", """if (document.fonts && document.fonts.ready) document.fonts.ready.then(runLoader); else runLoader();
+
+/* ---------- pages of products (Zid's pages of 24): the page swaps in place, the view stays on the products ---------- */
+const tagPage = list => list.forEach(p => {
+  p.price = +p.price || 0; p.was = +p.was || 0; if (p.was <= p.price) p.was = 0;
+  if (D.tables) { const rx = (l, n) => (l.find(([, r]) => new RegExp(r, 'i').test(n)) || [])[0] || ''; p.type = rx(RULES.types, p.ar) || 'side'; p.col = rx(RULES.cols, p.ar); }
+  else if (D.full) { p.type = p.price < 200 ? 'p1' : p.price < 500 ? 'p2' : p.price < 1000 ? 'p3' : 'p4';
+    const o = p.was ? Math.round((1 - p.price / p.was) * 100) : 0; p.col = o >= 50 ? 'd50' : o >= 30 ? 'd30' : o > 0 ? 'd1' : 'full'; }
+});
+let paging = false;
+async function goPage(url, push) {
+  if (paging) return; paging = true;
+  const g = $('#pgrid'); g.style.transition = 'opacity .2s'; g.style.opacity = '.35';
+  try {
+    const html = await (await fetch(url, { credentials: 'same-origin' })).text();
+    const m = html.match(/products: \\[([\\s\\S]*?)\\]\\s*\\};\\s*KET_CAT\\.products/); if (!m) throw new Error('no products');
+    const list = new Function('return [' + m[1] + '];')(); tagPage(list);
+    P.length = 0; P.push(...list); for (const k in byId) delete byId[k]; list.forEach(p => { byId[p.id] = p; });
+    const np = new DOMParser().parseFromString(html, 'text/html').querySelector('.kc .pager'), op = $('.pager', KC);
+    if (np && op) op.replaceWith(np);
+    if (push) history.pushState({ ketPage: 1 }, '', url);
+    Object.assign(state, { type: 'all', col: null }); renderControls(); renderGrid(false);
+    g.style.opacity = '';
+    const y = $('#all').getBoundingClientRect().top + scrollY - 90;
+    if (Math.abs(scrollY - y) > 40) { if (lenis) lenis.scrollTo(y, { duration: .9 }); else scrollTo({ top: y, behavior: 'smooth' }); }
+  } catch (e) { location.href = url; }
+  paging = false;
+}
+KC.addEventListener('click', e => { const a = e.target.closest('.pager a[href]'); if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); if (!a.classList.contains('is-on')) goPage(a.href, true); });
+addEventListener('popstate', () => goPage(location.href, false));""")
 # loader: the category's own pieces in the ring
 js = re.sub(r"const pick = \[\[.*?\]\];", "const pick = P.slice(0, 8).map((p, i) => [p.id, ['circle', 'arch', 'sq', 'pill'][i % 4], ['#C6F7A6', '#F4F4F4', '#e9e7e4', '#F4A7FC'][i % 4]]);", js, count=1, flags=re.S)
 open(os.path.join(THEME, 'assets', 'ket-category.js'), 'w').write(

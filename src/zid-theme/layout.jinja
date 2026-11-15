@@ -87,7 +87,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ 'ket.css' | asset_url }}&k=3227e4ae"
+      href="{{ 'ket.css' | asset_url }}&k=f4ff7ba5"
     />
 
     {# TailwindPlus Elements - pinned version for better caching #}
@@ -152,26 +152,27 @@
 
       // Custom styles for Vitrin Kit Components (bundle, gift, region dialogs)
       // These override the default styles in platform widgets
+      // KET: Zid's dialogs (country / language, gift, bundle) in the KET fonts, black buttons and round corners
       window.zidCustomStyles = {
         bundle_selection: {
-          fontFamily: "var(--font-family)",
+          fontFamily: "'IBM Plex Sans Arabic', 'Inter Tight', sans-serif",
           fontSize: "14px"
         },
         gift_dialog: {
-          fontFamily: "var(--font-family)",
-          fontSize: "14px",
-          primaryColor: "var(--primary)",
-          primaryForeground: "var(--primary-foreground)",
-          backgroundColor: "var(--background)",
-          borderRadius: "var(--radius)"
+          fontFamily: "'IBM Plex Sans Arabic', 'Inter Tight', sans-serif",
+          fontSize: "15px",
+          primaryColor: "#0B0B0B",
+          primaryForeground: "#FFFFFF",
+          backgroundColor: "#FFFFFF",
+          borderRadius: "20px"
         },
         region_settings_dialog: {
-          fontFamily: "var(--font-family)",
-          fontSize: "14px",
-          primaryColor: "var(--primary)",
-          primaryForeground: "var(--primary-foreground)",
-          backgroundColor: "var(--background)",
-          borderRadius: "var(--radius)"
+          fontFamily: "'IBM Plex Sans Arabic', 'Inter Tight', sans-serif",
+          fontSize: "15px",
+          primaryColor: "#0B0B0B",
+          primaryForeground: "#FFFFFF",
+          backgroundColor: "#FFFFFF",
+          borderRadius: "20px"
         }
       };
     </script>

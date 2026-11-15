@@ -356,8 +356,9 @@ function layoutDeals() {
   items.forEach((el, i) => {
     const d = wrapD(i - sale.pos, n), a = Math.abs(d);
     el.style.transform = `translate3d(${(d * sp * dirX).toFixed(1)}px,${(-Math.min(a, 2) * (mob ? 38 : 56)).toFixed(1)}px,0) scale(${(1 - Math.min(a, 2.2) * (mob ? .3 : .27)).toFixed(3)})`;
-    el.style.filter = a < .02 ? 'none' : `blur(${(Math.min(a, 2) * 4.5).toFixed(2)}px)`;
-    el.style.opacity = a > 2.6 ? 0 : (1 - Math.max(0, a - 1.2) * .5).toFixed(3);
+    // the piece coming in is sharp and solid well before it reaches the middle; only the far ones soften
+    el.style.filter = a < .55 ? 'none' : `blur(${(Math.min(a - .55, 1.45) * 2.6).toFixed(2)}px)`;
+    el.style.opacity = a > 2.6 ? 0 : (1 - Math.max(0, a - 1.5) * .7).toFixed(3);
     el.style.zIndex = 60 - Math.round(a * 4);   // every piece stays in front of the card (the front one highest), so none slips behind it on the way in
   });
   const on = ((Math.round(sale.pos) % n) + n) % n;
