@@ -335,10 +335,32 @@ function done() {
 function runLoader() {
   const ldr = $('#loader');
   if (!G) { done(); return; }
-  let seen = false; try { seen = !!sessionStorage.getItem('ketCatSeen'); sessionStorage.setItem('ketCatSeen', '1'); } catch (e) {}
+  let seen = false; const SEEN = D.trees ? 'ketTreesSeen' : 'ketCatSeen'; try { seen = !!sessionStorage.getItem(SEEN); sessionStorage.setItem(SEEN, '1'); } catch (e) {}
   if (seen || /[?&]page=/.test(location.search)) {
     ldr.remove(); done();
     if (/[?&]page=/.test(location.search)) requestAnimationFrame(() => { const y = $('#all').getBoundingClientRect().top + scrollY - 90; scrollTo(0, y); });
+    return;
+  }
+  if (D.trees && $('#wcard')) {
+    // the trees: the watering picture fills the screen, the words come up, the water falls, then the section opens
+    $('#wDrops').innerHTML = Array.from({ length: 14 }, (_, k) => `<i style="--x:${(6 + (k * 37) % 30)}%;--y:${(52 + (k * 13) % 22)}%;--d:${(k * .17).toFixed(2)}s"></i>`).join('');
+    let skippedT = false, startedT = false;
+    const startT = () => { if (startedT) return; startedT = true; done(); };
+    const finishT = () => { ldr.remove(); startT(); };
+    const tlT = gsap.timeline({ onComplete: finishT, paused: true });
+    tlT.to('#ldDots', { opacity: 0, scale: .6, duration: .35, delay: .6 })
+      .fromTo('#wcard', { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1, ease: 'expo.out' }, '-=.05')
+      .from('#ldH', { y: 30, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.55')
+      .from('#ldTx', { y: 20, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.5')
+      .add(() => $('#wcard').classList.add('is-on'), '-=.6')
+      .to('#wcard > img', { scale: 1.03, duration: 2.2, ease: 'sine.inOut' })
+      .addLabel('out')
+      .to('#wcard', { scale: 1.12, opacity: 0, y: -40, duration: .7, ease: 'power3.in' }, 'out')
+      .to(ldr, { opacity: 0, duration: .45 }, 'out+=.45')
+      .add(() => { if (!skippedT) startT(); }, 'out+=.2');
+    $('#ldSkip').onclick = () => { if (skippedT) return; skippedT = true; tlT.kill(); gsap.to(ldr, { opacity: 0, duration: .3, onComplete: finishT }); startT(); };
+    $$('#ring, #ldLine, #ldLogo').forEach(el => el.remove());
+    Promise.race([Promise.all($$('img', $('#wcard')).map(i => i.decode().catch(() => {}))), new Promise(r => setTimeout(r, 1200))]).then(() => tlT.play());
     return;
   }
   // ring of 8 tables in mixed shapes on pink and grey

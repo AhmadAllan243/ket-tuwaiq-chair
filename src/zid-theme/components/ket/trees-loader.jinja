@@ -1,0 +1,8 @@
+{# Trees department loader (inside the category loader): the watering picture fills the screen; assets/ket-category.js plays it #}
+{% set ar = session.lang == 'ar' %}
+<div class="wcard" id="wcard">
+  <img src="{{ 'ket-trees/ill-water.webp' | asset_url }}" alt="" width="820" height="1278">
+  <div class="wcard__copy"><h2 id="ldH">{{ 'قسم الأشجار' if ar else 'The trees section' }}</h2><p id="ldTx">{{ 'من أهم اللمسات التي تكمّل ديكور بيتك وتزيد المكان جمالًا' if ar else 'One of the touches that completes your home and makes the space even more beautiful' }}</p></div>
+  <span class="wcard__drops" id="wDrops"></span>
+  <span class="wcard__spark"></span><span class="wcard__spark"></span><span class="wcard__spark"></span>
+</div>

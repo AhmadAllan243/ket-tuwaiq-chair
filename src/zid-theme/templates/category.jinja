@@ -34,19 +34,31 @@
   {% set KC_IPILL = KC_PILL %}
   {% set KC_HELP = KC_PILL %}
 {% endif %}
+{% set KC_INTRO = KC_BIG %}
+{# the trees department: its own look on top of the same page (assets/ket-trees.css + ket-trees.js): the watering loader,
+   yellow and light green, the planting initiative banner and page, and its own photos #}
+{% set KC_TREES = (category.id | string) == '444476' %}
+{% if KC_TREES %}
+  {% set KC_HERO = 'ket-trees/life-sofa.webp' | asset_url %}
+  {% set KC_BIG = 'ket-trees/life-planter.webp' | asset_url %}
+  {% set KC_INTRO = 'ket-trees/life-walk.webp' | asset_url %}
+  {% set KC_HELP = 'ket-trees/life-room.webp' | asset_url %}
+{% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
 <link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=e506035c">
+{% if KC_TREES %}<link rel="stylesheet" href="{{ 'ket-trees.css' | asset_url }}&k=1ca39ffa">{% endif %}
 <script>
-  try { if (!sessionStorage.getItem('ketCatSeen') && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
+  try { if (!sessionStorage.getItem({{ ('ketTreesSeen' if KC_TREES else 'ketCatSeen') | tojson }}) && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
   window.KET_CAT = {
     {# KET's English name for this department is «Decorating supplies»; the site calls it Home essentials #}
     name: {{ ('Home essentials' if (category.id | string) == '444491' and session.lang == 'en' else category.name) | tojson }},
     sub: {{ ((category.description or '') | striptags | trim) | tojson }},
     full: {{ KC_FULL | tojson }},
     tables: {{ KC_TABLES | tojson }},
+    trees: {{ KC_TREES | tojson }},
     heroImg: {{ KC_HERO | tojson }},
-    tilePhoto: {{ ('ket-cat/life1.webp' | asset_url) | tojson }},
+    tilePhoto: {{ (('ket-trees/leaf-fig.webp' if KC_TREES else 'ket-cat/life1.webp') | asset_url) | tojson }},
     pills: {% if KC_TABLES %}[{{ ('ket-cat/t03.webp' | asset_url) | tojson }}, {{ ('ket-cat/life1.webp' | asset_url) | tojson }}]{% else %}[{{ (pimg(R[0], 300) if R else '') | tojson }}, {{ (pimg(R[1], 300) if R | length > 1 else '') | tojson }}]{% endif %},
     types: [
       {% if KC_TYPES %}{% for s in SUBS %}
@@ -70,10 +82,11 @@
   if (!KET_CAT.tables) KET_CAT.types = KET_CAT.types.filter(x => KET_CAT.products.some(p => p.type === x.id));
 </script>
 
-<div class="kc">
+<div class="kc{{ ' kc--trees' if KC_TREES }}">
 <!-- LOADER: dots → line → logo → tables gather in a ring (plays on each visit; tap to skip) -->
 <div class="loader" id="loader" aria-hidden="true">
   <div class="loader__dots" id="ldDots"><i></i><i></i><i></i></div>
+  {% if KC_TREES %}{% include "components/ket/trees-loader.jinja" %}{% endif %}
   <p class="loader__line" id="ldLine" data-t="loadLine"></p>
   <div class="ring" id="ring"></div>
   <div class="loader__logo" id="ldLogo"></div>
@@ -111,6 +124,7 @@
   </div>
 </section>
 
+{% if KC_TREES %}{% include 'components/ket/trees-banner.jinja' %}{% endif %}
 <!-- 4 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->
 <section class="section container" id="all" aria-labelledby="gridTitle">
   <div class="grid__head">
@@ -151,7 +165,7 @@
         <a class="btn btn-primary" href="#all"><span data-t="cardBtn"></span><span class="arr flip" id="cardArr"></span></a>
       </div>
       <div class="photo">
-        <img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730" data-par>
+        <img src="{{ KC_INTRO }}" alt="" loading="lazy" width="1100" height="730" data-par>
         <span class="pill tag" id="saleChip"></span>
         <div class="stat">
           <div class="stat__row"><span class="stat__lbl" data-t="fromLbl"></span><span class="stat__big" id="statFrom"></span></div>
@@ -187,6 +201,7 @@
   </div>
 </section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+{% if KC_TREES %}{% include "components/ket/trees-page.jinja" %}{% endif %}
 </div>
 
 {% include 'components/products/quick-view-modal.jinja' %}
@@ -194,5 +209,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}&k=e76b049a"></script>
-<script src="{{ 'ket-category.js' | asset_url }}&k=bfc835d0"></script>
+<script src="{{ 'ket-category.js' | asset_url }}&k=c61541c6"></script>
+{% if KC_TREES %}<script src="{{ 'ket-trees.js' | asset_url }}&k=7caebd3a"></script>{% endif %}
 {% endblock %}

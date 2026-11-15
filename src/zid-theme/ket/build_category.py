@@ -190,6 +190,32 @@ async function goPage(url, push) {
 }
 KC.addEventListener('click', e => { const a = e.target.closest('.pager a[href]'); if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); if (!a.classList.contains('is-on')) goPage(a.href, true); });
 addEventListener('popstate', () => goPage(location.href, false));""")
+# loader: the trees department has its own (the watering picture); its own "seen" key
+js = must(js, "try { seen = !!sessionStorage.getItem('ketCatSeen'); sessionStorage.setItem('ketCatSeen', '1'); } catch (e) {}",
+          "const SEEN = D.trees ? 'ketTreesSeen' : 'ketCatSeen'; try { seen = !!sessionStorage.getItem(SEEN); sessionStorage.setItem(SEEN, '1'); } catch (e) {}")
+js = must(js, "  // ring of 8 tables in mixed shapes on pink and grey", """  if (D.trees && $('#wcard')) {
+    // the trees: the watering picture fills the screen, the words come up, the water falls, then the section opens
+    $('#wDrops').innerHTML = Array.from({ length: 14 }, (_, k) => `<i style="--x:${(6 + (k * 37) % 30)}%;--y:${(52 + (k * 13) % 22)}%;--d:${(k * .17).toFixed(2)}s"></i>`).join('');
+    let skippedT = false, startedT = false;
+    const startT = () => { if (startedT) return; startedT = true; done(); };
+    const finishT = () => { ldr.remove(); startT(); };
+    const tlT = gsap.timeline({ onComplete: finishT, paused: true });
+    tlT.to('#ldDots', { opacity: 0, scale: .6, duration: .35, delay: .6 })
+      .fromTo('#wcard', { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1, ease: 'expo.out' }, '-=.05')
+      .from('#ldH', { y: 30, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.55')
+      .from('#ldTx', { y: 20, opacity: 0, duration: .7, ease: 'expo.out' }, '-=.5')
+      .add(() => $('#wcard').classList.add('is-on'), '-=.6')
+      .to('#wcard > img', { scale: 1.03, duration: 2.2, ease: 'sine.inOut' })
+      .addLabel('out')
+      .to('#wcard', { scale: 1.12, opacity: 0, y: -40, duration: .7, ease: 'power3.in' }, 'out')
+      .to(ldr, { opacity: 0, duration: .45 }, 'out+=.45')
+      .add(() => { if (!skippedT) startT(); }, 'out+=.2');
+    $('#ldSkip').onclick = () => { if (skippedT) return; skippedT = true; tlT.kill(); gsap.to(ldr, { opacity: 0, duration: .3, onComplete: finishT }); startT(); };
+    $$('#ring, #ldLine, #ldLogo').forEach(el => el.remove());
+    Promise.race([Promise.all($$('img', $('#wcard')).map(i => i.decode().catch(() => {}))), new Promise(r => setTimeout(r, 1200))]).then(() => tlT.play());
+    return;
+  }
+  // ring of 8 tables in mixed shapes on pink and grey""")
 # loader: the category's own pieces in the ring
 js = re.sub(r"const pick = \[\[.*?\]\];", "const pick = P.slice(0, 8).map((p, i) => [p.id, ['circle', 'arch', 'sq', 'pill'][i % 4], ['#C6F7A6', '#F4F4F4', '#e9e7e4', '#F4A7FC'][i % 4]]);", js, count=1, flags=re.S)
 open(os.path.join(THEME, 'assets', 'ket-category.js'), 'w').write(
@@ -200,6 +226,9 @@ open(os.path.join(THEME, 'assets', 'ket-category.js'), 'w').write(
 # ---------------------------------------------------------------- pictures (the tables page's own photos)
 import shutil
 os.makedirs(os.path.join(THEME, 'assets', 'ket-cat'), exist_ok=True)
+os.makedirs(os.path.join(THEME, 'assets', 'ket-trees'), exist_ok=True)
+for n in ('ill-water', 'ill-woman', 'ill-sprout', 'diriyah', 'leaf-bamboo', 'leaf-fig', 'life-sofa', 'life-planter', 'life-room', 'life-walk'):
+    shutil.copyfile(os.path.join(THEME, '..', 'media', 'trees', n + '.webp'), os.path.join(THEME, 'assets', 'ket-trees', n + '.webp'))
 for n in ('hero-joy', 'life1', 'life2', 't03', 't08', 't11'):
     shutil.copyfile(os.path.join(THEME, '..', 'media', 'tables', n + '.webp'), os.path.join(THEME, 'assets', 'ket-cat', n + '.webp'))
 
@@ -209,21 +238,24 @@ main = html[html.index('<main id="main">') + len('<main id="main">'):html.index(
 main = must(main, '<div class="pgrid" id="pgrid"></div>', '<div class="pgrid" id="pgrid"></div>\n  {% include "components/ket/category-pager.jinja" %}')
 main = must(main, '<img src="media/tables/hero-joy.webp" alt="" width="838" height="474" fetchpriority="high" id="heroImg">', '<img src="{{ KC_HERO }}" alt="" width="838" height="474" fetchpriority="high" id="heroImg">')
 main = must(main, '<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730">', '<img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730">', 1)
-main = must(main, '<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730" data-par>', '<img src="{{ KC_BIG }}" alt="" loading="lazy" width="1100" height="730" data-par>')
+main = must(main, '<img src="media/tables/life2.webp" alt="" loading="lazy" width="1100" height="730" data-par>', '<img src="{{ KC_INTRO }}" alt="" loading="lazy" width="1100" height="730" data-par>')
+main = must(main, '<!-- 4 · ALL PRODUCTS', "{% if KC_TREES %}{% include 'components/ket/trees-banner.jinja' %}{% endif %}\n<!-- 4 · ALL PRODUCTS")
+loader = must(loader, '<div class="loader__dots" id="ldDots"><i></i><i></i><i></i></div>', '<div class="loader__dots" id="ldDots"><i></i><i></i><i></i></div>\n  {% if KC_TREES %}{% include "components/ket/trees-loader.jinja" %}{% endif %}')
 main = must(main, '<span class="sav"><img src="media/tables/t03.webp" alt="" loading="lazy"></span>', '<span class="sav"><img src="{{ KC_PILL }}" alt="" loading="lazy"></span>')
 main = must(main, '<img src="media/tables/t08.webp" alt="" loading="lazy">', '<img src="{{ KC_IPILL }}" alt="" loading="lazy">')
 main = must(main, '<div class="help__img"><img src="media/tables/t11.webp" alt="" loading="lazy"></div>', '<div class="help__img"><img src="{{ KC_HELP }}" alt="" loading="lazy"></div>')
 main = must(main, '<a class="btn btn-wa" href="#" data-toast="soon">', '<a class="btn btn-wa" href="{{ KC_WA }}" target="_blank" rel="noopener">')
 assert 'media/' not in main, re.findall(r'media/[^"]*', main)
-tail = '<div class="toast" id="toast" role="status" aria-live="polite"></div>\n'
+tail = '<div class="toast" id="toast" role="status" aria-live="polite"></div>\n{% if KC_TREES %}{% include "components/ket/trees-page.jinja" %}{% endif %}\n'
 open(os.path.join(THEME, 'templates', 'category.jinja'), 'w').write(
-    open(os.path.join(HERE, 'ket-category.data.jinja')).read() + '\n<div class="kc">\n' + loader + main + tail + '</div>\n' + """
+    open(os.path.join(HERE, 'ket-category.data.jinja')).read() + '\n<div class="kc{{ \' kc--trees\' if KC_TREES }}">\n' + loader + main + tail + '</div>\n' + """
 {% include 'components/products/quick-view-modal.jinja' %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="{{ 'ket-brand.js' | asset_url }}"></script>
 <script src="{{ 'ket-category.js' | asset_url }}"></script>
+{% if KC_TREES %}<script src="{{ 'ket-trees.js' | asset_url }}"></script>{% endif %}
 {% endblock %}
 """)
 print('built ket-category: js', len(js))

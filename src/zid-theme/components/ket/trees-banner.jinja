@@ -1,0 +1,29 @@
+{# Trees department: the planting initiative banner and the "we plant" strip (after shop by budget); assets/ket-trees.js animates them #}
+{% set ar = session.lang == 'ar' %}
+<section class="plant container" aria-labelledby="ptTitle">
+  <div class="plant__card">
+    <div class="plant__copy">
+      <p class="plant__ey"><span>{{ 'مبادرة ket الخضراء' if ar else 'The ket green initiative' }}</span></p>
+      <h2 class="hero__h plant__h" id="ptTitle" data-l1="{{ 'من شجرتك' if ar else 'From your tree' }}" data-l2="{{ 'يبدأ أثر' if ar else 'grows a' }}" data-mark="{{ 'أخضر' if ar else 'green' }}" data-l3="{{ 'في وطننا' if ar else 'mark on our homeland' }}">{{ 'من شجرتك يبدأ أثر أخضر في وطننا' if ar else 'From your tree grows a green mark on our homeland' }}</h2>
+      <p class="plant__sub">{{ 'مع كل شجرة صناعية تشتريها منا، نغرس نبتة طبيعية في أرض وطننا 🇸🇦🌱' if ar else 'For every artificial tree you buy from us, we plant a natural one in our homeland 🇸🇦🌱' }}</p>
+      <div class="plant__btns">
+        <button class="btn btn-primary" type="button" id="pMore"><span>{{ 'اعرف عن المبادرة' if ar else 'About the initiative' }}</span><span class="arr flip" id="pMoreArr"></span></button>
+        <a class="plant__shop" href="#all">{{ 'تسوّق الأشجار' if ar else 'Shop trees' }}</a>
+      </div>
+    </div>
+    <div class="plant__art" aria-hidden="true">
+      <span class="plant__sun"></span>
+      <img class="plant__woman" src="{{ 'ket-trees/ill-woman.webp' | asset_url }}" alt="" width="452" height="1050" loading="lazy">
+      <span class="plant__soil"><img class="plant__sprout" src="{{ 'ket-trees/ill-sprout.webp' | asset_url }}" alt="" width="383" height="372" loading="lazy"></span>
+      <i class="plant__leaf"></i><i class="plant__leaf"></i><i class="plant__leaf"></i>
+    </div>
+  </div>
+</section>
+<section class="container weplant" aria-hidden="true">
+  <div class="wp" id="wp">
+    <span class="wp__p wp__p--w">{{ 'نغرس' if ar else 'We plant' }}</span>
+    <span class="wp__p wp__p--ph"><img src="{{ 'ket-trees/leaf-bamboo.webp' | asset_url }}" alt="" loading="lazy"><b>{{ 'أثرًا' if ar else 'a mark' }}</b></span>
+    <span class="wp__p wp__p--y"><i class="flip" id="wpArr"></i></span>
+    <span class="wp__p wp__p--ph"><img src="{{ 'ket-trees/diriyah.webp' | asset_url }}" alt="" loading="lazy"><b>{{ 'في وطننا' if ar else 'in our homeland' }}</b></span>
+  </div>
+</section>

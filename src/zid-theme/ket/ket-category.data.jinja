@@ -34,19 +34,31 @@
   {% set KC_IPILL = KC_PILL %}
   {% set KC_HELP = KC_PILL %}
 {% endif %}
+{% set KC_INTRO = KC_BIG %}
+{# the trees department: its own look on top of the same page (assets/ket-trees.css + ket-trees.js): the watering loader,
+   yellow and light green, the planting initiative banner and page, and its own photos #}
+{% set KC_TREES = (category.id | string) == '444476' %}
+{% if KC_TREES %}
+  {% set KC_HERO = 'ket-trees/life-sofa.webp' | asset_url %}
+  {% set KC_BIG = 'ket-trees/life-planter.webp' | asset_url %}
+  {% set KC_INTRO = 'ket-trees/life-walk.webp' | asset_url %}
+  {% set KC_HELP = 'ket-trees/life-room.webp' | asset_url %}
+{% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
 <link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=e506035c">
+{% if KC_TREES %}<link rel="stylesheet" href="{{ 'ket-trees.css' | asset_url }}&k=1ca39ffa">{% endif %}
 <script>
-  try { if (!sessionStorage.getItem('ketCatSeen') && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
+  try { if (!sessionStorage.getItem({{ ('ketTreesSeen' if KC_TREES else 'ketCatSeen') | tojson }}) && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
   window.KET_CAT = {
     {# KET's English name for this department is «Decorating supplies»; the site calls it Home essentials #}
     name: {{ ('Home essentials' if (category.id | string) == '444491' and session.lang == 'en' else category.name) | tojson }},
     sub: {{ ((category.description or '') | striptags | trim) | tojson }},
     full: {{ KC_FULL | tojson }},
     tables: {{ KC_TABLES | tojson }},
+    trees: {{ KC_TREES | tojson }},
     heroImg: {{ KC_HERO | tojson }},
-    tilePhoto: {{ ('ket-cat/life1.webp' | asset_url) | tojson }},
+    tilePhoto: {{ (('ket-trees/leaf-fig.webp' if KC_TREES else 'ket-cat/life1.webp') | asset_url) | tojson }},
     pills: {% if KC_TABLES %}[{{ ('ket-cat/t03.webp' | asset_url) | tojson }}, {{ ('ket-cat/life1.webp' | asset_url) | tojson }}]{% else %}[{{ (pimg(R[0], 300) if R else '') | tojson }}, {{ (pimg(R[1], 300) if R | length > 1 else '') | tojson }}]{% endif %},
     types: [
       {% if KC_TYPES %}{% for s in SUBS %}

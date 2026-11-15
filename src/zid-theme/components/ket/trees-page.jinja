@@ -1,0 +1,25 @@
+{# Trees department: the planting initiative page; opens from the banner, its button takes the customer to the trees #}
+{% set ar = session.lang == 'ar' %}
+<dialog class="green" id="green" aria-labelledby="gH">
+  <div class="green__in" data-lenis-prevent>
+    <button class="icon-btn green__x" type="button" id="gClose" aria-label="{{ _('Close') }}"></button>
+    <div class="green__ph"><img src="{{ 'ket-trees/diriyah.webp' | asset_url }}" alt="" loading="lazy"><span class="green__sprout"><img src="{{ 'ket-trees/ill-sprout.webp' | asset_url }}" alt="" loading="lazy"></span></div>
+    <div class="green__copy">
+      <p class="plant__ey"><span>{{ 'مبادرة ket الخضراء' if ar else 'The ket green initiative' }}</span></p>
+      {% if ar %}
+        <h2 id="gH">🌱 من شجرتك يبدأ أثر أخضر في وطننا</h2>
+        <p class="green__lead">مع كل شجرة صناعية تختارها من متجرنا، نغرس نبتة طبيعية في أرض وطننا الغالي 🇸🇦💚</p>
+        <p>مبادرة نعتز بها، نساهم من خلالها في زيادة الغطاء النباتي في مناطق مملكتنا، لنترك أثرًا ينمو مع الأيام، ويمنح أرضنا مزيدًا من الخضرة، وهواءنا مزيدًا من النقاء، وظلًا يستظل به عابر، ومأوى تحتضن فيه الطيور حياتها.</p>
+        <p class="green__quote">نغرس اليوم خيرًا، ليبقى غدًا ظلًا وأجرًا وعطاءً.</p>
+        <p>معًا نحو مستقبل أكثر خضرة، تماشيًا مع مستهدفات مبادرة السعودية الخضراء.</p>
+      {% else %}
+        <h2 id="gH">🌱 From your tree, a green mark grows in our homeland</h2>
+        <p class="green__lead">For every artificial tree you choose from our store, we plant a natural one in the land of our dear homeland 🇸🇦💚</p>
+        <p>An initiative we are proud of: we add to the green cover across the regions of our Kingdom, leaving a mark that grows with the days, giving our land more green and our air more freshness, shade for a passer-by and a home for the birds.</p>
+        <p class="green__quote">We plant good today, so tomorrow it stays shade, reward and giving.</p>
+        <p>Together towards a greener future, in line with the goals of the Saudi Green Initiative.</p>
+      {% endif %}
+      <button class="btn btn-green" type="button" id="gGo"><span>{{ 'ازرع أثرًا معنا 🌱' if ar else 'Plant a mark with us 🌱' }}</span><span class="arr flip" id="gArr"></span></button>
+    </div>
+  </div>
+</dialog>

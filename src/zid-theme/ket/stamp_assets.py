@@ -5,7 +5,7 @@ Run before zipping (ket/make-upload-zip.sh does).
 """
 import hashlib, os, re
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-ASSETS = ['ket.css', 'ket-site.js', 'ket-product.js', 'ket-hero.js', 'ket-brand.js', 'ket-home.css', 'ket-home.js', 'ket-category.css', 'ket-category.js', 'ket-cart.js']
+ASSETS = ['ket.css', 'ket-site.js', 'ket-product.js', 'ket-hero.js', 'ket-brand.js', 'ket-home.css', 'ket-home.js', 'ket-category.css', 'ket-category.js', 'ket-cart.js', 'ket-trees.css', 'ket-trees.js']
 H = {a: hashlib.sha1(open(os.path.join(ROOT, 'assets', a), 'rb').read()).hexdigest()[:8] for a in ASSETS if os.path.exists(os.path.join(ROOT, 'assets', a))}
 n = 0
 for d, _, files in os.walk(ROOT):
