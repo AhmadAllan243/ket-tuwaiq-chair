@@ -19,6 +19,17 @@
       name="viewport"
       content="width=device-width, initial-scale=1"
     />
+    {# KET: a wide share picture (1200×630) for each department, ahead of Zid's own (which pads a portrait photo with white);
+       link previews (WhatsApp, X…) take the first one #}
+    {% set KET_SHARE = {'444476': 'trees', '444477': 'tables', '444478': 'lamps', '444490': 'rugs', '444491': 'home'} %}
+    {% if category and category.id and (category.id | string) in KET_SHARE %}
+      {% set share_img = ('ket-share/' ~ KET_SHARE[category.id | string] ~ '.jpg') | asset_url %}
+      <meta property="og:image" content="{{ share_img }}" />
+      <meta property="og:image:secure_url" content="{{ share_img }}" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta name="twitter:image" content="{{ share_img }}" />
+    {% endif %}
     {% vitrin_head %}
     {# KET night mode: set before anything paints, so a dark page never flashes white #}
     <script>try { if (localStorage.getItem('ketTheme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}</script>
