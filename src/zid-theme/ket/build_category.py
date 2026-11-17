@@ -39,7 +39,7 @@ extra = """
 .kc > section{ isolation:isolate; }   /* each section keeps its layers to itself, so nothing rises over the store's sticky header */
 :where(.kc) .pager{ display:flex; justify-content:center; gap:8px; margin-top:40px; }
 :where(.kc) .pager a{ min-width:44px; height:44px; padding-inline:14px; display:grid; place-items:center; border-radius:999px; background:var(--white); font-weight:600; text-decoration:none; }
-html:not(.is-loading) :where(.kc) .loader{ display:none; }   /* return visits: no loader */
+html:not(.is-loading) :where(.kc) .loader:not(.is-out){ display:none; }   /* return visits: no loader (one that is fading out stays until its fade ends) */
 :where(.kc) .klogo .kl{ transform-box:fill-box; transform-origin:50% 100%; }
 :where(.kc) .klogo__smile{ opacity:0; }   /* the smile only shows in the scrolled header */
 :where(.kc) .pager a.is-on{ background:var(--black); color:var(--white); }
@@ -190,6 +190,8 @@ async function goPage(url, push) {
 }
 KC.addEventListener('click', e => { const a = e.target.closest('.pager a[href]'); if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); if (!a.classList.contains('is-on')) goPage(a.href, true); });
 addEventListener('popstate', () => goPage(location.href, false));""")
+# loader: it stays on screen until its own fade-out ends (the page's entrance starts underneath it)
+js = must(js, "    .addLabel('out', '-=.55')\n", "    .addLabel('out', '-=.55')\n    .add(() => ldr.classList.add('is-out'), 'out')\n")
 # loader: the trees department has its own (the watering picture); its own "seen" key
 js = must(js, "try { seen = !!sessionStorage.getItem('ketCatSeen'); sessionStorage.setItem('ketCatSeen', '1'); } catch (e) {}",
           "const SEEN = D.trees ? 'ketTreesSeen' : 'ketCatSeen'; try { seen = !!sessionStorage.getItem(SEEN); sessionStorage.setItem(SEEN, '1'); } catch (e) {}")
@@ -207,6 +209,7 @@ js = must(js, "  // ring of 8 tables in mixed shapes on pink and grey", """  if 
       .add(() => $('#wcard').classList.add('is-on'), '-=.6')
       .to('#wcard > img', { scale: 1.03, duration: 2.2, ease: 'sine.inOut' })
       .addLabel('out')
+      .add(() => ldr.classList.add('is-out'), 'out')
       .to('#wcard', { scale: 1.12, opacity: 0, y: -40, duration: .7, ease: 'power3.in' }, 'out')
       .to(ldr, { opacity: 0, duration: .45 }, 'out+=.45')
       .add(() => { if (!skippedT) startT(); }, 'out+=.2');

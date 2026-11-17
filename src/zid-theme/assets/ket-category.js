@@ -355,6 +355,7 @@ function runLoader() {
       .add(() => $('#wcard').classList.add('is-on'), '-=.6')
       .to('#wcard > img', { scale: 1.03, duration: 2.2, ease: 'sine.inOut' })
       .addLabel('out')
+      .add(() => ldr.classList.add('is-out'), 'out')
       .to('#wcard', { scale: 1.12, opacity: 0, y: -40, duration: .7, ease: 'power3.in' }, 'out')
       .to(ldr, { opacity: 0, duration: .45 }, 'out+=.45')
       .add(() => { if (!skippedT) startT(); }, 'out+=.2');
@@ -386,6 +387,7 @@ function runLoader() {
     .fromTo(T, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: .55, stagger: .09, ease: 'back.out(1.8)' }, 'ring')
     .to(st, { spin: Math.PI * .9, duration: 2.4, ease: 'power2.inOut' }, 'ring')
     .addLabel('out', '-=.55')
+    .add(() => ldr.classList.add('is-out'), 'out')
     .to(st, { r: () => Math.hypot(innerWidth, innerHeight) * .75, duration: .9, ease: 'power3.in' }, 'out')
     .to(T, { scale: 1.6, opacity: 0, duration: .9, ease: 'power3.in', stagger: .02 }, 'out')
     .to('#ldLogo', { scale: .45, opacity: 0, y: () => -innerHeight * .35, duration: .7, ease: 'power3.in' }, 'out+=.1')

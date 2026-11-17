@@ -95,35 +95,50 @@
     } catch (e) {}
   })();
 
-  /* ---------- Sticky add-to-cart bar: a green button that nudges, and a line of true reasons to buy that rotates
-     (the saving, free delivery, the offer ending within 48 h, few pieces left), from the product's own Zid data ---------- */
+  /* ---------- Sticky add-to-cart bar: a green button with a shine, a pulse and a wiggle, the saving as a tag on its corner,
+     and a chip of true reasons to buy that slides from one to the next (the saving, free delivery, the offer ending within
+     48 h, few pieces left), from the product's own Zid data ---------- */
   (async () => {
     const bar = $('#sticky-cta'), btn = bar && bar.querySelector('[data-sticky-cta-add-to-cart]'); if (!btn) return;
-    btn.classList.add('ket-cta-go');
-    const pop = document.createElement('i'); pop.className = 'ket-cta-pop'; pop.setAttribute('aria-hidden', 'true'); pop.textContent = '🔥';
-    btn.parentElement.style.position = 'relative'; btn.parentElement.appendChild(pop);
+    btn.classList.add('ket-cta-go'); btn.parentElement.classList.add('ket-cta-wrap');
+    const fit = () => { btn.parentElement.style.setProperty('--bw', btn.offsetWidth + 'px'); btn.parentElement.style.setProperty('--bh', btn.offsetHeight + 'px'); };   // the pulse ring hugs the button
+    fit(); addEventListener('resize', fit); new MutationObserver(fit).observe(bar, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
     const nameEl = bar.querySelector('[data-sticky-cta-name]'); if (!nameEl) return;
-    const line = document.createElement('p'); line.className = 'ket-perk'; line.setAttribute('aria-live', 'polite');
-    nameEl.insertAdjacentElement('afterend', line);
+    const tick = document.createElement('div'); tick.className = 'ket-perk'; tick.setAttribute('aria-live', 'polite');
+    nameEl.insertAdjacentElement('afterend', tick);
     for (let i = 0; i < 60 && !(window.zid && window.zid.products); i++) await new Promise(r => setTimeout(r, 200));
     const id = document.getElementById('product-parent-id')?.value || document.getElementById('product-id')?.value; if (!id || !window.zid?.products) return;   // the parent id exists only on products with options
     let p; try { p = await window.zid.products.get(id); } catch (e) { return; }
     const ar = (document.documentElement.lang || 'ar').startsWith('ar'), perks = [];
+    const svg = d => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+    const ICO = {
+      tag: svg('<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.5"/>'),
+      truck: svg('<path d="M2 6h11v10H2zM13 9h4l4 4v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'),
+      clock: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+      flame: svg('<path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.6.7-2.7 1.6-3.6.2 1.4 1 2.1 1.9 2.1C11 7.5 11 5 12 3Z"/>')
+    };
     const num = s => +String(s || '').replace(/[^\d.]/g, '') || 0;
     const price = num(p.formatted_price), sale = num(p.formatted_sale_price);
+    let off = 0;
     if (sale && price > sale) {
-      const off = Math.round((1 - sale / price) * 100), save = price - sale;
+      off = Math.round((1 - sale / price) * 100); const save = price - sale;
       const saveTxt = String(p.formatted_price).replace(/[\d.,]+/, save.toLocaleString('en-US', { minimumFractionDigits: save % 1 ? 2 : 0, maximumFractionDigits: 2 })).trim();
-      perks.push(ar ? `🏷️ خصم ${off}% · وفّر ${saveTxt}` : `🏷️ ${off}% off · save ${saveTxt}`);
+      perks.push({ i: 'tag', t: ar ? `خصم ${off}% · وفّر ${saveTxt}` : `${off}% off · save ${saveTxt}` });
     }
-    perks.push(ar ? '🚚 توصيل مجاني لكل مدن المملكة' : '🚚 Free delivery across the Kingdom');
+    perks.push({ i: 'truck', t: ar ? 'توصيل مجاني لكل مدن المملكة' : 'Free delivery across the Kingdom' });
     const end = Date.parse(p.purchase_restrictions?.sale_price_period_end || '');
-    if (sale && end && end > Date.now() && end - Date.now() < 48 * 3600e3) perks.push(ar ? '⏳ العرض ينتهي خلال أقل من 48 ساعة' : '⏳ This offer ends in under 48 hours');
+    if (sale && end && end > Date.now() && end - Date.now() < 48 * 3600e3) perks.push({ i: 'clock', t: ar ? 'العرض ينتهي خلال أقل من 48 ساعة' : 'Offer ends in under 48 hours', hot: true });
     const qty = +p.quantity || 0;
-    if (!p.is_infinite && qty > 0 && qty <= 10) perks.push(ar ? `🔥 باقي ${qty} ${qty === 1 ? 'قطعة' : qty === 2 ? 'قطعتان' : 'قطع'} فقط` : `🔥 Only ${qty} left`);
+    if (!p.is_infinite && qty > 0 && qty <= 10) perks.push({ i: 'flame', t: ar ? `باقي ${qty} ${qty === 1 ? 'قطعة' : qty === 2 ? 'قطعتان' : 'قطع'} فقط` : `Only ${qty} left`, hot: true });
+    if (off) { const tag = document.createElement('span'); tag.className = 'ket-cta-badge'; tag.setAttribute('aria-hidden', 'true'); tag.innerHTML = `<b dir="ltr">−${off}%</b>`; btn.parentElement.appendChild(tag); }
     let k = 0;
-    const show = () => { line.classList.remove('is-in'); void line.offsetWidth; line.textContent = perks[k % perks.length]; line.classList.add('is-in'); k++; };
-    show(); if (perks.length > 1) setInterval(show, 3200);
+    const show = () => {
+      const x = perks[k++ % perks.length], el = document.createElement('span');
+      el.className = 'ket-perk__i' + (x.hot ? ' is-hot' : ''); el.innerHTML = `${ICO[x.i]}<span>${x.t}</span>`;
+      tick.querySelectorAll('.ket-perk__i:not(.is-out)').forEach(o => { o.classList.add('is-out'); setTimeout(() => o.remove(), 700); });
+      tick.appendChild(el); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-in')));
+    };
+    show(); if (perks.length > 1) setInterval(show, 3400);
   })();
 
   /* ---------- Delivery estimate (today + N days, from theme settings) ---------- */

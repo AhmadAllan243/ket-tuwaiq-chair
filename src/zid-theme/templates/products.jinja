@@ -16,7 +16,7 @@
   {%- set im = p.main_image.image.large if p.main_image and p.main_image.image else (p.images[0].image.full_size if p.images else '') -%}
   {{- image_url(im, w=w, q=85, f='auto') if im else '' -}}
 {%- endmacro %}
-<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=e506035c">
+<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=3171005a">
 <div class="kc ksearch">
   <section class="container ksearch__head">
     <p class="eyebrow">{{ ('نتائج البحث' if ar else 'Search results') if q else ('المتجر' if ar else 'The shop') }}</p>
