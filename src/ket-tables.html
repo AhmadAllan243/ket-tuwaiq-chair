@@ -975,8 +975,8 @@ function bannerIn() {
   const tl = gsap.timeline();
   tl.from('#hTitle .w:not(.hero__pill)', { y: 26, opacity: 0, duration: .9, stagger: .035, ease: 'expo.out' }, 0)
     .from('#hTitle .hero__pill', { scale: 0, duration: .9, stagger: .15, ease: 'back.out(1.8)' }, .3)
-    .from('#heroCard', { clipPath: 'inset(14% 10% 0% 10% round 60px)', duration: 1.5, ease: 'expo.out' }, .35)
-    .from('#heroImg', { scale: 1.3, duration: 1.8, ease: 'expo.out' }, .35)
+    .from('#heroCard', { clipPath: 'inset(14% 10% 0% 10% round 60px)', duration: 1.6, ease: 'power3.out' }, .2)
+    .from('#heroImg', { scale: 1.3, duration: 2.2, ease: 'power3.out' }, .2)
     .from('#hStat', { y: 30, opacity: 0, scale: .8, duration: .9, ease: 'back.out(1.8)' }, .95)
     .from('#live', { y: 30, opacity: 0, scale: .8, duration: .9, ease: 'back.out(1.8)' }, 1.1)
     .to(live, { shown: live.now, duration: 1.6, ease: 'power3.out', onUpdate: () => { const n = $('#liveN'); if (n) n.textContent = fmt(Math.round(live.shown)); } }, 1.2)
@@ -1027,8 +1027,8 @@ function runLoader() {
     .to(st, { r: () => Math.hypot(innerWidth, innerHeight) * .75, duration: .9, ease: 'power3.in' }, 'out')
     .to(T, { scale: 1.6, opacity: 0, duration: .9, ease: 'power3.in', stagger: .02 }, 'out')
     .to('#ldLogo', { scale: .45, opacity: 0, y: () => -innerHeight * .35, duration: .7, ease: 'power3.in' }, 'out+=.1')
-    .to(ldr, { opacity: 0, duration: .45 }, 'out+=.6')
-    .add(() => { if (!skipped) bannerStart(); }, 'out+=.2');
+    .to(ldr, { opacity: 0, scale: 1.08, duration: .6, ease: 'power2.inOut' }, 'out+=.45')   // the loader zooms away and the photo zooms in behind it, in view
+    .add(() => { if (!skipped) bannerStart(); }, 'out+=.5');
   let started = false;
   function bannerStart() { if (started) return; started = true; done(); }
   function finish() { gsap.ticker.remove(place); ldr.remove(); bannerStart(); }

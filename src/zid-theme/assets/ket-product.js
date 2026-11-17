@@ -95,6 +95,37 @@
     } catch (e) {}
   })();
 
+  /* ---------- Sticky add-to-cart bar: a green button that nudges, and a line of true reasons to buy that rotates
+     (the saving, free delivery, the offer ending within 48 h, few pieces left), from the product's own Zid data ---------- */
+  (async () => {
+    const bar = $('#sticky-cta'), btn = bar && bar.querySelector('[data-sticky-cta-add-to-cart]'); if (!btn) return;
+    btn.classList.add('ket-cta-go');
+    const pop = document.createElement('i'); pop.className = 'ket-cta-pop'; pop.setAttribute('aria-hidden', 'true'); pop.textContent = '🔥';
+    btn.parentElement.style.position = 'relative'; btn.parentElement.appendChild(pop);
+    const nameEl = bar.querySelector('[data-sticky-cta-name]'); if (!nameEl) return;
+    const line = document.createElement('p'); line.className = 'ket-perk'; line.setAttribute('aria-live', 'polite');
+    nameEl.insertAdjacentElement('afterend', line);
+    for (let i = 0; i < 60 && !(window.zid && window.zid.products); i++) await new Promise(r => setTimeout(r, 200));
+    const id = document.getElementById('product-parent-id')?.value || document.getElementById('product-id')?.value; if (!id || !window.zid?.products) return;   // the parent id exists only on products with options
+    let p; try { p = await window.zid.products.get(id); } catch (e) { return; }
+    const ar = (document.documentElement.lang || 'ar').startsWith('ar'), perks = [];
+    const num = s => +String(s || '').replace(/[^\d.]/g, '') || 0;
+    const price = num(p.formatted_price), sale = num(p.formatted_sale_price);
+    if (sale && price > sale) {
+      const off = Math.round((1 - sale / price) * 100), save = price - sale;
+      const saveTxt = String(p.formatted_price).replace(/[\d.,]+/, save.toLocaleString('en-US', { minimumFractionDigits: save % 1 ? 2 : 0, maximumFractionDigits: 2 })).trim();
+      perks.push(ar ? `🏷️ خصم ${off}% · وفّر ${saveTxt}` : `🏷️ ${off}% off · save ${saveTxt}`);
+    }
+    perks.push(ar ? '🚚 توصيل مجاني لكل مدن المملكة' : '🚚 Free delivery across the Kingdom');
+    const end = Date.parse(p.purchase_restrictions?.sale_price_period_end || '');
+    if (sale && end && end > Date.now() && end - Date.now() < 48 * 3600e3) perks.push(ar ? '⏳ العرض ينتهي خلال أقل من 48 ساعة' : '⏳ This offer ends in under 48 hours');
+    const qty = +p.quantity || 0;
+    if (!p.is_infinite && qty > 0 && qty <= 10) perks.push(ar ? `🔥 باقي ${qty} ${qty === 1 ? 'قطعة' : qty === 2 ? 'قطعتان' : 'قطع'} فقط` : `🔥 Only ${qty} left`);
+    let k = 0;
+    const show = () => { line.classList.remove('is-in'); void line.offsetWidth; line.textContent = perks[k % perks.length]; line.classList.add('is-in'); k++; };
+    show(); if (perks.length > 1) setInterval(show, 3200);
+  })();
+
   /* ---------- Delivery estimate (today + N days, from theme settings) ---------- */
   const del = $('[data-ket-delivery]');
   if (del) {
