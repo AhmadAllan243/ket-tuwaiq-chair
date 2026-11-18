@@ -102,7 +102,17 @@
     const bar = $('#sticky-cta'), btn = bar && bar.querySelector('[data-sticky-cta-add-to-cart]'); if (!btn) return;
     btn.classList.add('ket-cta-go'); btn.parentElement.classList.add('ket-cta-wrap');
     const fit = () => { btn.parentElement.style.setProperty('--bw', btn.offsetWidth + 'px'); btn.parentElement.style.setProperty('--bh', btn.offsetHeight + 'px'); };   // the pulse ring hugs the button
-    fit(); addEventListener('resize', fit); new MutationObserver(fit).observe(bar, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
+    // while the bar is up, the floating chat button (BusinessChat) rides above it instead of hiding behind it
+    const lift = () => { const on = bar.getAttribute('aria-hidden') === 'false' && !document.body.classList.contains('ket-before-buy');
+      document.body.classList.toggle('ket-cta-on', on); if (on && bar.offsetHeight) document.documentElement.style.setProperty('--ket-cta-h', (bar.offsetHeight + 14) + 'px'); };
+    const fitAll = () => { fit(); lift(); };
+    fitAll(); addEventListener('resize', fitAll); new MutationObserver(fitAll).observe(bar, { attributes: true, attributeFilter: ['class', 'aria-hidden'] });
+    new MutationObserver(lift).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    // a variant with its own prices: the struck old price follows it
+    const wasEl = bar.querySelector('[data-ket-cta-was]'), priceBox = bar.querySelector('[data-ket-cta-price]');
+    window.addEventListener('product:variant-changed', e => { const v = e.detail?.selectedProduct; if (!v || !wasEl) return;
+      const on = !!(v.formatted_sale_price && v.formatted_price && v.formatted_sale_price !== v.formatted_price);
+      wasEl.textContent = on ? v.formatted_price : ''; priceBox?.classList.toggle('is-sale', on); });
     const nameEl = bar.querySelector('[data-sticky-cta-name]'); if (!nameEl) return;
     const tick = document.createElement('div'); tick.className = 'ket-perk'; tick.setAttribute('aria-live', 'polite');
     nameEl.insertAdjacentElement('afterend', tick);
@@ -123,18 +133,18 @@
     if (sale && price > sale) {
       off = Math.round((1 - sale / price) * 100); const save = price - sale;
       const saveTxt = String(p.formatted_price).replace(/[\d.,]+/, save.toLocaleString('en-US', { minimumFractionDigits: save % 1 ? 2 : 0, maximumFractionDigits: 2 })).trim();
-      perks.push({ i: 'tag', t: ar ? `خصم ${off}% · وفّر ${saveTxt}` : `${off}% off · save ${saveTxt}` });
+      perks.push({ i: 'tag', t: ar ? `خصم ${off}% · وفّر ${saveTxt}` : `${off}% off · save ${saveTxt}`, s: ar ? `وفّر ${saveTxt}` : `Save ${saveTxt}` });
     }
-    perks.push({ i: 'truck', t: ar ? 'توصيل مجاني لكل مدن المملكة' : 'Free delivery across the Kingdom' });
+    perks.push({ i: 'truck', t: ar ? 'توصيل مجاني لكل مدن المملكة' : 'Free delivery across the Kingdom', s: ar ? 'توصيل مجاني' : 'Free delivery' });
     const end = Date.parse(p.purchase_restrictions?.sale_price_period_end || '');
-    if (sale && end && end > Date.now() && end - Date.now() < 48 * 3600e3) perks.push({ i: 'clock', t: ar ? 'العرض ينتهي خلال أقل من 48 ساعة' : 'Offer ends in under 48 hours', hot: true });
+    if (sale && end && end > Date.now() && end - Date.now() < 48 * 3600e3) perks.push({ i: 'clock', t: ar ? 'العرض ينتهي خلال أقل من 48 ساعة' : 'Offer ends in under 48 hours', s: ar ? 'ينتهي خلال 48 ساعة' : 'Ends within 48 h', hot: true });
     const qty = +p.quantity || 0;
     if (!p.is_infinite && qty > 0 && qty <= 10) perks.push({ i: 'flame', t: ar ? `باقي ${qty} ${qty === 1 ? 'قطعة' : qty === 2 ? 'قطعتان' : 'قطع'} فقط` : `Only ${qty} left`, hot: true });
     if (off) { const tag = document.createElement('span'); tag.className = 'ket-cta-badge'; tag.setAttribute('aria-hidden', 'true'); tag.innerHTML = `<b dir="ltr">−${off}%</b>`; btn.parentElement.appendChild(tag); }
     let k = 0;
     const show = () => {
       const x = perks[k++ % perks.length], el = document.createElement('span');
-      el.className = 'ket-perk__i' + (x.hot ? ' is-hot' : ''); el.innerHTML = `${ICO[x.i]}<span>${x.t}</span>`;
+      el.className = 'ket-perk__i' + (x.hot ? ' is-hot' : ''); el.innerHTML = `${ICO[x.i]}<span>${(matchMedia('(max-width: 767px)').matches && x.s) || x.t}</span>`;   // short words on a phone
       tick.querySelectorAll('.ket-perk__i:not(.is-out)').forEach(o => { o.classList.add('is-out'); setTimeout(() => o.remove(), 700); });
       tick.appendChild(el); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-in')));
     };

@@ -1039,3 +1039,28 @@ html[data-theme="dark"] #sticky-cta .ket-perk__i{ background:#18301F; color:#C4F
 html[data-theme="dark"] #sticky-cta .ket-perk__i.is-hot{ background:#3A2A12; color:#FFC27A; }
 @media (max-width:767px){ #sticky-cta .ket-perk__i{ font-size:11px; padding-inline:6px 8px; gap:4px; } #sticky-cta .ket-cta-badge{ top:-14px; } }
 @media (prefers-reduced-motion:reduce){ #sticky-cta button.ket-cta-go.btn, #sticky-cta button.ket-cta-go.btn::after, #sticky-cta .ket-cta-wrap::before, #sticky-cta .ket-cta-badge{ animation:none; } #sticky-cta .ket-perk__i{ transition:opacity .3s; transform:none; } }
+/* ===================== Sticky bar: the store's own fonts and weights, the sale price read as a discount, the chat button above the bar ===================== */
+#sticky-cta, #sticky-cta button, #sticky-cta h3, #sticky-cta span{ font-family:'IBM Plex Sans Arabic', 'Inter Tight', system-ui, sans-serif; }
+#sticky-cta [data-sticky-cta-name]{ font-size:14.5px; font-weight:700; letter-spacing:0; color:var(--foreground); }
+#sticky-cta .ket-cta-price{ display:flex; flex-direction:column; align-items:flex-end; line-height:1.15; }
+html[dir="rtl"] #sticky-cta .ket-cta-price{ align-items:flex-start; }
+#sticky-cta .ket-cta-price [data-sticky-cta-price]{ font:800 16px/1.15 'Inter Tight', 'IBM Plex Sans Arabic', system-ui, sans-serif; white-space:nowrap; }
+#sticky-cta .ket-cta-price__was{ display:none; font:600 12px/1.2 'Inter Tight', 'IBM Plex Sans Arabic', system-ui, sans-serif; color:#8A8A85; text-decoration:line-through; text-decoration-color:#D9472B; text-decoration-thickness:1.5px; white-space:nowrap; }
+#sticky-cta .ket-cta-price.is-sale .ket-cta-price__was{ display:block; }
+#sticky-cta .ket-cta-price.is-sale [data-sticky-cta-price]{ color:#088040!important; }
+html[data-theme="dark"] #sticky-cta .ket-cta-price.is-sale [data-sticky-cta-price]{ color:#C4F5A4!important; }
+#sticky-cta button.ket-cta-go.btn{ font-weight:700; font-size:15px; letter-spacing:0; }
+#sticky-cta button.ket-cta-go [data-sticky-cta-btn-default]{ gap:7px; }
+#sticky-cta .ket-cta-ico{ display:block; flex:none; }
+@media (max-width:767px){
+  #sticky-cta button.ket-cta-go.btn{ padding-inline:14px; font-size:14.5px; }
+  #sticky-cta .ket-cta-ico{ width:18px; height:18px; }
+  #sticky-cta [data-sticky-cta-name]{ font-size:13.5px; }
+  #sticky-cta .ket-cta-price [data-sticky-cta-price]{ font-size:15px; }
+  #sticky-cta .ket-cta-price__was{ font-size:11px; }
+  #sticky-cta .gap-4{ gap:8px; }
+  #sticky-cta .size-16{ width:36px; height:36px; }
+  /* the floating chat button (BusinessChat, its own sealed widget): lifted above the bar while the bar is up, gliding there */
+  #bcio-whatsapp-widget{ position:fixed; left:0; right:0; bottom:0; height:0; z-index:2147483000; transform:translateY(0); transition:transform .5s cubic-bezier(.2,.8,.2,1); }
+  body.ket-cta-on #bcio-whatsapp-widget{ transform:translateY(calc(-1 * var(--ket-cta-h, 84px))); }
+}

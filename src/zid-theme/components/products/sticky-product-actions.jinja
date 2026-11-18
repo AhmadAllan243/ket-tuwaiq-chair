@@ -40,8 +40,10 @@
           </p>
         </div>
 
-        {# Price #}
-        <div class="shrink-0">
+        {# Price — KET: on a sale, the old price struck above and the new one in green, so it reads as a discount #}
+        {% set ket_was = product.formatted_sale_price and product.formatted_price and product.formatted_sale_price != product.formatted_price %}
+        <div class="ket-cta-price shrink-0 {{ 'is-sale' if ket_was }}" data-ket-cta-price>
+          <s class="ket-cta-price__was" data-ket-cta-was>{{ product.formatted_price if ket_was }}</s>
           <span
             class="text-foreground text-sm font-semibold"
             data-sticky-cta-price
@@ -81,22 +83,15 @@
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
+              stroke-width="2.2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="hidden sm:block"
+              class="ket-cta-ico"
+              aria-hidden="true"
             >
-              <circle
-                cx="8"
-                cy="21"
-                r="1"
-              ></circle>
-              <circle
-                cx="19"
-                cy="21"
-                r="1"
-              ></circle>
-              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+              <path d="M5 8h14l-1.2 11.2A2 2 0 0 1 15.8 21H8.2a2 2 0 0 1-2-1.8L5 8Z"></path>
+              <path d="M9 8V6.5a3 3 0 0 1 6 0V8"></path>
+              <path d="M12 11.5v5M9.5 14h5"></path>
             </svg>
             <span> {% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %} {{ _("Add to cart") }} {% endif %}</span>
           </span>
