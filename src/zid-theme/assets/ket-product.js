@@ -95,6 +95,21 @@
     } catch (e) {}
   })();
 
+  /* ---------- Options: a product never opens on a spare part. Choices that are only the top («Tabletop», «سطح») move to the end
+     of their list, and if Zid opened on one, the first full product is chosen instead (customers were buying the top by mistake) ---------- */
+  (async () => {
+    const PART = /table\s*to[pb]|\btop\b|سطح/i;
+    for (let i = 0; i < 50 && typeof window.productOptionListItemClicked !== 'function'; i++) await new Promise(r => setTimeout(r, 100));
+    document.querySelectorAll('#product-variants-options .product-options__group').forEach(g => {
+      const ul = g.querySelector('.product-options__list'); if (!ul) return;
+      const items = [...ul.querySelectorAll(':scope > li')], parts = items.filter(li => PART.test(li.getAttribute('value') || li.textContent));
+      if (!parts.length || parts.length === items.length) return;
+      parts.forEach(li => ul.appendChild(li));
+      const act = ul.querySelector(':scope > li.active');
+      if (act && parts.includes(act)) items.find(li => !parts.includes(li))?.click();
+    });
+  })();
+
   /* ---------- Sticky add-to-cart bar: a green button with a shine, a pulse and a wiggle, the saving as a tag on its corner,
      and a chip of true reasons to buy that slides from one to the next (the saving, free delivery, the offer ending within
      48 h, few pieces left), from the product's own Zid data ---------- */
