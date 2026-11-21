@@ -68,8 +68,9 @@ const STORE = {
 
   // the gallery: tap a lamp and its white turns into its room. x / y = where the lamp sits in the photo
   gallery: [
-    { id: 'mush', x: '60%', y: '54%', ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية.', en: 'A soft light that warms the corner.' } },
-    { id: 'spot', x: '62%', y: '50%', ar: 'على مكتبك', en: 'At your desk', note: { ar: 'ضوء مركّز للقراءة والشغل.', en: 'Focused light for reading and work.' } }
+    // w/h = the photo's size; box = the lamp inside it (% left, top, right, bottom); pos = how the room photo is framed
+    { id: 'rib', w: 1121, h: 1403, box: [31, 34.1, 68.8, 72.4], pos: [.5, .48], ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية، ويصير المكان أهدأ.', en: 'A soft light that warms the corner and calms the room.' } },
+    { id: 'spot', w: 1000, h: 1500, box: [44.5, 11.4, 99.9, 92.9], pos: [.62, .5], ar: 'على مكتبك', en: 'At your desk', note: { ar: 'ضوء مركّز تحرّكه بيدك، للقراءة والشغل.', en: 'A focused light you turn by hand, for reading and work.' } }
   ],
 
   ui: {
@@ -77,7 +78,7 @@ const STORE = {
       hEy: 'قسم الإضاءات', hTitle: 'لمسة ضوء واحدة، تغيّر إحساس المكان كله.', hMarkW: 'ضوء', hSub2: 'أبجورات بتصاميم هادئة وضوء دافئ، تحوّل كل زاوية في بيتك إلى ركنك المفضل.',
       hHint: 'مرّر للأسفل… وشغّل الضوء', stOn: 'الضوء شغّال', stOff: 'الضوء مطفأ', tapLight: 'المس لتشغيل الضوء',
       lsw: 'شغّل الإضاءة', lswOn: 'الإضاءة شغّالة',
-      galEy: 'المس الضوء', galH: 'المس أي أبجورة، وشوفها في مكانها.', galTx: 'اختر وحدة، وشوف كيف يتحوّل البياض إلى بيت، ويشتغل الضوء.', galBtn: 'تسوّق الإضاءات', galClose: 'رجوع', galTap: 'المس',
+      galEy: 'المس الضوء', galH: 'المس أي أبجورة، وشوفها في مكانها.', galTx: 'اختر وحدة، وشوفها تدخل مكانها في البيت، ويشتغل ضوءها.', galBtn: 'تسوّق الإضاءات', galClose: 'رجوع', galTap: 'المس',
       eco: 'كفاءة الطاقة', ecoS: 'الطاقة', ecoSave: 'توفير {n}٪',
       skip: 'تخطَّ إلى المنتجات', home: 'الرئيسية', tables: "الإضاءات", search: 'بحث', account: 'حسابي', cart: 'السلة',
       ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: "خصومات تصل إلى {n}٪ على الإضاءات",
@@ -106,7 +107,7 @@ const STORE = {
       hEy: 'The lighting section', hTitle: 'One touch of light changes how the whole room feels.', hMarkW: 'light', hSub2: 'Lamps in calm designs with a warm light that turns every corner of your home into your favourite place.',
       hHint: 'Scroll down… and switch the light on', stOn: 'Light on', stOff: 'Light off', tapLight: 'Tap to switch the light',
       lsw: 'Lights on', lswOn: 'Lights are on',
-      galEy: 'Touch the light', galH: 'Touch any lamp and see it in its place.', galTx: 'Pick one and watch the white turn into a home, and the light come on.', galBtn: 'Shop lighting', galClose: 'Back', galTap: 'Tap',
+      galEy: 'Touch the light', galH: 'Touch any lamp and see it in its place.', galTx: 'Pick one and watch it move into its place at home, and its light come on.', galBtn: 'Shop lighting', galClose: 'Back', galTap: 'Tap',
       eco: 'Energy efficiency', ecoS: 'Energy', ecoSave: '{n}% saving',
       skip: 'Skip to products', home: 'Home', tables: "Lighting", search: 'Search', account: 'Account', cart: 'Cart',
       ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: "Up to {n}% off lighting",
@@ -139,8 +140,8 @@ const STORE = {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="media/lamps/globe-off.webp">
-<link rel="preload" as="image" href="media/lamps/globe-on.webp">
+<link rel="preload" as="image" href="media/lamps/mush-off.webp">
+<link rel="preload" as="image" href="media/lamps/mush-on.webp">
 
 <style>
 /* ===================== TOKENS (same as ket-product.html) ===================== */
@@ -250,10 +251,10 @@ html[dir="rtl"] .w--mark::before{ --mo:right; }
 .lhero__media{ position:relative; flex:1 1 0; min-height:240px; width:100%; align-self:center; border-radius:clamp(26px, 3.6vw, 52px); box-shadow:0 0 0 rgba(255,184,103,0); transition:box-shadow 1.4s var(--ease); }
 .is-lit .lhero__media{ box-shadow:0 30px 90px -30px rgba(255,170,90,.75); }
 .lhero__ph{ position:absolute; inset:0; display:block; border-radius:inherit; overflow:hidden; background:#ece8e4; cursor:pointer; }
-.lhero__ph > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 30%; }
+.lhero__ph > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:58% 46%; }
 .lhero__ph > img.is-on{ opacity:0; transition:opacity 1.4s ease; }
 .is-lit .lhero__ph > img.is-on{ opacity:1; }
-.lhero__glow{ position:absolute; inset:0; pointer-events:none; background:radial-gradient(34% 40% at 50% 34%, rgba(255,205,140,.55), transparent 70%); mix-blend-mode:screen; opacity:0; transition:opacity 1.4s ease; }
+.lhero__glow{ position:absolute; inset:0; pointer-events:none; background:radial-gradient(30% 46% at 57% 44%, rgba(255,205,140,.45), transparent 70%); mix-blend-mode:screen; opacity:0; transition:opacity 1.4s ease; }
 .is-lit .lhero__glow{ opacity:1; }
 .lhero .hero__stat{ top:14px; inset-inline-start:14px; padding:8px 18px 8px 10px; gap:10px; }
 html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
@@ -262,7 +263,6 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 .lhero__state i{ width:9px; height:9px; border-radius:50%; background:#8d8d96; transition:background-color .6s, box-shadow .6s; }
 .lhero__state.is-on i{ background:var(--orange); box-shadow:0 0 0 4px rgba(255,100,23,.22); }
 .lhero .hero__shop{ background:var(--lemon); }
-@media (min-width:768px){ .lhero__media{ width:auto; aspect-ratio:4 / 5; max-width:100%; } }
 @media (max-width:767px){
   .lhero__in{ height:calc(100svh - var(--header-h) - 64px); min-height:480px; gap:14px; }
   .lhero__h{ font-size:clamp(28px, 8.2vw, 40px); }
@@ -275,54 +275,52 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 /* ===================== LIGHTING: the type photo, off → on ===================== */
 .shape__big > img.sb__on{ opacity:0; transition:opacity .8s var(--ease); }
 .shape__big.is-lit > img.sb__on{ opacity:1; animation:flick .9s both; }
-.shape__big > img{ object-position:50% 55%; }
+.shape__big > img{ object-position:50% 32%; }
 .shape__big h2 .w__g{ color:rgba(255,255,255,.25); }
 .shape__big h2 .w__i{ color:var(--white); }
 .shape__big::after{ background:linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,.25) 46%, rgba(0,0,0,.08) 66%, rgba(0,0,0,.4)); }
 .st{ background:var(--white); }
 
-/* ===================== LIGHTING: the gallery (one lamp at a time) ===================== */
-.gal{ background:var(--white); border-radius:var(--r-card); padding:clamp(18px, 3vw, 40px); box-shadow:inset 0 0 0 1px var(--line); }
-.gal__head{ display:grid; gap:10px; justify-items:center; text-align:center; margin-bottom:clamp(14px, 2vw, 24px); }
-.gal__head h2{ margin-inline:auto; }
-.gal__head .eyebrow::before{ background:var(--orange); }
-.gal__head h2{ font-size:clamp(26px, 3.2vw, 44px); font-weight:600; line-height:1.2; letter-spacing:-.03em; max-width:22ch; }
-html[lang="ar"] .gal__head h2{ font-weight:700; line-height:1.45; letter-spacing:0; }
-.gal__tx{ color:var(--ink-2); max-width:46ch; }
-@property --r{ syntax:'<length>'; inherits:true; initial-value:0px; }
-.gal__row{ position:relative; width:min(100%, 520px); aspect-ratio:4 / 5.7; margin-inline:auto; }
-.gal__it{ --r:clamp(110px, 11vw, 160px); --z:.64; position:absolute; inset:0 0 64px; border-radius:clamp(20px, 2.6vw, 34px); overflow:hidden; background:var(--white); opacity:0; visibility:hidden; transition:--r 1.2s var(--ease), visibility 0s .5s; }
-.gal__it.is-cur{ opacity:1; visibility:visible; transition:--r 1.2s var(--ease), visibility 0s; }
-.gal__hit{ position:absolute; inset:0; z-index:3; border-radius:inherit; }
-.gal__ph{ position:absolute; inset:0; -webkit-mask-image:radial-gradient(circle at var(--x) var(--y), #000 var(--r), transparent calc(var(--r) * 1.3)); mask-image:radial-gradient(circle at var(--x) var(--y), #000 var(--r), transparent calc(var(--r) * 1.3)); transform:scale(var(--z)); transform-origin:var(--x) var(--y); transition:transform 1.2s var(--ease); }
-.gal__ph img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:var(--x) var(--y); }
-.gal__ph .gal__on{ opacity:0; transition:opacity 1.2s ease; }
-.gal__it:not(.is-open):hover{ --z:.67; }
-.gal__lbl{ position:absolute; z-index:2; inset-inline:12px; bottom:14px; display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; pointer-events:none; transition:opacity .4s, transform .5s var(--ease); }
-.gal__lbl b{ font-size:clamp(16px, 1.5vw, 20px); font-weight:700; }
-.gal__lbl small{ display:inline-flex; align-items:center; gap:6px; height:28px; padding-inline:10px 12px; border-radius:var(--r-pill); background:var(--lav-l); font-size:12px; font-weight:700; }
-.gal__lbl small i{ width:7px; height:7px; border-radius:50%; background:var(--orange); animation:ping2 1.6s var(--ease) infinite; }
-@keyframes ping2{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,100,23,.5); } 70%{ box-shadow:0 0 0 7px rgba(255,100,23,0); } }
-.gal__cap{ position:absolute; z-index:4; inset-inline:clamp(14px, 2.4vw, 32px); bottom:clamp(14px, 2.4vw, 32px); display:grid; gap:8px; justify-items:start; max-width:430px; padding:clamp(16px, 2vw, 24px); border-radius:22px; background:rgba(255,255,255,.9); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); opacity:0; transform:translateY(20px); pointer-events:none; transition:opacity .5s .25s, transform .7s .25s var(--ease); }
-.gal__cap > b{ font-size:clamp(22px, 2.4vw, 32px); font-weight:700; line-height:1.3; }
-.gal__cap p{ color:var(--ink-2); font-size:15px; }
+/* ===================== LIGHTING: the gallery (full width, as in the video) ===================== */
+.gx{ padding-top:var(--section); }
+.gx__stage{ position:relative; overflow:hidden; height:clamp(580px, 94svh, 900px); background:radial-gradient(70% 60% at 50% 62%, #2B2236, #120F17 72%); color:var(--white); touch-action:pan-y; }
+.gx__scene img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; }
+.gx__lamps{ position:absolute; inset:0; z-index:1; }
+.gx__f{ position:absolute; display:block; padding:0; transition:filter .4s; }
+.gx__f img{ display:block; width:100%; height:100%; filter:drop-shadow(0 30px 34px rgba(0,0,0,.45)); animation:gxFloat 6s ease-in-out var(--d) infinite; }
+@keyframes gxFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+.gx__f.is-cur{ cursor:pointer; }
+.gx__f:not(.is-cur):hover{ filter:brightness(1.25); }
+.gx.is-open .gx__f img, .gx__stage.is-open .gx__f img{ animation:none; filter:none; }
+.gx__head{ position:absolute; z-index:2; inset-inline:0; top:clamp(24px, 4vw, 56px); display:grid; gap:10px; pointer-events:none; transition:opacity .5s; }
+.gx__head .eyebrow{ color:rgba(255,255,255,.85); }
+.gx__head .eyebrow::before{ background:var(--orange); }
+.gx__head h2{ font-size:clamp(28px, 3.6vw, 52px); font-weight:600; line-height:1.15; letter-spacing:-.03em; max-width:16ch; }
+html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:0; }
+.gx__tx{ color:rgba(255,255,255,.7); max-width:40ch; }
+.gx__lbl{ position:absolute; z-index:2; left:50%; bottom:92px; translate:-50% 0; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; pointer-events:none; transition:opacity .5s; }
+.gx__lbl b{ font-size:clamp(18px, 1.8vw, 24px); font-weight:700; }
+.gx__lbl small{ display:inline-flex; align-items:center; gap:6px; height:30px; padding-inline:10px 12px; border-radius:var(--r-pill); background:rgba(255,255,255,.12); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); font-size:12px; font-weight:700; }
+.gx__lbl small i{ width:7px; height:7px; border-radius:50%; background:var(--orange); animation:ping2 1.6s var(--ease) infinite; }
+@keyframes ping2{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,100,23,.6); } 70%{ box-shadow:0 0 0 8px rgba(255,100,23,0); } }
+.gx__nav{ position:absolute; z-index:2; left:50%; bottom:28px; translate:-50% 0; display:flex; align-items:center; gap:16px; transition:opacity .5s; }
+.gx__arr{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--lav); color:var(--black); transition:transform .4s var(--ease), background-color .3s; }
+.gx__arr:hover{ background:var(--lemon); transform:scale(1.06); }
+.gx__dots{ display:flex; gap:6px; }
+.gx__dots i{ width:8px; height:8px; border-radius:var(--r-pill); background:rgba(255,255,255,.3); transition:width .5s var(--ease), background-color .4s; }
+.gx__dots i.is-on{ width:26px; background:var(--orange); }
+.gx__cap{ position:absolute; z-index:4; inset-inline-start:var(--gutter); bottom:var(--gutter); display:grid; gap:8px; justify-items:start; max-width:440px; padding:clamp(16px, 2vw, 26px); border-radius:24px; background:rgba(255,255,255,.9); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); color:var(--black); opacity:0; pointer-events:none; }
+.gx__cap > b{ font-size:clamp(24px, 2.6vw, 36px); font-weight:700; line-height:1.25; }
+.gx__cap p{ color:var(--ink-2); font-size:15px; }
 .gal__btns{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin-top:4px; }
 .gal__x{ display:inline-flex; align-items:center; gap:6px; height:44px; padding-inline:12px 16px; border-radius:var(--r-pill); background:var(--lav-l); font-size:14px; font-weight:700; }
-/* tapped: it grows into its room, then the light comes on */
-.gal__it.is-open{ --r:170vmax; --z:1; }
-.gal__it.is-open .gal__lbl{ opacity:0; transform:translateY(10px); }
-.gal__it.is-open .gal__hit{ z-index:1; }
-.gal__it.is-open .gal__cap{ opacity:1; transform:none; pointer-events:auto; }
-.gal__it.is-lit .gal__on{ opacity:1; }
-.gal__nav{ position:absolute; inset-inline:0; bottom:0; height:48px; display:flex; align-items:center; justify-content:center; gap:16px; }
-.gal__arr{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--lav); transition:transform .4s var(--ease), background-color .3s; }
-.gal__arr:hover{ background:var(--lemon); transform:scale(1.06); }
-.gal__dots{ display:flex; gap:6px; }
-.gal__dots i{ width:8px; height:8px; border-radius:var(--r-pill); background:var(--g200); transition:width .5s var(--ease), background-color .4s; }
-.gal__dots i.is-on{ width:26px; background:var(--orange); }
+.gx__stage.is-open .gx__head, .gx__stage.is-open .gx__lbl, .gx__stage.is-open .gx__nav{ opacity:0; pointer-events:none; }
+.gx__stage.is-open .gx__cap{ pointer-events:auto; }
+.gx__stage.is-open{ cursor:pointer; }
 @media (max-width:767px){
-  .gal__it{ --r:clamp(100px, 30vw, 150px); --z:.6; }
-  .gal__cap{ inset-inline:10px; bottom:10px; }
+  .gx__stage{ height:min(175vw, 92svh); min-height:600px; }
+  .gx__lbl{ bottom:84px; }
+  .gx__cap{ inset-inline:12px; bottom:12px; max-width:none; }
 }
 
 /* ===================== LIGHTING: the light switch and the cards ===================== */
@@ -729,8 +727,8 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
     <h1 class="lhero__h" id="hTitle"></h1>
     <div class="lhero__media">
       <button class="lhero__ph" id="heroPh" type="button" data-t-aria="tapLight">
-        <img class="is-off" src="media/lamps/globe-off.webp" alt="" width="941" height="1500" fetchpriority="high">
-        <img class="is-on" src="media/lamps/globe-on.webp" alt="" width="941" height="1500">
+        <img class="is-off" src="media/lamps/mush-off.webp" alt="" width="1002" height="1500" fetchpriority="high">
+        <img class="is-on" src="media/lamps/mush-on.webp" alt="" width="1002" height="1500">
         <span class="lhero__glow" aria-hidden="true"></span>
       </button>
       <span class="hero__stat" id="hStat"></span>
@@ -746,7 +744,7 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
   <div class="shape">
     <div class="shape__cols" id="shapeCols"></div>
     <div class="shape__big" data-reveal>
-      <img class="sb__off" src="media/lamps/rib-off.webp" alt="" loading="lazy" width="1121" height="1403"><img class="sb__on" src="media/lamps/rib-on.webp" alt="" loading="lazy" width="1121" height="1403">
+      <img class="sb__off" src="media/lamps/globe-off.webp" alt="" loading="lazy" width="844" height="1500"><img class="sb__on" src="media/lamps/globe-on.webp" alt="" loading="lazy" width="844" height="1500">
       <div><h2 id="shapeTitle"></h2><p data-t="shapeTx"></p></div>
       <div class="shape__bar">
         <a class="sbtn flip" href="#all" id="shapeGo" data-t-aria="cardBtn"></a>
@@ -757,11 +755,15 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
   </div>
 </section>
 
-<!-- 3 · THE GALLERY: lamps on white; tap one and its white becomes the real room, then the light comes on -->
-<section class="section container" id="glow" aria-labelledby="galTitle">
-  <div class="gal" id="gal">
-    <div class="gal__head"><p class="eyebrow" data-t="galEy"></p><h2 id="galTitle" data-t="galH"></h2><p class="gal__tx" data-t="galTx"></p></div>
-    <div class="gal__row" id="galRow"></div>
+<!-- 3 · THE GALLERY: the lamps alone on a dark stage; tap one and it moves into its place in the real room, then the light comes on -->
+<section class="gx" id="glow" aria-labelledby="galTitle">
+  <div class="gx__stage" id="gx">
+    <div class="gx__scene" aria-hidden="true"><img class="gx__off" alt=""><img class="gx__on" alt=""></div>
+    <div class="gx__lamps" id="galRow"></div>
+    <div class="container gx__head"><p class="eyebrow" data-t="galEy"></p><h2 id="galTitle" data-t="galH"></h2><p class="gx__tx" data-t="galTx"></p></div>
+    <div class="gx__lbl" id="gxLbl" aria-hidden="true"></div>
+    <div class="gx__nav" id="gxNav"></div>
+    <div class="gx__cap" id="gxCap"></div>
   </div>
 </section>
 
@@ -1057,41 +1059,91 @@ let lightsOn = false;
 function renderSwitch() { $('#lsw').setAttribute('aria-checked', String(lightsOn)); $('#lswT').textContent = t(lightsOn ? 'lswOn' : 'lsw'); $('#pgrid').classList.toggle('is-lit', lightsOn); document.body.classList.toggle('lights-on', lightsOn); }
 $('#lsw').addEventListener('click', () => { lightsOn = !lightsOn; renderSwitch(); });
 
-/* the gallery: one lamp at a time on white, arrows between them; a tap grows it into its room, then its light comes on */
-let galI = 0, galT;
+/* the gallery: the lamps alone in a row (the chosen one big in the middle); a tap carries it into its exact place in the room,
+   the room fades in around it, then its light comes on. The cut-out has the same frame as the room photo, so it lands exactly. */
+const GX = { i: 0, open: false, busy: false };
+const gxEl = () => $('#gx');
+const gxSize = () => ({ W: gxEl().clientWidth, H: gxEl().clientHeight });
+function gxSlot(g, d) {          // d = place in the row: 0 the middle, ±1 the sides, further = out of view
+  const { W, H } = gxSize(), ph = W < 768, [x0, y0, x1, y1] = g.box.map(v => v / 100);
+  const lampH = H * (d === 0 ? (ph ? .36 : .42) : (ph ? .18 : .24));
+  const fs = lampH / ((y1 - y0) * g.h), fw = g.w * fs, fh = g.h * fs;
+  const step = W * (ph ? .42 : .34) * (lang === 'ar' ? -1 : 1);
+  const cxT = W / 2 + d * step, cyT = H * (d === 0 ? (ph ? .5 : .52) : (ph ? .54 : .56));
+  return { left: cxT - (x0 + x1) / 2 * fw, top: cyT - (y0 + y1) / 2 * fh, width: fw, height: fh, opacity: d === 0 ? 1 : Math.abs(d) === 1 ? .38 : 0 };
+}
+function gxCover(g) {           // where the room photo sits when it fills the stage (object-fit: cover)
+  const { W, H } = gxSize(), k = Math.max(W / g.w, H / g.h), dw = g.w * k, dh = g.h * k;
+  return { left: (W - dw) * g.pos[0], top: (H - dh) * g.pos[1], width: dw, height: dh };
+}
+function gxOff(j) { const n = STORE.gallery.length; let d = (j - GX.i + n) % n; if (d > n / 2) d -= n; if (n === 2 && d === -1) d = 1; return d; }
+function gxLayout(anim) {
+  $$('#galRow .gx__f').forEach((f, j) => { const t = gxSlot(STORE.gallery[j], gxOff(j)); f.classList.toggle('is-cur', j === GX.i);
+    if (anim && G) gsap.to(f, { ...t, duration: 1, ease: 'expo.inOut' }); else gsap.set(f, t); });
+  const g = STORE.gallery[GX.i];
+  $('#gxLbl').innerHTML = `<b>${L(g)}</b><small><i></i>${t('galTap')}</small>`;
+  $$('#gxNav .gx__dots i').forEach((x, k) => x.classList.toggle('is-on', k === GX.i));
+}
 function renderGal() {
   const G2 = STORE.gallery;
-  $('#galRow').innerHTML = G2.map((g, k) => `<div class="gal__it${k === galI ? ' is-cur' : ''}" data-i="${k}" style="--x:${g.x};--y:${g.y}" aria-hidden="${k !== galI}">
-      <button class="gal__hit" type="button" aria-label="${L(g)}"></button>
-      <span class="gal__ph" aria-hidden="true"><img src="${img(g.id + '-off')}" alt="" loading="lazy"><img class="gal__on" src="${img(g.id + '-on')}" alt="" loading="lazy"></span>
-      <span class="gal__lbl"><b>${L(g)}</b><small><i></i>${t('galTap')}</small></span>
-      <div class="gal__cap"><b>${L(g)}</b><p>${L(g.note)}</p>
-        <div class="gal__btns"><a class="btn btn-primary" href="#all" data-gal-shop><span>${t('galBtn')}</span><span class="arr flip">${icon('arrow', 18, 1.8)}</span></a>
-        <button class="gal__x" type="button" data-gal-close>${icon('close', 18, 2)}<span>${t('galClose')}</span></button></div></div>
-    </div>`).join('') + `<div class="gal__nav">
-      <button class="gal__arr flip" type="button" data-gal-go="-1" aria-label="${t('prev')}">${icon('arrow', 20, 2)}</button>
-      <span class="gal__dots">${G2.map((_, k) => `<i class="${k === galI ? 'is-on' : ''}"></i>`).join('')}</span>
-      <button class="gal__arr flip" type="button" data-gal-go="1" aria-label="${t('next')}">${icon('arrow', 20, 2)}</button></div>`;
-  // the "previous" arrow points back
-  $('#galRow [data-gal-go="-1"] svg').style.transform = 'scaleX(' + (lang === 'ar' ? 1 : -1) + ')';
+  $('#galRow').innerHTML = G2.map((g, j) => `<button class="gx__f" type="button" data-j="${j}" aria-label="${L(g)}"><img src="${img(g.id + '-cut')}" alt="" loading="lazy" style="--d:${j * 1.3}s"></button>`).join('');
+  $('#gxNav').innerHTML = `<button class="gx__arr" type="button" data-gx-go="-1" aria-label="${t('prev')}">${icon('arrow', 20, 2)}</button>
+    <span class="gx__dots">${G2.map(() => '<i></i>').join('')}</span>
+    <button class="gx__arr" type="button" data-gx-go="1" aria-label="${t('next')}">${icon('arrow', 20, 2)}</button>`;
+  // arrows point the way the row moves: "next" toward the reading direction
+  $('#gxNav [data-gx-go="1"] svg').style.transform = lang === 'ar' ? 'scaleX(-1)' : '';
+  $('#gxNav [data-gx-go="-1"] svg').style.transform = lang === 'ar' ? '' : 'scaleX(-1)';
+  gxCap();
+  requestAnimationFrame(() => { gxLayout(false); if (GX.open) gsap.set($$('#galRow .gx__f')[GX.i], { ...gxCover(G2[GX.i]), opacity: 0 }); });
 }
-function galOpen(it) { clearTimeout(galT); it.classList.add('is-open'); galT = setTimeout(() => it.classList.add('is-lit'), 900); }
-function galClose() { clearTimeout(galT); $$('#galRow .gal__it').forEach(x => x.classList.remove('is-open', 'is-lit')); }
-function galGo(d) {
-  const n = STORE.gallery.length, from = galI; galI = (galI + d + n) % n; galClose();
-  const a = $(`#galRow .gal__it[data-i="${from}"]`), b = $(`#galRow .gal__it[data-i="${galI}"]`);
-  $$('#galRow .gal__dots i').forEach((x, k) => x.classList.toggle('is-on', k === galI));
-  a.classList.remove('is-cur'); a.setAttribute('aria-hidden', 'true'); b.classList.add('is-cur'); b.setAttribute('aria-hidden', 'false');
-  if (G) { const dir = (lang === 'ar' ? -1 : 1) * d; gsap.fromTo(b, { xPercent: 18 * dir, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .8, ease: 'expo.out', clearProps: 'transform,opacity' }); gsap.fromTo(a, { opacity: 1 }, { xPercent: -18 * dir, opacity: 0, duration: .5, ease: 'power2.in', clearProps: 'transform,opacity' }); }
+function gxCap() {
+  const g = STORE.gallery[GX.i];
+  $('#gxCap').innerHTML = `<b>${L(g)}</b><p>${L(g.note)}</p><div class="gal__btns"><a class="btn btn-primary" href="#all" data-gx-shop><span>${t('galBtn')}</span><span class="arr flip">${icon('arrow', 18, 1.8)}</span></a>
+    <button class="gal__x" type="button" data-gx-close>${icon('close', 18, 2)}<span>${t('galClose')}</span></button></div>`;
 }
-$('#galRow').addEventListener('click', e => {
-  const go = e.target.closest('[data-gal-go]'); if (go) { galGo(+go.dataset.galGo); return; }
-  if (e.target.closest('[data-gal-close]')) { galClose(); return; }
-  if (e.target.closest('[data-gal-shop]')) { e.preventDefault(); galClose(); goGrid(); return; }
-  const it = e.target.closest('.gal__it'); if (!it) return;
-  if (it.classList.contains('is-open')) { it.classList.toggle('is-lit'); return; }   // in the room: a tap switches the light
-  galOpen(it);
+function gxGo(d) { if (GX.open || GX.busy) return; const n = STORE.gallery.length; GX.i = (GX.i + d + n) % n; gxLayout(true); }
+function gxOpen() {
+  if (GX.open || GX.busy) return; GX.busy = true; GX.open = true;
+  const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl();
+  const off = $('.gx__off', st), on = $('.gx__on', st), pos = `${g.pos[0] * 100}% ${g.pos[1] * 100}%`;
+  off.src = img(g.id + '-off'); on.src = img(g.id + '-on'); off.style.objectPosition = on.style.objectPosition = pos;
+  gxCap(); st.classList.add('is-open');
+  const others = $$('#galRow .gx__f').filter(x => x !== f);
+  if (!G) { gsap.set(f, { opacity: 0 }); off.style.opacity = 1; on.style.opacity = 1; GX.busy = false; return; }
+  gsap.timeline({ onComplete: () => { GX.busy = false; } })
+    .to(others, { opacity: 0, duration: .4 }, 0)
+    .to(f, { ...gxCover(g), duration: 1.2, ease: 'power3.inOut' }, 0)
+    .to(off, { opacity: 1, duration: .8, ease: 'power2.out' }, .55)
+    .set(f, { opacity: 0 }, 1.25)
+    .to(on, { opacity: 1, duration: 1.4, ease: 'power1.inOut' }, 1.55)
+    .fromTo('#gxCap', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'expo.out' }, 1.4);
+}
+function gxClose() {
+  if (!GX.open || GX.busy) return; GX.busy = true;
+  const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl(), off = $('.gx__off', st), on = $('.gx__on', st);
+  const done = () => { st.classList.remove('is-open'); GX.open = false; GX.busy = false; gxLayout(false); };
+  if (!G) { off.style.opacity = 0; on.style.opacity = 0; done(); return; }
+  gsap.timeline({ onComplete: done })
+    .to('#gxCap', { opacity: 0, duration: .3 }, 0)
+    .to(on, { opacity: 0, duration: .6 }, 0)
+    .set(f, { opacity: 1 }, .5)
+    .to(off, { opacity: 0, duration: .6 }, .55)
+    .to(f, { ...gxSlot(g, 0), duration: 1.1, ease: 'power3.inOut' }, .5)
+    .add(() => $$('#galRow .gx__f').forEach((x, j) => { if (x !== f) gsap.to(x, { opacity: gxSlot(STORE.gallery[j], gxOff(j)).opacity, duration: .5 }); }), 1.1);
+}
+$('#gx').addEventListener('click', e => {
+  const go = e.target.closest('[data-gx-go]'); if (go) { gxGo(+go.dataset.gxGo); return; }
+  if (e.target.closest('[data-gx-close]')) { gxClose(); return; }
+  if (e.target.closest('[data-gx-shop]')) { e.preventDefault(); gxClose(); goGrid(); return; }
+  if (GX.open) { if (!e.target.closest('.gx__cap') && !GX.busy) $('.gx__on', gxEl()).style.opacity = $('.gx__on', gxEl()).style.opacity === '0' ? 1 : 0; return; }   // in the room: a tap switches the light
+  const f = e.target.closest('.gx__f'); if (!f) return;
+  const j = +f.dataset.j; if (j === GX.i) gxOpen(); else { GX.i = j; gxLayout(true); }
 });
+// a swipe moves the row
+(() => { let x0 = null; const st = $('#gx');
+  st.addEventListener('pointerdown', e => { x0 = e.clientX; });
+  st.addEventListener('pointerup', e => { if (x0 == null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) gxGo((dx < 0 ? 1 : -1) * (lang === 'ar' ? -1 : 1)); }); })();
+addEventListener('resize', () => { if (GX.open) gsap.set($$('#galRow .gx__f')[GX.i], { ...gxCover(STORE.gallery[GX.i]), opacity: 0 }); gxLayout(false); });
 
 function setFilter(s) { Object.assign(state, s); renderControls(); renderGrid(true); }
 const goGrid = () => { const y = $('#all').getBoundingClientRect().top + scrollY - 70; lenis ? lenis.scrollTo(y, { duration: 1.4 }) : scrollTo({ top: y, behavior: 'smooth' }); };
@@ -1221,7 +1273,7 @@ function lampMotion() {
   if (G) ScrollTrigger.create({ trigger: sb, start: 'top 62%', onEnter: sbOn, onLeaveBack: () => { sb.classList.remove('is-lit'); gsap.set('#shapeTitle .w', { '--wp': 0 }); } });
   else sbOn();
   if (G) gsap.set('#shapeTitle .w', { '--wp': 0 });
-  if (G) gsap.fromTo('#galRow', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#galRow', start: 'top 85%' } });
+  if (G) gsap.fromTo('#galRow', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#gx', start: 'top 70%' } });
 }
 // the energy bars fill and count up as each card comes into view (and again after a filter)
 function ecoGo(card) {
