@@ -181,12 +181,12 @@ rep("  $('#shapeSeg').innerHTML =", "  $('#shapeTitle').innerHTML = WW(t('typesH
 rep("<!-- 4 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->", """<!-- 3 · THE GALLERY: the lamps alone on a dark stage; tap one and it moves into its place in the real room, then the light comes on -->
 <section class="gx" id="glow" aria-labelledby="galTitle">
   <div class="gx__stage" id="gx">
-    <div class="gx__scene" aria-hidden="true"><img class="gx__off" alt=""><img class="gx__on" alt=""></div>
+    <div class="gx__scene" id="gxScene"><img class="gx__off" alt=""><img class="gx__on" alt=""></div>
+    <div class="gx__cap" id="gxCap"></div>
     <div class="gx__lamps" id="galRow"></div>
     <div class="container gx__head"><p class="eyebrow" data-t="galEy"></p><h2 id="galTitle" data-t="galH"></h2><p class="gx__tx" data-t="galTx"></p></div>
     <div class="gx__lbl" id="gxLbl" aria-hidden="true"></div>
     <div class="gx__nav" id="gxNav"></div>
-    <div class="gx__cap" id="gxCap"></div>
   </div>
 </section>
 
@@ -249,9 +249,10 @@ function gxSlot(g, d) {          // d = place in the row: 0 the middle, ±1 the 
   const cxT = W / 2 + d * step, cyT = H * (d === 0 ? (ph ? .5 : .52) : (ph ? .54 : .56));
   return { left: cxT - (x0 + x1) / 2 * fw, top: cyT - (y0 + y1) / 2 * fh, width: fw, height: fh, opacity: d === 0 ? 1 : Math.abs(d) === 1 ? .38 : 0 };
 }
-function gxCover(g) {           // where the room photo sits when it fills the stage (object-fit: cover)
-  const { W, H } = gxSize(), k = Math.max(W / g.w, H / g.h), dw = g.w * k, dh = g.h * k;
-  return { left: (W - dw) * g.pos[0], top: (H - dh) * g.pos[1], width: dw, height: dh };
+function gxCover(g) {           // where the room photo sits inside the centred card (object-fit: cover), in stage coordinates
+  const st = gxEl().getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect();
+  const k = Math.max(b.width / g.w, b.height / g.h), dw = g.w * k, dh = g.h * k;
+  return { left: b.left - st.left + (b.width - dw) * g.pos[0], top: b.top - st.top + (b.height - dh) * g.pos[1], width: dw, height: dh };
 }
 function gxOff(j) { const n = STORE.gallery.length; let d = (j - GX.i + n) % n; if (d > n / 2) d -= n; if (n === 2 && d === -1) d = 1; return d; }
 function gxLayout(anim) {
@@ -456,44 +457,49 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 
 /* ===================== LIGHTING: the gallery (full width, as in the video) ===================== */
 .gx{ padding-top:var(--section); }
-.gx__stage{ position:relative; overflow:hidden; height:clamp(580px, 94svh, 900px); background:radial-gradient(70% 60% at 50% 62%, #2B2236, #120F17 72%); color:var(--white); touch-action:pan-y; }
+.gx__stage{ --gh:clamp(600px, 90svh, 860px); position:relative; overflow:hidden; height:var(--gh); background:var(--white); color:var(--black); touch-action:pan-y; }
+.gx__scene{ position:absolute; z-index:0; left:50%; top:50%; translate:-50% -50%; height:calc(100% - 150px); aspect-ratio:4 / 5; max-width:calc(100% - 32px); border-radius:clamp(22px, 2.6vw, 34px); overflow:hidden; pointer-events:none; }
+.gx__stage.is-open .gx__scene{ pointer-events:auto; }
 .gx__scene img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; }
 .gx__lamps{ position:absolute; inset:0; z-index:1; }
 .gx__f{ position:absolute; display:block; padding:0; transition:filter .4s; }
-.gx__f img{ display:block; width:100%; height:100%; filter:drop-shadow(0 30px 34px rgba(0,0,0,.45)); animation:gxFloat 6s ease-in-out var(--d) infinite; }
+.gx__f img{ display:block; width:100%; height:100%; filter:drop-shadow(0 26px 26px rgba(0,0,0,.16)); animation:gxFloat 6s ease-in-out var(--d) infinite; }
 @keyframes gxFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
 .gx__f.is-cur{ cursor:pointer; }
 .gx__f:not(.is-cur):hover{ filter:brightness(1.25); }
 .gx.is-open .gx__f img, .gx__stage.is-open .gx__f img{ animation:none; filter:none; }
 .gx__head{ position:absolute; z-index:2; inset-inline:0; top:clamp(24px, 4vw, 56px); display:grid; gap:10px; pointer-events:none; transition:opacity .5s; }
-.gx__head .eyebrow{ color:rgba(255,255,255,.85); }
+.gx__head .eyebrow{ color:var(--black); }
 .gx__head .eyebrow::before{ background:var(--orange); }
 .gx__head h2{ font-size:clamp(28px, 3.6vw, 52px); font-weight:600; line-height:1.15; letter-spacing:-.03em; max-width:16ch; }
 html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:0; }
-.gx__tx{ color:rgba(255,255,255,.7); max-width:40ch; }
+.gx__tx{ color:var(--ink-2); max-width:40ch; }
 .gx__lbl{ position:absolute; z-index:2; left:50%; bottom:92px; translate:-50% 0; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; pointer-events:none; transition:opacity .5s; }
 .gx__lbl b{ font-size:clamp(18px, 1.8vw, 24px); font-weight:700; }
-.gx__lbl small{ display:inline-flex; align-items:center; gap:6px; height:30px; padding-inline:10px 12px; border-radius:var(--r-pill); background:rgba(255,255,255,.12); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); font-size:12px; font-weight:700; }
+.gx__lbl small{ display:inline-flex; align-items:center; gap:6px; height:30px; padding-inline:10px 12px; border-radius:var(--r-pill); background:var(--lav-l); font-size:12px; font-weight:700; }
 .gx__lbl small i{ width:7px; height:7px; border-radius:50%; background:var(--orange); animation:ping2 1.6s var(--ease) infinite; }
 @keyframes ping2{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,100,23,.6); } 70%{ box-shadow:0 0 0 8px rgba(255,100,23,0); } }
 .gx__nav{ position:absolute; z-index:2; left:50%; bottom:28px; translate:-50% 0; display:flex; align-items:center; gap:16px; transition:opacity .5s; }
 .gx__arr{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--lav); color:var(--black); transition:transform .4s var(--ease), background-color .3s; }
 .gx__arr:hover{ background:var(--lemon); transform:scale(1.06); }
 .gx__dots{ display:flex; gap:6px; }
-.gx__dots i{ width:8px; height:8px; border-radius:var(--r-pill); background:rgba(255,255,255,.3); transition:width .5s var(--ease), background-color .4s; }
+.gx__dots i{ width:8px; height:8px; border-radius:var(--r-pill); background:var(--g200); transition:width .5s var(--ease), background-color .4s; }
 .gx__dots i.is-on{ width:26px; background:var(--orange); }
-.gx__cap{ position:absolute; z-index:4; inset-inline-start:var(--gutter); bottom:var(--gutter); display:grid; gap:8px; justify-items:start; max-width:440px; padding:clamp(16px, 2vw, 26px); border-radius:24px; background:rgba(255,255,255,.9); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); color:var(--black); opacity:0; pointer-events:none; }
-.gx__cap > b{ font-size:clamp(24px, 2.6vw, 36px); font-weight:700; line-height:1.25; }
-.gx__cap p{ color:var(--ink-2); font-size:15px; }
+.gx__cap{ position:absolute; z-index:4; top:50%; translate:0 -50%; inset-inline-start:calc(50% + (var(--gh) - 150px) * .4 + 32px); width:min(340px, calc(50% - (var(--gh) - 150px) * .4 - 56px)); display:grid; gap:8px; justify-items:start; padding:clamp(16px, 2vw, 26px); border-radius:24px; background:rgba(255,255,255,.9); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); color:var(--black); opacity:0; pointer-events:none; }
+.gx__cap > b{ font-size:clamp(20px, 2vw, 28px); font-weight:700; line-height:1.25; }
+.gx__cap p{ color:var(--ink-2); font-size:14px; }
 .gal__btns{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin-top:4px; }
 .gal__x{ display:inline-flex; align-items:center; gap:6px; height:44px; padding-inline:12px 16px; border-radius:var(--r-pill); background:var(--lav-l); font-size:14px; font-weight:700; }
 .gx__stage.is-open .gx__head, .gx__stage.is-open .gx__lbl, .gx__stage.is-open .gx__nav{ opacity:0; pointer-events:none; }
 .gx__stage.is-open .gx__cap{ pointer-events:auto; }
 .gx__stage.is-open{ cursor:pointer; }
+@media (min-width:768px) and (max-width:1199px){ .gx__cap{ top:auto; translate:-50% 0; inset-inline-start:auto; left:50%; bottom:28px; width:min(420px, 80%); } }
 @media (max-width:767px){
   .gx__stage{ height:min(175vw, 92svh); min-height:600px; }
+  .gx__scene{ height:auto; width:calc(100% - 24px); max-height:calc(100% - 130px); }
+  .gx__cap{ top:auto; translate:none; bottom:20px; inset-inline:24px; width:auto; padding:14px; }
+  .gx__cap p{ display:none; }
   .gx__lbl{ bottom:84px; }
-  .gx__cap{ inset-inline:12px; bottom:12px; max-width:none; }
 }
 
 /* ===================== LIGHTING: the light switch and the cards ===================== */
