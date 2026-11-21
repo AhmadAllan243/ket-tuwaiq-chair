@@ -182,7 +182,7 @@ rep("  $('#shapeSeg').innerHTML =", "  $('#shapeTitle').innerHTML = WW(t('typesH
 rep("<!-- 4 · ALL PRODUCTS   → Vitrin: category.products with Zid's filters / sort -->", """<!-- 3 · THE GALLERY: the lamps alone on a dark stage; tap one and it moves into its place in the real room, then the light comes on -->
 <section class="gx" id="glow" aria-labelledby="galTitle">
   <div class="gx__stage" id="gx">
-    <div class="gx__scene" id="gxScene"><img class="gx__off" alt=""><img class="gx__on" alt=""></div>
+    <div class="gx__scene" id="gxScene"><img class="gx__boff" alt=""><img class="gx__bon" alt=""><img class="gx__off" alt=""><img class="gx__on" alt=""></div>
     <div class="gx__cap" id="gxCap"></div>
     <div class="gx__lamps" id="galRow"></div>
     <div class="container gx__head"><p class="eyebrow" data-t="galEy"></p><h2 id="galTitle" data-t="galH"></h2><p class="gx__tx" data-t="galTx"></p></div>
@@ -250,11 +250,13 @@ function gxSlot(g, d) {          // d = place in the row: 0 the middle, ±1 the 
   const cxT = W / 2 + d * step, cyT = H * (d === 0 ? (ph ? .5 : .52) : (ph ? .54 : .56));
   return { left: cxT - (x0 + x1) / 2 * fw, top: cyT - (y0 + y1) / 2 * fh, width: fw, height: fh, opacity: d === 0 ? 1 : Math.abs(d) === 1 ? .38 : 0 };
 }
-function gxCover(g) {           // where the room photo sits inside the centred card (object-fit: cover), in stage coordinates
+const gxBig = () => gxEl().classList.contains('gx--big');
+function gxCover(g) {           // where the whole room photo sits inside the card (it is never cropped), in stage coordinates
   const st = gxEl().getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect();
-  const k = Math.max(b.width / g.w, b.height / g.h), dw = g.w * k, dh = g.h * k;
-  return { left: b.left - st.left + (b.width - dw) * g.pos[0], top: b.top - st.top + (b.height - dh) * g.pos[1], width: dw, height: dh };
+  const k = Math.min(b.width / g.w, b.height / g.h), dw = g.w * k, dh = g.h * k;
+  return { left: b.left - st.left + (b.width - dw) / 2, top: b.top - st.top + (b.height - dh) / 2, width: dw, height: dh };
 }
+function gxFit(g) { if (!gxBig()) $('#gxScene').style.aspectRatio = `${g.w} / ${g.h}`; }   // the normal card takes the photo's own shape
 function gxOff(j) { const n = STORE.gallery.length; let d = (j - GX.i + n) % n; if (d > n / 2) d -= n; if (n === 2 && d === -1) d = 1; return d; }
 function gxLayout(anim) {
   $$('#galRow .gx__f').forEach((f, j) => { const t = gxSlot(STORE.gallery[j], gxOff(j)); f.classList.toggle('is-cur', j === GX.i);
@@ -285,14 +287,14 @@ function gxGo(d) { if (GX.open || GX.busy) return; const n = STORE.gallery.lengt
 function gxOpen() {
   if (GX.open || GX.busy) return; GX.busy = true; GX.open = true;
   const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl();
-  const off = $('.gx__off', st), on = $('.gx__on', st), pos = `${g.pos[0] * 100}% ${g.pos[1] * 100}%`;
-  off.src = img(g.id + '-off'); on.src = img(g.id + '-on'); off.style.objectPosition = on.style.objectPosition = pos;
-  gxCap(); st.classList.add('is-open');
+  const off = $$('.gx__off, .gx__boff', st), on = $$('.gx__on, .gx__bon', st);
+  off.forEach(x => x.src = img(g.id + '-off')); on.forEach(x => x.src = img(g.id + '-on'));
+  gxFit(g); gxCap(); st.classList.add('is-open');
   // while it travels, the lamp stays inside the room card's edges
   { const r = st.getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect(), rad = getComputedStyle($('#gxScene')).borderRadius;
     $('#galRow').style.clipPath = `inset(${b.top - r.top}px ${r.right - b.right}px ${r.bottom - b.bottom}px ${b.left - r.left}px round ${rad})`; }
   const others = $$('#galRow .gx__f').filter(x => x !== f);
-  if (!G) { gsap.set(f, { opacity: 0 }); off.style.opacity = 1; on.style.opacity = 1; GX.busy = false; return; }
+  if (!G) { gsap.set(f, { opacity: 0 }); gsap.set([...off, ...on], { opacity: 1 }); GX.busy = false; return; }
   gsap.timeline({ onComplete: () => { GX.busy = false; } })
     .to(others, { opacity: 0, duration: .4 }, 0)
     .to(f, { ...gxCover(g), duration: 1.2, ease: 'power3.inOut' }, 0)
@@ -303,9 +305,9 @@ function gxOpen() {
 }
 function gxClose() {
   if (!GX.open || GX.busy) return; GX.busy = true;
-  const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl(), off = $('.gx__off', st), on = $('.gx__on', st);
+  const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl(), off = $$('.gx__off, .gx__boff', st), on = $$('.gx__on, .gx__bon', st);
   const done = () => { st.classList.remove('is-open'); GX.open = false; GX.busy = false; gxLayout(false); $('#galRow').style.clipPath = ''; };
-  if (!G) { off.style.opacity = 0; on.style.opacity = 0; done(); return; }
+  if (!G) { gsap.set([...off, ...on], { opacity: 0 }); done(); return; }
   gsap.timeline({ onComplete: done })
     .to('#gxCap', { opacity: 0, duration: .3 }, 0)
     .to(on, { opacity: 0, duration: .6 }, 0)
@@ -319,7 +321,7 @@ $('#gx').addEventListener('click', e => {
   const go = e.target.closest('[data-gx-go]'); if (go) { gxGo(+go.dataset.gxGo); return; }
   if (e.target.closest('[data-gx-close]')) { gxClose(); return; }
   if (e.target.closest('[data-gx-shop]')) { e.preventDefault(); gxClose(); goGrid(); return; }
-  if (GX.open) { if (!e.target.closest('.gx__cap') && !GX.busy) $('.gx__on', gxEl()).style.opacity = $('.gx__on', gxEl()).style.opacity === '0' ? 1 : 0; return; }   // in the room: a tap switches the light
+  if (GX.open) { if (!e.target.closest('.gx__cap') && !GX.busy) { const on = $$('.gx__on, .gx__bon', gxEl()); gsap.to(on, { opacity: +getComputedStyle(on[0]).opacity > .5 ? 0 : 1, duration: .8 }); } return; }   // in the room: a tap switches the light
   const f = e.target.closest('.gx__f'); if (!f) return;
   const j = +f.dataset.j; if (j === GX.i) gxOpen(); else { GX.i = j; gxLayout(true); }
 });
@@ -327,7 +329,7 @@ $('#gx').addEventListener('click', e => {
 (() => { let x0 = null; const st = $('#gx');
   st.addEventListener('pointerdown', e => { x0 = e.clientX; });
   st.addEventListener('pointerup', e => { if (x0 == null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) gxGo((dx < 0 ? 1 : -1) * (lang === 'ar' ? -1 : 1)); }); })();
-addEventListener('resize', () => { if (GX.open) gsap.set($$('#galRow .gx__f')[GX.i], { ...gxCover(STORE.gallery[GX.i]), opacity: 0 }); gxLayout(false); });
+addEventListener('resize', () => { if (GX.open) gxFit(STORE.gallery[GX.i]); if (GX.open) gsap.set($$('#galRow .gx__f')[GX.i], { ...gxCover(STORE.gallery[GX.i]), opacity: 0 }); gxLayout(false); });
 
 function setFilter(s) {""")
 
@@ -466,7 +468,9 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 .gx__stage{ --gh:clamp(600px, 90svh, 860px); position:relative; overflow:hidden; height:var(--gh); background:var(--white); color:var(--black); touch-action:pan-y; }
 .gx__scene{ position:absolute; z-index:0; left:50%; top:50%; translate:-50% -50%; height:calc(100% - 150px); aspect-ratio:4 / 5; max-width:calc(100% - 32px); border-radius:clamp(22px, 2.6vw, 34px); overflow:hidden; pointer-events:none; }
 .gx__stage.is-open .gx__scene{ pointer-events:auto; }
-.gx__scene img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; }
+.gx__scene img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; }
+.gx__scene .gx__boff, .gx__scene .gx__bon{ display:none; object-fit:cover; filter:blur(30px) saturate(1.1); transform:scale(1.2); }
+.gx--big .gx__scene .gx__boff, .gx--big .gx__scene .gx__bon{ display:block; }
 .gx__lamps{ position:absolute; inset:0; z-index:1; }
 .gx__f{ position:absolute; display:block; padding:0; transition:filter .4s; }
 .gx__f img{ display:block; width:100%; height:100%; filter:drop-shadow(0 26px 26px rgba(0,0,0,.16)); animation:gxFloat 6s ease-in-out var(--d) infinite; }
