@@ -70,6 +70,7 @@ const STORE = {
   gallery: [
     // w/h = the photo's size; box = the lamp inside it (% left, top, right, bottom); pos = how the room photo is framed
     { id: 'rib', w: 1121, h: 1403, box: [31, 34.1, 68.8, 72.4], pos: [.5, .48], ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية، ويصير المكان أهدأ.', en: 'A soft light that warms the corner and calms the room.' } },
+    { id: 'mush', w: 1002, h: 1500, box: [36.6, 36.8, 82.7, 71.1], pos: [.58, .5], ar: 'ضوء القعدة', en: 'Living-room glow', note: { ar: 'قبّة زجاج تنشر ضوءًا ناعمًا على الجدار والرف.', en: 'A glass dome that spreads a soft light over the wall and shelf.' } },
     { id: 'spot', w: 1000, h: 1500, box: [44.5, 11.4, 99.9, 92.9], pos: [.62, .5], ar: 'على مكتبك', en: 'At your desk', note: { ar: 'ضوء مركّز تحرّكه بيدك، للقراءة والشغل.', en: 'A focused light you turn by hand, for reading and work.' } }
   ],
 
@@ -319,6 +320,9 @@ html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:
 .gx__stage.is-open .gx__head, .gx__stage.is-open .gx__lbl, .gx__stage.is-open .gx__nav{ opacity:0; pointer-events:none; }
 .gx__stage.is-open .gx__cap{ pointer-events:auto; }
 .gx__stage.is-open{ cursor:pointer; }
+.gx--big .gx__scene{ left:max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter))); right:max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter))); top:64px; bottom:76px; height:auto; width:auto; aspect-ratio:auto; max-width:none; translate:none; border-radius:clamp(28px, 4vw, 60px); }
+.gx__stage.gx--big .gx__cap{ top:auto; translate:none; left:auto; inset-inline-start:calc(max(var(--gutter), (100% - 1440px) / 2 + var(--gutter)) + clamp(16px, 2.4vw, 32px)); bottom:calc(76px + clamp(16px, 2.4vw, 32px)); width:min(400px, calc(100% - 2 * var(--gutter) - 32px)); padding:clamp(16px, 2vw, 24px); border-radius:22px; background:rgba(255,255,255,.92); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+@media (max-width:767px){ .gx--big .gx__scene{ left:12px; right:12px; top:56px; bottom:70px; } .gx__stage.gx--big .gx__cap{ inset-inline:24px; bottom:86px; width:auto; padding:14px; } }
 @media (min-width:768px) and (max-width:1199px){ .gx__cap{ top:auto; translate:-50% 0; inset-inline-start:auto; left:50%; bottom:28px; width:min(420px, 80%); } }
 @media (max-width:767px){
   .gx__stage{ height:min(175vw, 92svh); min-height:600px; }
@@ -1091,6 +1095,7 @@ function gxLayout(anim) {
   $$('#gxNav .gx__dots i').forEach((x, k) => x.classList.toggle('is-on', k === GX.i));
 }
 function renderGal() {
+  if (/[?&]big(?:[=&]|$)/.test(location.search)) $('#gx').classList.add('gx--big');   // the review option: the room opens as big as the banner photo
   const G2 = STORE.gallery;
   $('#galRow').innerHTML = G2.map((g, j) => `<button class="gx__f" type="button" data-j="${j}" aria-label="${L(g)}"><img src="${img(g.id + '-cut')}" alt="" loading="lazy" style="--d:${j * 1.3}s"></button>`).join('');
   $('#gxNav').innerHTML = `<button class="gx__arr" type="button" data-gx-go="-1" aria-label="${t('prev')}">${icon('arrow', 20, 2)}</button>
@@ -1114,6 +1119,9 @@ function gxOpen() {
   const off = $('.gx__off', st), on = $('.gx__on', st), pos = `${g.pos[0] * 100}% ${g.pos[1] * 100}%`;
   off.src = img(g.id + '-off'); on.src = img(g.id + '-on'); off.style.objectPosition = on.style.objectPosition = pos;
   gxCap(); st.classList.add('is-open');
+  // while it travels, the lamp stays inside the room card's edges
+  { const r = st.getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect(), rad = getComputedStyle($('#gxScene')).borderRadius;
+    $('#galRow').style.clipPath = `inset(${b.top - r.top}px ${r.right - b.right}px ${r.bottom - b.bottom}px ${b.left - r.left}px round ${rad})`; }
   const others = $$('#galRow .gx__f').filter(x => x !== f);
   if (!G) { gsap.set(f, { opacity: 0 }); off.style.opacity = 1; on.style.opacity = 1; GX.busy = false; return; }
   gsap.timeline({ onComplete: () => { GX.busy = false; } })
@@ -1127,13 +1135,14 @@ function gxOpen() {
 function gxClose() {
   if (!GX.open || GX.busy) return; GX.busy = true;
   const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl(), off = $('.gx__off', st), on = $('.gx__on', st);
-  const done = () => { st.classList.remove('is-open'); GX.open = false; GX.busy = false; gxLayout(false); };
+  const done = () => { st.classList.remove('is-open'); GX.open = false; GX.busy = false; gxLayout(false); $('#galRow').style.clipPath = ''; };
   if (!G) { off.style.opacity = 0; on.style.opacity = 0; done(); return; }
   gsap.timeline({ onComplete: done })
     .to('#gxCap', { opacity: 0, duration: .3 }, 0)
     .to(on, { opacity: 0, duration: .6 }, 0)
     .set(f, { opacity: 1 }, .5)
     .to(off, { opacity: 0, duration: .6 }, .55)
+    .add(() => { $('#galRow').style.clipPath = ''; }, .75)
     .to(f, { ...gxSlot(g, 0), duration: 1.1, ease: 'power3.inOut' }, .5)
     .add(() => $$('#galRow .gx__f').forEach((x, j) => { if (x !== f) gsap.to(x, { opacity: gxSlot(STORE.gallery[j], gxOff(j)).opacity, duration: .5 }); }), 1.1);
 }
