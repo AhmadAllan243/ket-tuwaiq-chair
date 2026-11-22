@@ -1096,7 +1096,7 @@ const cardHTML = (p, i) => {
     <div class="card__media${p.photo ? ' is-photo' : ''}" style="--i:${i % 8}"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600"><img class="card__on" src="${img(p.id + '-on')}" alt="" loading="lazy" width="640" height="640">
       <span class="card__off" dir="ltr">−${off(p)}%</span>
       <button class="card__add" type="button" data-add="${p.id}" aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></div>
-    <div class="card__body"><h3 class="card__name"><a href="#" data-pd="${p.id}">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p></div>
+    <div class="card__body"><h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p></div>
   </article>`;
 };
 const tiles = () => [

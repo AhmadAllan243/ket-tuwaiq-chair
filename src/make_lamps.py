@@ -207,7 +207,7 @@ rep("""    <div class="card__media${p.photo ? ' is-photo' : ''}" ><img src="${im
     """    <div class="card__media${p.photo ? ' is-photo' : ''}" style="--i:${i % 8}"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600"><img class="card__on" src="${img(p.id + '-on')}" alt="" loading="lazy" width="640" height="640">""")
 rep("`<div class=\"ttile ttile--photo\"><img src=\"${img('life1')}\" alt=\"\" loading=\"lazy\">", "`<div class=\"ttile ttile--photo\"><img src=\"${img('lady-on')}\" alt=\"\" loading=\"lazy\" style=\"object-position:30% 50%\">")
 
-rep('<div class="card__body"><h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3>', '<div class="card__body"><h3 class="card__name"><a href="#" data-pd="${p.id}">${L(p)}</a></h3>')
+rep('<div class="card__body"><h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3>', '<div class="card__body"><h3 class="card__name"><a href="${p.url}">${L(p)}</a></h3>')
 
 # intro, help
 rep('<span class="ipill ipill--cut"><img src="media/tables/t08.webp" alt="" loading="lazy"></span>', '<span class="ipill ipill--cut"><img src="media/lamps/lp23.webp" alt="" loading="lazy"></span>')
