@@ -413,8 +413,7 @@ rep("""  // wait until the ring images are decoded (max 1.2s) so the tiles never
 rep("/* ===================== ANNOUNCEMENT + HEADER ===================== */", """/* ===================== LIGHTING: loader ===================== */
 .loader__dots i{ background:var(--lav); } .loader__dots i:nth-child(2){ background:var(--lemon); } .loader__dots i:nth-child(3){ background:var(--orange); }
 .ring__t img.ring__on{ position:absolute; inset:0; padding:0; object-fit:cover; mix-blend-mode:normal; opacity:0; transition:opacity .45s calc(var(--k) * 90ms) ease; }
-.ring.is-lit .ring__t img.ring__on{ opacity:1; animation:flick .7s calc(var(--k) * 90ms) both; }
-@keyframes flick{ 0%{ opacity:0; } 18%{ opacity:.85; } 26%{ opacity:.25; } 40%{ opacity:1; } 52%{ opacity:.7; } 100%{ opacity:1; } }
+.ring.is-lit .ring__t img.ring__on{ opacity:1; }
 
 /* ===================== LIGHTING: the banner (the words alone on top, then the photo) ===================== */
 .lhero{ padding-top:16px; }
@@ -455,8 +454,8 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 }
 
 /* ===================== LIGHTING: the type photo, off → on ===================== */
-.shape__big > img.sb__on{ opacity:0; transition:opacity .8s var(--ease); }
-.shape__big.is-lit > img.sb__on{ opacity:1; animation:flick .9s both; }
+.shape__big > img.sb__on{ opacity:0; transition:opacity 1.4s ease; }
+.shape__big.is-lit > img.sb__on{ opacity:1; }
 .shape__big > img{ object-position:50% 32%; }
 .shape__big h2 .w__g{ color:rgba(255,255,255,.25); }
 .shape__big h2 .w__i{ color:var(--white); }
