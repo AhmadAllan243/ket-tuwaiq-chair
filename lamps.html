@@ -1154,6 +1154,7 @@ function gxOff(j) { const n = STORE.gallery.length; let d = (j - GX.i + n) % n; 
 function gxLayout(anim) {
   $$('#galRow .gx__f').forEach((f, j) => {
     const g = STORE.gallery[j], d = gxOff(j), r = gxSlot(g, d), [x0, , x1, y1] = gxBox(g), nm = $$('#gxNames span')[j];
+    if (GX.open) r.opacity = 0;   // a room is open: the row stays hidden (phones fire a resize as the address bar moves)
     f.classList.toggle('is-cur', j === GX.i); nm.classList.toggle('is-cur', j === GX.i);
     const n = { left: r.left + (x0 + x1) / 2 * r.width, top: r.top + y1 * r.height + 14, opacity: r.opacity };
     if (anim && G) { gsap.to(f, { ...r, duration: 1, ease: 'expo.inOut' }); gsap.to(nm, { ...n, duration: 1, ease: 'expo.inOut' }); }
@@ -1250,7 +1251,7 @@ $('#gx').addEventListener('click', e => {
 (() => { let x0 = null; const st = $('#gx');
   st.addEventListener('pointerdown', e => { x0 = e.clientX; });
   st.addEventListener('pointerup', e => { if (x0 == null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) gxGo((dx < 0 ? 1 : -1) * (lang === 'ar' ? -1 : 1)); }); })();
-addEventListener('resize', () => { gxLayout(false); if (GX.open) gxRoomImgs(STORE.gallery[GX.i]); });
+addEventListener('resize', () => { if (GX.busy) return; gxLayout(false); if (GX.open) gxRoomImgs(STORE.gallery[GX.i]); });
 
 /* the product view (the live store's product page): photo with its own light switch, price, and the green energy bar */
 let pdP = null, pdN = 1;
