@@ -80,6 +80,7 @@ const STORE = {
       hHint: 'مرّر للأسفل… وشغّل الضوء', stOn: 'الضوء شغّال', stOff: 'الضوء مطفأ', tapLight: 'المس لتشغيل الضوء',
       lsw: 'شغّل الإضاءة', lswOn: 'الإضاءة شغّالة',
       galEy: 'المس الضوء', galH: 'المس أي أبجورة، وشوفها في مكانها.', galTx: 'اختر وحدة، وشوفها تدخل مكانها في البيت، ويشتغل ضوءها.', galBtn: 'تسوّق الإضاءات', galClose: 'رجوع', galTap: 'المس',
+      band: ['ضوء دافئ', 'تصاميم هادئة', 'توصيل مجاني', 'خصم يصل إلى {n}٪', 'لكل زاوية في البيت'], gxHint: 'المس الصورة وشغّل الضوء',
       eco: 'كفاءة الطاقة', ecoS: 'الطاقة', ecoSave: 'توفير {n}٪', pdEco: 'موفّرة للطاقة', pdSave: 'توفير {n}٪ من الكهرباء', pdLight: 'شغّل الضوء', pdLightOn: 'الضوء شغّال', pdClose: 'إغلاق', pdPage: 'صفحة المنتج في المتجر', pdQty: 'الكمية', gxRoomOn: 'شغّل الضوء', gxRoomOff: 'طفّ الضوء', gxBack: 'كل الأبجورات',
       skip: 'تخطَّ إلى المنتجات', home: 'الرئيسية', tables: "الإضاءات", search: 'بحث', account: 'حسابي', cart: 'السلة',
       ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: "خصومات تصل إلى {n}٪ على الإضاءات",
@@ -109,6 +110,7 @@ const STORE = {
       hHint: 'Scroll down… and switch the light on', stOn: 'Light on', stOff: 'Light off', tapLight: 'Tap to switch the light',
       lsw: 'Lights on', lswOn: 'Lights are on',
       galEy: 'Touch the light', galH: 'Touch any lamp and see it in its place.', galTx: 'Pick one and watch it move into its place at home, and its light come on.', galBtn: 'Shop lighting', galClose: 'Back', galTap: 'Tap',
+      band: ['Warm light', 'Calm designs', 'Free delivery', 'Up to {n}% off', 'For every corner of home'], gxHint: 'Tap the photo to switch the light on',
       eco: 'Energy efficiency', ecoS: 'Energy', ecoSave: '{n}% saving', pdEco: 'Energy saving', pdSave: '{n}% less electricity', pdLight: 'Switch the light on', pdLightOn: 'Light on', pdClose: 'Close', pdPage: 'Product page on the store', pdQty: 'Quantity', gxRoomOn: 'Switch it on', gxRoomOff: 'Switch it off', gxBack: 'All lamps',
       skip: 'Skip to products', home: 'Home', tables: "Lighting", search: 'Search', account: 'Account', cart: 'Cart',
       ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: "Up to {n}% off lighting",
@@ -289,7 +291,7 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 .gx__stage.is-open .gx__scene{ pointer-events:auto; cursor:pointer; }
 .gx__scene img{ position:absolute; opacity:0; }
 .gx__scene .gx__boff, .gx__scene .gx__bon{ inset:0; width:100%; height:100%; object-fit:cover; filter:blur(30px) saturate(1.05); transform:scale(1.2); }
-.gx__x{ position:absolute; z-index:3; top:14px; inset-inline-end:14px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.9); opacity:0; transition:opacity .4s; }
+.gx__x{ display:none!important; position:absolute; z-index:3; top:14px; inset-inline-end:14px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.9); opacity:0; transition:opacity .4s; }
 .gx__stage.is-open .gx__x{ opacity:1; transition-delay:1s; }
 .gx__lamps, .gx__names{ position:absolute; inset:0; }
 .gx__lamps{ z-index:1; }
@@ -323,6 +325,17 @@ html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:
 .gx__cap > p:not(.eyebrow):not(.gx__price){ color:var(--ink-2); font-size:15px; line-height:1.7; }
 .gx__price b{ font-size:22px; }
 .gx__btns{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.gx__hint{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--ink-2); }
+.gx__hint i{ width:8px; height:8px; border-radius:50%; background:var(--acc); animation:ping3 1.6s var(--ease) infinite; }
+.gx__stage:has(.gx__sw[aria-checked="true"]) .gx__hint{ opacity:.0!important; }
+/* the band of words between the last two sections */
+.lband{ margin-top:var(--section); overflow:hidden; background:var(--lav); padding-block:clamp(18px, 2.6vw, 30px); }
+.lband__track{ display:flex; width:max-content; animation:marquee 34s linear infinite; }
+.lband__g{ display:flex; align-items:center; gap:clamp(18px, 2.6vw, 36px); padding-inline-end:clamp(18px, 2.6vw, 36px); white-space:nowrap; }
+.lband__g span{ font-size:clamp(24px, 3.4vw, 46px); font-weight:700; letter-spacing:-.02em; }
+html[lang="ar"] .lband__g span{ letter-spacing:0; }
+.lband__g i{ font-style:normal; font-size:clamp(18px, 2.4vw, 30px); color:var(--orange); }
+.lband + .help{ padding-top:var(--section); }
 .gx__add{ display:inline-flex; align-items:center; gap:8px; height:50px; padding-inline:20px 22px; border-radius:var(--r-pill); background:var(--acc); color:var(--white); font-size:15px; font-weight:700; transition:background-color .3s; }
 .gx__add:hover{ background:#066B36; }
 .gx__sw{ height:50px; }
@@ -357,6 +370,8 @@ body.lights-on .bar{ background:var(--page); }
 .pgrid.is-lit .card__media img.card__on{ opacity:1; }
 @media (hover:hover) and (pointer:fine){ .card:hover .card__media img.card__on{ opacity:1; transition-delay:0s; } }
 .card .card__off{ background:var(--orange); color:var(--white); box-shadow:none; }
+.pgrid .ttile--dark{ background:var(--orange); color:var(--white); }
+.pgrid .ttile--dark p{ color:rgba(255,255,255,.88); }
 /* the product view (on the live store: the product page) */
 .pd{ width:min(100%, 980px); max-width:none; max-height:none; margin:auto; padding:0; border:0; background:none; overflow:visible; }
 .pd::backdrop{ background:rgba(15,12,20,.45); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
@@ -882,6 +897,9 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
   </div>
 </section>
 
+<!-- a band of words between two pictures -->
+<section class="lband" aria-hidden="true"><div class="lband__track" id="lband"></div></section>
+
 <!-- 8 · HELP -->
 <section class="help" aria-labelledby="helpTitle">
   <div class="container">
@@ -1128,7 +1146,7 @@ $('#lsw').addEventListener('click', () => { lightsOn = !lightsOn; renderSwitch()
 /* the gallery: the lamps in a row (all at full strength, the chosen one big); a tap carries it into its exact spot in its room
    (the cut-out has the same frame as the room photo), the room fades in around it, then the room dims and the lamp glows.
    Arrows and swipes move straight to the next room; the price and add to cart sit beside the room. */
-const GX = { i: 0, open: false, busy: false, lit: false };
+const GX = { i: 0, open: true, busy: false, lit: false };   // it opens straight on the first room
 const gxEl = () => $('#gx');
 const gxSize = () => ({ W: gxEl().clientWidth, H: gxEl().clientHeight });
 const gxBox = g => g.box.map(v => v / 100);
@@ -1173,6 +1191,7 @@ function gxCap() {
   const g = STORE.gallery[GX.i];
   $('#gxCap').innerHTML = `<p class="eyebrow" data-t="galEy">${t('galEy')}</p><b>${L(g)}</b><p>${L(g.note)}</p>
     <p class="card__price gx__price"><b>${money(g.price)}</b><s>${fmt(g.was)}</s></p>
+    <p class="gx__hint"><i></i>${t('gxHint')}</p>
     <div class="gx__btns"><button class="gx__add" type="button" data-gx-add>${icon('bag', 18, 1.8)}<span>${t('add')}</span></button>
       <button class="lsw gx__sw" type="button" role="switch" aria-checked="${GX.lit}" data-gx-light><span class="lsw__k" aria-hidden="true"></span><span>${t(GX.lit ? 'gxRoomOff' : 'gxRoomOn')}</span></button></div>`;
 }
@@ -1181,6 +1200,11 @@ function gxSetLit(on, dur) {
   if (sw) { sw.setAttribute('aria-checked', String(on)); sw.lastElementChild.textContent = t(on ? 'gxRoomOff' : 'gxRoomOn'); }
   const els = $$('.gx__on, .gx__bon', gxEl());
   if (G) gsap.to(els, { opacity: on ? 1 : 0, duration: dur ?? 1.4, ease: 'power1.inOut' }); else gsap.set(els, { opacity: on ? 1 : 0 });
+}
+function renderBand() {
+  const words = STORE.ui[lang].band.map(w => w.replace('{n}', maxOff));
+  const one = words.map(w => `<span>${w}</span><i>✦</i>`).join('');
+  $('#lband').innerHTML = `<div class="lband__g">${one}</div><div class="lband__g">${one}</div>`;
 }
 function renderGal() {
   const G2 = STORE.gallery;
@@ -1192,8 +1216,9 @@ function renderGal() {
   $('#gxNav [data-gx-go="1"] svg').style.transform = lang === 'ar' ? 'scaleX(-1)' : '';
   $('#gxNav [data-gx-go="-1"] svg').style.transform = lang === 'ar' ? '' : 'scaleX(-1)';
   $('[data-gx-close]').innerHTML = icon('close', 18, 2); $('[data-gx-close]').setAttribute('aria-label', t('gxBack'));
-  gxCap();
-  requestAnimationFrame(() => { gxLayout(false); if (GX.open) { gxRoomImgs(STORE.gallery[GX.i]); gsap.set($$('#galRow .gx__f')[GX.i], { opacity: 0 }); gsap.set('#gxCap > *', { opacity: 1 }); } });
+  gxEl().classList.toggle('is-open', GX.open); gxCap();
+  requestAnimationFrame(() => { gxLayout(false); if (GX.open) { const st = gxEl(); gxRoomImgs(STORE.gallery[GX.i]); gsap.set($$('#galRow .gx__f'), { opacity: 0 }); gsap.set('#gxCap > *', { opacity: 1 });
+    gsap.set($$('.gx__off, .gx__boff', st), { opacity: 1 }); gsap.set($$('.gx__on, .gx__bon', st), { opacity: GX.lit ? 1 : 0 }); } });
 }
 function gxGo(d) {
   if (GX.busy) return; const n = STORE.gallery.length;
@@ -1201,10 +1226,10 @@ function gxGo(d) {
   // in a room: straight to the next room — the light goes off, the next room fades in, then its lamp glows
   GX.busy = true; const st = gxEl(), all = $$('.gx__off, .gx__on, .gx__boff, .gx__bon', st);
   const swap = () => { GX.i = (GX.i + d + n) % n; gxLayout(false); $$('#galRow .gx__f').forEach(f => gsap.set(f, { opacity: 0 })); gxRoomImgs(STORE.gallery[GX.i]); GX.lit = false; gxCap();
-    if (!G) { gsap.set($$('.gx__off, .gx__boff', st), { opacity: 1 }); gxSetLit(true); GX.busy = false; return; }
+    if (!G) { gsap.set($$('.gx__off, .gx__boff', st), { opacity: 1 }); GX.busy = false; return; }
     gsap.fromTo($$('.gx__off, .gx__boff', st), { opacity: 0, x: 40 * d * (lang === 'ar' ? -1 : 1) }, { opacity: 1, x: 0, duration: .7, ease: 'expo.out' });
     gsap.fromTo('#gxCap > *', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .6, stagger: .05, ease: 'expo.out' });
-    gsap.delayedCall(.75, () => { gxSetLit(true); GX.busy = false; }); };
+    gsap.delayedCall(.5, () => { GX.busy = false; }); };
   if (G) gsap.to(all, { opacity: 0, duration: .4, onComplete: swap }); else swap();
 }
 function gxOpen() {
@@ -1318,7 +1343,7 @@ function applyLang() {
   $('#langBtn').textContent = lang === 'ar' ? 'EN' : 'ع';
   $('#langBtn').setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
   $('#vatNo').textContent = t('vatNo', { n: STORE.vat }); $('#crNo').textContent = t('crNo', { n: STORE.cr });
-  renderBanner(); renderShape(); renderGal(); renderIntro(); renderCols(); renderControls(); renderGrid(false); renderSize(); renderSwitch();
+  renderBanner(); renderShape(); renderGal(); renderBand(); renderIntro(); renderCols(); renderControls(); renderGrid(false); renderSize(); renderSwitch();
   if (G) requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 $('#langBtn').onclick = () => { lang = lang === 'ar' ? 'en' : 'ar'; applyLang(); };
@@ -1405,7 +1430,7 @@ function lampMotion() {
   if (G) ScrollTrigger.create({ trigger: sb, start: 'top 62%', onEnter: sbOn, onLeaveBack: () => { sb.classList.remove('is-lit'); gsap.set('#shapeTitle .w', { '--wp': 0 }); } });
   else sbOn();
   if (G) gsap.set('#shapeTitle .w', { '--wp': 0 });
-  if (G) gsap.fromTo(['#galRow', '#gxNames'], { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#gx', start: 'top 70%' } });
+  if (G) gsap.fromTo(['#gxScene', '#gxCap'], { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.3, stagger: .12, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#gx', start: 'top 75%' } });
 }
 // the energy bars fill and count up as each card comes into view (and again after a filter)
 function ecoGo(card) {
