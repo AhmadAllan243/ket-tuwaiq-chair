@@ -68,10 +68,10 @@ const STORE = {
 
   // the gallery: tap a lamp and its white turns into its room. x / y = where the lamp sits in the photo
   gallery: [
-    // w/h = the photo's size; box = the lamp inside it (% left, top, right, bottom); pos = how the room photo is framed
-    { id: 'rib', w: 1121, h: 1403, box: [31, 34.1, 68.8, 72.4], pos: [.5, .48], ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية، ويصير المكان أهدأ.', en: 'A soft light that warms the corner and calms the room.' } },
-    { id: 'mush', w: 1002, h: 1500, box: [36.6, 36.8, 82.7, 71.1], pos: [.58, .5], ar: 'ضوء القعدة', en: 'Living-room glow', note: { ar: 'قبّة زجاج تنشر ضوءًا ناعمًا على الجدار والرف.', en: 'A glass dome that spreads a soft light over the wall and shelf.' } },
-    { id: 'spot', w: 1000, h: 1500, box: [44.5, 11.4, 99.9, 92.9], pos: [.62, .5], ar: 'على مكتبك', en: 'At your desk', note: { ar: 'ضوء مركّز تحرّكه بيدك، للقراءة والشغل.', en: 'A focused light you turn by hand, for reading and work.' } }
+    // w/h = the photo's size; box = the lamp inside it (% left, top, right, bottom). price / was: PLACEHOLDER until these lamps are in the store
+    { id: 'rib', w: 1121, h: 1403, box: [31, 34.1, 68.8, 72.4], price: 249, was: 499, ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية، ويصير المكان أهدأ.', en: 'A soft light that warms the corner and calms the room.' } },
+    { id: 'mush', w: 1002, h: 1500, box: [36.6, 36.8, 82.7, 71.1], price: 329, was: 650, ar: 'ضوء القعدة', en: 'Living-room glow', note: { ar: 'قبّة زجاج تنشر ضوءًا ناعمًا على الجدار والرف.', en: 'A glass dome that spreads a soft light over the wall and shelf.' } },
+    { id: 'spot', w: 1000, h: 1500, box: [44.5, 11.4, 99.9, 92.9], price: 199, was: 399, ar: 'على مكتبك', en: 'At your desk', note: { ar: 'ضوء مركّز تحرّكه بيدك، للقراءة والشغل.', en: 'A focused light you turn by hand, for reading and work.' } }
   ],
 
   ui: {
@@ -80,7 +80,7 @@ const STORE = {
       hHint: 'مرّر للأسفل… وشغّل الضوء', stOn: 'الضوء شغّال', stOff: 'الضوء مطفأ', tapLight: 'المس لتشغيل الضوء',
       lsw: 'شغّل الإضاءة', lswOn: 'الإضاءة شغّالة',
       galEy: 'المس الضوء', galH: 'المس أي أبجورة، وشوفها في مكانها.', galTx: 'اختر وحدة، وشوفها تدخل مكانها في البيت، ويشتغل ضوءها.', galBtn: 'تسوّق الإضاءات', galClose: 'رجوع', galTap: 'المس',
-      eco: 'كفاءة الطاقة', ecoS: 'الطاقة', ecoSave: 'توفير {n}٪',
+      eco: 'كفاءة الطاقة', ecoS: 'الطاقة', ecoSave: 'توفير {n}٪', pdEco: 'موفّرة للطاقة', pdSave: 'توفير {n}٪ من الكهرباء', pdLight: 'شغّل الضوء', pdLightOn: 'الضوء شغّال', pdClose: 'إغلاق', pdQty: 'الكمية', gxRoomOn: 'شغّل الضوء', gxRoomOff: 'طفّ الضوء', gxBack: 'كل الأبجورات',
       skip: 'تخطَّ إلى المنتجات', home: 'الرئيسية', tables: "الإضاءات", search: 'بحث', account: 'حسابي', cart: 'السلة',
       ann1: 'توصيل مجاني لكل مدن المملكة', ann2: 'هدية مجانية مع كل طلب', ann3: "خصومات تصل إلى {n}٪ على الإضاءات",
       loadLine: "نوّر بيتك", skipIntro: 'تخطَّ',
@@ -109,7 +109,7 @@ const STORE = {
       hHint: 'Scroll down… and switch the light on', stOn: 'Light on', stOff: 'Light off', tapLight: 'Tap to switch the light',
       lsw: 'Lights on', lswOn: 'Lights are on',
       galEy: 'Touch the light', galH: 'Touch any lamp and see it in its place.', galTx: 'Pick one and watch it move into its place at home, and its light come on.', galBtn: 'Shop lighting', galClose: 'Back', galTap: 'Tap',
-      eco: 'Energy efficiency', ecoS: 'Energy', ecoSave: '{n}% saving',
+      eco: 'Energy efficiency', ecoS: 'Energy', ecoSave: '{n}% saving', pdEco: 'Energy saving', pdSave: '{n}% less electricity', pdLight: 'Switch the light on', pdLightOn: 'Light on', pdClose: 'Close', pdQty: 'Quantity', gxRoomOn: 'Switch it on', gxRoomOff: 'Switch it off', gxBack: 'All lamps',
       skip: 'Skip to products', home: 'Home', tables: "Lighting", search: 'Search', account: 'Account', cart: 'Cart',
       ann1: 'Free delivery across the Kingdom', ann2: 'A free gift with every order', ann3: "Up to {n}% off lighting",
       loadLine: "Light up your home", skipIntro: 'Skip',
@@ -281,56 +281,66 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 .shape__big::after{ background:linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,.25) 46%, rgba(0,0,0,.08) 66%, rgba(0,0,0,.4)); }
 .st{ background:var(--white); }
 
-/* ===================== LIGHTING: the gallery (full width, as in the video) ===================== */
+/* ===================== LIGHTING: the gallery (the lamp travels into its room; one brand colour for the controls) ===================== */
 .gx{ padding-top:var(--section); }
-.gx__stage{ --gh:clamp(600px, 90svh, 860px); position:relative; overflow:hidden; height:var(--gh); background:var(--white); color:var(--black); touch-action:pan-y; }
-.gx__scene{ position:absolute; z-index:0; left:50%; top:50%; translate:-50% -50%; height:calc(100% - 150px); aspect-ratio:4 / 5; max-width:calc(100% - 32px); border-radius:clamp(22px, 2.6vw, 34px); overflow:hidden; pointer-events:none; }
-.gx__stage.is-open .gx__scene{ pointer-events:auto; }
-.gx__scene img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; }
-.gx__scene .gx__boff, .gx__scene .gx__bon{ display:none; object-fit:cover; filter:blur(30px) saturate(1.1); transform:scale(1.2); }
-.gx--big .gx__scene .gx__boff, .gx--big .gx__scene .gx__bon{ display:block; }
-.gx__lamps{ position:absolute; inset:0; z-index:1; }
-.gx__f{ position:absolute; display:block; padding:0; transition:filter .4s; }
-.gx__f img{ display:block; width:100%; height:100%; filter:drop-shadow(0 26px 26px rgba(0,0,0,.16)); animation:gxFloat 6s ease-in-out var(--d) infinite; }
+.gx__stage{ --acc:var(--forest); --pad:max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter))); position:relative; overflow:hidden; height:clamp(640px, 92svh, 880px); background:var(--white); color:var(--black); touch-action:pan-y; }
+/* the room: about two thirds of the width, the words in a column beside it */
+.gx__scene{ position:absolute; z-index:0; top:28px; bottom:28px; inset-inline-end:var(--pad); width:min(64%, 1000px); border-radius:clamp(24px, 3vw, 44px); overflow:hidden; pointer-events:none; }
+.gx__stage.is-open .gx__scene{ pointer-events:auto; cursor:pointer; }
+.gx__scene img{ position:absolute; opacity:0; }
+.gx__scene .gx__boff, .gx__scene .gx__bon{ inset:0; width:100%; height:100%; object-fit:cover; filter:blur(30px) saturate(1.05); transform:scale(1.2); }
+.gx__x{ position:absolute; z-index:3; top:14px; inset-inline-end:14px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.9); opacity:0; transition:opacity .4s; }
+.gx__stage.is-open .gx__x{ opacity:1; transition-delay:1s; }
+.gx__lamps, .gx__names{ position:absolute; inset:0; }
+.gx__lamps{ z-index:1; }
+.gx__names{ z-index:2; pointer-events:none; }
+.gx__f{ position:absolute; display:block; padding:0; }
+.gx__f img{ display:block; width:100%; height:100%; filter:drop-shadow(0 24px 24px rgba(0,0,0,.14)); animation:gxFloat 6s ease-in-out var(--d) infinite; }
 @keyframes gxFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
-.gx__f.is-cur{ cursor:pointer; }
-.gx__f:not(.is-cur):hover{ filter:brightness(1.25); }
-.gx.is-open .gx__f img, .gx__stage.is-open .gx__f img{ animation:none; filter:none; }
+.gx__stage.is-open .gx__f img{ animation:none; filter:none; }
+.gx__names span{ position:absolute; display:flex; flex-direction:column; align-items:center; gap:6px; translate:-50% 0; white-space:nowrap; }
+.gx__names b{ font-size:14px; font-weight:700; }
+.gx__names span.is-cur b{ font-size:clamp(18px, 1.8vw, 22px); }
+.gx__names small{ display:none; align-items:center; gap:6px; height:30px; padding-inline:10px 12px; border-radius:var(--r-pill); background:var(--g100); font-size:12px; font-weight:700; }
+.gx__names span.is-cur small{ display:inline-flex; }
+.gx__names small i{ width:7px; height:7px; border-radius:50%; background:var(--acc); animation:ping3 1.6s var(--ease) infinite; }
+@keyframes ping3{ 0%,100%{ box-shadow:0 0 0 0 rgba(8,128,64,.5); } 70%{ box-shadow:0 0 0 8px rgba(8,128,64,0); } }
 .gx__head{ position:absolute; z-index:2; inset-inline:0; top:clamp(24px, 4vw, 56px); display:grid; gap:10px; pointer-events:none; transition:opacity .5s; }
-.gx__head .eyebrow{ color:var(--black); }
-.gx__head .eyebrow::before{ background:var(--orange); }
+.gx__head .eyebrow::before, .gx__cap .eyebrow::before{ background:var(--acc); }
 .gx__head h2{ font-size:clamp(28px, 3.6vw, 52px); font-weight:600; line-height:1.15; letter-spacing:-.03em; max-width:16ch; }
 html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:0; }
 .gx__tx{ color:var(--ink-2); max-width:40ch; }
-.gx__lbl{ position:absolute; z-index:2; left:50%; bottom:92px; translate:-50% 0; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; pointer-events:none; transition:opacity .5s; }
-.gx__lbl b{ font-size:clamp(18px, 1.8vw, 24px); font-weight:700; }
-.gx__lbl small{ display:inline-flex; align-items:center; gap:6px; height:30px; padding-inline:10px 12px; border-radius:var(--r-pill); background:var(--lav-l); font-size:12px; font-weight:700; }
-.gx__lbl small i{ width:7px; height:7px; border-radius:50%; background:var(--orange); animation:ping2 1.6s var(--ease) infinite; }
-@keyframes ping2{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,100,23,.6); } 70%{ box-shadow:0 0 0 8px rgba(255,100,23,0); } }
-.gx__nav{ position:absolute; z-index:2; left:50%; bottom:28px; translate:-50% 0; display:flex; align-items:center; gap:16px; transition:opacity .5s; }
-.gx__arr{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--lav); color:var(--black); transition:transform .4s var(--ease), background-color .3s; }
-.gx__arr:hover{ background:var(--lemon); transform:scale(1.06); }
+.gx__nav{ position:absolute; z-index:3; left:50%; bottom:26px; translate:-50% 0; display:flex; align-items:center; gap:16px; transition:left .8s var(--ease), translate .8s var(--ease); }
+.gx__arr{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:var(--acc); color:var(--white); transition:transform .4s var(--ease), background-color .3s; }
+.gx__arr:hover{ background:#066B36; transform:scale(1.06); }
 .gx__dots{ display:flex; gap:6px; }
 .gx__dots i{ width:8px; height:8px; border-radius:var(--r-pill); background:var(--g200); transition:width .5s var(--ease), background-color .4s; }
-.gx__dots i.is-on{ width:26px; background:var(--orange); }
-.gx__cap{ position:absolute; z-index:4; top:50%; translate:0 -50%; inset-inline-start:calc(50% + (var(--gh) - 150px) * .4 + 32px); width:min(340px, calc(50% - (var(--gh) - 150px) * .4 - 56px)); display:grid; gap:8px; justify-items:start; padding:clamp(16px, 2vw, 26px); border-radius:24px; background:rgba(255,255,255,.9); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); color:var(--black); opacity:0; pointer-events:none; }
-.gx__cap > b{ font-size:clamp(20px, 2vw, 28px); font-weight:700; line-height:1.25; }
-.gx__cap p{ color:var(--ink-2); font-size:14px; }
-.gal__btns{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin-top:4px; }
-.gal__x{ display:inline-flex; align-items:center; gap:6px; height:44px; padding-inline:12px 16px; border-radius:var(--r-pill); background:var(--lav-l); font-size:14px; font-weight:700; }
-.gx__stage.is-open .gx__head, .gx__stage.is-open .gx__lbl, .gx__stage.is-open .gx__nav{ opacity:0; pointer-events:none; }
+.gx__dots i.is-on{ width:26px; background:var(--acc); }
+/* the words beside the room: name, a line, price, add to cart and the light switch */
+.gx__cap{ position:absolute; z-index:3; inset-inline-start:var(--pad); top:50%; translate:0 -50%; width:calc(100% - min(64%, 1000px) - 2 * var(--pad) - 40px); max-width:380px; display:grid; gap:12px; justify-items:start; pointer-events:none; }
+.gx__cap > *{ opacity:0; }
+.gx__cap > b{ font-size:clamp(26px, 2.8vw, 40px); font-weight:700; line-height:1.25; }
+.gx__cap > p:not(.eyebrow):not(.gx__price){ color:var(--ink-2); font-size:15px; line-height:1.7; }
+.gx__price b{ font-size:22px; }
+.gx__btns{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.gx__add{ display:inline-flex; align-items:center; gap:8px; height:50px; padding-inline:20px 22px; border-radius:var(--r-pill); background:var(--acc); color:var(--white); font-size:15px; font-weight:700; transition:background-color .3s; }
+.gx__add:hover{ background:#066B36; }
+.gx__sw{ height:50px; }
+.gx__sw[aria-checked="true"]{ background:var(--night); color:#FFE7B8; }
+.gx__sw[aria-checked="true"] .lsw__k::after{ background:#FFD27A; box-shadow:0 0 12px 3px rgba(255,200,110,.7); }
+.gx__stage.is-open .gx__head, .gx__stage.is-open .gx__names{ opacity:0; pointer-events:none; }
 .gx__stage.is-open .gx__cap{ pointer-events:auto; }
-.gx__stage.is-open{ cursor:pointer; }
-.gx--big .gx__scene{ left:max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter))); right:max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter))); top:64px; bottom:76px; height:auto; width:auto; aspect-ratio:auto; max-width:none; translate:none; border-radius:clamp(28px, 4vw, 60px); }
-.gx__stage.gx--big .gx__cap{ top:auto; translate:none; left:auto; inset-inline-start:calc(max(var(--gutter), (100% - 1440px) / 2 + var(--gutter)) + clamp(16px, 2.4vw, 32px)); bottom:calc(76px + clamp(16px, 2.4vw, 32px)); width:min(400px, calc(100% - 2 * var(--gutter) - 32px)); padding:clamp(16px, 2vw, 24px); border-radius:22px; background:rgba(255,255,255,.92); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
-@media (max-width:767px){ .gx--big .gx__scene{ left:12px; right:12px; top:56px; bottom:70px; } .gx__stage.gx--big .gx__cap{ inset-inline:24px; bottom:86px; width:auto; padding:14px; } }
-@media (min-width:768px) and (max-width:1199px){ .gx__cap{ top:auto; translate:-50% 0; inset-inline-start:auto; left:50%; bottom:28px; width:min(420px, 80%); } }
-@media (max-width:767px){
-  .gx__stage{ height:min(175vw, 92svh); min-height:600px; }
-  .gx__scene{ height:auto; width:calc(100% - 24px); max-height:calc(100% - 130px); }
-  .gx__cap{ top:auto; translate:none; bottom:20px; inset-inline:24px; width:auto; padding:14px; }
-  .gx__cap p{ display:none; }
-  .gx__lbl{ bottom:84px; }
+.gx__stage.is-open .gx__nav{ left:calc(var(--pad) + min(190px, (100% - min(64%, 1000px) - 2 * var(--pad) - 40px) / 2)); }
+html[dir="rtl"] .gx__stage.is-open .gx__nav{ left:auto; right:calc(var(--pad) + min(190px, (100% - min(64%, 1000px) - 2 * var(--pad) - 40px) / 2)); translate:50% 0; }
+@media (max-width:899px){
+  .gx__stage{ height:auto; min-height:min(190vw, 820px); }
+  .gx__scene{ top:12px; bottom:auto; inset-inline:12px; width:auto; height:min(62vh, 120vw); }
+  .gx__cap{ top:auto; translate:none; inset-inline:20px; bottom:84px; width:auto; max-width:none; gap:8px; }
+  .gx__cap > p:not(.eyebrow):not(.gx__price){ display:none; }
+  .gx__cap .eyebrow{ display:none; }
+  .gx__cap > b{ font-size:24px; }
+  .gx__add, .gx__sw{ height:46px; }
+  .gx__stage.is-open .gx__nav, html[dir="rtl"] .gx__stage.is-open .gx__nav{ left:50%; right:auto; translate:-50% 0; }
 }
 
 /* ===================== LIGHTING: the light switch and the cards ===================== */
@@ -346,21 +356,46 @@ body.lights-on .bar{ background:var(--page); }
 .pgrid.is-lit .card__media img.card__on{ opacity:1; }
 @media (hover:hover) and (pointer:fine){ .card:hover .card__media img.card__on{ opacity:1; transition-delay:0s; } }
 .card .card__off{ background:var(--orange); color:var(--white); box-shadow:none; }
-/* the energy pill inside the photo, shaped like the quantity pill: green, a yellow ⚡, and a lighter green that fills as it counts
-   (PLACEHOLDER figures for the review) */
-.eco{ position:absolute; z-index:1; bottom:10px; inset-inline-start:10px; display:inline-flex; align-items:center; gap:6px; height:36px; padding-inline:6px 12px; border-radius:var(--r-pill); overflow:hidden; isolation:isolate; background:#066B36; color:var(--white); font-size:12.5px; font-weight:700; box-shadow:0 8px 18px -8px rgba(8,128,64,.6); }
-.eco__f{ position:absolute; z-index:-1; inset-block:0; inset-inline-start:0; width:calc(var(--e) * 1%); background:linear-gradient(90deg, #02A27A, #3FCB86 45%, #02A27A 90%); background-size:200% 100%; transform:scaleX(0); transform-origin:var(--to, left) center; transition:transform 1.4s var(--ease); animation:ecoFlow 2s linear infinite; }
-html[dir="rtl"] .eco__f{ --to:right; }
+/* the product view (on the live store: the product page) */
+.pd{ width:min(100%, 980px); max-width:none; max-height:none; margin:auto; padding:0; border:0; background:none; overflow:visible; }
+.pd::backdrop{ background:rgba(15,12,20,.45); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.pd__in{ position:relative; display:grid; max-height:calc(100svh - 32px); overflow:auto; margin:16px; border-radius:28px; background:var(--white); }
+@media (min-width:820px){ .pd__in{ grid-template-columns:1fr 1fr; } }
+.pd__x{ position:absolute; z-index:3; top:12px; inset-inline-end:12px; background:var(--g100); }
+.pd__media{ position:relative; aspect-ratio:1; background:var(--white); }
+.pd__media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:6%; mix-blend-mode:multiply; }
+.pd__media .pd__on{ opacity:0; transition:opacity 1.2s ease; }
+.pd__media.is-lit .pd__on{ opacity:1; }
+.pd__sw{ position:absolute; z-index:2; bottom:14px; inset-inline-start:14px; }
+.pd__sw[aria-checked="true"]{ background:var(--night); color:#FFE7B8; }
+.pd__sw[aria-checked="true"] .lsw__k::after{ inset-inline-start:19px; background:#FFD27A; box-shadow:0 0 12px 3px rgba(255,200,110,.7); }
+.pd__copy{ display:grid; gap:14px; align-content:center; padding:clamp(20px, 3.4vw, 44px); }
+.pd__copy h2{ font-size:clamp(24px, 2.6vw, 34px); font-weight:700; line-height:1.3; }
+.pd__price b{ font-size:22px; }
+.pd__buy{ display:flex; gap:10px; margin-top:6px; }
+.pd__qty{ display:inline-flex; align-items:center; gap:14px; height:52px; padding-inline:14px; border-radius:var(--r-pill); box-shadow:inset 0 0 0 1px var(--g200); font:600 16px/1 var(--f-latin); }
+.pd__qty button{ width:26px; height:26px; font-size:20px; line-height:1; }
+.pd__add{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:52px; border-radius:var(--r-pill); background:var(--black); color:var(--white); font-size:15px; font-weight:700; }
+/* the energy bar: like the store's "pieces left" bar (a line of words over a thin bar), in green, with a yellow ⚡ and a moving shine.
+   The figure is a PLACEHOLDER for the review; on the live store it comes from each lamp's real data */
+.ebar{ display:grid; gap:8px; }
+.ebar__row{ display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:14px; }
+.ebar__l{ display:inline-flex; align-items:center; gap:8px; font-weight:700; color:#0B5E30; }
+.ebar__l i{ width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:#088040; color:var(--lemon); font-style:normal; font-size:13px; animation:zap 2.4s ease-in-out infinite; }
+@keyframes zap{ 0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(8,128,64,.35); } 50%{ transform:scale(1.1); box-shadow:0 0 0 6px rgba(8,128,64,0); } }
+.ebar__v{ color:#0B5E30; font-weight:700; }
+.ebar__n{ font-family:var(--f-latin); font-variant-numeric:tabular-nums; }
+.ebar__t{ position:relative; height:6px; border-radius:6px; background:#E2F3E9; overflow:hidden; }
+.ebar__t i{ position:absolute; inset-block:0; inset-inline-start:0; width:calc(var(--e) * 1%); border-radius:inherit; background:linear-gradient(90deg, #02A27A, #3FCB86 40%, #088040 80%); background-size:200% 100%; transform:scaleX(0); transform-origin:var(--to, left) center; transition:transform 1.4s var(--ease) .2s; animation:ecoFlow 1.8s linear infinite; }
+html[dir="rtl"] .ebar__t i{ --to:right; }
 @keyframes ecoFlow{ to{ background-position:-200% 0; } }
-.card.is-seen .eco__f{ transform:scaleX(1); }
-.eco__z{ width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:rgba(0,0,0,.18); color:var(--lemon); font-size:14px; line-height:1; filter:drop-shadow(0 0 4px rgba(248,250,117,.8)); animation:zap 2.4s ease-in-out infinite; }
-@keyframes zap{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.15); } }
-.eco__v{ white-space:nowrap; text-shadow:0 1px 2px rgba(0,0,0,.15); }
-.eco__n{ font-family:var(--f-latin); font-variant-numeric:tabular-nums; }
-@media (max-width:480px){ .eco{ height:30px; font-size:11px; gap:4px; padding-inline:4px 9px; bottom:8px; inset-inline-start:8px; } .eco__z{ width:20px; height:20px; font-size:12px; } }
+.ebar.is-in .ebar__t i{ transform:scaleX(1); }
 
 /* the bar: room for the switch on phones */
 @media (max-width:767px){ .bar{ flex-wrap:wrap; } .bar .filters{ flex:0 0 100%; order:1; } .bar .lsw{ order:2; } .bar .sortw{ order:3; margin-inline-start:auto; } }
+
+/* phones: the help card's words come before its picture, so it never sits right under the photo above it */
+@media (max-width:639px){ .help__copy{ order:-1; } }
 
 /* the collections hover in lavender */
 .crow:hover, .crow.is-on{ background:var(--lav); }
@@ -765,14 +800,16 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
   </div>
 </section>
 
-<!-- 3 · THE GALLERY: the lamps alone on a dark stage; tap one and it moves into its place in the real room, then the light comes on -->
+<!-- 3 · THE GALLERY: the lamps in a row; a tap carries the lamp into its exact spot in its room, the room fades in around it,
+     then the room dims and the lamp glows. Arrows move straight to the next room; price and add to cart sit beside it -->
 <section class="gx" id="glow" aria-labelledby="galTitle">
   <div class="gx__stage" id="gx">
-    <div class="gx__scene" id="gxScene"><img class="gx__boff" alt=""><img class="gx__bon" alt=""><img class="gx__off" alt=""><img class="gx__on" alt=""></div>
-    <div class="gx__cap" id="gxCap"></div>
+    <div class="gx__scene" id="gxScene"><img class="gx__boff" alt=""><img class="gx__bon" alt=""><img class="gx__off" alt=""><img class="gx__on" alt="">
+      <button class="gx__x" type="button" data-gx-close></button></div>
     <div class="gx__lamps" id="galRow"></div>
+    <div class="gx__names" id="gxNames" aria-hidden="true"></div>
     <div class="container gx__head"><p class="eyebrow" data-t="galEy"></p><h2 id="galTitle" data-t="galH"></h2><p class="gx__tx" data-t="galTx"></p></div>
-    <div class="gx__lbl" id="gxLbl" aria-hidden="true"></div>
+    <div class="gx__cap" id="gxCap"></div>
     <div class="gx__nav" id="gxNav"></div>
   </div>
 </section>
@@ -866,6 +903,23 @@ html[lang="ar"] .help__copy h2{ letter-spacing:0; line-height:1.45; }
 </footer>
 <a class="wa" id="wa" href="#" data-toast="soon" data-t-aria="wa"></a>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- THE PRODUCT (on the live store: the product page). The energy bar sits under the price, like the "pieces left" bar, in green -->
+<dialog class="pd" id="pd" aria-labelledby="pdName">
+  <div class="pd__in" data-lenis-prevent>
+    <button class="icon-btn pd__x" type="button" id="pdX" data-t-aria="pdClose"></button>
+    <div class="pd__media" id="pdMedia"><img class="pd__off" alt=""><img class="pd__on" alt="">
+      <button class="lsw pd__sw" id="pdSw" type="button" role="switch" aria-checked="false"><span class="lsw__k" aria-hidden="true"></span><span id="pdSwT"></span></button></div>
+    <div class="pd__copy">
+      <p class="eyebrow" data-t="tables"></p>
+      <h2 id="pdName"></h2>
+      <p class="card__price pd__price" id="pdPrice"></p>
+      <div class="ebar" id="pdEco"></div>
+      <div class="pd__buy"><div class="pd__qty"><button type="button" data-q="-1" aria-label="-">−</button><b id="pdQ">1</b><button type="button" data-q="1" aria-label="+">+</button></div>
+        <button class="pd__add" type="button" id="pdAdd"></button></div>
+    </div>
+  </div>
+</dialog>
 
 <script src="ket-brand.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -981,9 +1035,9 @@ function renderShape() {
   const ty = id => STORE.types.find(x => x.id === id);
   const pieces = n => n === 1 ? t('piece1') : n === 2 ? t('pieces2') : t('pieces', { n });
   const lbl = (name, n) => `<span class="st__lbl"><span><b>${name}</b><small>${pieces(n)}</small></span><span class="st__go flip">${icon('arrow', 14, 2)}</span></span>`;
-  const tile = (id, cls, tint) => `<button class="st ${cls}" type="button" data-type="${id}" style="--tint:var(--${tint})"><img src="${img(ty(id).hero)}" alt="" loading="lazy">${lbl(L(ty(id)), P.filter(p => p.type === id).length)}</button>`;
+  const tile = (id, cls, tint) => `<button class="st ${cls}" type="button" data-type="${id}" style="--tint:var(--${tint})"><img src="${img(ty(id).hero + '-on')}" alt="" loading="lazy">${lbl(L(ty(id)), P.filter(p => p.type === id).length)}</button>`;
   const col = (id, cls, im, tint, label) => { const c = STORE.collections.find(x => x.id === id), ph = !!byId[im]?.photo;
-    return `<button class="st ${cls}${ph ? ' is-photo' : ''}" type="button" data-col="${id}" aria-label="${L(c)}" style="--tint:var(--${tint})"><img src="${img(im)}" alt="" loading="lazy">${label ? lbl(L(c), P.filter(p => p.col === id).length) : ''}</button>`; };
+    return `<button class="st ${cls}${ph ? ' is-photo' : ''}" type="button" data-col="${id}" aria-label="${L(c)}" style="--tint:var(--${tint})"><img src="${img(im + '-on')}" alt="" loading="lazy">${label ? lbl(L(c), P.filter(p => p.col === id).length) : ''}</button>`; };
   $('#shapeCols').innerHTML = `
     <div class="sc">${tile('ceramic', 'st--a', 'white')}
       <div class="srow"><button class="stack" type="button" data-type="all" aria-label="${t('shapeAll')}">${STORE.types.map(x => `<span><img src="${img(x.hero)}" alt=""></span>`).join('')}</button><span class="srow__plus">${icon('spark', 20, 1.4)}</span></div>
@@ -1037,10 +1091,9 @@ $('#sort').addEventListener('change', e => { state.sort = e.target.value; render
 const cardHTML = (p, i) => {
   return `<article class="card" data-id="${p.id}">
     <div class="card__media${p.photo ? ' is-photo' : ''}" style="--i:${i % 8}"><img src="${img(p.id)}" alt="${L(p)}" loading="lazy" width="600" height="600"><img class="card__on" src="${img(p.id + '-on')}" alt="" loading="lazy" width="640" height="640">
-      <span class="eco" style="--e:${p.eco}" title="${t('eco')}"><i class="eco__f"></i><span class="eco__z" aria-hidden="true">⚡</span><span class="eco__v">${t('ecoSave', { n: `<b class="eco__n" data-n="${p.eco}">0</b>` })}</span></span>
       <span class="card__off" dir="ltr">−${off(p)}%</span>
       <button class="card__add" type="button" data-add="${p.id}" aria-label="${t('add')}: ${L(p)}">${icon('plus', 20, 1.8)}</button></div>
-    <div class="card__body"><h3 class="card__name"><a href="#" data-toast="soon">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p></div>
+    <div class="card__body"><h3 class="card__name"><a href="#" data-pd="${p.id}">${L(p)}</a></h3><p class="card__price"><b>${money(p.price)}</b><s>${fmt(p.was)}</s></p></div>
   </article>`;
 };
 const tiles = () => [
@@ -1069,99 +1122,155 @@ let lightsOn = false;
 function renderSwitch() { $('#lsw').setAttribute('aria-checked', String(lightsOn)); $('#lswT').textContent = t(lightsOn ? 'lswOn' : 'lsw'); $('#pgrid').classList.toggle('is-lit', lightsOn); document.body.classList.toggle('lights-on', lightsOn); }
 $('#lsw').addEventListener('click', () => { lightsOn = !lightsOn; renderSwitch(); });
 
-/* the gallery: the lamps alone in a row (the chosen one big in the middle); a tap carries it into its exact place in the room,
-   the room fades in around it, then its light comes on. The cut-out has the same frame as the room photo, so it lands exactly. */
-const GX = { i: 0, open: false, busy: false };
+/* the gallery: the lamps in a row (all at full strength, the chosen one big); a tap carries it into its exact spot in its room
+   (the cut-out has the same frame as the room photo), the room fades in around it, then the room dims and the lamp glows.
+   Arrows and swipes move straight to the next room; the price and add to cart sit beside the room. */
+const GX = { i: 0, open: false, busy: false, lit: false };
 const gxEl = () => $('#gx');
 const gxSize = () => ({ W: gxEl().clientWidth, H: gxEl().clientHeight });
+const gxBox = g => g.box.map(v => v / 100);
 function gxSlot(g, d) {          // d = place in the row: 0 the middle, ±1 the sides, further = out of view
-  const { W, H } = gxSize(), ph = W < 768, [x0, y0, x1, y1] = g.box.map(v => v / 100);
-  const lampH = H * (d === 0 ? (ph ? .36 : .42) : (ph ? .18 : .24));
+  const { W, H } = gxSize(), ph = W < 768, [x0, y0, x1, y1] = gxBox(g);
+  const lampH = H * (d === 0 ? (ph ? .34 : .4) : (ph ? .17 : .22));
   const fs = lampH / ((y1 - y0) * g.h), fw = g.w * fs, fh = g.h * fs;
-  const step = W * (ph ? .42 : .34) * (lang === 'ar' ? -1 : 1);
-  const cxT = W / 2 + d * step, cyT = H * (d === 0 ? (ph ? .5 : .52) : (ph ? .54 : .56));
-  return { left: cxT - (x0 + x1) / 2 * fw, top: cyT - (y0 + y1) / 2 * fh, width: fw, height: fh, opacity: d === 0 ? 1 : Math.abs(d) === 1 ? .38 : 0 };
+  const step = W * (ph ? .36 : .3) * (lang === 'ar' ? -1 : 1);
+  const cxT = W / 2 + d * step, cyT = H * (d === 0 ? (ph ? .5 : .5) : (ph ? .55 : .56));
+  return { left: cxT - (x0 + x1) / 2 * fw, top: cyT - (y0 + y1) / 2 * fh, width: fw, height: fh, opacity: Math.abs(d) <= 1 ? 1 : 0 };
 }
-const gxBig = () => gxEl().classList.contains('gx--big');
-function gxCover(g) {           // where the whole room photo sits inside the card (it is never cropped), in stage coordinates
-  const st = gxEl().getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect();
-  const k = Math.min(b.width / g.w, b.height / g.h), dw = g.w * k, dh = g.h * k;
-  return { left: b.left - st.left + (b.width - dw) / 2, top: b.top - st.top + (b.height - dh) / 2, width: dw, height: dh };
+function gxRoom(g) {             // the room photo inside the room box: framed around the lamp, never cropping it
+  const b = $('#gxScene').getBoundingClientRect(), st = gxEl().getBoundingClientRect(), bw = b.width, bh = b.height, [x0, y0, x1, y1] = gxBox(g);
+  const cover = Math.max(bw / g.w, bh / g.h), contain = Math.min(bw / g.w, bh / g.h);
+  const fit = Math.min(bh / ((y1 - y0) * g.h * 1.5), bw / ((x1 - x0) * g.w * 1.6));
+  const k = Math.max(contain, Math.min(cover, fit)), dw = g.w * k, dh = g.h * k;
+  let l = bw / 2 - (x0 + x1) / 2 * dw, tp = bh * .52 - (y0 + y1) / 2 * dh;
+  l = dw >= bw ? Math.min(0, Math.max(bw - dw, l)) : (bw - dw) / 2;
+  tp = dh >= bh ? Math.min(0, Math.max(bh - dh, tp)) : (bh - dh) / 2;
+  return { box: { left: l, top: tp, width: dw, height: dh }, stage: { left: b.left - st.left + l, top: b.top - st.top + tp, width: dw, height: dh } };
 }
-function gxFit(g) { if (!gxBig()) $('#gxScene').style.aspectRatio = `${g.w} / ${g.h}`; }   // the normal card takes the photo's own shape
 function gxOff(j) { const n = STORE.gallery.length; let d = (j - GX.i + n) % n; if (d > n / 2) d -= n; if (n === 2 && d === -1) d = 1; return d; }
 function gxLayout(anim) {
-  $$('#galRow .gx__f').forEach((f, j) => { const t = gxSlot(STORE.gallery[j], gxOff(j)); f.classList.toggle('is-cur', j === GX.i);
-    if (anim && G) gsap.to(f, { ...t, duration: 1, ease: 'expo.inOut' }); else gsap.set(f, t); });
-  const g = STORE.gallery[GX.i];
-  $('#gxLbl').innerHTML = `<b>${L(g)}</b><small><i></i>${t('galTap')}</small>`;
+  $$('#galRow .gx__f').forEach((f, j) => {
+    const g = STORE.gallery[j], d = gxOff(j), r = gxSlot(g, d), [x0, , x1, y1] = gxBox(g), nm = $$('#gxNames span')[j];
+    f.classList.toggle('is-cur', j === GX.i); nm.classList.toggle('is-cur', j === GX.i);
+    const n = { left: r.left + (x0 + x1) / 2 * r.width, top: r.top + y1 * r.height + 14, opacity: r.opacity };
+    if (anim && G) { gsap.to(f, { ...r, duration: 1, ease: 'expo.inOut' }); gsap.to(nm, { ...n, duration: 1, ease: 'expo.inOut' }); }
+    else { gsap.set(f, r); gsap.set(nm, n); }
+  });
   $$('#gxNav .gx__dots i').forEach((x, k) => x.classList.toggle('is-on', k === GX.i));
 }
-function renderGal() {
-  if (/[?&]big(?:[=&]|$)/.test(location.search)) $('#gx').classList.add('gx--big');   // the review option: the room opens as big as the banner photo
-  const G2 = STORE.gallery;
-  $('#galRow').innerHTML = G2.map((g, j) => `<button class="gx__f" type="button" data-j="${j}" aria-label="${L(g)}"><img src="${img(g.id + '-cut')}" alt="" loading="lazy" style="--d:${j * 1.3}s"></button>`).join('');
-  $('#gxNav').innerHTML = `<button class="gx__arr" type="button" data-gx-go="-1" aria-label="${t('prev')}">${icon('arrow', 20, 2)}</button>
-    <span class="gx__dots">${G2.map(() => '<i></i>').join('')}</span>
-    <button class="gx__arr" type="button" data-gx-go="1" aria-label="${t('next')}">${icon('arrow', 20, 2)}</button>`;
-  // arrows point the way the row moves: "next" toward the reading direction
-  $('#gxNav [data-gx-go="1"] svg').style.transform = lang === 'ar' ? 'scaleX(-1)' : '';
-  $('#gxNav [data-gx-go="-1"] svg').style.transform = lang === 'ar' ? '' : 'scaleX(-1)';
-  gxCap();
-  requestAnimationFrame(() => { gxLayout(false); if (GX.open) gsap.set($$('#galRow .gx__f')[GX.i], { ...gxCover(G2[GX.i]), opacity: 0 }); });
+function gxRoomImgs(g) {          // the room photo, its lit twin and their blurred fill
+  const st = gxEl(), r = gxRoom(g);
+  $$('.gx__off, .gx__boff', st).forEach(x => x.src = img(g.id + '-off'));
+  $$('.gx__on, .gx__bon', st).forEach(x => x.src = img(g.id + '-on'));
+  $$('.gx__off, .gx__on', st).forEach(x => Object.assign(x.style, { left: r.box.left + 'px', top: r.box.top + 'px', width: r.box.width + 'px', height: r.box.height + 'px' }));
+  return r;
 }
 function gxCap() {
   const g = STORE.gallery[GX.i];
-  $('#gxCap').innerHTML = `<b>${L(g)}</b><p>${L(g.note)}</p><div class="gal__btns"><a class="btn btn-primary" href="#all" data-gx-shop><span>${t('galBtn')}</span><span class="arr flip">${icon('arrow', 18, 1.8)}</span></a>
-    <button class="gal__x" type="button" data-gx-close>${icon('close', 18, 2)}<span>${t('galClose')}</span></button></div>`;
+  $('#gxCap').innerHTML = `<p class="eyebrow" data-t="galEy">${t('galEy')}</p><b>${L(g)}</b><p>${L(g.note)}</p>
+    <p class="card__price gx__price"><b>${money(g.price)}</b><s>${fmt(g.was)}</s></p>
+    <div class="gx__btns"><button class="gx__add" type="button" data-gx-add>${icon('bag', 18, 1.8)}<span>${t('add')}</span></button>
+      <button class="lsw gx__sw" type="button" role="switch" aria-checked="${GX.lit}" data-gx-light><span class="lsw__k" aria-hidden="true"></span><span>${t(GX.lit ? 'gxRoomOff' : 'gxRoomOn')}</span></button></div>`;
 }
-function gxGo(d) { if (GX.open || GX.busy) return; const n = STORE.gallery.length; GX.i = (GX.i + d + n) % n; gxLayout(true); }
+function gxSetLit(on, dur) {
+  GX.lit = on; const sw = $('[data-gx-light]');
+  if (sw) { sw.setAttribute('aria-checked', String(on)); sw.lastElementChild.textContent = t(on ? 'gxRoomOff' : 'gxRoomOn'); }
+  const els = $$('.gx__on, .gx__bon', gxEl());
+  if (G) gsap.to(els, { opacity: on ? 1 : 0, duration: dur ?? 1.4, ease: 'power1.inOut' }); else gsap.set(els, { opacity: on ? 1 : 0 });
+}
+function renderGal() {
+  const G2 = STORE.gallery;
+  $('#galRow').innerHTML = G2.map((g, j) => `<button class="gx__f" type="button" data-j="${j}" aria-label="${L(g)}"><img src="${img(g.id + '-cut')}" alt="" loading="lazy" style="--d:${j * 1.3}s"></button>`).join('');
+  $('#gxNames').innerHTML = G2.map(g => `<span><b>${L(g)}</b><small><i></i>${t('galTap')}</small></span>`).join('');
+  $('#gxNav').innerHTML = `<button class="gx__arr" type="button" data-gx-go="-1" aria-label="${t('prev')}">${icon('arrow', 20, 2)}</button>
+    <span class="gx__dots">${G2.map(() => '<i></i>').join('')}</span>
+    <button class="gx__arr" type="button" data-gx-go="1" aria-label="${t('next')}">${icon('arrow', 20, 2)}</button>`;
+  $('#gxNav [data-gx-go="1"] svg').style.transform = lang === 'ar' ? 'scaleX(-1)' : '';
+  $('#gxNav [data-gx-go="-1"] svg').style.transform = lang === 'ar' ? '' : 'scaleX(-1)';
+  $('[data-gx-close]').innerHTML = icon('close', 18, 2); $('[data-gx-close]').setAttribute('aria-label', t('gxBack'));
+  gxCap();
+  requestAnimationFrame(() => { gxLayout(false); if (GX.open) { gxRoomImgs(STORE.gallery[GX.i]); gsap.set($$('#galRow .gx__f')[GX.i], { opacity: 0 }); gsap.set('#gxCap > *', { opacity: 1 }); } });
+}
+function gxGo(d) {
+  if (GX.busy) return; const n = STORE.gallery.length;
+  if (!GX.open) { GX.i = (GX.i + d + n) % n; gxLayout(true); return; }
+  // in a room: straight to the next room — the light goes off, the next room fades in, then its lamp glows
+  GX.busy = true; const st = gxEl(), all = $$('.gx__off, .gx__on, .gx__boff, .gx__bon', st);
+  const swap = () => { GX.i = (GX.i + d + n) % n; gxLayout(false); $$('#galRow .gx__f').forEach(f => gsap.set(f, { opacity: 0 })); gxRoomImgs(STORE.gallery[GX.i]); GX.lit = false; gxCap();
+    if (!G) { gsap.set($$('.gx__off, .gx__boff', st), { opacity: 1 }); gxSetLit(true); GX.busy = false; return; }
+    gsap.fromTo($$('.gx__off, .gx__boff', st), { opacity: 0, x: 40 * d * (lang === 'ar' ? -1 : 1) }, { opacity: 1, x: 0, duration: .7, ease: 'expo.out' });
+    gsap.fromTo('#gxCap > *', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .6, stagger: .05, ease: 'expo.out' });
+    gsap.delayedCall(.75, () => { gxSetLit(true); GX.busy = false; }); };
+  if (G) gsap.to(all, { opacity: 0, duration: .4, onComplete: swap }); else swap();
+}
 function gxOpen() {
   if (GX.open || GX.busy) return; GX.busy = true; GX.open = true;
   const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl();
-  const off = $$('.gx__off, .gx__boff', st), on = $$('.gx__on, .gx__bon', st);
-  off.forEach(x => x.src = img(g.id + '-off')); on.forEach(x => x.src = img(g.id + '-on'));
-  gxFit(g); gxCap(); st.classList.add('is-open');
-  // while it travels, the lamp stays inside the room card's edges
-  { const r = st.getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect(), rad = getComputedStyle($('#gxScene')).borderRadius;
-    $('#galRow').style.clipPath = `inset(${b.top - r.top}px ${r.right - b.right}px ${r.bottom - b.bottom}px ${b.left - r.left}px round ${rad})`; }
-  const others = $$('#galRow .gx__f').filter(x => x !== f);
-  if (!G) { gsap.set(f, { opacity: 0 }); gsap.set([...off, ...on], { opacity: 1 }); GX.busy = false; return; }
+  st.classList.add('is-open'); GX.lit = false; gxCap();
+  const r = gxRoomImgs(g);
+  // while it travels, the lamp stays inside the room's edges
+  { const sr = st.getBoundingClientRect(), b = $('#gxScene').getBoundingClientRect(), rad = getComputedStyle($('#gxScene')).borderRadius;
+    $('#galRow').style.clipPath = `inset(${b.top - sr.top}px ${sr.right - b.right}px ${sr.bottom - b.bottom}px ${b.left - sr.left}px round ${rad})`; }
+  const others = $$('#galRow .gx__f').filter(x => x !== f), off = $$('.gx__off, .gx__boff', st);
+  if (!G) { gsap.set(f, { opacity: 0 }); gsap.set(off, { opacity: 1 }); gxSetLit(true); GX.busy = false; return; }
   gsap.timeline({ onComplete: () => { GX.busy = false; } })
-    .to(others, { opacity: 0, duration: .4 }, 0)
-    .to(f, { ...gxCover(g), duration: 1.2, ease: 'power3.inOut' }, 0)
+    .to([...others, '#gxNames'], { opacity: 0, duration: .4 }, 0)
+    .to(f, { ...r.stage, duration: 1.2, ease: 'power3.inOut' }, 0)
     .to(off, { opacity: 1, duration: .8, ease: 'power2.out' }, .55)
     .set(f, { opacity: 0 }, 1.25)
-    .to(on, { opacity: 1, duration: 1.4, ease: 'power1.inOut' }, 1.55)
-    .fromTo('#gxCap', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'expo.out' }, 1.4);
+    .add(() => gxSetLit(true), 1.45)
+    .fromTo('#gxCap > *', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .8, stagger: .06, ease: 'expo.out' }, .9);
 }
 function gxClose() {
   if (!GX.open || GX.busy) return; GX.busy = true;
-  const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl(), off = $$('.gx__off, .gx__boff', st), on = $$('.gx__on, .gx__bon', st);
-  const done = () => { st.classList.remove('is-open'); GX.open = false; GX.busy = false; gxLayout(false); $('#galRow').style.clipPath = ''; };
-  if (!G) { gsap.set([...off, ...on], { opacity: 0 }); done(); return; }
+  const g = STORE.gallery[GX.i], f = $$('#galRow .gx__f')[GX.i], st = gxEl(), all = $$('.gx__off, .gx__on, .gx__boff, .gx__bon', st);
+  const done = () => { st.classList.remove('is-open'); GX.open = false; GX.busy = false; GX.lit = false; $('#galRow').style.clipPath = ''; gxLayout(false); gsap.set('#gxNames', { opacity: 1 }); };
+  if (!G) { gsap.set(all, { opacity: 0 }); done(); return; }
+  gsap.set(f, { ...gxRoom(g).stage, opacity: 1 });
   gsap.timeline({ onComplete: done })
-    .to('#gxCap', { opacity: 0, duration: .3 }, 0)
-    .to(on, { opacity: 0, duration: .6 }, 0)
-    .set(f, { opacity: 1 }, .5)
-    .to(off, { opacity: 0, duration: .6 }, .55)
-    .add(() => { $('#galRow').style.clipPath = ''; }, .75)
-    .to(f, { ...gxSlot(g, 0), duration: 1.1, ease: 'power3.inOut' }, .5)
-    .add(() => $$('#galRow .gx__f').forEach((x, j) => { if (x !== f) gsap.to(x, { opacity: gxSlot(STORE.gallery[j], gxOff(j)).opacity, duration: .5 }); }), 1.1);
+    .to('#gxCap > *', { opacity: 0, duration: .3 }, 0)
+    .to(all, { opacity: 0, duration: .6 }, .1)
+    .add(() => { $('#galRow').style.clipPath = ''; }, .35)
+    .to(f, { ...gxSlot(g, 0), duration: 1.1, ease: 'power3.inOut' }, .3)
+    .add(() => { $$('#galRow .gx__f').forEach((x, j) => { if (x !== f) gsap.to(x, { opacity: gxSlot(STORE.gallery[j], gxOff(j)).opacity, duration: .5 }); }); gxLayout(true); gsap.to('#gxNames', { opacity: 1, duration: .5 }); }, 1);
 }
 $('#gx').addEventListener('click', e => {
   const go = e.target.closest('[data-gx-go]'); if (go) { gxGo(+go.dataset.gxGo); return; }
   if (e.target.closest('[data-gx-close]')) { gxClose(); return; }
-  if (e.target.closest('[data-gx-shop]')) { e.preventDefault(); gxClose(); goGrid(); return; }
-  if (GX.open) { if (!e.target.closest('.gx__cap') && !GX.busy) { const on = $$('.gx__on, .gx__bon', gxEl()); gsap.to(on, { opacity: +getComputedStyle(on[0]).opacity > .5 ? 0 : 1, duration: .8 }); } return; }   // in the room: a tap switches the light
+  if (e.target.closest('[data-gx-light]')) { if (!GX.busy) { gxSetLit(!GX.lit, .9); } return; }
+  if (e.target.closest('[data-gx-add]')) { const g = STORE.gallery[GX.i]; cart++; const c = $('#cartCount'); c.textContent = cart; c.classList.add('has-items'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); toast(t('added', { n: L(g) })); return; }
+  if (GX.open) { if (e.target.closest('.gx__scene') && !GX.busy) gxSetLit(!GX.lit, .9); return; }   // in the room: a tap on the photo switches the light
   const f = e.target.closest('.gx__f'); if (!f) return;
   const j = +f.dataset.j; if (j === GX.i) gxOpen(); else { GX.i = j; gxLayout(true); }
 });
-// a swipe moves the row
+// a swipe moves to the next lamp (or the next room)
 (() => { let x0 = null; const st = $('#gx');
   st.addEventListener('pointerdown', e => { x0 = e.clientX; });
   st.addEventListener('pointerup', e => { if (x0 == null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) gxGo((dx < 0 ? 1 : -1) * (lang === 'ar' ? -1 : 1)); }); })();
-addEventListener('resize', () => { if (GX.open) gxFit(STORE.gallery[GX.i]); if (GX.open) gsap.set($$('#galRow .gx__f')[GX.i], { ...gxCover(STORE.gallery[GX.i]), opacity: 0 }); gxLayout(false); });
+addEventListener('resize', () => { gxLayout(false); if (GX.open) gxRoomImgs(STORE.gallery[GX.i]); });
+
+/* the product view (the live store's product page): photo with its own light switch, price, and the green energy bar */
+let pdP = null, pdN = 1;
+function pdOpen(id) {
+  const p = byId[id]; if (!p) return; pdP = p; pdN = 1;
+  $('.pd__off').src = img(p.id); $('.pd__on').src = img(p.id + '-on'); $('#pdMedia').classList.remove('is-lit');
+  $('#pdName').textContent = L(p); $('#pdPrice').innerHTML = `<b>${money(p.price)}</b><s>${fmt(p.was)}</s>`; $('#pdQ').textContent = 1;
+  $('#pdSw').setAttribute('aria-checked', 'false'); $('#pdSwT').textContent = t('pdLight');
+  $('#pdEco').innerHTML = `<div class="ebar__row"><span class="ebar__l"><i aria-hidden="true">⚡</i>${t('pdEco')}</span><b class="ebar__v">${t('pdSave', { n: `<span class="ebar__n">0</span>` })}</b></div><div class="ebar__t"><i style="--e:${p.eco}"></i></div>`;
+  $('#pdAdd').innerHTML = `${icon('bag', 18, 1.8)}<span>${t('add')}</span>`;
+  $('#pd').showModal(); if (lenis) lenis.stop();
+  requestAnimationFrame(() => requestAnimationFrame(() => $('#pdEco').classList.add('is-in')));
+  const n = $('.ebar__n'), o = { v: 0 };
+  if (G) { gsap.fromTo('.pd__in', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: .6, ease: 'expo.out' }); gsap.to(o, { v: p.eco, duration: 1.4, delay: .25, ease: 'power3.out', onUpdate: () => n.textContent = Math.round(o.v) }); } else n.textContent = p.eco;
+}
+function pdClose() { $('#pd').close(); $('#pdEco').classList.remove('is-in'); if (lenis) lenis.start(); }
+$('#pgrid').addEventListener('click', e => { const a = e.target.closest('[data-pd]'); if (!a) return; e.preventDefault(); pdOpen(a.dataset.pd); });
+$('#pdX').innerHTML = icon('close', 22); $('#pdX').onclick = pdClose;
+$('#pd').addEventListener('click', e => { if (e.target === $('#pd')) pdClose(); });
+$('#pd').addEventListener('cancel', () => { $('#pdEco').classList.remove('is-in'); if (lenis) lenis.start(); });
+$('#pdSw').onclick = () => { const on = !$('#pdMedia').classList.contains('is-lit'); $('#pdMedia').classList.toggle('is-lit', on); $('#pdSw').setAttribute('aria-checked', String(on)); $('#pdSwT').textContent = t(on ? 'pdLightOn' : 'pdLight'); };
+$('.pd__qty').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (!b) return; pdN = Math.max(1, pdN + +b.dataset.q); $('#pdQ').textContent = pdN; });
+$('#pdAdd').onclick = () => { cart += pdN; const c = $('#cartCount'); c.textContent = cart; c.classList.add('has-items'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); toast(t('added', { n: L(pdP) })); pdClose(); };
 
 function setFilter(s) { Object.assign(state, s); renderControls(); renderGrid(true); }
 const goGrid = () => { const y = $('#all').getBoundingClientRect().top + scrollY - 70; lenis ? lenis.scrollTo(y, { duration: 1.4 }) : scrollTo({ top: y, behavior: 'smooth' }); };
@@ -1291,7 +1400,7 @@ function lampMotion() {
   if (G) ScrollTrigger.create({ trigger: sb, start: 'top 62%', onEnter: sbOn, onLeaveBack: () => { sb.classList.remove('is-lit'); gsap.set('#shapeTitle .w', { '--wp': 0 }); } });
   else sbOn();
   if (G) gsap.set('#shapeTitle .w', { '--wp': 0 });
-  if (G) gsap.fromTo('#galRow', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#gx', start: 'top 70%' } });
+  if (G) gsap.fromTo(['#galRow', '#gxNames'], { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, ease: 'expo.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#gx', start: 'top 70%' } });
 }
 // the energy bars fill and count up as each card comes into view (and again after a filter)
 function ecoGo(card) {
