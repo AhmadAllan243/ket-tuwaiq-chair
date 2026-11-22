@@ -130,13 +130,13 @@ rep("      skip: 'تخطَّ إلى المنتجات',", """      hEy: 'قسم �
       hHint: 'مرّر للأسفل… وشغّل الضوء', stOn: 'الضوء شغّال', stOff: 'الضوء مطفأ', tapLight: 'المس لتشغيل الضوء',
       lsw: 'شغّل الإضاءة', lswOn: 'الإضاءة شغّالة',
       galEy: 'المس الضوء', galH: 'المس أي أبجورة، وشوفها في مكانها.', galTx: 'اختر وحدة، وشوفها تدخل مكانها في البيت، ويشتغل ضوءها.', galBtn: 'تسوّق الإضاءات', galClose: 'رجوع', galTap: 'المس',
-      eco: 'كفاءة الطاقة', ecoS: 'الطاقة', ecoSave: 'توفير {n}٪', pdEco: 'موفّرة للطاقة', pdSave: 'توفير {n}٪ من الكهرباء', pdLight: 'شغّل الضوء', pdLightOn: 'الضوء شغّال', pdClose: 'إغلاق', pdQty: 'الكمية', gxRoomOn: 'شغّل الضوء', gxRoomOff: 'طفّ الضوء', gxBack: 'كل الأبجورات',
+      eco: 'كفاءة الطاقة', ecoS: 'الطاقة', ecoSave: 'توفير {n}٪', pdEco: 'موفّرة للطاقة', pdSave: 'توفير {n}٪ من الكهرباء', pdLight: 'شغّل الضوء', pdLightOn: 'الضوء شغّال', pdClose: 'إغلاق', pdPage: 'صفحة المنتج في المتجر', pdQty: 'الكمية', gxRoomOn: 'شغّل الضوء', gxRoomOff: 'طفّ الضوء', gxBack: 'كل الأبجورات',
       skip: 'تخطَّ إلى المنتجات',""")
 rep("      skip: 'Skip to products',", """      hEy: 'The lighting section', hTitle: 'One touch of light changes how the whole room feels.', hMarkW: 'light', hSub2: 'Lamps in calm designs with a warm light that turns every corner of your home into your favourite place.',
       hHint: 'Scroll down… and switch the light on', stOn: 'Light on', stOff: 'Light off', tapLight: 'Tap to switch the light',
       lsw: 'Lights on', lswOn: 'Lights are on',
       galEy: 'Touch the light', galH: 'Touch any lamp and see it in its place.', galTx: 'Pick one and watch it move into its place at home, and its light come on.', galBtn: 'Shop lighting', galClose: 'Back', galTap: 'Tap',
-      eco: 'Energy efficiency', ecoS: 'Energy', ecoSave: '{n}% saving', pdEco: 'Energy saving', pdSave: '{n}% less electricity', pdLight: 'Switch the light on', pdLightOn: 'Light on', pdClose: 'Close', pdQty: 'Quantity', gxRoomOn: 'Switch it on', gxRoomOff: 'Switch it off', gxBack: 'All lamps',
+      eco: 'Energy efficiency', ecoS: 'Energy', ecoSave: '{n}% saving', pdEco: 'Energy saving', pdSave: '{n}% less electricity', pdLight: 'Switch the light on', pdLightOn: 'Light on', pdClose: 'Close', pdPage: 'Product page on the store', pdQty: 'Quantity', gxRoomOn: 'Switch it on', gxRoomOff: 'Switch it off', gxBack: 'All lamps',
       skip: 'Skip to products',""")
 
 # ---------------------------------------------------------------- colours: lavender (most), lemon and orange (touches)
@@ -380,6 +380,7 @@ function pdOpen(id) {
   $('#pdSw').setAttribute('aria-checked', 'false'); $('#pdSwT').textContent = t('pdLight');
   $('#pdEco').innerHTML = `<div class="ebar__row"><span class="ebar__l"><i aria-hidden="true">⚡</i>${t('pdEco')}</span><b class="ebar__v">${t('pdSave', { n: `<span class="ebar__n">0</span>` })}</b></div><div class="ebar__t"><i style="--e:${p.eco}"></i></div>`;
   $('#pdAdd').innerHTML = `${icon('bag', 18, 1.8)}<span>${t('add')}</span>`;
+  $('#pdPage').href = p.url; $('#pdPage').innerHTML = `<span>${t('pdPage')}</span>${icon('ne', 16, 2)}`;
   $('#pd').showModal(); if (lenis) lenis.stop();
   requestAnimationFrame(() => requestAnimationFrame(() => $('#pdEco').classList.add('is-in')));
   const n = $('.ebar__n'), o = { v: 0 };
@@ -488,6 +489,7 @@ rep('<div class="toast" id="toast" role="status" aria-live="polite"></div>', '''
       <div class="ebar" id="pdEco"></div>
       <div class="pd__buy"><div class="pd__qty"><button type="button" data-q="-1" aria-label="-">−</button><b id="pdQ">1</b><button type="button" data-q="1" aria-label="+">+</button></div>
         <button class="pd__add" type="button" id="pdAdd"></button></div>
+      <a class="pd__page" id="pdPage" href="#" target="_blank" rel="noopener"></a>
     </div>
   </div>
 </dialog>''')
@@ -593,6 +595,7 @@ html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:
 .gx__sw[aria-checked="true"]{ background:var(--night); color:#FFE7B8; }
 .gx__sw[aria-checked="true"] .lsw__k::after{ background:#FFD27A; box-shadow:0 0 12px 3px rgba(255,200,110,.7); }
 .gx__stage.is-open .gx__head, .gx__stage.is-open .gx__names{ opacity:0; pointer-events:none; }
+.gx__stage.is-open .gx__lamps{ pointer-events:none; }   /* the cut-outs no longer cover the room, so its ✕ and light taps work */
 .gx__stage.is-open .gx__cap{ pointer-events:auto; }
 .gx__stage.is-open .gx__nav{ left:calc(var(--pad) + min(190px, (100% - min(64%, 1000px) - 2 * var(--pad) - 40px) / 2)); }
 html[dir="rtl"] .gx__stage.is-open .gx__nav{ left:auto; right:calc(var(--pad) + min(190px, (100% - min(64%, 1000px) - 2 * var(--pad) - 40px) / 2)); translate:50% 0; }
@@ -639,6 +642,7 @@ body.lights-on .bar{ background:var(--page); }
 .pd__buy{ display:flex; gap:10px; margin-top:6px; }
 .pd__qty{ display:inline-flex; align-items:center; gap:14px; height:52px; padding-inline:14px; border-radius:var(--r-pill); box-shadow:inset 0 0 0 1px var(--g200); font:600 16px/1 var(--f-latin); }
 .pd__qty button{ width:26px; height:26px; font-size:20px; line-height:1; }
+.pd__page{ display:inline-flex; align-items:center; gap:6px; justify-self:start; font-size:14px; font-weight:700; text-decoration:underline; text-underline-offset:4px; }
 .pd__add{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; height:52px; border-radius:var(--r-pill); background:var(--black); color:var(--white); font-size:15px; font-weight:700; }
 /* the energy bar: like the store's "pieces left" bar (a line of words over a thin bar), in green, with a yellow ⚡ and a moving shine.
    The figure is a PLACEHOLDER for the review; on the live store it comes from each lamp's real data */
