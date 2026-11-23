@@ -141,7 +141,8 @@ product = obj({
                    'en': 'Najdi triangles, the lattice of Hijazi rawasheen, the colour of Asiri Al-Qatt, brought together in one piece.'}},
     ],
     'related_products': [{'id': 'r1', 'name': 'طاولة التقديم TM' if AR else 'TM side table', 'slug': 'tm', 'in_stock': True, 'formatted_price': '750.00', 'formatted_sale_price': '296.00', 'discount_percentage': 61,
-                          'main_image': {'image': {'large': IMG + IMAGES[2] + '.png'}}}], 'categories': [],
+                          'main_image': {'image': {'large': IMG + IMAGES[2] + '.png'}}}],
+    'categories': [{'id': 444478, 'name': 'الإضاءات'}] if os.environ.get('KET_LIGHT') else [],   # KET_LIGHT=1: as if in the lighting department
 })
 # theme settings: schema defaults (header / footer / layout, as group_setting) under the layout.json values
 layout = {}

@@ -270,8 +270,9 @@
           {% endif %}
           {# KET energy bar, under the stock bar and built like it, in green. It shows only when the product has a real figure:
              a Zid product specification named «توفير الطاقة» (or "Energy saving") with a value like 80% #}
-          {% set eco_ns = namespace(v=0) %}
-          {% for a in (product.attributes or []) %}
+          {% set eco_ns = namespace(v=0, light=false) %}
+          {% for c in (product.categories or []) %}{% if (c.id | string) == '444478' %}{% set eco_ns.light = true %}{% endif %}{% endfor %}   {# the lighting department only #}
+          {% for a in (product.attributes or []) if eco_ns.light %}
             {% set an = ((a.name.ar ~ ' ' ~ a.name.en) if a.name is mapping else (a.name or a.slug or '')) | string | lower %}
             {% if eco_ns.v == 0 and ('طاق' in an or 'energy' in an) %}
               {% set av = a.value %}
@@ -711,5 +712,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   {# ket-product.js loads the 3D hero bundle itself, only on products that have a 3D model #}
-  <script defer src="{{ 'ket-product.js' | asset_url }}&k=28641594" data-hero="{{ 'ket-hero.js' | asset_url }}&k=9a63d5bb"></script>
+  <script defer src="{{ 'ket-product.js' | asset_url }}&k=a18f0e65" data-hero="{{ 'ket-hero.js' | asset_url }}&k=d79ebcd2"></script>
 {% endblock %}
