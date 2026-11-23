@@ -117,6 +117,8 @@ product = obj({
     'formatted_price': '1,560.00 ر.س' if AR else 'SAR 1,560.00', 'formatted_sale_price': '696.00 ر.س' if AR else 'SAR 696.00',
     'discount_percentage': 55.4, 'is_taxable': True, 'in_stock': True, 'is_infinite': False, 'quantity': 80,
     'sold_products_count': 1653, 'has_options': False, 'has_fields': False,
+    # KET_ECO=80 python3 ket/preview.py  → a sample «توفير الطاقة» specification, to see the energy bar
+    'attributes': [{'name': 'توفير الطاقة', 'value': os.environ['KET_ECO'] + '%'}] if os.environ.get('KET_ECO') else [],
     'images': [{'image': {'large': IMG + i + '.png'}, 'alt_text': ''} for i in IMAGES],
     'selected_product': {'id': 'tuwaiq-1', 'in_stock': True, 'is_infinite': False, 'quantity': 80, 'sold_products_count': 1653},
     'rating': {'average': 5.0, 'total_count': 326, 'ratings_5': {'count': 313}, 'ratings_4': {'count': 13}},

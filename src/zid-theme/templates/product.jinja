@@ -268,6 +268,31 @@
               <div class="stock__bar" aria-hidden="true"><span style="--w:{{ [8, (qty_left / stock_scale * 100) | round(0)] | max }}%"></span></div>
             </div>
           {% endif %}
+          {# KET energy bar, under the stock bar and built like it, in green. It shows only when the product has a real figure:
+             a Zid product specification named «توفير الطاقة» (or "Energy saving") with a value like 80% #}
+          {% set eco_ns = namespace(v=0) %}
+          {% for a in (product.attributes or []) %}
+            {% set an = ((a.name.ar ~ ' ' ~ a.name.en) if a.name is mapping else (a.name or a.slug or '')) | string | lower %}
+            {% if eco_ns.v == 0 and ('طاق' in an or 'energy' in an) %}
+              {% set av = a.value %}
+              {% if av is mapping %}{% set av = av.ar or av.en %}{% endif %}
+              {% if av is iterable and av is not string %}{% set av = (av | first) if av else '' %}{% endif %}
+              {% if av is mapping %}{% set av = av.value or av.ar or av.en or '' %}{% endif %}
+              {% set digits = av | string %}
+              {% for d in ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'] %}{% set digits = digits | replace(d, loop.index0 | string) %}{% endfor %}
+              {% set eco_ns.v = digits | replace('%', '') | replace('٪', '') | trim | int %}
+            {% endif %}
+          {% endfor %}
+          {% if eco_ns.v > 0 %}
+            {% set eco_v = [eco_ns.v, 100] | min %}
+            <div class="stock ket-eco" role="group" aria-label="{{ 'توفير الطاقة' if lang != 'en' else 'Energy saving' }}">
+              <div class="stock__row">
+                <strong class="ket-eco__l"><i aria-hidden="true">⚡</i>{{ 'موفّرة للطاقة' if lang != 'en' else 'Energy saving' }}</strong>
+                <span class="ket-eco__v">{{ ('توفير ' ~ eco_v ~ '٪ من الكهرباء') if lang != 'en' else (eco_v ~ '% less electricity') }}</span>
+              </div>
+              <div class="stock__bar ket-eco__bar" aria-hidden="true"><span style="--w:{{ eco_v }}%"></span></div>
+            </div>
+          {% endif %}
           <p class="delivery" data-ket-delivery data-days="{{ (settings.ket_delivery_days or KD.ket_delivery_days) | default(3) }}" hidden>
             {{ k.icon('calendar', 20, 1.4) }}<span></span>
           </p>
@@ -686,5 +711,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   {# ket-product.js loads the 3D hero bundle itself, only on products that have a 3D model #}
-  <script defer src="{{ 'ket-product.js' | asset_url }}&k=0738ee96" data-hero="{{ 'ket-hero.js' | asset_url }}&k=302faf28"></script>
+  <script defer src="{{ 'ket-product.js' | asset_url }}&k=28641594" data-hero="{{ 'ket-hero.js' | asset_url }}&k=9a63d5bb"></script>
 {% endblock %}

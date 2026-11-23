@@ -1064,3 +1064,16 @@ html[data-theme="dark"] #sticky-cta .ket-cta-price.is-sale [data-sticky-cta-pric
   #bcio-whatsapp-widget{ position:fixed; left:0; right:0; bottom:0; height:0; z-index:2147483000; transform:translateY(0); transition:transform .5s cubic-bezier(.2,.8,.2,1); }
   body.ket-cta-on #bcio-whatsapp-widget{ transform:translateY(calc(-1 * var(--ket-cta-h, 84px))); }
 }
+/* ===================== Product page: the energy bar under the stock bar (green, a yellow ⚡, a moving shine; shows only with a real figure) ===================== */
+.ket .ket-eco{ margin-top:14px; }
+.ket .ket-eco__l{ display:inline-flex; align-items:center; gap:8px; color:#0B5E30; }
+.ket .ket-eco__l i{ width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:#088040; color:#F8FA75; font-style:normal; font-size:13px; animation:ket-zap 2.4s ease-in-out infinite; }
+@keyframes ket-zap{ 0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(8,128,64,.35); } 50%{ transform:scale(1.1); box-shadow:0 0 0 6px rgba(8,128,64,0); } }
+.ket .ket-eco__v{ color:#0B5E30; font-weight:600; }
+.ket .ket-eco__bar{ background:#E2F3E9; }
+.ket .ket-eco__bar span{ background:linear-gradient(90deg, #02A27A, #3FCB86 40%, #088040 80%); background-size:200% 100%; animation:ket-eco-in 1.4s cubic-bezier(.16,1,.3,1) .3s both, ket-eco-flow 1.8s linear infinite; }
+@keyframes ket-eco-in{ from{ transform:scaleX(0); } }
+@keyframes ket-eco-flow{ to{ background-position:-200% 0; } }
+html[data-theme="dark"] .ket .ket-eco__l, html[data-theme="dark"] .ket .ket-eco__v{ color:#9EF0C0; }
+html[data-theme="dark"] .ket .ket-eco__bar{ background:#14261C; }
+@media (prefers-reduced-motion:reduce){ .ket .ket-eco__l i, .ket .ket-eco__bar span{ animation:none; } }
