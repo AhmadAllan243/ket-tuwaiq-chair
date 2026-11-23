@@ -259,6 +259,7 @@ open(os.path.join(THEME, 'templates', 'category.jinja'), 'w').write(
 <script src="{{ 'ket-brand.js' | asset_url }}"></script>
 <script src="{{ 'ket-category.js' | asset_url }}"></script>
 {% if KC_TREES %}<script src="{{ 'ket-trees.js' | asset_url }}"></script>{% endif %}
+{% endif %}
 {% endblock %}
 """)
 print('built ket-category: js', len(js))

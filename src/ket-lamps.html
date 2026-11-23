@@ -1461,21 +1461,45 @@ function runLoader() {
     if (/[?&]page=/.test(location.search)) requestAnimationFrame(() => { const y = $('#all').getBoundingClientRect().top + scrollY - 90; scrollTo(0, y); });
     return;
   }
-  // just the three dots (lavender, lemon, orange), then the page opens
+  // ring of 8 lamps in mixed shapes on lavender, lemon and grey
+  const pick = [['lp06', 'circle', '#D4C5FF'], ['lp13', 'arch', '#F4F4F4'], ['lp02', 'sq', '#F8FA75'], ['lp07', 'pill', '#D4C5FF'], ['lp05', 'circle', '#F4F4F4'], ['lp17', 'sq', '#F0EBFF'], ['lp15', 'arch', '#F4F4F4'], ['lp10', 'circle', '#FDFDE3']];
+  const ring = $('#ring');
+  ring.innerHTML = pick.map(([id, sh, bg]) => `<span class="ring__t sh-${sh}${byId[id]?.photo ? ' is-photo' : ''}" style="--bg:${bg}"><img src="${img(id)}" alt=""></span>`).join('');
+  const T = $$('.ring__t', ring);
+  const geo = () => { const m = Math.min(innerWidth, innerHeight); return { R: Math.min(m * .36, 300), ts: Math.min(m * .2, 150) }; };
+  let { R, ts } = geo(); ring.style.setProperty('--ts', ts + 'px');
+  const a0 = T.map((_, i) => -Math.PI / 2 + i * Math.PI * 2 / T.length);
+  const st = { spin: 0, r: R * .55 };
+  const place = () => T.forEach((el, i) => { const a = a0[i] + st.spin; gsap.set(el, { x: Math.cos(a) * st.r, y: Math.sin(a) * st.r }); });
+  gsap.ticker.add(place);
+
   let skipped = false;
   const tl = gsap.timeline({ onComplete: finish });
-  tl.to({}, { duration: 1.2 })
-    .addLabel('out')
-    .to('#ldDots', { scale: .5, opacity: 0, duration: .4, ease: 'power2.in' }, 'out')
-    .to(ldr, { opacity: 0, duration: .6, ease: 'power2.inOut' }, 'out+=.2')
-    .add(() => { if (!skipped) bannerStart(); }, 'out+=.25');
+  tl.to('#ldDots', { opacity: 0, scale: .6, duration: .35, delay: .55 })
+    .fromTo('#ldLine', { opacity: 0, y: 14, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .6, ease: 'power3.out' })
+    .to('#ldLine', { opacity: 0, y: -10, filter: 'blur(6px)', duration: .45, delay: .45 })
+    .fromTo('#ldLogo', { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .6, ease: 'back.out(1.8)' }, '-=.15')
+    .addLabel('ring')
+    .to(st, { r: R, duration: 1.2, ease: 'expo.out' }, 'ring')
+    .fromTo(T, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: .55, stagger: .09, ease: 'back.out(1.8)' }, 'ring')
+    .to(st, { spin: Math.PI * .9, duration: 2.4, ease: 'power2.inOut' }, 'ring')
+    .addLabel('out', '-=.55')
+    .to(st, { r: () => Math.hypot(innerWidth, innerHeight) * .75, duration: .9, ease: 'power3.in' }, 'out')
+    .to(T, { scale: 1.6, opacity: 0, duration: .9, ease: 'power3.in', stagger: .02 }, 'out')
+    .to('#ldLogo', { scale: .45, opacity: 0, y: () => -innerHeight * .35, duration: .7, ease: 'power3.in' }, 'out+=.1')
+    .to(ldr, { opacity: 0, scale: 1.08, duration: .6, ease: 'power2.inOut' }, 'out+=.45')   // the loader zooms away and the photo zooms in behind it, in view
+    .add(() => { if (!skipped) bannerStart(); }, 'out+=.5');
   let started = false;
   function bannerStart() { if (started) return; started = true; done(); }
-  function finish() { ldr.remove(); bannerStart(); }
+  function finish() { gsap.ticker.remove(place); ldr.remove(); bannerStart(); }
   const skip = () => { if (skipped) return; skipped = true; tl.kill(); gsap.to(ldr, { opacity: 0, duration: .3, onComplete: finish }); bannerStart(); };
   $('#ldSkip').onclick = skip;
   addEventListener('keydown', e => { if (e.key === 'Escape') skip(); }, { once: true });
-
+  addEventListener('resize', () => ({ R, ts } = geo(), ring.style.setProperty('--ts', ts + 'px')));
+  // wait until the ring images are decoded (max 1.2s) so the tiles never pop in empty
+  tl.pause();
+  const ready = Promise.all($$('img', ring).map(i => i.decode().catch(() => {})));
+  Promise.race([ready, new Promise(r => setTimeout(r, 1200))]).then(() => tl.play());
 }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(runLoader); else runLoader();
 })();

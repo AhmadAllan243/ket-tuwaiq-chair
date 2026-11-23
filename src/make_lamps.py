@@ -465,22 +465,9 @@ rep("  scrollMotion(); bannerIn();", "  bannerIn(); scrollMotion(); lampMotion()
 # ---------------------------------------------------------------- loader: the ring of lamps switches on as it spins
 rep("try { seen = !!sessionStorage.getItem('ketCatSeen'); sessionStorage.setItem('ketCatSeen', '1'); } catch (e) {}",
     "try { seen = !!sessionStorage.getItem('ketLampsSeen'); sessionStorage.setItem('ketLampsSeen', '1'); } catch (e) {}")
-i = s.index("  // ring of 8 tables in mixed shapes on pink and grey"); j = s.index("  let started = false;")
-s = s[:i] + """  // just the three dots (lavender, lemon, orange), then the page opens
-  let skipped = false;
-  const tl = gsap.timeline({ onComplete: finish });
-  tl.to({}, { duration: 1.2 })
-    .addLabel('out')
-    .to('#ldDots', { scale: .5, opacity: 0, duration: .4, ease: 'power2.in' }, 'out')
-    .to(ldr, { opacity: 0, duration: .6, ease: 'power2.inOut' }, 'out+=.2')
-    .add(() => { if (!skipped) bannerStart(); }, 'out+=.25');
-""" + s[j:]
-rep("  function finish() { gsap.ticker.remove(place); ldr.remove(); bannerStart(); }", "  function finish() { ldr.remove(); bannerStart(); }")
-rep("  addEventListener('resize', () => ({ R, ts } = geo(), ring.style.setProperty('--ts', ts + 'px')));\n", "")
-rep("""  // wait until the ring images are decoded (max 1.2s) so the tiles never pop in empty
-  tl.pause();
-  const ready = Promise.all($$('img', ring).map(i => i.decode().catch(() => {})));
-  Promise.race([ready, new Promise(r => setTimeout(r, 1200))]).then(() => tl.play());""", "")
+# the department loader as on the other departments: dots → line → logo → a ring of lamps spins around it (the lamps as they are, no lighting)
+rep("  // ring of 8 tables in mixed shapes on pink and grey\n  const pick = [['t03', 'circle', '#C6F7A6'], ['t12', 'arch', '#F4F4F4'], ['life1', 'sq', '#e9e7e4'], ['t01', 'pill', '#F4A7FC'], ['t08', 'circle', '#F4F4F4'], ['t17', 'sq', '#C6F7A6'], ['t15', 'arch', '#F4F4F4'], ['t02', 'circle', '#F4F4F4']];",
+    "  // ring of 8 lamps in mixed shapes on lavender, lemon and grey\n  const pick = [['lp06', 'circle', '#D4C5FF'], ['lp13', 'arch', '#F4F4F4'], ['lp02', 'sq', '#F8FA75'], ['lp07', 'pill', '#D4C5FF'], ['lp05', 'circle', '#F4F4F4'], ['lp17', 'sq', '#F0EBFF'], ['lp15', 'arch', '#F4F4F4'], ['lp10', 'circle', '#FDFDE3']];")
 
 # the product view: in this preview a tap on a card opens it; on the live store this is the product page
 rep('<div class="toast" id="toast" role="status" aria-live="polite"></div>', '''<div class="toast" id="toast" role="status" aria-live="polite"></div>
