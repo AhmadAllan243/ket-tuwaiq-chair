@@ -31,8 +31,13 @@
   /* ---------- Zid's sticky add-to-cart bar: only once the customer has scrolled past the buy box ---------- */
   const actions = $('[data-product-actions]');
   if (actions) {
-    const before = () => document.body.classList.toggle('ket-before-buy', actions.getBoundingClientRect().top > innerHeight);
-    before(); addEventListener('scroll', before, { passive: true });
+    // shown once the buy box has scrolled fully up and out, hidden as soon as it comes back; a 48px dead band between the two
+    // so the bar never flickers on and off while the buy box sits at the edge (or as the phone's address bar grows and shrinks)
+    let past = false, raf = 0;
+    const before = () => { raf = 0; const b = actions.getBoundingClientRect().bottom;
+      if (!past && b < -24) past = true; else if (past && b > 24) past = false;
+      document.body.classList.toggle('ket-before-buy', !past); };
+    before(); addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(before); }, { passive: true }); addEventListener('resize', before);
   }
 
   /* ---------- Gallery: count, progress bar, thumbs, arrows ---------- */
@@ -128,6 +133,13 @@
     window.addEventListener('product:variant-changed', e => { const v = e.detail?.selectedProduct; if (!v || !wasEl) return;
       const on = !!(v.formatted_sale_price && v.formatted_price && v.formatted_sale_price !== v.formatted_price);
       wasEl.textContent = on ? v.formatted_price : ''; priceBox?.classList.toggle('is-sale', on); });
+    // a small round chat button in the bar (phones): it opens the store's WhatsApp, the same chat as the floating «Contact Us»,
+    // which steps aside while the bar is up
+    const wa = document.querySelector('a[href*="wa.me"][href*="text="]') || document.querySelector('a[href*="wa.me"]');
+    if (wa) { const c = document.createElement('a'); c.className = 'ket-cta-chat'; c.href = wa.href; c.target = '_blank'; c.rel = 'noopener';
+      c.setAttribute('aria-label', (document.documentElement.lang || 'ar').startsWith('ar') ? 'تواصل معنا' : 'Contact us');
+      c.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z"/><path d="M9 10.5h.01M12.5 10.5h.01M16 10.5h.01" stroke-width="2.6"/></svg>';
+      btn.parentElement.parentElement.insertBefore(c, btn.parentElement); }
     const nameEl = bar.querySelector('[data-sticky-cta-name]'); if (!nameEl) return;
     const tick = document.createElement('div'); tick.className = 'ket-perk'; tick.setAttribute('aria-live', 'polite');
     nameEl.insertAdjacentElement('afterend', tick);
@@ -155,7 +167,6 @@
     if (sale && end && end > Date.now() && end - Date.now() < 48 * 3600e3) perks.push({ i: 'clock', t: ar ? 'العرض ينتهي خلال أقل من 48 ساعة' : 'Offer ends in under 48 hours', s: ar ? 'ينتهي خلال 48 ساعة' : 'Ends within 48 h', hot: true });
     const qty = +p.quantity || 0;
     if (!p.is_infinite && qty > 0 && qty <= 10) perks.push({ i: 'flame', t: ar ? `باقي ${qty} ${qty === 1 ? 'قطعة' : qty === 2 ? 'قطعتان' : 'قطع'} فقط` : `Only ${qty} left`, hot: true });
-    if (off) { const tag = document.createElement('span'); tag.className = 'ket-cta-badge'; tag.setAttribute('aria-hidden', 'true'); tag.innerHTML = `<b dir="ltr">−${off}%</b>`; btn.parentElement.appendChild(tag); }
     let k = 0;
     const show = () => {
       const x = perks[k++ % perks.length], el = document.createElement('span');

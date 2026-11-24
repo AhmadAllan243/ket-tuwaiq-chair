@@ -70,65 +70,25 @@
           type="button"
           class="btn btn-filled btn-lg shrink-0 transition-all duration-200"
           data-sticky-cta-add-to-cart
+          aria-label="{% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %}{{ _("Add to cart") }}{% endif %}"
+          title="{% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %}{{ _("Add to cart") }}{% endif %}"
         >
-          {# Default state #}
-          <span
-            class="inline-flex items-center gap-2"
-            data-sticky-cta-btn-default
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="ket-cta-ico"
-              aria-hidden="true"
-            >
-              <path d="M5 8h14l-1.2 11.2A2 2 0 0 1 15.8 21H8.2a2 2 0 0 1-2-1.8L5 8Z"></path>
-              <path d="M9 8V6.5a3 3 0 0 1 6 0V8"></path>
-              <path d="M12 11.5v5M9.5 14h5"></path>
+          {# KET: the icon alone, a cart with a plus #}
+          <span class="inline-flex items-center" data-sticky-cta-btn-default>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ket-cta-ico" aria-hidden="true">
+              <path d="M2.5 3h2.2l2.1 11.2a1.6 1.6 0 0 0 1.6 1.3h8.9a1.6 1.6 0 0 0 1.6-1.2L20.5 7.5H6"></path>
+              <circle cx="9" cy="20" r="1.3"></circle><circle cx="17.5" cy="20" r="1.3"></circle>
+              <path d="M13 8.6v4.6M10.7 10.9h4.6"></path>
             </svg>
-            <span> {% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %} {{ _("Add to cart") }} {% endif %}</span>
           </span>
           {# Loading state #}
-          <span
-            class="hidden items-center gap-2"
-            data-sticky-cta-btn-loading
-          >
-            <svg
-              class="size-5 animate-spin"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-            </svg>
+          <span class="hidden items-center" data-sticky-cta-btn-loading>
+            <svg class="size-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
           </span>
           {# Success state #}
-          <span
-            class="hidden items-center gap-2"
-            data-sticky-cta-btn-success
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            <span>{{ _("Added!") }}</span>
+          <span class="hidden items-center" data-sticky-cta-btn-success>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span class="sr-only">{{ _("Added!") }}</span>
           </span>
         </button>
       </div>

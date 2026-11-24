@@ -112,8 +112,22 @@
   {% if not (dim_w or dim_h or dim_d or dim_sh) %}
     {% set dn = namespace(v=[]) %}
     {% set dtxt = ((product.description or '') | striptags | replace('×', ' ') | replace('*', ' ') | replace('سم', ' cm ') | replace('CM', ' cm ') | replace('cm', ' cm ')) %}
-    {% for t in dtxt.split() %}{% if t == 'cm' and loop.previtem and (loop.previtem | float) > 0 and (loop.previtem | float) < 500 %}{% set _x = dn.v.append(loop.previtem | float | round | int) %}{% endif %}{% endfor %}
-    {% if dn.v | length == 1 %}{% set dim_h = dn.v[0] | string %}
+    {# a size written with its label («الارتفاع: 58cm», «العرض: 38cm», «Height 58 cm») goes to that label; unlabelled ones by their order #}
+    {% set dl = namespace(lab='', h='', w='', d='', l='', any=false) %}
+    {% for t in dtxt.split() %}
+      {% set tl = t | lower %}
+      {% if 'رتفاع' in tl or 'height' in tl %}{% set dl.lab = 'h' %}{% elif 'عرض' in tl or 'width' in tl or 'قطر' in tl or 'diam' in tl %}{% set dl.lab = 'w' %}
+      {% elif 'عمق' in tl or 'depth' in tl %}{% set dl.lab = 'd' %}{% elif 'طول' in tl or 'length' in tl %}{% set dl.lab = 'l' %}{% endif %}
+      {% if t == 'cm' and loop.previtem and (loop.previtem | float) > 0 and (loop.previtem | float) < 500 %}
+        {% set cv = (loop.previtem | float | round | int) | string %}{% set _x = dn.v.append(cv | int) %}
+        {% if dl.lab == 'h' and not dl.h %}{% set dl.h = cv %}{% set dl.any = true %}{% elif dl.lab == 'w' and not dl.w %}{% set dl.w = cv %}{% set dl.any = true %}
+        {% elif dl.lab == 'd' and not dl.d %}{% set dl.d = cv %}{% set dl.any = true %}{% elif dl.lab == 'l' and not dl.l %}{% set dl.l = cv %}{% set dl.any = true %}{% endif %}
+        {% set dl.lab = '' %}
+      {% endif %}
+    {% endfor %}
+    {% if dl.any %}
+      {% set dim_h = dl.h or (dl.l if not dl.h else '') %}{% set dim_w = dl.w %}{% set dim_d = dl.d or (dl.l if dl.h else '') %}
+    {% elif dn.v | length == 1 %}{% set dim_h = dn.v[0] | string %}
     {% elif dn.v | length == 2 %}{% set dim_w = dn.v[0] | string %}{% set dim_h = dn.v[1] | string %}
     {% elif dn.v | length > 2 %}{% set dim_w = dn.v[0] | string %}{% set dim_d = dn.v[1] | string %}{% set dim_h = dn.v[2] | string %}{% endif %}
   {% endif %}
@@ -712,5 +726,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   {# ket-product.js loads the 3D hero bundle itself, only on products that have a 3D model #}
-  <script defer src="{{ 'ket-product.js' | asset_url }}&k=a57098a5" data-hero="{{ 'ket-hero.js' | asset_url }}&k=58ca30de"></script>
+  <script defer src="{{ 'ket-product.js' | asset_url }}&k=21ff1357" data-hero="{{ 'ket-hero.js' | asset_url }}&k=2e67bcd0"></script>
 {% endblock %}

@@ -144,6 +144,10 @@ product = obj({
                           'main_image': {'image': {'large': IMG + IMAGES[2] + '.png'}}}],
     'categories': [{'id': 444478, 'name': 'الإضاءات'}] if os.environ.get('KET_LIGHT') else [],   # KET_LIGHT=1: as if in the lighting department
 })
+# KET_DESC='<p>الأرتفاع: 58cm<br>العرض: 38cm</p>' → that description and no size fields, to test reading sizes from the text
+if os.environ.get('KET_DESC'):
+    product['description'] = os.environ['KET_DESC']
+    product['metafields'] = [m for m in product['metafields'] if m['key'] not in ('width', 'height', 'depth')]
 # theme settings: schema defaults (header / footer / layout, as group_setting) under the layout.json values
 layout = {}
 for sch in ('header.schema.json', 'footer.schema.json', 'layout.schema.json'):

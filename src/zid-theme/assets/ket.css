@@ -705,7 +705,9 @@ html[dir="rtl"] :where(.ket) .mom__deck{ --d:-1; }
 .ket .ket-qty .qty-input-field{ height:46px; padding:0; line-height:46px; }
 .ket .rev > *{ min-width:0; }   /* the review slider must not widen the column on phones */
 .ket .ket-qty .qty-input{ display:inline-flex; align-items:center; }
-body.ket-before-buy #sticky-cta{ display:none!important; }   /* not over the 3D hero / gallery */
+/* not over the 3D hero / gallery / buy box: it fades away and back (no on/off jump) */
+#sticky-cta{ transition:opacity .28s ease, translate .32s cubic-bezier(.2,.8,.2,1), visibility 0s linear 0s!important; }
+body.ket-before-buy #sticky-cta{ opacity:0; translate:0 18px; visibility:hidden; pointer-events:none; transition:opacity .2s ease, translate .25s ease, visibility 0s linear .25s!important; }
 
 /* ===================== Header / announcement / footer (every page) ===================== */
 .ket-top{ background:var(--white); }
@@ -1015,10 +1017,10 @@ html[dir="rtl"] .kc .pager__step span{ transform:scaleX(-1); }
 
 /* ===================== Sticky add-to-cart: green with a shine, a pulse and a wiggle; the saving as a tag; a sliding chip of reasons (assets/ket-product.js) ===================== */
 #sticky-cta .ket-cta-wrap{ position:relative; }
-#sticky-cta button.ket-cta-go.btn{ position:relative; overflow:hidden; isolation:isolate; background:#088040!important; color:#fff!important; border:0!important; box-shadow:0 10px 24px -10px rgba(8,128,64,.75); animation:ket-wiggle 5s ease-in-out 1.5s infinite; }
+#sticky-cta button.ket-cta-go.btn{ position:relative; overflow:hidden; isolation:isolate; background:#088040!important; color:#fff!important; border:0!important; box-shadow:0 10px 24px -10px rgba(8,128,64,.75); }
 #sticky-cta button.ket-cta-go.btn:hover{ background:#066B36!important; }
 #sticky-cta button.ket-cta-go.btn::after{ content:""; position:absolute; z-index:-1; inset:0; background:linear-gradient(105deg, transparent 35%, rgba(255,255,255,.5) 50%, transparent 65%); transform:translateX(-130%); animation:ket-shine 2.6s ease-in-out .6s infinite; pointer-events:none; }
-#sticky-cta .ket-cta-wrap::before{ content:""; position:absolute; z-index:0; inset:auto; inset-inline-end:0; top:50%; width:var(--bw, 150px); height:var(--bh, 44px); translate:0 -50%; border-radius:999px; box-shadow:0 0 0 0 rgba(8,128,64,.45); animation:ket-ring 2.4s ease-out 1s infinite; pointer-events:none; }
+#sticky-cta .ket-cta-wrap::before{ display:none; content:""; position:absolute; z-index:0; inset:auto; inset-inline-end:0; top:50%; width:var(--bw, 150px); height:var(--bh, 44px); translate:0 -50%; border-radius:999px; box-shadow:0 0 0 0 rgba(8,128,64,.45); animation:ket-ring 2.4s ease-out 1s infinite; pointer-events:none; }
 @keyframes ket-shine{ 0%, 45%{ transform:translateX(-130%); } 80%, 100%{ transform:translateX(130%); } }
 @keyframes ket-wiggle{ 0%, 80%, 100%{ transform:none; } 83%{ transform:scale(1.07) rotate(-3deg); } 86%{ transform:scale(1.07) rotate(3deg); } 89%{ transform:scale(1.05) rotate(-2deg); } 92%{ transform:scale(1.02) rotate(1deg); } }
 @keyframes ket-ring{ 0%{ box-shadow:0 0 0 0 rgba(8,128,64,.45); } 70%, 100%{ box-shadow:0 0 0 12px rgba(8,128,64,0); } }
@@ -1060,9 +1062,11 @@ html[data-theme="dark"] #sticky-cta .ket-cta-price.is-sale [data-sticky-cta-pric
   #sticky-cta .ket-cta-price__was{ font-size:11px; }
   #sticky-cta .gap-4{ gap:8px; }
   #sticky-cta .size-16{ width:36px; height:36px; }
-  /* the floating chat button (BusinessChat, its own sealed widget): lifted above the bar while the bar is up, gliding there */
-  #bcio-whatsapp-widget{ position:fixed; left:0; right:0; bottom:0; height:0; z-index:2147483000; transform:translateY(0); transition:transform .5s cubic-bezier(.2,.8,.2,1); }
-  body.ket-cta-on #bcio-whatsapp-widget{ transform:translateY(calc(-1 * var(--ket-cta-h, 84px))); }
+  /* the floating «Contact Us» (BusinessChat, its own sealed widget) steps aside while the bar is up: the bar has its own chat button */
+  #bcio-whatsapp-widget{ transition:opacity .25s ease, visibility 0s linear 0s; }
+  body.ket-cta-on #bcio-whatsapp-widget{ opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, visibility 0s linear .2s; }
+  /* calmer on a phone: the name and the price only (no rolling chip) */
+  #sticky-cta .ket-perk{ display:none; }
 }
 /* ===================== Product page: the energy bar under the stock bar (green, a yellow ⚡, a moving shine; shows only with a real figure) ===================== */
 .ket .ket-eco{ margin-top:14px; }
@@ -1077,3 +1081,12 @@ html[data-theme="dark"] #sticky-cta .ket-cta-price.is-sale [data-sticky-cta-pric
 html[data-theme="dark"] .ket .ket-eco__l, html[data-theme="dark"] .ket .ket-eco__v{ color:#9EF0C0; }
 html[data-theme="dark"] .ket .ket-eco__bar{ background:#14261C; }
 @media (prefers-reduced-motion:reduce){ .ket .ket-eco__l i, .ket .ket-eco__bar span{ animation:none; } }
+
+/* ===================== Sticky bar: two round icon buttons, chat (phones) and add to cart ===================== */
+#sticky-cta button.ket-cta-go.btn{ width:48px; height:48px; padding:0!important; display:grid; place-items:center; border-radius:50%; }
+#sticky-cta button.ket-cta-go [data-sticky-cta-btn-default] svg{ transition:transform .2s ease; }
+#sticky-cta button.ket-cta-go:active [data-sticky-cta-btn-default] svg{ transform:scale(.9); }
+#sticky-cta .ket-cta-chat{ display:none; flex:none; width:44px; height:44px; border-radius:50%; place-items:center; color:#088040; background:#E9FCDD; }
+#sticky-cta .ket-cta-chat:active{ transform:scale(.94); }
+html[data-theme="dark"] #sticky-cta .ket-cta-chat{ background:#18301F; color:#C4F5A4; }
+@media (max-width:767px){ #sticky-cta .ket-cta-chat{ display:grid; } #sticky-cta button.ket-cta-go.btn{ width:46px; height:46px; } }
