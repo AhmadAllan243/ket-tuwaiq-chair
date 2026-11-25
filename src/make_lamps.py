@@ -145,7 +145,7 @@ rep("  --lime:#C6F7A6; --pink:#F4A7FC; --blush:var(--pink); --rose:var(--pink); 
     "  --lime:#F8FA75; --pink:#D4C5FF; --blush:var(--pink); --rose:var(--pink); --lime-l:#FDFDE3; --pink-l:#F0EBFF; --line:rgba(0,0,0,.08);\n"
     "  --lav:#D4C5FF; --lav-l:#F0EBFF; --lav-d:#7B61FF; --lemon:#F8FA75; --orange:#FF6417; --night:#17120E; --warm:#FFB867;   /* lighting: lavender most of the way; lemon and orange as touches */")
 s = re.sub(r'<title>.*?</title>', '<title>ket · الإضاءات</title>', s, count=1)
-rep('<link rel="preload" as="image" href="media/tables/hero-joy.webp">', '<link rel="preload" as="image" href="media/lamps/mush-off.webp">\n<link rel="preload" as="image" href="media/lamps/mush-on.webp">')
+rep('<link rel="preload" as="image" href="media/tables/hero-joy.webp">', '<link rel="preload" as="image" href="media/lamps/hero-off.webp">\n<link rel="preload" as="image" href="media/lamps/hero-on.webp">')
 
 # ---------------------------------------------------------------- 1 · the banner: words written by the scroll, then the lamp switches on
 i = s.index('<!-- 1 · HERO'); j = s.index('<!-- 2 · PICK THE SHAPE')
@@ -155,8 +155,8 @@ s = s[:i] + """<!-- 1 · BANNER: the words alone on top, written by the scroll; 
     <h1 class="lhero__h" id="hTitle"></h1>
     <div class="lhero__media">
       <button class="lhero__ph" id="heroPh" type="button" data-t-aria="tapLight">
-        <img class="is-off" src="media/lamps/mush-off.webp" alt="" width="1002" height="1500" fetchpriority="high">
-        <img class="is-on" src="media/lamps/mush-on.webp" alt="" width="1002" height="1500">
+        <img class="is-off" src="media/lamps/hero-off.webp" alt="" width="1002" height="1500" fetchpriority="high">
+        <img class="is-on" src="media/lamps/hero-on.webp" alt="" width="1002" height="1500">
         <span class="lhero__glow" aria-hidden="true"></span>
       </button>
       <span class="hero__stat" id="hStat"></span>
@@ -264,7 +264,7 @@ function gxRoom(g) {             // the room photo inside the room box: framed a
   const b = $('#gxScene').getBoundingClientRect(), st = gxEl().getBoundingClientRect(), bw = b.width, bh = b.height, [x0, y0, x1, y1] = gxBox(g);
   const cover = Math.max(bw / g.w, bh / g.h), contain = Math.min(bw / g.w, bh / g.h);
   const fit = Math.min(bh / ((y1 - y0) * g.h * 1.5), bw / ((x1 - x0) * g.w * 1.6));
-  const k = Math.max(contain, Math.min(cover, fit)), dw = g.w * k, dh = g.h * k;
+  const k = cover, dw = g.w * k, dh = g.h * k;   // the box has the photo's own shape (gxFit), so the photo fills it: no blurred fill at the edges
   let l = bw / 2 - (x0 + x1) / 2 * dw, tp = bh * .52 - (y0 + y1) / 2 * dh;
   l = dw >= bw ? Math.min(0, Math.max(bw - dw, l)) : (bw - dw) / 2;
   tp = dh >= bh ? Math.min(0, Math.max(bh - dh, tp)) : (bh - dh) / 2;
@@ -282,8 +282,14 @@ function gxLayout(anim) {
   });
   $$('#gxNav .gx__dots i').forEach((x, k) => x.classList.toggle('is-on', k === GX.i));
 }
-function gxRoomImgs(g) {          // the room photo, its lit twin and their blurred fill
-  const st = gxEl(), r = gxRoom(g);
+function gxFit(g) {               // laptops: the room box takes the photo's shape, and the photo and its words sit together in the middle
+  const st = gxEl(), W = st.clientWidth;
+  if (W < 768) { st.style.removeProperty('--sw'); st.style.removeProperty('--off'); return; }
+  const H = $('#gxScene').clientHeight || st.clientHeight - 56, sw = Math.round(Math.min(H * g.w / g.h, W * .64, 1000));
+  st.style.setProperty('--sw', sw + 'px'); st.style.setProperty('--off', Math.round(Math.max(32, (W - sw - 40 - 380) / 2)) + 'px');
+}
+function gxRoomImgs(g) {          // the room photo and its lit twin
+  gxFit(g); const st = gxEl(), r = gxRoom(g);
   $$('.gx__off, .gx__boff', st).forEach(x => x.src = img(g.id + '-off'));
   $$('.gx__on, .gx__bon', st).forEach(x => x.src = img(g.id + '-on'));
   $$('.gx__off, .gx__on', st).forEach(x => Object.assign(x.style, { left: r.box.left + 'px', top: r.box.top + 'px', width: r.box.width + 'px', height: r.box.height + 'px' }));
@@ -550,10 +556,10 @@ html[dir="rtl"] .lhero .hero__stat{ padding:8px 10px 8px 18px; }
 .gx{ padding-top:var(--section); }
 .gx__stage{ --acc:var(--forest); --pad:max(var(--gutter), calc((100% - 1440px) / 2 + var(--gutter))); position:relative; overflow:hidden; height:clamp(640px, 92svh, 880px); background:var(--white); color:var(--black); touch-action:pan-y; }
 /* the room: about two thirds of the width, the words in a column beside it */
-.gx__scene{ position:absolute; z-index:0; top:28px; bottom:28px; inset-inline-end:var(--pad); width:min(64%, 1000px); border-radius:clamp(24px, 3vw, 44px); overflow:hidden; pointer-events:none; }
+.gx__scene{ position:absolute; z-index:0; top:28px; bottom:28px; inset-inline-end:var(--off, var(--pad)); width:var(--sw, min(64%, 1000px)); border-radius:clamp(24px, 3vw, 44px); overflow:hidden; pointer-events:none; }
 .gx__stage.is-open .gx__scene{ pointer-events:auto; cursor:pointer; }
 .gx__scene img{ position:absolute; opacity:0; }
-.gx__scene .gx__boff, .gx__scene .gx__bon{ inset:0; width:100%; height:100%; object-fit:cover; filter:blur(30px) saturate(1.05); transform:scale(1.2); }
+.gx__scene .gx__boff, .gx__scene .gx__bon{ display:none!important; }   /* no blurred fill: the box has the photo's shape */
 .gx__x{ display:none!important; position:absolute; z-index:3; top:14px; inset-inline-end:14px; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:rgba(255,255,255,.9); opacity:0; transition:opacity .4s; }
 .gx__stage.is-open .gx__x{ opacity:1; transition-delay:1s; }
 .gx__lamps, .gx__names{ position:absolute; inset:0; }
@@ -582,7 +588,7 @@ html[lang="ar"] .gx__head h2{ font-weight:700; line-height:1.45; letter-spacing:
 .gx__dots i{ width:8px; height:8px; border-radius:var(--r-pill); background:var(--g200); transition:width .5s var(--ease), background-color .4s; }
 .gx__dots i.is-on{ width:26px; background:var(--acc); }
 /* the words beside the room: name, a line, price, add to cart and the light switch */
-.gx__cap{ position:absolute; z-index:3; inset-inline-start:var(--pad); top:50%; translate:0 -50%; width:calc(100% - min(64%, 1000px) - 2 * var(--pad) - 40px); max-width:380px; display:grid; gap:12px; justify-items:start; pointer-events:none; }
+.gx__cap{ position:absolute; z-index:3; inset-inline-start:var(--off, var(--pad)); top:50%; translate:0 -50%; width:calc(100% - var(--sw, min(64%, 1000px)) - 2 * var(--off, var(--pad)) - 40px); max-width:380px; display:grid; gap:12px; justify-items:start; pointer-events:none; }
 .gx__cap > *{ opacity:0; }
 .gx__cap > b{ font-size:clamp(26px, 2.8vw, 40px); font-weight:700; line-height:1.25; }
 .gx__cap > p:not(.eyebrow):not(.gx__price){ color:var(--ink-2); font-size:15px; line-height:1.7; }
@@ -607,8 +613,8 @@ html[lang="ar"] .lband__g span{ letter-spacing:0; }
 .gx__stage.is-open .gx__head, .gx__stage.is-open .gx__names{ opacity:0; pointer-events:none; }
 .gx__stage.is-open .gx__lamps{ pointer-events:none; }   /* the cut-outs no longer cover the room, so its ✕ and light taps work */
 .gx__stage.is-open .gx__cap{ pointer-events:auto; }
-.gx__stage.is-open .gx__nav{ left:calc(var(--pad) + min(190px, (100% - min(64%, 1000px) - 2 * var(--pad) - 40px) / 2)); }
-html[dir="rtl"] .gx__stage.is-open .gx__nav{ left:auto; right:calc(var(--pad) + min(190px, (100% - min(64%, 1000px) - 2 * var(--pad) - 40px) / 2)); translate:50% 0; }
+.gx__stage.is-open .gx__nav{ left:calc(var(--off, var(--pad)) + min(190px, (100% - var(--sw, min(64%, 1000px)) - 2 * var(--off, var(--pad)) - 40px) / 2)); }
+html[dir="rtl"] .gx__stage.is-open .gx__nav{ left:auto; right:calc(var(--off, var(--pad)) + min(190px, (100% - var(--sw, min(64%, 1000px)) - 2 * var(--off, var(--pad)) - 40px) / 2)); translate:50% 0; }
 @media (max-width:899px){
   .gx__stage{ height:auto; min-height:min(190vw, 820px); }
   .gx__scene{ top:12px; bottom:auto; inset-inline:12px; width:auto; height:min(62vh, 120vw); }

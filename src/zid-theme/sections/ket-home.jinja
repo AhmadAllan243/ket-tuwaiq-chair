@@ -7,7 +7,7 @@
 {% macro pic(v, w=900) %}{{ (image_url(v, w=w, q=85, f='auto') if v else '') | tojson }}{% endmacro %}
 {% macro href(v) %}{{ ((v._url if v and v._url else (v.url if v and v.url is string else (v or ''))) ~ '') | tojson }}{% endmacro %}
 {% macro txt(v) %}{{ (v or '') | tojson }}{% endmacro %}
-<link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=501222de">
+<link rel="stylesheet" href="{{ 'ket-home.css' | asset_url }}&k=4d13c182">
 <script>
   try { if (!sessionStorage.getItem('ketHello')) document.documentElement.classList.add('is-intro'); } catch (e) { document.documentElement.classList.add('is-intro'); }   // the welcome: first visit of a session only
   window.KET_HOME = {
@@ -207,5 +207,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="{{ 'ket-brand.js' | asset_url }}&k=16264d54"></script>
-<script src="{{ 'ket-home.js' | asset_url }}&k=069476d0"></script>
+<script src="{{ 'ket-brand.js' | asset_url }}&k=fe6c0b2c"></script>
+<script src="{{ 'ket-home.js' | asset_url }}&k=49166939"></script>

@@ -48,8 +48,8 @@
 {% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
-<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=988aa429">
-{% if KC_TREES %}<link rel="stylesheet" href="{{ 'ket-trees.css' | asset_url }}&k=5c399799">{% endif %}
+<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=8cee33ee">
+{% if KC_TREES %}<link rel="stylesheet" href="{{ 'ket-trees.css' | asset_url }}&k=98c8e8e3">{% endif %}
 <script>
   try { if (!sessionStorage.getItem({{ ('ketTreesSeen' if KC_TREES else 'ketCatSeen') | tojson }}) && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
   window.KET_CAT = {

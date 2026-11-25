@@ -221,7 +221,7 @@ function gxRoom(g) {             // the room photo inside the room box: framed a
   const b = $('#gxScene').getBoundingClientRect(), st = gxEl().getBoundingClientRect(), bw = b.width, bh = b.height, [x0, y0, x1, y1] = gxBox(g);
   const cover = Math.max(bw / g.w, bh / g.h), contain = Math.min(bw / g.w, bh / g.h);
   const fit = Math.min(bh / ((y1 - y0) * g.h * 1.5), bw / ((x1 - x0) * g.w * 1.6));
-  const k = Math.max(contain, Math.min(cover, fit)), dw = g.w * k, dh = g.h * k;
+  const k = cover, dw = g.w * k, dh = g.h * k;   // the box has the photo's own shape (gxFit), so the photo fills it: no blurred fill at the edges
   let l = bw / 2 - (x0 + x1) / 2 * dw, tp = bh * .52 - (y0 + y1) / 2 * dh;
   l = dw >= bw ? Math.min(0, Math.max(bw - dw, l)) : (bw - dw) / 2;
   tp = dh >= bh ? Math.min(0, Math.max(bh - dh, tp)) : (bh - dh) / 2;
@@ -239,8 +239,14 @@ function gxLayout(anim) {
   });
   $$('#gxNav .gx__dots i').forEach((x, k) => x.classList.toggle('is-on', k === GX.i));
 }
-function gxRoomImgs(g) {          // the room photo, its lit twin and their blurred fill
-  const st = gxEl(), r = gxRoom(g);
+function gxFit(g) {               // laptops: the room box takes the photo's shape, and the photo and its words sit together in the middle
+  const st = gxEl(), W = st.clientWidth;
+  if (W < 768) { st.style.removeProperty('--sw'); st.style.removeProperty('--off'); return; }
+  const H = $('#gxScene').clientHeight || st.clientHeight - 56, sw = Math.round(Math.min(H * g.w / g.h, W * .64, 1000));
+  st.style.setProperty('--sw', sw + 'px'); st.style.setProperty('--off', Math.round(Math.max(32, (W - sw - 40 - 380) / 2)) + 'px');
+}
+function gxRoomImgs(g) {          // the room photo and its lit twin
+  gxFit(g); const st = gxEl(), r = gxRoom(g);
   $$('.gx__off, .gx__boff', st).forEach(x => x.src = img(g.id + '-off'));
   $$('.gx__on, .gx__bon', st).forEach(x => x.src = img(g.id + '-on'));
   $$('.gx__off, .gx__on', st).forEach(x => Object.assign(x.style, { left: r.box.left + 'px', top: r.box.top + 'px', width: r.box.width + 'px', height: r.box.height + 'px' }));
