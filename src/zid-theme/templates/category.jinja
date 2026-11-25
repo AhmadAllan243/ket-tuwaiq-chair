@@ -48,8 +48,8 @@
 {% endif %}
 {% set phone = (store.settings.contact.phone or '') | replace('+', '') | replace(' ', '') %}
 {% set KC_WA = ('https://wa.me/' ~ phone) if phone else '#' %}
-<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=24bbff93">
-{% if KC_TREES %}<link rel="stylesheet" href="{{ 'ket-trees.css' | asset_url }}&k=7d3b61a4">{% endif %}
+<link rel="stylesheet" href="{{ 'ket-category.css' | asset_url }}&k=988aa429">
+{% if KC_TREES %}<link rel="stylesheet" href="{{ 'ket-trees.css' | asset_url }}&k=5c399799">{% endif %}
 <script>
   try { if (!sessionStorage.getItem({{ ('ketTreesSeen' if KC_TREES else 'ketCatSeen') | tojson }}) && !/[?&]page=/.test(location.search)) document.documentElement.classList.add('is-loading'); } catch (e) {}   // the ring loader: first category visit of a session only
   window.KET_CAT = {
@@ -210,8 +210,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="{{ 'ket-brand.js' | asset_url }}&k=3fb31b4b"></script>
-<script src="{{ 'ket-category.js' | asset_url }}&k=9d76b304"></script>
-{% if KC_TREES %}<script src="{{ 'ket-trees.js' | asset_url }}&k=6374bc22"></script>{% endif %}
+<script src="{{ 'ket-brand.js' | asset_url }}&k=16264d54"></script>
+<script src="{{ 'ket-category.js' | asset_url }}&k=1640ccf6"></script>
+{% if KC_TREES %}<script src="{{ 'ket-trees.js' | asset_url }}&k=b92290f2"></script>{% endif %}
 {% endif %}
 {% endblock %}

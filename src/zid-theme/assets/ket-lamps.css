@@ -206,7 +206,8 @@ html[dir="rtl"] :where(.kl) .gx__stage.is-open .gx__nav{ left:auto; right:calc(v
 .kl.lights-on .bar{ background:var(--page); }
 /* the light-on look: the same white card, the lamp glowing warm (a smooth fade, one after another) */:where(.kl) .card__media img.card__on{ opacity:0; transition:opacity 1s ease calc(var(--i) * 80ms); }
 :where(.kl) .pgrid.is-lit .card__media img.card__on{ opacity:1; }
-@media (hover:hover) and (pointer:fine){ :where(.kl) .card:hover .card__media img.card__on{ opacity:1; transition-delay:0s; } }
+/* hover lighting a card: off for now (back later with the switch) */
+/* the «Lights on» switch over the grid: hidden for now */:where(.kl) #lsw{ display:none!important; }
 :where(.kl) .card .card__off{ background:var(--orange); color:var(--white); box-shadow:none; }
 :where(.kl) .pgrid .ttile--dark{ background:var(--orange); color:var(--white); }
 :where(.kl) .pgrid .ttile--dark p{ color:rgba(255,255,255,.88); }

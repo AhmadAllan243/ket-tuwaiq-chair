@@ -73,8 +73,8 @@ const STORE = {
   // the gallery: tap a lamp and its white turns into its room. x / y = where the lamp sits in the photo
   gallery: [
     // w/h = the photo's size; box = the lamp inside it (% left, top, right, bottom). price / was: PLACEHOLDER until these lamps are in the store
-    { id: 'rib', w: 1121, h: 1403, box: [31, 34.1, 68.8, 72.4], price: 249, was: 499, ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية، ويصير المكان أهدأ.', en: 'A soft light that warms the corner and calms the room.' } },
-    { id: 'mush', w: 1002, h: 1500, box: [36.6, 36.8, 82.7, 71.1], price: 329, was: 650, ar: 'ضوء القعدة', en: 'Living-room glow', note: { ar: 'قبّة زجاج تنشر ضوءًا ناعمًا على الجدار والرف.', en: 'A glass dome that spreads a soft light over the wall and shelf.' } },
+    { id: 'rib', w: 1087, h: 1447, box: [6.1, 20.2, 95.7, 99.7], price: 249, was: 499, ar: 'ركن هادئ', en: 'A quiet corner', note: { ar: 'ضوء ناعم يدفّي الزاوية، ويصير المكان أهدأ.', en: 'A soft light that warms the corner and calms the room.' } },
+    { id: 'mush', w: 1025, h: 1535, box: [40.7, 37.3, 72.6, 70.4], price: 329, was: 650, ar: 'ضوء القعدة', en: 'Living-room glow', note: { ar: 'ضوء دافي من تحت القبّة، يلوّن الجدار والرف بهدوء.', en: 'A warm glow under the dome that softly colours the wall and shelf.' } },
   ],
 
 """ + s[j:]
@@ -631,7 +631,9 @@ body.lights-on .bar{ background:var(--page); }
 /* the light-on look: the same white card, the lamp glowing warm (a smooth fade, one after another) */
 .card__media img.card__on{ opacity:0; transition:opacity 1s ease calc(var(--i) * 80ms); }
 .pgrid.is-lit .card__media img.card__on{ opacity:1; }
-@media (hover:hover) and (pointer:fine){ .card:hover .card__media img.card__on{ opacity:1; transition-delay:0s; } }
+/* hover lighting a card: off for now (back later with the switch) */
+/* the «Lights on» switch over the grid: hidden for now */
+#lsw{ display:none!important; }
 .card .card__off{ background:var(--orange); color:var(--white); box-shadow:none; }
 .pgrid .ttile--dark{ background:var(--orange); color:var(--white); }
 .pgrid .ttile--dark p{ color:rgba(255,255,255,.88); }
